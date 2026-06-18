@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HanBuddy — Experience KBO Baseball with a Local Buddy</title>
+  <meta name="description" content="Go to a Korean baseball (KBO) game with a local buddy who explains the cheers, food, and rules in English. First pilot: June 25, 2026 at Jamsil Stadium, Seoul." />
+
+  <!-- Open Graph (for community / social sharing) -->
+  <meta property="og:title" content="HanBuddy — Experience KBO Baseball with a Local Buddy" />
+  <meta property="og:description" content="A local buddy + AI briefing makes your first Korean baseball game easy and fun. June 25, 2026 · Jamsil Stadium, Seoul." />
+  <meta property="og:type" content="website" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: '#0b1437', 800: '#131d4d', 700: '#1c2a6b' },
+            field: '#1f9d55',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .hero-grad { background: radial-gradient(1200px 600px at 70% -10%, #1c2a6b 0%, #0b1437 55%, #070d24 100%); }
+    .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); }
+  </style>
+</head>
+
+<body class="font-sans text-navy-900 bg-white antialiased">
+
+  <!-- ===== Nav ===== -->
+  <header class="sticky top-0 z-40 bg-navy-900/90 backdrop-blur supports-[backdrop-filter]:bg-navy-900/75 text-white">
+    <nav class="mx-auto max-w-6xl px-5 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2 font-extrabold text-lg tracking-tight">
+        <span class="inline-grid place-items-center h-8 w-8 rounded-full bg-amber-400 text-navy-900">⚾</span>
+        HanBuddy
+      </a>
+      <div class="hidden sm:flex items-center gap-7 text-sm font-medium text-white/80">
+        <a href="#experience" class="hover:text-white">The day</a>
+        <a href="#why" class="hover:text-white">Why us</a>
+        <a href="#pilot" class="hover:text-white">Details</a>
+        <a href="#safety" class="hover:text-white">Safety</a>
+      </div>
+      <a href="#apply" data-cta="apply"
+         class="rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-navy-900 hover:bg-amber-300 transition">
+        Join the pilot
+      </a>
+    </nav>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section id="top" class="hero-grad text-white">
+    <div class="mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
+      <span class="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-3 py-1 text-xs font-semibold text-amber-200">
+        ● First pilot run · only a few spots
+      </span>
+      <h1 class="mt-6 text-4xl sm:text-6xl font-black leading-[1.05] tracking-tight max-w-3xl">
+        Experience <span class="text-amber-400">KBO baseball</span><br class="hidden sm:block" />
+        with a local buddy.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg text-white/80">
+        Korean baseball games are loud, fun, and full of culture — but hard to enjoy alone if you
+        don't know the cheers, the food, or the rules. Go with a Korean buddy who explains everything
+        in English, backed by an AI briefing made for you. No baseball experience needed —
+        first-timers are very welcome.
+      </p>
+
+      <div class="mt-9 flex flex-col sm:flex-row gap-3">
+        <a href="#apply" data-cta="apply"
+           class="rounded-full bg-amber-400 px-7 py-3.5 text-center font-bold text-navy-900 hover:bg-amber-300 transition">
+          Join the June 25 game →
+        </a>
+        <a href="#experience"
+           class="rounded-full border border-white/25 px-7 py-3.5 text-center font-semibold text-white hover:bg-white/10 transition">
+          See what a day looks like
+        </a>
+      </div>
+
+      <dl class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 text-sm">
+        <div class="bg-navy-900 px-5 py-4">
+          <dt class="text-white/50">Date</dt>
+          <dd class="mt-1 font-bold text-white">Thu, Jun 25, 2026</dd>
+        </div>
+        <div class="bg-navy-900 px-5 py-4">
+          <dt class="text-white/50">Where</dt>
+          <dd class="mt-1 font-bold text-white">Jamsil Stadium, Seoul</dd>
+        </div>
+        <div class="bg-navy-900 px-5 py-4">
+          <dt class="text-white/50">Price</dt>
+          <dd class="mt-1 font-bold text-white">₩50,000 / person</dd>
+        </div>
+        <div class="bg-navy-900 px-5 py-4">
+          <dt class="text-white/50">Group size</dt>
+          <dd class="mt-1 font-bold text-white">Small (4 people)</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===== What you get / The day ===== -->
+  <section id="experience" class="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl sm:text-4xl font-black tracking-tight">What's included</h2>
+      <p class="mt-4 text-lg text-navy-900/70">
+        Not just a ticket — a guided experience from before the first pitch to after the last out.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="card-hover rounded-2xl border border-navy-900/10 p-6 bg-white">
+        <div class="h-11 w-11 grid place-items-center rounded-xl bg-amber-100 text-2xl">📋</div>
+        <h3 class="mt-4 font-bold text-lg">Pre-game briefing</h3>
+        <p class="mt-2 text-sm text-navy-900/70">
+          A simple card on the teams, the rules, and the cheering culture — so nothing feels confusing.
+        </p>
+      </div>
+      <div class="card-hover rounded-2xl border border-navy-900/10 p-6 bg-white">
+        <div class="h-11 w-11 grid place-items-center rounded-xl bg-amber-100 text-2xl">🧑‍🤝‍🧑</div>
+        <h3 class="mt-4 font-bold text-lg">A local buddy</h3>
+        <p class="mt-2 text-sm text-navy-900/70">
+          A Korean baseball fan sits with you the whole game and shows you how locals enjoy it.
+        </p>
+      </div>
+      <div class="card-hover rounded-2xl border border-navy-900/10 p-6 bg-white">
+        <div class="h-11 w-11 grid place-items-center rounded-xl bg-amber-100 text-2xl">💬</div>
+        <h3 class="mt-4 font-bold text-lg">Answers, in real time</h3>
+        <p class="mt-2 text-sm text-navy-900/70">
+          What's that chant? What should I eat? Why is everyone standing up? Just ask.
+        </p>
+      </div>
+      <div class="card-hover rounded-2xl border border-navy-900/10 p-6 bg-white">
+        <div class="h-11 w-11 grid place-items-center rounded-xl bg-amber-100 text-2xl">📸</div>
+        <h3 class="mt-4 font-bold text-lg">After-game recap</h3>
+        <p class="mt-2 text-sm text-navy-900/70">
+          A short summary of what happened and the moments you'll want to remember.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why HanBuddy ===== -->
+  <section id="why" class="bg-navy-900 text-white">
+    <div class="mx-auto max-w-6xl px-5 py-20 sm:py-24 grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">Why go with HanBuddy?</h2>
+        <p class="mt-4 text-lg text-white/75">
+          Translation apps tell you the words. A local buddy tells you what's actually going on —
+          the context Koreans just <em>know</em>.
+        </p>
+        <ul class="mt-8 space-y-4">
+          <li class="flex gap-3">
+            <span class="mt-1 text-amber-400">✓</span>
+            <span class="text-white/85"><b class="text-white">Real local context</b>, not a generic tour script.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 text-amber-400">✓</span>
+            <span class="text-white/85"><b class="text-white">AI briefing</b> takes the pressure off your buddy, so explanations stay clear and consistent.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 text-amber-400">✓</span>
+            <span class="text-white/85"><b class="text-white">Built for foreigners</b> — everything is reframed from your point of view.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 text-amber-400">✓</span>
+            <span class="text-white/85"><b class="text-white">You're never alone</b> at the stadium — someone's got you the whole time.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <p class="text-sm font-semibold text-amber-300">Going alone vs. going with HanBuddy</p>
+        <div class="mt-5 space-y-4 text-sm">
+          <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+            <span class="text-white/60">Buying the right ticket &amp; finding your seat</span>
+            <span class="font-semibold text-amber-300 whitespace-nowrap">We handle it</span>
+          </div>
+          <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+            <span class="text-white/60">Knowing the chants &amp; when to stand</span>
+            <span class="font-semibold text-amber-300 whitespace-nowrap">Your buddy shows you</span>
+          </div>
+          <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+            <span class="text-white/60">What food to get &amp; how to order</span>
+            <span class="font-semibold text-amber-300 whitespace-nowrap">Sorted together</span>
+          </div>
+          <div class="flex items-start justify-between gap-4">
+            <span class="text-white/60">Understanding what's happening on the field</span>
+            <span class="font-semibold text-amber-300 whitespace-nowrap">Explained live</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== The pilot details ===== -->
+  <section id="pilot" class="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">The first run</h2>
+        <p class="mt-4 text-lg text-navy-900/70">
+          This is our very first pilot, run hands-on by the HanBuddy team. A small group, so we can
+          make it great and learn from you.
+        </p>
+
+        <div class="mt-8 grid sm:grid-cols-2 gap-4">
+          <div class="rounded-2xl bg-navy-900/[0.03] border border-navy-900/10 p-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-navy-900/50">When</p>
+            <p class="mt-1 font-bold">Thursday, June 25, 2026</p>
+          </div>
+          <div class="rounded-2xl bg-navy-900/[0.03] border border-navy-900/10 p-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-navy-900/50">Where</p>
+            <p class="mt-1 font-bold">Jamsil Baseball Stadium, Seoul</p>
+          </div>
+          <div class="rounded-2xl bg-navy-900/[0.03] border border-navy-900/10 p-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-navy-900/50">Price</p>
+            <p class="mt-1 font-bold">₩50,000 per person</p>
+          </div>
+          <div class="rounded-2xl bg-navy-900/[0.03] border border-navy-900/10 p-5">
+            <p class="text-xs font-semibold uppercase tracking-wide text-navy-900/50">Spots</p>
+            <p class="mt-1 font-bold">Limited to 4 people</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-navy-900/10 p-8 bg-white shadow-sm">
+        <h3 class="font-bold text-lg">What ₩50,000 covers</h3>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li class="flex gap-3"><span class="text-field">✓</span> Baseball game ticket</li>
+          <li class="flex gap-3"><span class="text-field">✓</span> Stadium food — Korean fried chicken &amp; a drink</li>
+          <li class="flex gap-3"><span class="text-field">✓</span> Your local buddy for the whole game</li>
+          <li class="flex gap-3"><span class="text-field">✓</span> Pre-game briefing &amp; after-game recap</li>
+        </ul>
+        <h3 class="mt-7 font-bold text-lg">Not included</h3>
+        <ul class="mt-5 space-y-3 text-sm text-navy-900/70">
+          <li class="flex gap-3"><span class="text-navy-900/40">·</span> Transport to and from the stadium</li>
+          <li class="flex gap-3"><span class="text-navy-900/40">·</span> Extra food or drinks you order yourself</li>
+        </ul>
+        <p class="mt-6 text-xs text-navy-900/50">
+          Any optional extra cost is always told to you upfront — no surprises.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Safety & policy ===== -->
+  <section id="safety" class="bg-navy-900/[0.03] border-y border-navy-900/10">
+    <div class="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+      <h2 class="text-3xl sm:text-4xl font-black tracking-tight">Safety &amp; the simple rules</h2>
+      <p class="mt-4 max-w-2xl text-lg text-navy-900/70">
+        Meeting new people should feel safe. Here's how we keep it that way for this first run.
+      </p>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="rounded-2xl bg-white border border-navy-900/10 p-6">
+          <h3 class="font-bold">Verified buddies</h3>
+          <p class="mt-2 text-sm text-navy-900/70">Buddies are checked by our team. For this pilot, buddies are HanBuddy team members.</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-navy-900/10 p-6">
+          <h3 class="font-bold">A group, in public</h3>
+          <p class="mt-2 text-sm text-navy-900/70">You're in a small group at a public stadium — never a private one-on-one meetup.</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-navy-900/10 p-6">
+          <h3 class="font-bold">Clear refund &amp; no-show terms</h3>
+          <p class="mt-2 text-sm text-navy-900/70">If the game is cancelled or you can't make it, we'll tell you the refund terms before you pay.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Apply CTA ===== -->
+  <section id="apply" class="hero-grad text-white">
+    <div class="mx-auto max-w-3xl px-5 py-20 sm:py-24 text-center">
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight">Ready for the game?</h2>
+      <p class="mt-5 text-lg text-white/80">
+        Spots are limited for this first run. Fill out a 2-minute form and we'll reach out with the
+        next steps. No payment needed to apply.
+      </p>
+      <a href="#" data-cta="apply"
+         class="mt-9 inline-block rounded-full bg-amber-400 px-9 py-4 text-lg font-bold text-navy-900 hover:bg-amber-300 transition">
+        Apply for June 25 →
+      </a>
+      <p class="mt-5 text-sm text-white/55">
+        Questions first? <a href="#" data-cta="contact" class="underline hover:text-white">Message us</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Buddy recruitment (Korean) ===== -->
+  <section id="buddy" class="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+    <div class="rounded-3xl border border-navy-900/10 bg-navy-900/[0.03] p-8 sm:p-12 grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">한국인 버디 모집</span>
+        <h2 class="mt-5 text-3xl font-black tracking-tight">야구 좋아하세요? 외국인과 함께 직관 가요</h2>
+        <p class="mt-4 text-navy-900/70">
+          영어로 기본 소통이 되고, KBO 직관을 함께 즐길 한국인 버디를 찾고 있어요.
+          외국인 친구에게 응원 문화·현장 음식·경기 맥락을 같이 알려주는 역할이에요.
+          활동비를 드리며, 자세한 내용은 신청 폼에서 안내드려요.
+        </p>
+        <ul class="mt-5 space-y-2 text-sm text-navy-900/70">
+          <li class="flex gap-3"><span class="text-field">✓</span> 6월 25일(목) 잠실 경기 동행 가능하신 분</li>
+          <li class="flex gap-3"><span class="text-field">✓</span> 야구 팬 / 대학생 / 프리랜서 환영</li>
+          <li class="flex gap-3"><span class="text-field">✓</span> 영어로 가벼운 대화가 가능하신 분</li>
+        </ul>
+      </div>
+      <div class="text-center lg:text-right">
+        <a href="#" data-cta="buddy"
+           class="inline-block rounded-full bg-navy-900 px-8 py-4 font-bold text-white hover:bg-navy-800 transition">
+          버디로 신청하기 →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="border-t border-navy-900/10">
+    <div class="mx-auto max-w-6xl px-5 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-navy-900/60">
+      <div class="flex items-center gap-2 font-extrabold text-navy-900">
+        <span class="inline-grid place-items-center h-7 w-7 rounded-full bg-amber-400 text-navy-900">⚾</span>
+        HanBuddy
+      </div>
+      <p>Experience Korea's local culture, with a buddy. · First pilot, June 2026.</p>
+      <p class="text-navy-900/40">Team ZeroOne · SW Maestro 17th</p>
+    </div>
+  </footer>
+
+  <!-- ===== Link config ===== -->
+  <!--
+    한 곳에서 모든 버튼 링크를 바꿉니다.
+    아래 값만 실제 Google Form / Tally / 오픈채팅 링크로 교체하세요.
+    개인정보(연락처 등)는 이 페이지가 아니라 외부 폼에서만 수집합니다.
+  -->
+  <script>
+    const CONFIG = {
+      apply:   'REPLACE_WITH_APPLY_FORM_URL',   // 외국인 참가 신청 폼 (Google Form / Tally)
+      contact: 'REPLACE_WITH_CONTACT_URL',      // 문의 채널 (오픈채팅 / 이메일 등)
+      buddy:   'REPLACE_WITH_BUDDY_FORM_URL',   // 한국인 버디 신청 폼
+    };
+
+    document.querySelectorAll('[data-cta]').forEach((el) => {
+      const key = el.getAttribute('data-cta');
+      const url = CONFIG[key];
+      if (url && !url.startsWith('REPLACE_WITH_')) {
+        el.setAttribute('href', url);
+        el.setAttribute('target', '_blank');
+        el.setAttribute('rel', 'noopener');
+      } else {
+        // 링크 미설정 시: 클릭하면 안내 (실수로 빈 링크 배포 방지)
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          alert('신청 폼 링크가 아직 설정되지 않았어요. index.html 하단 CONFIG 값을 교체하세요.');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
