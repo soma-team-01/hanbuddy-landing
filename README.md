@@ -1,26 +1,14 @@
-# HanBuddy Landing (KBO Run 1 모집 v0)
+# HanBuddy Landing (KBO Run 1 모집)
 
 ZeroOne 팀 HanBuddy의 첫 검증(2026-06-25 잠실 KBO 직관) 외국인 모집용 정적 랜딩페이지.
 
-- 단일 파일: `index.html` (Tailwind Play CDN + Google Fonts, 빌드 불필요)
-- 언어: 영문 우선 + 한국인 버디 모집 섹션만 한글
-- 개인정보는 이 페이지/레포에 저장하지 않는다. 신청은 외부 폼(Google Form / Tally)으로만 수집한다.
+- 경기: 2026-06-25 Samsung Lions vs LG Twins, Jamsil Baseball Stadium
+- 현재 모집: 외국인 3명 추가 모집
+- CTA/문의 채널: https://open.kakao.com/o/gDBFqEyi
+- 구조: 정적 `index.html` + `assets/kbo-stadium-hero.webp` (빌드 불필요)
+- 개인정보는 이 페이지/레포에 저장하지 않는다. 신청과 문의는 외부 채널에서 처리한다.
 
-## 1. 링크 설정 (배포 전 필수)
-
-`index.html` 맨 아래 `CONFIG`의 세 값을 실제 링크로 교체한다.
-
-```js
-const CONFIG = {
-  apply:   'https://...',  // 외국인 참가 신청 폼
-  contact: 'https://...',  // 문의 채널 (오픈채팅/이메일 등)
-  buddy:   'https://...',  // 한국인 버디 신청 폼
-};
-```
-
-미설정 상태로 두면 버튼 클릭 시 "링크가 아직 설정되지 않았어요" 안내가 떠서 빈 링크 배포를 막는다.
-
-## 2. 로컬 미리보기
+## 로컬 미리보기
 
 ```bash
 cd ~/projects/hanbuddy-landing
@@ -28,9 +16,23 @@ python3 -m http.server 8080
 # http://localhost:8080 접속
 ```
 
-## 3. 무료 배포 (택 1)
+## 배포용 폴더 만들기
 
-- **Netlify Drop**: https://app.netlify.com/drop 에 폴더 드래그앤드롭 → 즉시 URL 발급
+프로젝트 폴더 전체를 그대로 드래그해서 배포하지 않는다. `.git/`, `.superpowers/`, `.omo/` 같은 로컬 도구 파일이 섞일 수 있다.
+
+```bash
+cd ~/projects/hanbuddy-landing
+rm -rf /tmp/hanbuddy-landing-deploy
+mkdir -p /tmp/hanbuddy-landing-deploy
+cp index.html /tmp/hanbuddy-landing-deploy/index.html
+cp -R assets /tmp/hanbuddy-landing-deploy/assets
+```
+
+배포에는 `/tmp/hanbuddy-landing-deploy` 폴더만 사용한다.
+
+## 무료 배포 (택 1)
+
+- **Netlify Drop**: https://app.netlify.com/drop 에 `/tmp/hanbuddy-landing-deploy` 폴더 드래그앤드롭 → 즉시 URL 발급
 - **Vercel**: `npx vercel` (이 폴더에서) → 안내 따라 배포
 - **GitHub Pages**: 이 저장소를 GitHub에 올리고 Settings → Pages에서 main 브랜치 / root 지정
 
