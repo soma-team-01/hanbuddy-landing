@@ -23,12 +23,13 @@ python3 -m http.server 8080
 ```bash
 cd ~/projects/hanbuddy-landing
 rm -rf /tmp/hanbuddy-landing-deploy
-mkdir -p /tmp/hanbuddy-landing-deploy
+mkdir -p /tmp/hanbuddy-landing-deploy/assets
 cp index.html /tmp/hanbuddy-landing-deploy/index.html
-cp -R assets /tmp/hanbuddy-landing-deploy/assets
+cp assets/kbo-stadium-hero.webp /tmp/hanbuddy-landing-deploy/assets/kbo-stadium-hero.webp
 ```
 
 배포에는 `/tmp/hanbuddy-landing-deploy` 폴더만 사용한다.
+`assets/` 아래 원본 JPG/JPEG 사진은 배포 폴더에 복사하지 않는다.
 
 ## 무료 배포 (택 1)
 

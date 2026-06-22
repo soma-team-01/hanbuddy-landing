@@ -1,2 +1,8 @@
 .superpowers/
 .omo/
+
+# Raw local photos are not production assets. Keep only processed WebP assets deployable.
+assets/*.jpg
+assets/*.jpeg
+assets/*.JPG
+assets/*.JPEG
