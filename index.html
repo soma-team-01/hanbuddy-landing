@@ -164,7 +164,7 @@
 
   <main id="main">
     <section id="top" class="hero-surface grain overflow-hidden text-white">
-      <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-10 sm:gap-10 sm:py-12 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
+      <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-10 sm:gap-10 sm:py-12 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[0.95fr_1.05fr] lg:py-16">
         <div>
           <p class="inline-flex items-center rounded-full border border-amber-300/30 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-amber-300" data-i18n="hero.eyebrow">
             HanBuddy by ZeroOne
@@ -213,8 +213,8 @@
           </p>
         </div>
 
-        <aside class="relative rounded-[2rem] border border-white/20 bg-white/10 p-5 shadow-lift backdrop-blur" aria-label="Pilot match card" data-i18n-aria="matchCard.aria">
-          <div class="rounded-[1.5rem] bg-clay-50 p-5 text-ink-950">
+        <aside class="relative rounded-[2rem] border border-white/15 bg-white/[0.06] p-3 shadow-lift backdrop-blur-sm sm:p-4" aria-label="Pilot match card" data-i18n-aria="matchCard.aria">
+          <div class="rounded-[1.5rem] bg-clay-50/95 p-4 text-ink-950 sm:p-5">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <p class="text-xs font-black uppercase tracking-[0.18em] text-score-500" data-i18n="matchCard.eyebrow">Run 1 pilot</p>
@@ -226,18 +226,15 @@
               </div>
             </div>
 
-            <figure class="mt-6 overflow-hidden rounded-[1.25rem] border border-ink-950/10 bg-ink-950">
-              <div class="relative aspect-[4/3]">
+            <figure class="mt-5 overflow-hidden rounded-[1.25rem] border border-ink-950/10 bg-ink-950">
+              <div class="relative aspect-[16/10]">
                 <img src="assets/kbo-stadium-hero.webp" width="1672" height="941" fetchpriority="high"
                      class="h-full w-full object-cover" alt="Jamsil Baseball Stadium viewed from the stands during a KBO game night" data-i18n-alt="meta.imageAlt" />
-                <div class="absolute inset-0 bg-gradient-to-t from-ink-950/85 via-ink-950/20 to-transparent" aria-hidden="true"></div>
-                <figcaption class="absolute inset-x-0 bottom-0 p-5">
-                  <div class="rounded-2xl border border-white/20 bg-ink-950/80 p-4 text-white backdrop-blur">
-                    <p class="text-xs font-bold uppercase tracking-[0.14em] text-amber-300" data-i18n="matchCard.stadium">Jamsil Baseball Stadium</p>
-                    <p class="mt-2 text-sm text-white/80" data-i18n="matchCard.stadiumCopy">Local cheering culture, stadium food, live explanations, and a small group that stays together.</p>
-                  </div>
-                </figcaption>
               </div>
+              <figcaption class="bg-white/85 p-4">
+                <p class="text-xs font-bold uppercase tracking-[0.14em] text-field-700" data-i18n="matchCard.stadium">Jamsil Baseball Stadium</p>
+                <p class="mt-2 text-sm leading-6 text-ink-800/75" data-i18n="matchCard.stadiumCopy">Local cheering culture, stadium food, live explanations, and a small group that stays together.</p>
+              </figcaption>
             </figure>
 
             <dl class="mt-6 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2" data-match-stats>
@@ -312,7 +309,7 @@
             <p class="text-sm font-black uppercase tracking-[0.16em] text-field-700" data-i18n="teamTrust.eyebrow">Hosted by ZeroOne</p>
             <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl" data-i18n="teamTrust.title">Meet the local buddy team joining you at the stadium.</h2>
             <p class="mt-5 text-lg leading-8 text-ink-800/75" data-i18n="teamTrust.body">
-              ZeroOne is a team participating in AI·SW Maestro 17th. This page does not claim official endorsement by AI·SW Maestro; it only identifies our participation and the local hosts for this first HanBuddy pilot.
+              AI·SW Maestro is a national software talent development program in Korea. ZeroOne is participating in its 17th cohort and hosting this first HanBuddy pilot as a local buddy team.
             </p>
           </div>
           <div class="grid gap-4 sm:grid-cols-3" data-team-members></div>
@@ -512,7 +509,7 @@
         teamTrust: {
           eyebrow: 'Hosted by ZeroOne',
           title: 'Meet the local buddy team joining you at the stadium.',
-          body: 'ZeroOne is a team participating in AI·SW Maestro 17th. This page does not claim official endorsement by AI·SW Maestro; it only identifies our participation and the local hosts for this first HanBuddy pilot.',
+          body: 'AI·SW Maestro is a national software talent development program in Korea. ZeroOne is participating in its 17th cohort and hosting this first HanBuddy pilot as a local buddy team.',
           members: [
             {
               name: '김민형',
@@ -701,7 +698,7 @@
         teamTrust: {
           eyebrow: 'ZeroOne이 함께합니다',
           title: '야구장에서 직접 함께할 로컬 버디 팀입니다.',
-          body: 'ZeroOne은 AI·SW Maestro 17th에 참여 중인 팀입니다. 이 문구는 AI·SW Maestro의 공식 보증을 의미하지 않으며, 첫 HanBuddy 파일럿을 직접 운영하는 호스트와 참여 사실만 안내합니다.',
+          body: 'AI·SW Maestro는 국내 소프트웨어 인재 양성을 위한 국가 프로그램입니다. ZeroOne은 17기 참여 팀으로, 이번 첫 HanBuddy 파일럿을 로컬 버디 팀으로 직접 운영합니다.',
           members: [
             {
               name: '김민형',
