@@ -131,6 +131,15 @@ All spacing follows Tailwind's 4px-based scale.
 - **Persistence**: only store the language preference in `localStorage`; do not collect names, contacts, or analytics data for the toggle.
 - **Content rule**: every visible navigation, hero, section, CTA, payment, safety, team trust, footer, and image-alt string controlled by the language toggle needs an English and Korean value.
 
+### Team Social Link
+
+- **Structure**: external anchor inside each team card, labeled by the social platform name.
+- **Variants**: compact rounded outline link using field green text on white cards.
+- **Spacing**: sits below the member note with `space-5` top rhythm and compact horizontal padding.
+- **States**: hover may add a clay fill and darker field border; active uses a small scale transform.
+- **Accessibility**: must use `target="_blank"` and `rel="noopener"` for external social links.
+- **Content rule**: use only user-approved public profile links, and keep the link label concise so foreign participants can recognize the destination quickly.
+
 ## 6. Motion & Interaction
 
 ### Timing
