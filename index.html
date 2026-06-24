@@ -176,10 +176,14 @@
             Join Korean local buddies for Samsung Lions vs LG Twins on Thursday, June 25, 2026.
           </p>
 
-          <div class="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row">
+          <div class="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap">
             <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="apply"
                class="focusable rounded-full bg-amber-300 px-7 py-4 text-center text-base font-extrabold text-ink-950 shadow-lift transition hover:bg-amber-400 active:scale-[0.98]" data-i18n="hero.primaryCta">
               Claim one of 3 spots
+            </a>
+            <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
+               class="focusable rounded-full border border-amber-300/50 bg-amber-300/10 px-7 py-4 text-center text-base font-extrabold text-amber-200 transition hover:bg-amber-300/20 active:scale-[0.98]" data-i18n="hero.guideCta">
+              Open pre-game guide
             </a>
             <a href="#pilot"
                class="focusable rounded-full border border-white/20 px-7 py-4 text-center text-base font-bold text-white transition hover:bg-white/10 active:scale-[0.98]" data-i18n="hero.secondaryCta">
@@ -330,10 +334,16 @@
             <span class="font-semibold text-white">https://open.kakao.com/o/gDBFqEyi</span>
           </p>
         </div>
-        <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-           class="focusable rounded-full bg-amber-300 px-8 py-4 text-center text-lg font-extrabold text-ink-950 transition hover:bg-amber-400 active:scale-[0.98]" data-i18n="finalCta.button">
-          Open KakaoTalk chat
-        </a>
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
+             class="focusable rounded-full bg-amber-300 px-8 py-4 text-center text-lg font-extrabold text-ink-950 transition hover:bg-amber-400 active:scale-[0.98]" data-i18n="finalCta.button">
+            Open KakaoTalk chat
+          </a>
+          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
+             class="focusable rounded-full border border-white/20 px-8 py-4 text-center text-lg font-extrabold text-white transition hover:bg-white/10 active:scale-[0.98]" data-i18n="finalCta.guideButton">
+            Open pre-game guide
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -355,6 +365,7 @@
     const CONFIG = {
       apply: 'https://open.kakao.com/o/gDBFqEyi',
       contact: 'https://open.kakao.com/o/gDBFqEyi',
+      guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -390,6 +401,7 @@
           title: 'KBO baseball experience at Jamsil.',
           subtitle: 'Join Korean local buddies for Samsung Lions vs LG Twins on Thursday, June 25, 2026.',
           primaryCta: 'Claim one of 3 spots',
+          guideCta: 'Open pre-game guide',
           secondaryCta: 'See pilot details',
           assurance: 'Ticket included · light food budget included · pay after confirmation · refund terms shared before payment',
           factsAria: 'Key recruitment facts',
@@ -543,6 +555,7 @@
           body: 'Join the KakaoTalk open chat. No personal names or contact details are shown on this page.',
           fallback: 'If the button does not open, copy this URL:',
           button: 'Open KakaoTalk chat',
+          guideButton: 'Open pre-game guide',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -582,6 +595,7 @@
           title: '잠실에서 즐기는 KBO 야구 경험.',
           subtitle: '2026년 6월 25일 목요일, 삼성 라이온즈 vs LG 트윈스 경기를 한국 로컬 버디와 함께합니다.',
           primaryCta: '남은 3자리 중 1자리 신청',
+          guideCta: '사전 가이드 보기',
           secondaryCta: '파일럿 자세히 보기',
           assurance: '티켓 포함 · 간단한 식비 포함 · 확정 후 결제 · 결제 전 환불 조건 안내',
           factsAria: '핵심 모집 정보',
@@ -735,6 +749,7 @@
           body: '카카오톡 오픈채팅에 참여하세요. 이 페이지에는 개인 이름, 개인 식별 정보, 비공개 ID를 표시하지 않습니다.',
           fallback: '버튼이 열리지 않으면 이 URL을 복사하세요:',
           button: '카카오톡 오픈채팅 열기',
+          guideButton: '사전 가이드 보기',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
