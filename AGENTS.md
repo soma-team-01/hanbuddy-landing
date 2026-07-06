@@ -1,73 +1,97 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-06-22 05:52:28 KST
-**Commit:** a7560d9
-**Branch:** main
+**Updated:** 2026-07-06 KST
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing page for recruiting foreign participants to the first KBO pilot: Samsung Lions vs LG Twins at Jamsil Baseball Stadium on 2026-06-25. No app framework, package manager, build step, server code, or local data collection exists in this repo.
+HanBuddy by ZeroOne static landing page. The page is being refocused as a public recruitment/promotion landing for international participants and Korean/local buddies. Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote, while the next activity application is planned for July 18 or July 19 with a forthcoming Google Form link. KakaoTalk remains temporary contact/fallback until the real form URL exists. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
 
 ## STRUCTURE
 
 ```text
 /home/kimyo/projects/hanbuddy-landing/
 |-- index.html                    # entire landing page: content, Tailwind config, CSS, CTA script
+|-- DESIGN.md                     # current MVP Figma-derived product landing design system
+|-- README.md                     # run/deploy instructions and current product facts
 |-- assets/
-|   `-- kbo-stadium-hero.webp     # only production image asset, 1672x941 WebP
-|-- README.md                     # run/deploy instructions and product facts
+|   |-- kbo-stadium-hero.webp     # legacy tracked pre-run stadium asset
+|   |-- run1-hero.webp            # public WebP derivative: stadium context photo
+|   |-- run1-group.webp           # public WebP derivative: approved participant group proof photo
+|   |-- run1-opening.webp         # public WebP derivative: opening/stadium context
+|   `-- run1-night.webp           # public WebP derivative: night stadium context
 |-- .omo/                         # local review/QA evidence; never deploy
 `-- .superpowers/                 # local tool state; never deploy
 ```
+
+Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them.
 
 ## WHERE TO LOOK
 
 | Task | Location | Notes |
 |------|----------|-------|
-| Edit visible landing copy | `index.html` | Single source for hero, sections, CTA labels, footer |
-| Update product facts | `index.html`, then `README.md` | Keep date, matchup, price, seats, spots, included scope aligned |
-| Change Kakao CTA | `index.html` `CONFIG` object and fallback visible URL | Also check hardcoded `href` values on CTA anchors |
-| Replace hero image | `assets/kbo-stadium-hero.webp` and OG image in `index.html` | Preserve inspection-friendly stadium context |
+| Edit visible landing copy | `index.html` | English/Korean copy lives in `CONTENT_MAP` plus initial fallback DOM text |
+| Update design direction | `DESIGN.md`, then `index.html` | Keep tokens aligned with the inline Tailwind config |
+| Change application/contact CTA | `index.html` `CONFIG`, hardcoded anchors, visible CTA copy | Google Form is forthcoming; KakaoTalk is temporary contact/fallback until a real form URL exists |
+| Change guide CTA | `index.html` `CONFIG.guide` and hardcoded guide anchors | Current guide URL points to the Run 1 Notion guide |
+| Replace public photos | `assets/run1-*.webp` and OG image in `index.html` | Use WebP derivatives only, strip EXIF, preserve meaningful alt text; photos support product proof |
 | Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
-| Deploy artifact | `/tmp/hanbuddy-landing-deploy` | Copy only `index.html` and `assets/kbo-stadium-hero.webp` |
-| Prior QA notes | `.omo/evidence/` | Evidence only; not production input |
+| Deploy artifact | `/tmp/hanbuddy-landing-deploy` | Copy only `index.html` and referenced `assets/run1-*.webp` |
 
 ## CODE MAP
 
 | Symbol / Section | Type | Location | Role |
 |------------------|------|----------|------|
-| `tailwind.config` | inline config | `index.html` head | Defines custom palette, font, shadow tokens for CDN Tailwind |
+| `tailwind.config` | inline config | `index.html` head | Defines MVP Figma-derived palette, font stacks, radius, and shadow tokens |
 | `.skip-link` | CSS utility | `index.html` style block | Keyboard accessibility entry to `#main` |
-| `.hero-surface` | CSS utility | `index.html` style block | Dark stadium-themed hero background |
-| `.grain` | CSS utility | `index.html` style block | Subtle grid overlay on hero only |
-| `.focusable` | CSS utility | `index.html` style block | Shared focus-visible ring for links/buttons |
-| `.card-lift` | CSS utility | `index.html` style block | Hover lift for info cards |
-| `#top` | section | `index.html` | Hero and match summary |
-| `#pilot` | section | `index.html` | Date, venue, group status, price |
-| `#included` | section | `index.html` | Ticket, food budget, guidance, orientation |
-| `#how` | section | `index.html` | Kakao application flow |
-| `#details` | section | `index.html` | Payment, cancellation, safety copy |
-| `#apply` | section | `index.html` | Final CTA and fallback Kakao URL |
-| `CONFIG` | inline JS object | `index.html` footer script | Maps `data-cta` keys to Kakao URLs |
-| `[data-cta]` enhancer | inline JS loop | `index.html` footer script | Sets CTA href, target, and `rel=noopener` |
-
-LSP/codegraph tools were unavailable in this session; this map is file-structure and static HTML based.
+| `.focusable` | CSS utility | `index.html` style block | Shared focus-visible ring |
+| `.chapter-line` | CSS utility | `index.html` style block | Subtle section divider treatment |
+| `.app-canvas` | CSS utility | `index.html` style block | App-like product preview background |
+| `.ui-card` | CSS utility | `index.html` style block | Product module card hover/focus treatment |
+| `.app-preview-stage` | CSS utility | `index.html` style block | Hero product preview layout surface |
+| `.app-shell` | CSS utility | `index.html` style block | Device/app shell for the MVP preview |
+| `.device-media` | CSS utility | `index.html` style block | Stable media framing inside app preview modules |
+| `.ui-chip` | CSS utility | `index.html` style block | Compact labels and status chips |
+| `.brand-mark` | CSS utility | `index.html` style block | HB brand mark styling |
+| `.photo-lift` | CSS utility | `index.html` style block | Low-risk image hover treatment |
+| `#top` | section | `index.html` | Hero and primary CTA |
+| `#problem` | section | `index.html` | Tourist/local-context problem framing |
+| `#workflow` | section | `index.html` | Before/during/after HanBuddy flow |
+| `#roles` | section | `index.html` | Tourist, buddy, and operations surfaces |
+| `#ai` | section | `index.html` | Planned AI context-support framing |
+| `#evidence` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
+| `#policy` | section | `index.html` | Safety, payment, and manual confirmation expectations |
+| `#gallery` | section | `index.html` | Public-ready photo evidence |
+| `#team` | section | `index.html` | ZeroOne trust/team context |
+| `#apply` | section | `index.html` | Final recruitment CTA for the July 18 or July 19 next activity, Google Form forthcoming state, and KakaoTalk fallback |
+| `CONFIG` | inline JS object | `index.html` footer script | Maps CTA keys to external URLs |
+| `CONTENT_MAP` | inline JS object | `index.html` footer script | English/Korean visible copy, nav, cards, alt strings, meta |
 
 ## CONVENTIONS
 
 - Keep this as a buildless static page unless the scope materially grows.
-- Production surface is `index.html` plus `assets/kbo-stadium-hero.webp` only.
-- Body copy is English for foreign participants; repository instructions are Korean.
-- The page intentionally does not store personal information. Application and questions go through KakaoTalk open chat.
-- Update repeated facts together: `3 spots`, `50,000 KRW`, `June 25, 2026`, `Samsung Lions vs LG Twins`, `Jamsil`, `8 seats`, `3 ZeroOne members + 2 foreign participants`.
-- CTA URL appears both as anchor `href` values and in the `CONFIG` object; keep both aligned so the page still works before JS enhancement.
+- Production surface is `index.html` plus referenced WebP assets only.
+- Current design direction is the HanBuddy MVP Figma-derived product system: app-like local context, thin bordered surfaces, compact activity modules, role-aware chips, and public Run 1 proof.
+- The hero is product-led. Approved Run 1 photos support proof and trust, while MVP UI previews explain the tourist/buddy/operations flow.
+- Body copy defaults to English for foreign/international participants; Korean toggle exists for local buddies and internal/stakeholder sharing.
+- Public page copy recruits two audiences: foreign/international participants who want Korean local-culture experiences and Korean/local buddies who want to host or guide.
+- The next activity application window is planned for July 18 or July 19 / 7월 18일 또는 7월 19일. Do not invent price, venue, capacity, exact time, activity type, payment method, included items, cancellation terms, refund terms, or guarantees.
+- The Google Form application link is forthcoming. Until the real URL exists, keep KakaoTalk open chat as temporary contact/fallback and do not add fake form URLs.
+- The page intentionally does not store personal information. Applications/questions must go through external channels only.
+- Public Run 1 proof should use approved photos, completed-operation facts, and this exact testimonial quote: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
+- Use this fixed Korean testimonial translation: "한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!"
+- Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public copy, metadata, alt text, README public summary, or deploy artifacts.
+- Participant photo use was approved for marketing, but original JPG/EXIF must not be deployed.
+- CTA URLs may appear both as anchor `href` values and in the `CONFIG` object; keep hardcoded anchors, `CONFIG`, and visible labels aligned so the page works before JS enhancement.
+- Guide URL appears both as anchor `href` values and in the `CONFIG` object; keep `https://www.notion.so/388d889585858177b58dc513bd5517c0` aligned with the Run 1 Notion guide.
 - Tailwind is loaded from CDN and configured inline. Broad public release should consider precompiled or inline CSS.
 
 ## ANTI-PATTERNS
 
 - Do not deploy the whole repository folder.
 - Do not include `.git/`, `.omo/`, `.superpowers/`, QA screenshots, local tokens, raw JPG/JPEG photos, or tool evidence in any public artifact.
-- Do not add participant names, phone numbers, payment details, secrets, or private chat logs to this repo.
+- Do not add participant phone numbers, payment details, secrets, private chat logs, or unapproved direct quotes to this repo.
+- Do not reintroduce the old recruitment facts as current truth: `3 spots left`, `50,000 KRW`, `8 seats booked`, or "first pilot recruitment" are historical unless explicitly reframed.
+- Do not expose internal weak validation details in public copy. If a maintainer check mentions F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, or learning signal, it must be only to verify those details are absent from public surfaces.
 - Do not create package/build tooling just to make small copy changes.
 - Do not split the single page into a framework structure unless routing, reusable components, or automated builds become real requirements.
 - Do not treat `.omo/evidence/` as current truth without rechecking timestamps and the live file.
@@ -84,17 +108,19 @@ cd /home/kimyo/projects/hanbuddy-landing
 rm -rf /tmp/hanbuddy-landing-deploy
 mkdir -p /tmp/hanbuddy-landing-deploy/assets
 cp index.html /tmp/hanbuddy-landing-deploy/index.html
-cp assets/kbo-stadium-hero.webp /tmp/hanbuddy-landing-deploy/assets/kbo-stadium-hero.webp
+cp assets/run1-hero.webp /tmp/hanbuddy-landing-deploy/assets/run1-hero.webp
+cp assets/run1-group.webp /tmp/hanbuddy-landing-deploy/assets/run1-group.webp
 
 # Quick content checks
-rg -n "gDBFqEyi|50,000|June 25|3 spots|Samsung Lions|LG Twins|Jamsil" index.html README.md
+rg -n "Google Form|KakaoTalk|gDBFqEyi|July 18|July 19|7월 18|7월 19|If you are looking to experience Korean baseball culture|한국 야구 문화를 현지 한국인과 함께 경험" index.html README.md AGENTS.md
+
+# Maintainer-only forbidden public-copy check: run the regex from the guardrail above; matches in index.html or README.md are failures because those details must not be exposed publicly.
 find /tmp/hanbuddy-landing-deploy -maxdepth 3 -type f | sort
 ```
 
 ## NOTES
 
-- `assets/kbo-stadium-hero.webp` is the only local media file and is referenced by both the hero background and Open Graph metadata.
-- `.gitignore` excludes `.superpowers/` and `.omo/`, but Git ignore rules do not protect drag-and-drop deploys.
-- Previous review evidence flagged hidden local tool state as a deploy risk; never print or copy token contents.
-- There are no tests or CI workflows. For meaningful visual changes, run local preview and capture desktop/mobile screenshots before sharing.
-- Root `AGENTS.md` is sufficient now. `assets/AGENTS.md` only becomes useful if asset count and replacement rules grow.
+- `assets/run1-group.webp` is referenced by Open Graph metadata and as approved Run 1 proof media.
+- `assets/run1-hero.webp` is kept as supporting stadium context, not the main first-viewport image.
+- `.gitignore` excludes local tool folders and raw image patterns, but Git ignore rules do not protect drag-and-drop deploys.
+- There are no tests or CI workflows. For meaningful visual changes, run local preview and capture desktop/tablet/mobile screenshots before sharing.

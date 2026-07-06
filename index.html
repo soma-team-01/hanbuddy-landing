@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HanBuddy by ZeroOne - KBO baseball experience at Jamsil</title>
-  <meta name="description" content="Join HanBuddy's first KBO baseball pilot for foreigners: Samsung Lions vs LG Twins at Jamsil Baseball Stadium on Thursday, June 25, 2026. Only 3 spots left, 50,000 KRW per person." />
+  <title>HanBuddy by ZeroOne | Join Korean local experiences with buddies</title>
+  <meta name="description" content="HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial." />
 
-  <meta property="og:title" content="HanBuddy by ZeroOne - KBO baseball experience at Jamsil" />
-  <meta property="og:description" content="A Korean local buddy helps you enjoy Samsung Lions vs LG Twins at Jamsil Baseball Stadium. Only 3 foreigner spots left. 50,000 KRW includes ticket and simple food expenses." />
+  <meta property="og:title" content="HanBuddy by ZeroOne | Join Korean local experiences with buddies" />
+  <meta property="og:description" content="Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 will open soon, and the Google Form link will be added here." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/kbo-stadium-hero.webp" />
+  <meta property="og:image" content="assets/run1-group.webp" />
   <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23182820'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='20' font-weight='800' fill='%23fbf9f7'%3EHB%3C/text%3E%3C/svg%3E" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -18,17 +19,26 @@
       theme: {
         extend: {
           colors: {
-            ink: { 950: '#101316', 900: '#171b20', 800: '#242a31', 700: '#343c46' },
-            clay: { 50: '#fbf7ef', 100: '#f3eadb', 200: '#e3d0ae' },
-            amber: { 300: '#f6c96d', 400: '#edac2f', 500: '#c77a17' },
-            field: { 500: '#2f855a', 700: '#1e5f43' },
-            score: { 500: '#bf3f32' },
+            canvas: '#fbf9f4',
+            'canvas-soft': '#fbf9f7',
+            ink: '#182820',
+            sage: '#2d3e35',
+            muted: '#434844',
+            'line-strong': '#c3c8c3',
+            'line-soft': '#e4e2dd',
+            panel: '#f0eee9',
+            'panel-raised': '#f5f3ee',
+            clay: '#735a3e',
+            mint: '#cee9da',
           },
           fontFamily: {
-            sans: ['Outfit', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            sans: ['Manrope', 'Noto Sans', 'Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            kr: ['Noto Sans KR', 'Noto Sans', 'system-ui', 'sans-serif'],
+            serif: ['Liberation Serif', 'Georgia', 'ui-serif', 'serif'],
           },
           boxShadow: {
-            lift: '0 24px 80px -48px rgba(16, 19, 22, 0.65)',
+            subtle: '0 1px 2px rgba(24, 40, 32, 0.05)',
+            raised: '0 8px 24px rgba(24, 40, 32, 0.08)',
           },
         },
       },
@@ -36,11 +46,22 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       color-scheme: light;
+      --color-canvas: #fbf9f4;
+      --color-canvas-soft: #fbf9f7;
+      --color-ink: #182820;
+      --color-sage: #2d3e35;
+      --color-muted: #434844;
+      --color-line-strong: #c3c8c3;
+      --color-line-soft: #e4e2dd;
+      --color-panel: #f0eee9;
+      --color-panel-raised: #f5f3ee;
+      --color-clay: #735a3e;
+      --color-mint: #cee9da;
     }
 
     html {
@@ -55,10 +76,10 @@
       position: absolute;
       left: 1rem;
       top: -4rem;
-      z-index: 60;
-      border-radius: 999px;
-      background: #f6c96d;
-      color: #101316;
+      z-index: 80;
+      border-radius: 0.75rem;
+      background: var(--color-ink);
+      color: var(--color-canvas-soft);
       padding: 0.75rem 1rem;
       font-weight: 800;
       transition: top 180ms ease;
@@ -66,55 +87,91 @@
 
     .skip-link:focus {
       top: 1rem;
-      outline: 3px solid rgba(16, 19, 22, 0.35);
-      outline-offset: 3px;
+      outline: 3px solid var(--color-line-strong);
+      outline-offset: 4px;
     }
 
-    .hero-surface {
-      background:
-        radial-gradient(circle at 82% 8%, rgba(237, 172, 47, 0.34), transparent 27rem),
-        radial-gradient(circle at 8% 80%, rgba(47, 133, 90, 0.28), transparent 29rem),
-        linear-gradient(135deg, #101316 0%, #171b20 48%, #2b2016 100%);
+    .focusable:focus-visible {
+      outline: 3px solid var(--color-line-strong);
+      outline-offset: 4px;
     }
 
-    .grain {
+    .chapter-line {
+      background-image: linear-gradient(90deg, var(--color-line-soft) 1px, transparent 1px);
+      background-size: 28px 1px;
+      background-repeat: repeat-x;
+      background-position: left bottom;
+    }
+
+    .app-canvas {
       position: relative;
       isolation: isolate;
     }
 
-    .grain::before {
+    .app-canvas::before {
       content: '';
-      position: absolute;
+      position: fixed;
       inset: 0;
       z-index: -1;
-      opacity: 0.12;
       pointer-events: none;
+      opacity: 0.28;
       background-image:
-        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, black, transparent 88%);
+        linear-gradient(var(--color-line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-line-soft) 1px, transparent 1px);
+      background-size: 100% 32px, 32px 100%;
     }
 
-    .focusable:focus-visible {
-      outline: 3px solid rgba(246, 201, 109, 0.9);
-      outline-offset: 4px;
+    .ui-card {
+      border: 1px solid var(--color-line-soft);
+      border-radius: 0.75rem;
+      background: var(--color-panel-raised);
+      box-shadow: 0 1px 2px rgba(24, 40, 32, 0.05);
     }
 
-    .card-lift {
-      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    .app-preview-stage {
+      position: relative;
+      isolation: isolate;
     }
 
-    .card-lift:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 22px 64px -42px rgba(16, 19, 22, 0.72);
-      border-color: rgba(199, 122, 23, 0.42);
+    .app-preview-stage::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 1rem 0 0 2rem;
+      pointer-events: none;
+      border: 1px solid var(--color-line-strong);
+      border-radius: 2rem;
+      background: var(--color-panel);
+      transform: translate3d(0, 0, 0);
     }
 
-    .stadium-lines {
-      background:
-        linear-gradient(90deg, transparent 0 47%, rgba(255, 255, 255, 0.28) 47% 53%, transparent 53%),
-        repeating-linear-gradient(90deg, rgba(47, 133, 90, 0.78) 0 18px, rgba(30, 95, 67, 0.78) 18px 36px);
+    .app-shell {
+      border: 1px solid var(--color-line-strong);
+      border-radius: 2rem;
+      background: var(--color-panel-raised);
+      box-shadow: 0 8px 24px rgba(24, 40, 32, 0.08);
+    }
+
+    .device-media {
+      border-radius: 1.5rem;
+    }
+
+    .ui-chip {
+      border-radius: 0.75rem;
+    }
+
+    .brand-mark {
+      background: var(--color-clay);
+      box-shadow: 14px 0 0 var(--color-mint);
+    }
+
+    .photo-lift {
+      transition: transform 220ms ease, filter 220ms ease;
+    }
+
+    .photo-lift:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.03);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -129,241 +186,296 @@
   </style>
 </head>
 
-<body class="bg-clay-50 text-ink-950 antialiased">
+<body class="app-canvas bg-canvas font-sans text-ink antialiased">
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
-  <header class="sticky top-0 z-50 border-b border-white/10 bg-ink-950 text-white">
-    <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
-      <a href="#top" class="focusable flex shrink-0 items-center gap-3 rounded-full font-extrabold tracking-tight" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
-        <span class="grid h-9 w-9 place-items-center rounded-full bg-amber-300 text-sm font-black text-ink-950" aria-hidden="true">HB</span>
-        <span class="hidden sm:inline">HanBuddy</span>
+  <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
+    <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
+      <a href="#top" class="focusable flex shrink-0 items-center gap-3 rounded-full" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
+        <span class="relative grid h-9 w-9 place-items-center rounded-xl bg-ink text-sm font-extrabold text-canvas-soft" aria-hidden="true">
+          HB
+          <span class="brand-mark absolute -bottom-1 left-2 h-2 w-2 rounded-full"></span>
+        </span>
+        <span class="font-semibold">HanBuddy</span>
       </a>
 
-      <div class="hidden items-center gap-5 text-sm font-semibold text-white/80 lg:flex" data-nav-links>
-        <a class="focusable rounded-full hover:text-white" href="#pilot">Pilot</a>
-        <a class="focusable rounded-full hover:text-white" href="#included">Included</a>
-        <a class="focusable rounded-full hover:text-white" href="#how">How it works</a>
-        <a class="focusable rounded-full hover:text-white" href="#details">Before you pay</a>
-        <a class="focusable rounded-full hover:text-white" href="#team">Team</a>
-        <a class="focusable rounded-full hover:text-white" href="#apply">Apply</a>
-      </div>
+      <div class="hidden items-center gap-5 text-sm font-semibold text-muted lg:flex" data-nav-links></div>
 
       <div class="flex shrink-0 items-center gap-2">
-        <div class="flex rounded-full border border-white/15 bg-white/10 p-1" role="group" aria-label="Select language" data-i18n-aria="languageToggle.aria">
-          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-black transition" data-lang="en" aria-pressed="true">EN</button>
-          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-black transition" data-lang="ko" aria-pressed="false">KO</button>
+        <div class="flex rounded-xl border border-line-soft bg-panel-raised p-1" role="group" aria-label="Select language" data-i18n-aria="languageToggle.aria">
+          <button type="button" class="focusable rounded-lg px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="focusable rounded-lg px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
-        <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="apply"
-           class="focusable rounded-full bg-amber-300 px-4 py-2 text-sm font-extrabold text-ink-950 transition hover:bg-amber-400 active:scale-[0.98]">
-          <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Apply</span>
-          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Claim 1 of 3 spots</span>
+        <a href="#apply" data-cta="apply"
+           class="focusable rounded-xl bg-ink px-3.5 py-2 text-sm font-extrabold text-canvas-soft transition hover:bg-sage active:translate-y-px sm:px-4">
+          <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Form soon</span>
+          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Google Form coming soon</span>
         </a>
       </div>
     </nav>
   </header>
 
   <main id="main">
-    <section id="top" class="hero-surface grain overflow-hidden text-white">
-      <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-10 sm:gap-10 sm:py-12 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[0.95fr_1.05fr] lg:py-16">
-        <div>
-          <p class="inline-flex items-center rounded-full border border-amber-300/30 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-amber-300" data-i18n="hero.eyebrow">
-            HanBuddy by ZeroOne
+    <section id="top" class="overflow-hidden">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 pb-8 pt-7 md:pt-10 lg:min-h-[calc(100dvh-5.5rem)] lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:pb-10">
+        <div class="max-w-3xl">
+          <p class="inline-flex ui-chip border border-line-soft bg-panel-raised px-3 py-2 text-xs font-extrabold text-clay shadow-subtle" data-i18n="hero.eyebrow">
+            Recruiting guests and local buddies for Korean culture nights
           </p>
-          <h1 class="mt-5 max-w-2xl text-4xl font-black !leading-[1.08] tracking-tight sm:mt-6 sm:text-6xl lg:text-7xl" data-i18n="hero.title">
-            KBO baseball experience at Jamsil.
+          <h1 class="mt-5 max-w-3xl text-[2.35rem] font-extrabold leading-[1.06] text-ink sm:text-6xl lg:text-7xl" data-i18n="hero.title">
+            Join Korean local experiences with a HanBuddy.
           </h1>
-          <p class="mt-5 max-w-2xl text-lg font-medium text-white/80 sm:mt-6 sm:text-2xl" data-i18n="hero.subtitle">
-            Join Korean local buddies for Samsung Lions vs LG Twins on Thursday, June 25, 2026.
+          <p class="mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
+            HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.
           </p>
 
-          <div class="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap">
-            <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="apply"
-               class="focusable rounded-full bg-amber-300 px-7 py-4 text-center text-base font-extrabold text-ink-950 shadow-lift transition hover:bg-amber-400 active:scale-[0.98]" data-i18n="hero.primaryCta">
-              Claim one of 3 spots
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href="#apply" data-cta="apply"
+               class="focusable rounded-xl bg-ink px-7 py-3.5 text-center text-base font-extrabold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="hero.primaryCta">
+              Google Form coming soon
             </a>
             <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
-               class="focusable rounded-full border border-amber-300/50 bg-amber-300/10 px-7 py-4 text-center text-base font-extrabold text-amber-200 transition hover:bg-amber-300/20 active:scale-[0.98]" data-i18n="hero.guideCta">
-              Open pre-game guide
+               class="focusable hidden rounded-xl border border-line-soft bg-panel-raised px-7 py-3.5 text-center text-base font-bold text-ink transition hover:bg-panel active:translate-y-px sm:block" data-i18n="hero.guideCta">
+              Read the Run 1 guide
             </a>
-            <a href="#pilot"
-               class="focusable rounded-full border border-white/20 px-7 py-4 text-center text-base font-bold text-white transition hover:bg-white/10 active:scale-[0.98]" data-i18n="hero.secondaryCta">
-              See pilot details
+            <a href="#evidence"
+               class="focusable hidden rounded-xl px-7 py-3.5 text-center text-base font-bold text-muted transition hover:bg-panel-raised active:translate-y-px sm:block" data-i18n="hero.secondaryCta">
+              Read the testimonial
             </a>
           </div>
-          <p class="mt-4 max-w-xl text-sm font-semibold leading-6 text-white/75" data-i18n="hero.assurance">
-            Ticket included · light food budget included · pay after confirmation · refund terms shared before payment
-          </p>
-
-          <div class="mt-6 grid max-w-2xl grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-3" aria-label="Key recruitment facts" data-i18n-aria="hero.factsAria" data-hero-facts>
-            <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-              <p class="text-xs font-bold uppercase tracking-[0.14em] text-white/50">Spots left</p>
-              <p class="mt-2 text-3xl font-black text-amber-300">3</p>
-              <p class="mt-1 text-sm text-white/70">foreign guests</p>
+          <div class="mt-6 hidden max-w-xl grid-cols-3 overflow-hidden rounded-2xl border border-line-soft bg-panel-raised text-center shadow-subtle sm:grid">
+            <div class="border-r border-line-soft px-2 py-3 sm:px-3">
+              <p class="text-xl font-extrabold text-ink sm:text-2xl">Guest</p>
+              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microOne">recommended</p>
             </div>
-            <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-              <p class="text-xs font-bold uppercase tracking-[0.14em] text-white/50">Price</p>
-              <p class="mt-2 text-3xl font-black text-amber-300">50,000</p>
-              <p class="mt-1 text-sm text-white/70">KRW per person</p>
+            <div class="border-r border-line-soft px-2 py-3 sm:px-3">
+              <p class="text-xl font-extrabold text-ink sm:text-2xl">Run 1</p>
+              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microTwo">completed pilot</p>
             </div>
-            <div class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-              <p class="text-xs font-bold uppercase tracking-[0.14em] text-white/50">Place</p>
-              <p class="mt-2 text-2xl font-black text-amber-300">Jamsil</p>
-              <p class="mt-1 text-sm text-white/70">Baseball Stadium</p>
+            <div class="px-2 py-3 sm:px-3">
+              <p class="text-xl font-extrabold text-ink sm:text-2xl">Jul 18/19</p>
+              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microThree">applications soon</p>
             </div>
           </div>
-
-          <p class="mt-5 max-w-xl text-sm leading-6 text-white/60" data-i18n="hero.note">
-            Tickets were booked on June 21, 2026. Current group: 3 ZeroOne members and 2 foreign participants.
-          </p>
         </div>
 
-        <aside class="relative rounded-[2rem] border border-white/15 bg-white/[0.06] p-3 shadow-lift backdrop-blur-sm sm:p-4" aria-label="Pilot match card" data-i18n-aria="matchCard.aria">
-          <div class="rounded-[1.5rem] bg-clay-50/95 p-4 text-ink-950 sm:p-5">
-            <div class="flex items-start justify-between gap-4">
+        <div class="app-preview-stage px-0 py-2 sm:px-5 lg:py-8">
+          <div class="app-shell mx-auto max-w-[600px] p-3 sm:p-4">
+            <div class="flex items-center justify-between border-b border-line-soft px-1 pb-3">
               <div>
-                <p class="text-xs font-black uppercase tracking-[0.18em] text-score-500" data-i18n="matchCard.eyebrow">Run 1 pilot</p>
-                <h2 class="mt-2 text-2xl font-black tracking-tight" data-i18n="matchCard.title">Samsung Lions vs LG Twins</h2>
+                <p class="text-xs font-extrabold text-clay" data-i18n="hero.mockupLabel">MVP activity detail</p>
+                <h2 class="mt-1 text-lg font-extrabold leading-tight text-ink sm:text-2xl" data-i18n="hero.mockupTitle">KBO stadium night with a local buddy</h2>
               </div>
-              <div class="shrink-0 rounded-2xl bg-ink-950 px-3 py-2 text-right text-white">
-                <p class="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-white/50" data-i18n="matchCard.dateLabel">Date</p>
-                <p class="text-sm font-black" data-i18n="matchCard.date">Jun 25</p>
-              </div>
+              <span class="rounded-lg bg-mint px-3 py-1.5 text-xs font-extrabold text-sage" data-i18n="hero.mockupStatus">Run 1 completed</span>
             </div>
 
-            <figure class="mt-5 overflow-hidden rounded-[1.25rem] border border-ink-950/10 bg-ink-950">
-              <div class="relative aspect-[4/3]">
-                <img src="assets/kbo-stadium-hero.webp" width="1600" height="1200" fetchpriority="high"
-                     class="h-full w-full object-cover" alt="Jamsil Baseball Stadium viewed from the stands during a KBO game night" data-i18n-alt="meta.imageAlt" />
-              </div>
-              <figcaption class="bg-white/85 p-4">
-                <p class="text-xs font-bold uppercase tracking-[0.14em] text-field-700" data-i18n="matchCard.stadium">Jamsil Baseball Stadium</p>
-                <p class="mt-2 text-sm leading-6 text-ink-800/75" data-i18n="matchCard.stadiumCopy">Local cheering culture, stadium food, live explanations, and a small group that stays together.</p>
-              </figcaption>
-            </figure>
+            <div class="grid gap-3 pt-3 sm:grid-cols-[0.9fr_1.1fr] sm:gap-4 sm:pt-4">
+              <figure class="relative overflow-hidden rounded-xl border border-line-soft bg-panel">
+                <img src="assets/run1-group.webp" width="975" height="1300" fetchpriority="high"
+                     class="aspect-[16/10] w-full object-cover object-[50%_34%] sm:aspect-[0.8]" alt="Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands" data-i18n-alt="meta.heroAlt" />
+                <figcaption class="absolute bottom-2 left-2 right-2 rounded-lg bg-canvas-soft/95 px-3 py-2 text-xs font-extrabold leading-4 text-clay shadow-subtle backdrop-blur">
+                  <span data-i18n="hero.caption">Approved Run 1 photo</span>
+                </figcaption>
+              </figure>
 
-            <dl class="mt-6 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2" data-match-stats>
-              <div class="rounded-2xl bg-white p-4 ring-1 ring-ink-950/10">
-                <dt class="font-bold text-ink-950/50">Ticket status</dt>
-                <dd class="mt-1 font-extrabold">8 seats booked</dd>
+              <div class="grid gap-3">
+                <div class="rounded-xl border border-line-soft bg-panel px-3 py-3 sm:px-4">
+                  <div class="flex flex-wrap gap-2">
+                    <span class="rounded-lg border border-line-strong bg-canvas-soft px-3 py-1.5 text-xs font-extrabold text-ink" data-i18n="hero.roleTourist">Tourist</span>
+                    <span class="rounded-lg border border-line-soft bg-panel-raised px-3 py-1.5 text-xs font-bold text-muted" data-i18n="hero.roleBuddy">Buddy</span>
+                    <span class="rounded-lg border border-line-soft bg-panel-raised px-3 py-1.5 text-xs font-bold text-muted" data-i18n="hero.roleOps">Operations</span>
+                  </div>
+                  <p class="mt-3 text-sm font-semibold leading-6 text-muted" data-i18n="hero.mockupBody">
+                    Browse the experience, understand the buddy role, and check application status once the Google Form opens.
+                  </p>
+                </div>
+
+                <div class="rounded-xl border border-line-soft bg-canvas-soft px-3 py-3 sm:px-4">
+                  <p class="text-xs font-extrabold text-clay" data-i18n="hero.aiLabel">AI context planned</p>
+                  <p class="mt-2 text-sm font-semibold leading-6 text-ink" data-i18n="hero.aiBody">
+                    Planned support: cultural briefs, cheering cues, food tips, and reviewable prompts buddies can use on site.
+                  </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="rounded-xl border border-line-soft bg-panel-raised px-3 py-3">
+                    <p class="text-lg font-extrabold text-ink">Quote</p>
+                    <p class="text-xs font-bold leading-4 text-muted" data-i18n="hero.cardOne">guest recommendation</p>
+                  </div>
+                  <div class="rounded-xl border border-line-soft bg-panel-raised px-3 py-3">
+                    <p class="text-lg font-extrabold text-ink">06.25</p>
+                    <p class="text-xs font-bold leading-4 text-muted" data-i18n="hero.cardTwo">Jamsil KBO pilot</p>
+                  </div>
+                </div>
               </div>
-              <div class="rounded-2xl bg-white p-4 ring-1 ring-ink-950/10">
-                <dt class="font-bold text-ink-950/50">Recruiting</dt>
-                <dd class="mt-1 font-extrabold">3 more foreigners</dd>
-              </div>
-            </dl>
+            </div>
           </div>
-        </aside>
+        </div>
       </div>
     </section>
 
-    <section id="pilot" class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+    <section id="problem" class="chapter-line border-y border-line-soft bg-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
         <div>
-          <p class="text-sm font-black uppercase tracking-[0.16em] text-score-500" data-i18n="pilot.eyebrow">First pilot recruitment</p>
-          <h2 class="mt-3 text-4xl font-black tracking-tight text-ink-950 sm:text-5xl" data-i18n="pilot.title">What you are joining</h2>
-          <p class="mt-5 max-w-xl text-lg leading-8 text-ink-800" data-i18n="pilot.body">
-            HanBuddy helps foreigners experience Korean local culture with people who know the place. For Run 1, we are starting with a KBO baseball game because the stadium culture is hard to understand from a guidebook but easy to love with the right buddy.
+          <p class="text-sm font-bold text-clay" data-i18n="problem.eyebrow">Tourist problem</p>
+          <h2 class="mt-4 max-w-2xl text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="problem.title">
+            The best local moments are easier to enter with someone beside you.
+          </h2>
+          <p class="mt-5 max-w-2xl text-base leading-8 text-muted" data-i18n="problem.body">
+            Korean stadiums, food spots, fan rituals, and neighborhood activities become more welcoming when a local buddy explains what is happening, when to join in, and what feels natural.
           </p>
         </div>
-
-        <div class="grid gap-4 sm:grid-cols-2" data-pilot-cards>
-          <article class="card-lift rounded-3xl border border-ink-950/10 bg-white p-6">
-            <p class="text-sm font-bold uppercase tracking-[0.14em] text-ink-950/50">Game</p>
-            <h3 class="mt-2 text-xl font-black">Samsung Lions vs LG Twins</h3>
-            <p class="mt-3 text-sm leading-6 text-ink-800/75">A real regular-season KBO night at Jamsil, guided by Korean local buddies.</p>
-          </article>
-        </div>
+        <div class="grid gap-4 md:grid-cols-3" data-problem-cards></div>
       </div>
     </section>
 
-    <section id="included" class="border-y border-ink-950/10 bg-white">
-      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-20 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+    <section id="workflow" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+      <div class="max-w-3xl">
+        <p class="text-sm font-bold text-clay" data-i18n="workflow.eyebrow">How HanBuddy works</p>
+        <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="workflow.title">
+            HanBuddy connects guests, buddies, and operators around one clear experience.
+        </h2>
+        <p class="mt-5 text-base leading-8 text-muted" data-i18n="workflow.body">
+            Guests get context before joining, buddies prepare to host, and ZeroOne keeps confirmation manual while the Google Form application link is being prepared.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-4 md:grid-cols-3" data-workflow-items></div>
+    </section>
+
+    <section id="roles" class="border-y border-line-soft bg-canvas-soft">
+      <div class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
         <div>
-          <p class="text-sm font-black uppercase tracking-[0.16em] text-field-700" data-i18n="included.eyebrow">Included in 50,000 KRW</p>
-          <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl" data-i18n="included.title">A ticket plus someone who makes the game make sense.</h2>
-          <p class="mt-5 max-w-2xl text-lg leading-8 text-ink-800/75" data-i18n="included.body">
-            The pilot is intentionally small. You can ask simple questions, follow the cheers, try stadium food, and enjoy the game without needing to understand Korean baseball beforehand.
+          <p class="text-sm font-bold text-clay" data-i18n="roles.eyebrow">MVP role surfaces</p>
+          <h2 class="mt-4 max-w-3xl text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="roles.title">
+            International guests join; Korean/local buddies host and guide.
+          </h2>
+          <p class="mt-5 max-w-3xl text-base leading-8 text-muted" data-i18n="roles.body">
+            The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.
           </p>
         </div>
-        <div class="rounded-[2rem] bg-clay-100 p-6 ring-1 ring-ink-950/10">
-          <ul class="space-y-4" data-included-items></ul>
-        </div>
+        <div class="mt-10 grid gap-4 lg:grid-cols-[1fr_1fr_0.86fr]" data-role-cards></div>
       </div>
     </section>
 
-    <section id="how" class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-      <div class="max-w-2xl">
-        <p class="text-sm font-black uppercase tracking-[0.16em] text-score-500" data-i18n="howToJoin.eyebrow">How to join</p>
-        <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl" data-i18n="howToJoin.title">Apply through KakaoTalk open chat.</h2>
-      </div>
-      <div class="mt-10 grid gap-5 md:grid-cols-3" data-how-steps></div>
-    </section>
-
-    <section id="details" class="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
-      <div class="rounded-[2rem] border border-ink-950/10 bg-white p-6 shadow-lift sm:p-8">
-        <p class="text-sm font-black uppercase tracking-[0.16em] text-score-500" data-i18n="beforeYouPay.eyebrow">Before you pay</p>
-        <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-4" data-payment-items></div>
-      </div>
-    </section>
-
-    <section id="team" class="border-y border-ink-950/10 bg-clay-100">
-      <div class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-        <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div>
-            <p class="text-sm font-black uppercase tracking-[0.16em] text-field-700" data-i18n="teamTrust.eyebrow">Hosted by ZeroOne</p>
-            <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl" data-i18n="teamTrust.title">Meet the local buddy team joining you at the stadium.</h2>
-            <p class="mt-5 text-lg leading-8 text-ink-800/75" data-i18n="teamTrust.body">
-              AI·SW Maestro is a national software talent development program in Korea. ZeroOne is participating in its 17th cohort and hosting this first HanBuddy pilot as a local buddy team.
-            </p>
-          </div>
-          <div class="grid gap-4 sm:grid-cols-3" data-team-members></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="apply" class="bg-ink-950 text-white">
-      <div class="mx-auto grid max-w-6xl gap-8 px-5 py-14 sm:py-16 lg:grid-cols-[1fr_auto] lg:items-center">
+    <section id="ai" class="bg-ink text-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-24">
         <div>
-          <p class="text-sm font-black uppercase tracking-[0.16em] text-amber-300" data-i18n="finalCta.eyebrow">Only 3 foreigner spots left</p>
-          <h2 class="mt-3 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl" data-i18n="finalCta.title">Want to experience a KBO game with local buddies?</h2>
-          <p class="mt-5 max-w-2xl text-lg leading-8 text-white/70" data-i18n="finalCta.body">
-            Join the KakaoTalk open chat. No personal names or contact details are shown on this page.
+          <p class="text-sm font-bold text-mint" data-i18n="ai.eyebrow">AI support standard</p>
+          <h2 class="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl" data-i18n="ai.title">
+            Planned AI support should make every buddy better prepared.
+          </h2>
+          <p class="mt-5 text-base leading-8 text-line-soft" data-i18n="ai.body">
+            HanBuddy should not replace the local buddy. The planned AI layer turns short buddy input into clearer briefs, multilingual activity copy, cultural context notes, and reviewable checklists.
           </p>
-          <p class="mt-3 max-w-2xl text-sm leading-6 text-white/55">
-            <span data-i18n="finalCta.fallback">If the button does not open, copy this URL:</span>
-            <span class="font-semibold text-white">https://open.kakao.com/o/gDBFqEyi</span>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3" data-ai-items></div>
+      </div>
+    </section>
+
+    <section id="evidence" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
+        <div>
+          <p class="text-sm font-bold text-clay" data-i18n="evidence.eyebrow">Run 1 testimonial</p>
+          <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="evidence.title">
+            A real guest recommends the HanBuddy baseball-culture experience.
+          </h2>
+          <p class="mt-5 text-base leading-8 text-muted" data-i18n="evidence.body">
+            HanBuddy hosted a Korean baseball-culture experience at Jamsil Baseball Stadium on June 25, 2026. The approved public quote and photos show what guests can expect from joining with local Koreans.
+          </p>
+          <div class="mt-8 grid gap-4" data-evidence-cards></div>
+        </div>
+        <div class="grid gap-4">
+          <figure class="photo-lift overflow-hidden rounded-3xl bg-panel-raised shadow-raised ring-1 ring-line-soft">
+            <img src="assets/run1-hero.webp" width="1800" height="1350" loading="eager"
+                 class="aspect-[16/9] w-full object-cover object-[50%_24%]" alt="Jamsil Baseball Stadium field during HanBuddy Run 1" data-i18n-alt="meta.stadiumAlt" />
+            <figcaption class="grid gap-3 p-4 text-sm leading-6 text-muted sm:grid-cols-[1fr_auto] sm:items-center">
+              <span data-i18n="evidence.stadiumCaption">The field context: cheering timing, rules, food, and fan culture that need local explanation.</span>
+              <span class="ui-chip bg-panel px-4 py-2 text-xs font-extrabold text-clay" data-i18n="evidence.stadiumBadge">Jamsil / June 25</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="policy" class="border-y border-line-soft bg-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-24">
+        <div>
+          <p class="text-sm font-bold text-clay" data-i18n="policy.eyebrow">Safety and privacy</p>
+          <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="policy.title">
+            Safety, privacy, and confirmation stay clear before anyone joins.
+          </h2>
+          <p class="mt-5 text-base leading-8 text-muted" data-i18n="policy.body">
+            This page does not collect personal information. Applications and questions will go through external channels, and ZeroOne will confirm participation details directly before each activity.
+          </p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3" data-policy-items></div>
+      </div>
+    </section>
+
+    <section id="team" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div>
+          <p class="text-sm font-bold text-clay" data-i18n="team.eyebrow">Hosted by ZeroOne</p>
+          <h2 class="mt-4 font-serif text-4xl font-medium leading-tight sm:text-5xl" data-i18n="team.title">
+            A small ZeroOne team hosting carefully before scaling.
+          </h2>
+          <p class="mt-5 text-base leading-8 text-muted" data-i18n="team.body">
+            ZeroOne is a Software Maestro 17th cohort team building HanBuddy around hosted local experiences, bilingual communication, buddy preparation, and careful operations.
+          </p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3" data-team-members></div>
+      </div>
+    </section>
+
+    <section id="apply" class="bg-ink text-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div>
+          <p class="text-sm font-bold text-mint" data-i18n="finalCta.eyebrow">Next activity applications</p>
+          <h2 class="mt-4 max-w-3xl font-serif text-4xl font-medium leading-tight sm:text-5xl" data-i18n="finalCta.title">
+            Applications for July 18 or 19 will open soon.
+          </h2>
+          <p id="application-status-note" class="mt-5 max-w-2xl text-base leading-8 text-line-soft" data-i18n="finalCta.body">
+            The Google Form link will be added here soon. Until then, KakaoTalk is available only as a temporary contact and update fallback.
+          </p>
+          <p class="mt-4 max-w-2xl text-sm leading-6 text-line-soft">
+            <span data-i18n="finalCta.fallback">Temporary KakaoTalk contact:</span>
+            <span class="font-semibold text-canvas-soft">https://open.kakao.com/o/gDBFqEyi</span>
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <button type="button" disabled aria-describedby="application-status-note"
+             class="rounded-xl border border-line-strong/40 bg-canvas-soft/20 px-7 py-3.5 text-center text-base font-extrabold text-line-soft opacity-90 cursor-not-allowed" data-i18n="finalCta.formButton">
+            Google Form coming soon
+          </button>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable rounded-full bg-amber-300 px-8 py-4 text-center text-lg font-extrabold text-ink-950 transition hover:bg-amber-400 active:scale-[0.98]" data-i18n="finalCta.button">
-            Open KakaoTalk chat
+             class="focusable rounded-xl bg-canvas-soft px-7 py-3.5 text-center text-base font-extrabold text-ink transition hover:bg-panel active:translate-y-px" data-i18n="finalCta.contactButton">
+            Ask on KakaoTalk for updates
           </a>
           <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
-             class="focusable rounded-full border border-white/20 px-8 py-4 text-center text-lg font-extrabold text-white transition hover:bg-white/10 active:scale-[0.98]" data-i18n="finalCta.guideButton">
-            Open pre-game guide
+             class="focusable rounded-xl border border-line-strong/30 px-7 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="finalCta.guideButton">
+            Read the Run 1 guide
           </a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-ink-950/10 bg-clay-50">
-    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 text-sm text-ink-800/60 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex items-center gap-3 font-extrabold text-ink-950">
-        <span class="grid h-8 w-8 place-items-center rounded-full bg-ink-950 text-xs font-black text-amber-300" aria-hidden="true">HB</span>
+  <footer class="border-t border-line-soft bg-canvas">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3 font-semibold text-ink">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-ink text-xs font-extrabold text-canvas-soft" aria-hidden="true">HB</span>
         <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
       </div>
-      <p data-i18n="footer.note">First KBO pilot recruitment - June 25, 2026 at Jamsil Baseball Stadium.</p>
-      <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-full font-bold text-ink-950 underline decoration-ink-950/30 underline-offset-4 hover:decoration-ink-950" data-i18n="footer.link">
-        KakaoTalk open chat
+      <p data-i18n="footer.note">Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.</p>
+      <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
+        KakaoTalk fallback contact
       </a>
     </div>
   </footer>
 
   <script>
     const CONFIG = {
-      apply: 'https://open.kakao.com/o/gDBFqEyi',
+      apply: '#apply',
       contact: 'https://open.kakao.com/o/gDBFqEyi',
       guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
     };
@@ -371,390 +483,278 @@
     const CONTENT_MAP = Object.freeze({
       en: {
         skipLink: 'Skip to content',
-        languageToggle: {
-          aria: 'Select language',
-        },
+        languageToggle: { aria: 'Select language' },
         meta: {
           htmlLang: 'en',
-          title: 'HanBuddy by ZeroOne - KBO baseball experience at Jamsil',
-          description: 'Join HanBuddy\'s first KBO baseball pilot for foreigners: Samsung Lions vs LG Twins at Jamsil Baseball Stadium on Thursday, June 25, 2026. Only 3 spots left, 50,000 KRW per person.',
-          ogTitle: 'HanBuddy by ZeroOne - KBO baseball experience at Jamsil',
-          ogDescription: 'A Korean local buddy helps you enjoy Samsung Lions vs LG Twins at Jamsil Baseball Stadium. Only 3 foreigner spots left. 50,000 KRW includes ticket and simple food expenses.',
-          imageAlt: 'Jamsil Baseball Stadium viewed from the stands during a KBO game night',
+          title: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
+          description: 'HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial.',
+          ogTitle: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
+          ogDescription: 'Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 will open soon, and the Google Form link will be added here.',
+          heroAlt: 'Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands',
+          stadiumAlt: 'Jamsil Baseball Stadium field during HanBuddy Run 1',
         },
         nav: {
           aria: 'Main navigation',
           homeAria: 'HanBuddy home',
           links: [
-            { href: '#pilot', label: 'Pilot' },
-            { href: '#included', label: 'Included' },
-            { href: '#how', label: 'How it works' },
-            { href: '#details', label: 'Before you pay' },
+            { href: '#problem', label: 'Why' },
+            { href: '#workflow', label: 'Flow' },
+            { href: '#roles', label: 'Roles' },
+            { href: '#ai', label: 'AI support' },
+            { href: '#evidence', label: 'Testimonial' },
+            { href: '#policy', label: 'Safety' },
             { href: '#team', label: 'Team' },
-            { href: '#apply', label: 'Apply' },
           ],
-          primaryCta: 'Claim 1 of 3 spots',
-          primaryCtaShort: 'Apply',
+          primaryCta: 'Google Form coming soon',
+          primaryCtaShort: 'Form soon',
         },
         hero: {
-          eyebrow: 'HanBuddy by ZeroOne',
-          title: 'KBO baseball experience at Jamsil.',
-          subtitle: 'Join Korean local buddies for Samsung Lions vs LG Twins on Thursday, June 25, 2026.',
-          primaryCta: 'Claim one of 3 spots',
-          guideCta: 'Open pre-game guide',
-          secondaryCta: 'See pilot details',
-          assurance: 'Ticket included · light food budget included · pay after confirmation · refund terms shared before payment',
-          factsAria: 'Key recruitment facts',
-          facts: [
-            { label: 'Spots left', value: '3', detail: 'foreign guests' },
-            { label: 'Price', value: '50,000', detail: 'KRW per person' },
-            { label: 'Place', value: 'Jamsil', detail: 'Baseball Stadium' },
-          ],
-          note: 'Tickets were booked on June 21, 2026. Current group: 3 ZeroOne members and 2 foreign participants.',
+          eyebrow: 'Recruiting guests and local buddies for Korean culture nights',
+          title: 'Join Korean local experiences with a HanBuddy.',
+          subtitle: 'HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.',
+          primaryCta: 'Google Form coming soon',
+          guideCta: 'Read the Run 1 guide',
+          secondaryCta: 'Read the testimonial',
+          microOne: 'recommended',
+          microTwo: 'completed pilot',
+          microThree: 'applications soon',
+          caption: 'Approved Run 1 photo',
+          mockupLabel: 'MVP activity detail',
+          mockupTitle: 'KBO stadium night with a local buddy',
+          mockupStatus: 'Run 1 completed',
+          roleTourist: 'Tourist',
+          roleBuddy: 'Buddy',
+          roleOps: 'Operations',
+          mockupBody: 'Browse the experience, understand the buddy role, and check application status once the Google Form opens.',
+          aiLabel: 'AI context planned',
+          aiBody: 'Planned support: cultural briefs, cheering cues, food tips, and reviewable prompts buddies can use on site.',
+          cardOne: 'guest recommendation',
+          cardTwo: 'Jamsil KBO pilot',
         },
-        matchCard: {
-          aria: 'Pilot match card',
-          eyebrow: 'Run 1 pilot',
-          title: 'Samsung Lions vs LG Twins',
-          dateLabel: 'Date',
-          date: 'Jun 25',
-          stadium: 'Jamsil Baseball Stadium',
-          stadiumCopy: 'Local cheering culture, stadium food, live explanations, and a small group that stays together.',
-          stats: [
-            { label: 'Ticket status', value: '8 seats booked' },
-            { label: 'Recruiting', value: '3 more foreigners' },
-          ],
-        },
-        pilot: {
-          eyebrow: 'First pilot recruitment',
-          title: 'What you are joining',
-          body: 'HanBuddy helps foreigners experience Korean local culture with people who know the place. For Run 1, we are starting with a KBO baseball game because the stadium culture is hard to understand from a guidebook but easy to love with the right buddy.',
+        problem: {
+          eyebrow: 'Tourist problem',
+          title: 'The best local moments are easier to enter with someone beside you.',
+          body: 'Korean stadiums, food spots, fan rituals, and neighborhood activities become more welcoming when a local buddy explains what is happening, when to join in, and what feels natural.',
           cards: [
-            {
-              label: 'Game',
-              title: 'Samsung Lions vs LG Twins',
-              body: 'A real regular-season KBO night at Jamsil, guided by Korean local buddies.',
-            },
-            {
-              label: 'Date and place',
-              title: 'Thursday, June 25, 2026',
-              body: 'Jamsil Baseball Stadium in Seoul. Meeting details will be shared in the open chat.',
-            },
-            {
-              label: 'Group status',
-              title: '5 confirmed, 3 spots left',
-              body: 'Current attendees are 3 ZeroOne members and 2 foreign participants. We are recruiting 3 more foreign guests.',
-            },
-            {
-              label: 'Price',
-              title: '50,000 KRW per person',
-              body: 'Includes your baseball game ticket and simple food expenses for the stadium experience.',
-            },
+            { label: 'Context gap', title: 'Translation does not explain timing.', body: 'A schedule or map rarely tells a Tourist when to cheer, what to order, or how local fans behave.' },
+            { label: 'Culture gap', title: 'Being present is not the same as joining in.', body: 'HanBuddy gives guests a local buddy who can explain rituals, answer questions, and make the moment easier to share.' },
+            { label: 'Trust gap', title: 'Meeting a stranger needs structure.', body: 'The experience needs a visible purpose, manual confirmation, safety expectations, and a clear activity boundary.' },
           ],
         },
-        included: {
-          eyebrow: 'Included in 50,000 KRW',
-          title: 'A ticket plus someone who makes the game make sense.',
-          body: 'The pilot is intentionally small. You can ask simple questions, follow the cheers, try stadium food, and enjoy the game without needing to understand Korean baseball beforehand.',
+        workflow: {
+          eyebrow: 'How HanBuddy works',
+          title: 'HanBuddy connects guests, buddies, and operators around one clear experience.',
+          body: 'Guests get context before joining, buddies prepare to host, and ZeroOne keeps confirmation manual while the Google Form application link is being prepared.',
           items: [
-            {
-              title: 'Baseball game ticket',
-              body: 'Your seat for Samsung Lions vs LG Twins.',
-            },
-            {
-              title: 'Simple food expenses',
-              body: 'A light stadium food budget is included; extra food, drinks, transport, and goods are separate.',
-            },
-            {
-              title: 'Local buddy guidance',
-              body: 'A ZeroOne member stays with the group and explains the local context in English.',
-            },
-            {
-              title: 'Pre-game orientation',
-              body: 'Teams, rules, cheering culture, meeting point, and what to expect.',
-            },
+            { step: 'Before', title: 'Choose a local activity and get context.', body: 'Guests review the activity theme, buddy introduction, safety notes, and planned AI context before joining.' },
+            { step: 'During', title: 'Meet the Buddy and follow the local rhythm.', body: 'The Buddy explains culture in plain English, prompts interaction, and helps guests avoid feeling like outsiders.' },
+            { step: 'After', title: 'Share feedback so the next run feels better.', body: 'A short follow-up helps the team improve guest comfort, buddy preparation, safety, and communication.' },
           ],
         },
-        howToJoin: {
-          eyebrow: 'How to join',
-          title: 'Apply through KakaoTalk open chat.',
-          steps: [
-            {
-              step: '01',
-              title: 'Enter the open chat',
-              body: 'Tap the button and tell us you want to join the HanBuddy KBO Run 1 pilot.',
-            },
-            {
-              step: '02',
-              title: 'Confirm your spot',
-              body: 'We will share the meeting plan, payment timing, payment methods, and refund terms before you pay.',
-            },
-            {
-              step: '03',
-              title: 'Meet at Jamsil',
-              body: 'Come to the stadium and enjoy the game with the local buddy group.',
-            },
+        roles: {
+          eyebrow: 'MVP role surfaces',
+          title: 'International guests join; Korean/local buddies host and guide.',
+          body: 'The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.',
+          cards: [
+            { label: 'Guest path', title: 'Discover a local activity and apply.', body: 'International guests can understand the experience, check the buddy-led format, and return when the Google Form opens.' },
+            { label: 'Buddy path', title: 'Host, guide, and share culture.', body: 'Korean/local buddies can prepare activities, explain cultural context, and help guests enjoy moments that locals understand naturally.' },
+            { label: 'Operations path', title: 'Manual confirmation for now.', body: 'ZeroOne keeps participant communication, safety checks, and status updates direct while the public application flow is being prepared.' },
           ],
         },
-        beforeYouPay: {
-          eyebrow: 'Before you pay',
+        ai: {
+          eyebrow: 'AI support standard',
+          title: 'Planned AI support should make every buddy better prepared.',
+          body: 'HanBuddy should not replace the local buddy. The planned AI layer turns short buddy input into clearer briefs, multilingual activity copy, cultural context notes, and reviewable checklists.',
           items: [
-            {
-              title: 'Payment timing',
-              body: 'Joining the open chat is free. We confirm your spot, meeting plan, and payment method before asking for payment.',
-            },
-            {
-              title: 'Payment methods',
-              body: 'Payment methods are bank transfer, KakaoPay, and on-site cash after confirmation.',
-              methods: ['bank transfer', 'KakaoPay', 'on-site cash after confirmation'],
-            },
-            {
-              title: 'Cancellation',
-              body: 'If the game is cancelled or postponed, we will explain the refund or reschedule option before collecting payment.',
-            },
-            {
-              title: 'Safety',
-              body: 'This is a public stadium group experience with three ZeroOne team members. It is not a private one-on-one meetup.',
-            },
+            { label: 'Preparation', title: 'Buddy brief from short input.', body: 'AI can help convert a Buddy idea into meeting notes, local rules, and guest-ready context.' },
+            { label: 'Content', title: 'Multilingual activity copy.', body: 'AI-generated drafts can support English and Korean descriptions, while operators still review what goes public.' },
+            { label: 'Quality', title: 'Repeatable checklist standard.', body: 'The goal is consistent preparation and safer hosting, not a claim that every AI feature is already live.' },
           ],
         },
-        teamTrust: {
+        evidence: {
+          eyebrow: 'Run 1 testimonial',
+          title: 'A real guest recommends the HanBuddy baseball-culture experience.',
+          body: 'HanBuddy hosted a Korean baseball-culture experience at Jamsil Baseball Stadium on June 25, 2026. The approved public quote and photos show what guests can expect from joining with local Koreans.',
+          stadiumCaption: 'The field context: cheering timing, rules, food, and fan culture that need local explanation.',
+          stadiumBadge: 'Jamsil / June 25',
+          cards: [
+            { label: 'Participant testimonial', value: 'If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!', body: 'Approved quote from a Run 1 participant.' },
+            { label: 'Completed experience', value: 'Hosted at Jamsil on June 25', body: 'Run 1 brought guests into a real Korean baseball-culture setting with local support.' },
+            { label: 'For the next run', value: 'Guests and buddies are both welcome', body: 'HanBuddy is recruiting international guests who want local culture and Korean/local buddies who want to host or guide.' },
+          ],
+        },
+        policy: {
+          eyebrow: 'Safety and privacy',
+          title: 'Safety, privacy, and confirmation stay clear before anyone joins.',
+          body: 'This page does not collect personal information. Applications and questions will go through external channels, and ZeroOne will confirm participation details directly before each activity.',
+          items: [
+            { label: 'Safety', title: 'Purpose-bound local experience.', body: 'HanBuddy is framed around a specific cultural activity, not open-ended social matching.' },
+            { label: 'Privacy', title: 'No personal data on this page.', body: 'The static landing page does not store applications, phone numbers, private chat logs, or participant contact details.' },
+            { label: 'Confirmation', title: 'Details are shared directly.', body: 'ZeroOne will confirm the actual application and participation details through the official external channel.' },
+          ],
+        },
+        team: {
           eyebrow: 'Hosted by ZeroOne',
-          title: 'Meet the local buddy team joining you at the stadium.',
-          body: 'AI·SW Maestro is a national software talent development program in Korea. ZeroOne is participating in its 17th cohort and hosting this first HanBuddy pilot as a local buddy team.',
+          title: 'A small ZeroOne team hosting carefully before scaling.',
+          body: 'ZeroOne is a Software Maestro 17th cohort team building HanBuddy around hosted local experiences, bilingual communication, buddy preparation, and careful operations.',
           members: [
-            {
-              name: 'Kim Minhyung',
-              role: 'Team lead',
-              university: 'University of Seoul',
-              field: 'Computer Science',
-              note: 'Local buddy host for the first KBO pilot.',
-              instagramUrl: 'https://www.instagram.com/kminbro/',
-            },
-            {
-              name: 'Kim Yoohyun',
-              role: 'Host',
-              university: 'Inha University',
-              field: 'Artificial Intelligence Engineering',
-              note: 'Local buddy host for the first KBO pilot.',
-              instagramUrl: 'https://www.instagram.com/u_hyuuun/',
-            },
-            {
-              name: 'Lee Junyoung',
-              role: 'Host',
-              university: 'Yonsei University',
-              field: 'Computer Science',
-              note: 'Local buddy host for the first KBO pilot.',
-              instagramUrl: 'https://www.instagram.com/_may1b/',
-            },
+            { role: 'Team lead', name: 'Kim Minhyung', school: 'University of Seoul', field: 'Computer Science', url: 'https://www.instagram.com/kminbro/' },
+            { role: 'Host', name: 'Kim Yoohyun', school: 'Inha University', field: 'Artificial Intelligence Engineering', url: 'https://www.instagram.com/u_hyuuun/' },
+            { role: 'Host', name: 'Lee Junyoung', school: 'Yonsei University', field: 'Computer Science', url: 'https://www.instagram.com/_may1b/' },
           ],
+          instagram: 'Instagram',
         },
         finalCta: {
-          eyebrow: 'Only 3 foreigner spots left',
-          title: 'Want to experience a KBO game with local buddies?',
-          body: 'Join the KakaoTalk open chat. No personal names or contact details are shown on this page.',
-          fallback: 'If the button does not open, copy this URL:',
-          button: 'Open KakaoTalk chat',
-          guideButton: 'Open pre-game guide',
+          eyebrow: 'Next activity applications',
+          title: 'Applications for July 18 or 19 will open soon.',
+          body: 'The Google Form link will be added here soon. Until then, KakaoTalk is available only as a temporary contact and update fallback.',
+          fallback: 'Temporary KakaoTalk contact:',
+          formButton: 'Google Form coming soon',
+          contactButton: 'Ask on KakaoTalk for updates',
+          guideButton: 'Read the Run 1 guide',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
-          note: 'First KBO pilot recruitment - June 25, 2026 at Jamsil Baseball Stadium.',
-          link: 'KakaoTalk open chat',
+          note: 'Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.',
+          link: 'KakaoTalk fallback contact',
         },
       },
       ko: {
         skipLink: '본문으로 이동',
-        languageToggle: {
-          aria: '언어 선택',
-        },
+        languageToggle: { aria: '언어 선택' },
         meta: {
           htmlLang: 'ko',
-          title: 'HanBuddy by ZeroOne - 잠실 KBO 야구 경험',
-          description: '외국인 참가자를 위한 HanBuddy 첫 KBO 야구 파일럿에 함께하세요. 2026년 6월 25일 목요일 잠실야구장 삼성 라이온즈 vs LG 트윈스 경기, 남은 자리는 3명이며 참가비는 1인 50,000원입니다.',
-          ogTitle: 'HanBuddy by ZeroOne - 잠실 KBO 야구 경험',
-          ogDescription: '한국 로컬 버디와 함께 잠실야구장에서 삼성 라이온즈 vs LG 트윈스 경기를 즐기는 파일럿입니다. 외국인 참가자 3명 모집, 50,000원에 티켓과 간단한 식비가 포함됩니다.',
-          imageAlt: 'KBO 경기 날 관중석에서 바라본 잠실야구장',
+          title: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
+          description: 'HanBuddy는 외국인 게스트와 한국인/로컬 버디를 모집해 한국 로컬 문화 경험을 함께 만드는 공개 모집 랜딩입니다.',
+          ogTitle: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
+          ogDescription: '외국인 게스트 또는 로컬 버디로 HanBuddy에 참여하세요. 7월 18일 또는 7월 19일 신청은 곧 열리며, 구글폼 링크가 이 페이지에 추가됩니다.',
+          heroAlt: '잠실야구장 관중석에서 촬영한 HanBuddy 1회차 승인 단체 사진',
+          stadiumAlt: 'HanBuddy 1회차가 진행된 잠실야구장 그라운드',
         },
         nav: {
           aria: '주요 내비게이션',
           homeAria: 'HanBuddy 홈',
           links: [
-            { href: '#pilot', label: '파일럿' },
-            { href: '#included', label: '포함 사항' },
-            { href: '#how', label: '참여 방법' },
-            { href: '#details', label: '결제 전 안내' },
-            { href: '#team', label: '팀 소개' },
-            { href: '#apply', label: '신청' },
+            { href: '#problem', label: '왜 필요한가' },
+            { href: '#workflow', label: '흐름' },
+            { href: '#roles', label: '역할' },
+            { href: '#ai', label: 'AI 지원' },
+            { href: '#evidence', label: '후기' },
+            { href: '#policy', label: '안전' },
+            { href: '#team', label: '팀' },
           ],
-          primaryCta: '남은 3자리 중 1자리 신청',
-          primaryCtaShort: '신청',
+          primaryCta: '구글폼 곧 오픈',
+          primaryCtaShort: '폼 예정',
         },
         hero: {
-          eyebrow: 'HanBuddy by ZeroOne',
-          title: '잠실에서 즐기는 KBO 야구 경험.',
-          subtitle: '2026년 6월 25일 목요일, 삼성 라이온즈 vs LG 트윈스 경기를 한국 로컬 버디와 함께합니다.',
-          primaryCta: '남은 3자리 중 1자리 신청',
-          guideCta: '사전 가이드 보기',
-          secondaryCta: '파일럿 자세히 보기',
-          assurance: '티켓 포함 · 간단한 식비 포함 · 확정 후 결제 · 결제 전 환불 조건 안내',
-          factsAria: '핵심 모집 정보',
-          facts: [
-            { label: '남은 자리', value: '3', detail: '외국인 참가자' },
-            { label: '참가비', value: '50,000', detail: '1인 기준 원' },
-            { label: '장소', value: '잠실', detail: '야구장' },
-          ],
-          note: '티켓은 2026년 6월 21일 예매 완료되었습니다. 현재 그룹은 ZeroOne 멤버 3명과 외국인 참가자 2명입니다.',
+          eyebrow: '외국인 게스트와 로컬 버디를 모집하는 한국 문화 경험',
+          title: '한국 로컬 경험을 HanBuddy와 함께하세요.',
+          subtitle: 'HanBuddy는 외국인 게스트가 한국 현장 문화를 로컬 버디와 함께 경험하도록 돕고, 한국인 버디가 직접 호스트하고 안내할 수 있는 기회를 만듭니다.',
+          primaryCta: '구글폼 곧 오픈',
+          guideCta: '1회차 가이드 보기',
+          secondaryCta: '참가자 후기 보기',
+          microOne: '추천 후기',
+          microTwo: '완료된 파일럿',
+          microThree: '신청 곧 오픈',
+          caption: '승인된 1회차 사진',
+          mockupLabel: 'MVP 활동 상세',
+          mockupTitle: '로컬 버디와 함께하는 KBO 직관 밤',
+          mockupStatus: '1회차 완료',
+          roleTourist: '관광객',
+          roleBuddy: '버디',
+          roleOps: '운영',
+          mockupBody: '경험을 확인하고 버디 역할을 이해한 뒤, 구글폼이 열리면 신청 상태를 확인할 수 있습니다.',
+          aiLabel: 'AI 맥락 지원 설계 중',
+          aiBody: '계획 중인 지원: 문화 브리프, 응원 타이밍, 음식 팁, 현장에서 버디가 참고할 수 있는 검수형 프롬프트.',
+          cardOne: '참가자 추천 후기',
+          cardTwo: '잠실 KBO 파일럿',
         },
-        matchCard: {
-          aria: '파일럿 경기 카드',
-          eyebrow: '1회차 파일럿',
-          title: '삼성 라이온즈 vs LG 트윈스',
-          dateLabel: '날짜',
-          date: '6월 25일',
-          stadium: '잠실야구장',
-          stadiumCopy: '응원 문화, 야구장 음식, 현장 설명, 그리고 함께 움직이는 소규모 그룹 경험입니다.',
-          stats: [
-            { label: '티켓 상태', value: '8석 예매 완료' },
-            { label: '모집 인원', value: '외국인 3명 추가 모집' },
-          ],
-        },
-        pilot: {
-          eyebrow: '첫 번째 파일럿 모집',
-          title: '무엇에 참여하나요?',
-          body: 'HanBuddy는 외국인이 한국 로컬 문화를 현장을 아는 사람들과 함께 경험하도록 돕습니다. 1회차는 KBO 야구 경기로 시작합니다. 야구장 문화는 가이드북만으로 이해하기 어렵지만, 적절한 버디와 함께하면 쉽게 즐길 수 있기 때문입니다.',
+        problem: {
+          eyebrow: '관광객 문제',
+          title: '좋은 로컬 순간은 곁에 함께하는 사람이 있을 때 더 쉽게 들어갈 수 있습니다.',
+          body: '야구장, 음식점, 응원 문화, 동네 활동은 로컬 버디가 지금 무엇이 일어나고 있는지, 언제 함께하면 좋은지, 무엇이 자연스러운지 설명해줄 때 더 환영받는 경험이 됩니다.',
           cards: [
-            {
-              label: '경기',
-              title: '삼성 라이온즈 vs LG 트윈스',
-              body: '잠실에서 열리는 실제 KBO 정규시즌 야간 경기를 한국 로컬 버디가 안내합니다.',
-            },
-            {
-              label: '날짜와 장소',
-              title: '2026년 6월 25일 목요일',
-              body: '서울 잠실야구장입니다. 구체적인 만남 장소와 시간은 오픈채팅에서 안내합니다.',
-            },
-            {
-              label: '그룹 현황',
-              title: '5명 확정, 3자리 남음',
-              body: '현재 ZeroOne 멤버 3명과 외국인 참가자 2명이 확정되었고, 외국인 참가자 3명을 추가 모집합니다.',
-            },
-            {
-              label: '참가비',
-              title: '1인 50,000원',
-              body: '야구 경기 티켓과 야구장 경험을 위한 간단한 식비가 포함됩니다.',
-            },
+            { label: '맥락 공백', title: '번역은 타이밍을 설명하지 못합니다.', body: '일정과 지도만으로는 관광객이 언제 응원하고, 무엇을 주문하고, 현지 팬들이 어떻게 행동하는지 알기 어렵습니다.' },
+            { label: '문화 공백', title: '그 자리에 있는 것과 함께 즐기는 것은 다릅니다.', body: 'HanBuddy는 게스트가 의식, 질문, 분위기를 더 쉽게 나눌 수 있도록 로컬 버디를 연결합니다.' },
+            { label: '신뢰 공백', title: '낯선 사람과의 만남에는 구조가 필요합니다.', body: '목적이 분명한 활동, 수동 확인, 안전 기대치, 명확한 활동 범위가 함께 필요합니다.' },
           ],
         },
-        included: {
-          eyebrow: '50,000원 포함 사항',
-          title: '티켓과, 경기를 이해하게 해주는 사람이 함께합니다.',
-          body: '이번 파일럿은 의도적으로 소규모로 운영합니다. 한국 야구를 미리 잘 알지 못해도 질문하고, 응원을 따라 하고, 야구장 음식을 먹어 보며 경기를 즐길 수 있습니다.',
+        workflow: {
+          eyebrow: 'HanBuddy 작동 방식',
+          title: 'HanBuddy는 게스트, 버디, 운영을 하나의 분명한 경험으로 연결합니다.',
+          body: '게스트는 참여 전 맥락을 얻고, 버디는 호스트를 준비하며, ZeroOne은 구글폼 신청 링크를 준비하는 동안 확인 절차를 수동으로 관리합니다.',
           items: [
-            {
-              title: '야구 경기 티켓',
-              body: '삼성 라이온즈 vs LG 트윈스 경기 좌석이 포함됩니다.',
-            },
-            {
-              title: '간단한 식비',
-              body: '가벼운 야구장 음식 예산이 포함되며, 추가 음식, 음료, 교통비, 굿즈는 별도입니다.',
-            },
-            {
-              title: '로컬 버디 안내',
-              body: 'ZeroOne 멤버가 그룹과 함께 움직이며 현장 맥락을 영어로 설명합니다.',
-            },
-            {
-              title: '경기 전 오리엔테이션',
-              body: '팀, 규칙, 응원 문화, 만남 장소, 당일 흐름을 미리 안내합니다.',
-            },
+            { step: '전', title: '로컬 활동을 고르고 사전 맥락을 확인합니다.', body: '게스트는 활동 주제, 버디 소개, 안전 안내, 계획 중인 AI 맥락 요약을 확인합니다.' },
+            { step: '중', title: '버디와 만나 현지 리듬을 따라갑니다.', body: '버디는 문화를 쉬운 영어로 설명하고, 상호작용을 돕고, 게스트가 외부인처럼 느끼지 않게 보조합니다.' },
+            { step: '후', title: '후속 피드백으로 다음 회차를 더 좋게 만듭니다.', body: '짧은 후속 확인으로 게스트 편안함, 버디 준비, 안전, 커뮤니케이션을 더 나아지게 합니다.' },
           ],
         },
-        howToJoin: {
-          eyebrow: '참여 방법',
-          title: '카카오톡 오픈채팅으로 신청하세요.',
-          steps: [
-            {
-              step: '01',
-              title: '오픈채팅 입장',
-              body: '버튼을 누르고 HanBuddy KBO 1회차 파일럿에 참여하고 싶다고 알려주세요.',
-            },
-            {
-              step: '02',
-              title: '자리 확정',
-              body: '결제 전 만남 계획, 결제 시점, 결제 수단, 환불 조건을 안내합니다.',
-            },
-            {
-              step: '03',
-              title: '잠실에서 만남',
-              body: '야구장에 와서 로컬 버디 그룹과 함께 경기를 즐깁니다.',
-            },
+        roles: {
+          eyebrow: 'MVP 역할 화면',
+          title: '외국인 게스트는 참여하고, 한국인/로컬 버디는 호스트하고 안내합니다.',
+          body: '이 페이지는 한국 로컬 문화를 경험하고 싶은 게스트와 방문객이 더 잘 즐기도록 돕고 싶은 버디를 함께 모집합니다.',
+          cards: [
+            { label: '게스트 경로', title: '로컬 활동을 발견하고 신청합니다.', body: '외국인 게스트는 경험 내용을 이해하고, 버디가 함께하는 방식을 확인한 뒤 구글폼 오픈 시 신청할 수 있습니다.' },
+            { label: '버디 경로', title: '호스트하고, 안내하고, 문화를 나눕니다.', body: '한국인/로컬 버디는 활동을 준비하고 문화 맥락을 설명하며, 게스트가 현장을 자연스럽게 즐기도록 돕습니다.' },
+            { label: '운영 경로', title: '지금은 수동 확인으로 운영합니다.', body: 'ZeroOne은 공개 신청 흐름이 준비되는 동안 참가자 커뮤니케이션, 안전 확인, 상태 안내를 직접 관리합니다.' },
           ],
         },
-        beforeYouPay: {
-          eyebrow: '결제 전 안내',
+        ai: {
+          eyebrow: 'AI 지원 기준',
+          title: '계획 중인 AI 지원은 모든 버디가 더 잘 준비되도록 돕는 방향입니다.',
+          body: 'HanBuddy의 AI는 로컬 버디를 대체하지 않습니다. 짧은 버디 입력을 더 명확한 브리프, 다국어 활동 문안, 문화 맥락 노트, 검수 가능한 체크리스트로 바꾸는 보조 계층입니다.',
           items: [
-            {
-              title: '결제 시점',
-              body: '오픈채팅 입장은 무료입니다. 자리, 만남 계획, 결제 수단을 먼저 확인한 뒤 결제를 요청합니다.',
-            },
-            {
-              title: '결제 수단',
-              body: '결제 수단은 계좌이체, 카카오페이, 확정 후 현장 현금입니다.',
-              methods: ['계좌이체', '카카오페이', '현장 현금'],
-            },
-            {
-              title: '취소 안내',
-              body: '경기가 취소되거나 연기되면 결제 전 환불 또는 일정 변경 선택지를 설명합니다.',
-            },
-            {
-              title: '안전 안내',
-              body: '이 프로그램은 ZeroOne 팀원 3명과 함께하는 공개된 야구장 단체 경험입니다. 개인 1:1 만남이 아닙니다.',
-            },
+            { label: '준비', title: '짧은 입력에서 버디 브리프 생성.', body: 'AI는 버디 아이디어를 집합 안내, 현장 규칙, 게스트용 맥락으로 정리하는 데 도움을 줄 수 있습니다.' },
+            { label: '콘텐츠', title: '다국어 활동 문안 초안.', body: 'AI 초안은 영어와 한국어 설명을 보조하되, 공개 전 운영자가 검수합니다.' },
+            { label: '품질', title: '반복 가능한 체크리스트.', body: '목표는 모든 AI 기능이 이미 완성됐다고 말하는 것이 아니라 준비 품질과 호스팅 안정성을 맞추는 것입니다.' },
           ],
         },
-        teamTrust: {
-          eyebrow: 'ZeroOne이 함께합니다',
-          title: '야구장에서 직접 함께할 로컬 버디 팀입니다.',
-          body: 'AI·SW Maestro는 국내 소프트웨어 인재 양성을 위한 국가 프로그램입니다. ZeroOne은 17기 참여 팀으로, 이번 첫 HanBuddy 파일럿을 로컬 버디 팀으로 직접 운영합니다.',
+        evidence: {
+          eyebrow: '1회차 참가자 후기',
+          title: '실제 게스트가 HanBuddy의 한국 야구 문화 경험을 추천했습니다.',
+          body: 'HanBuddy는 2026년 6월 25일 잠실야구장에서 한국 야구 문화 경험을 운영했습니다. 승인된 공개 후기와 사진은 로컬 한국인과 함께하는 경험을 보여줍니다.',
+          stadiumCaption: '응원 타이밍, 규칙, 음식, 팬 문화처럼 로컬 설명이 필요한 현장 맥락입니다.',
+          stadiumBadge: '잠실 / 6월 25일',
+          cards: [
+            { label: '참가자 후기', value: '한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!', body: '1회차 참가자의 승인된 공개 후기입니다.' },
+            { label: '완료된 경험', value: '6월 25일 잠실에서 운영', body: '1회차는 로컬 지원과 함께 실제 한국 야구 문화 현장에 게스트를 초대한 경험이었습니다.' },
+            { label: '다음 회차 모집', value: '게스트와 버디 모두 환영합니다', body: 'HanBuddy는 로컬 문화를 원하는 외국인 게스트와 호스트하거나 안내하고 싶은 한국인/로컬 버디를 모집합니다.' },
+          ],
+        },
+        policy: {
+          eyebrow: '안전과 개인정보',
+          title: '참여 전 안전, 개인정보, 확인 절차를 분명하게 안내합니다.',
+          body: '이 페이지는 개인정보를 수집하지 않습니다. 신청과 문의는 외부 채널에서 진행하며, ZeroOne은 각 활동 전 참여 세부 정보를 직접 확인합니다.',
+          items: [
+            { label: '안전', title: '목적이 분명한 로컬 경험.', body: 'HanBuddy는 열린 소셜 매칭이 아니라 특정 문화 활동 중심의 경험으로 선을 긋습니다.' },
+            { label: '개인정보', title: '이 페이지에는 개인정보를 저장하지 않습니다.', body: '정적 랜딩은 신청서, 전화번호, 비공개 채팅, 참가자 연락처를 저장하지 않습니다.' },
+            { label: '확인', title: '세부 정보는 직접 안내합니다.', body: 'ZeroOne은 실제 신청과 참여 세부 정보를 공식 외부 채널에서 확인합니다.' },
+          ],
+        },
+        team: {
+          eyebrow: 'ZeroOne 운영',
+          title: '확장하기 전 신중하게 호스팅하는 작은 ZeroOne 팀입니다.',
+          body: 'ZeroOne은 SW마에스트로 17기 팀입니다. HanBuddy는 호스팅 기반 로컬 경험, 이중언어 커뮤니케이션, 버디 준비, 신중한 운영을 중심으로 만들고 있습니다.',
           members: [
-            {
-              name: '김민형',
-              role: '팀 리드',
-              university: 'University of Seoul',
-              field: 'Computer Science',
-              note: '첫 KBO 파일럿 로컬 버디 호스트입니다.',
-              instagramUrl: 'https://www.instagram.com/kminbro/',
-            },
-            {
-              name: '김유현',
-              role: '호스트',
-              university: 'Inha University',
-              field: 'Artificial Intelligence Engineering',
-              note: '첫 KBO 파일럿 로컬 버디 호스트입니다.',
-              instagramUrl: 'https://www.instagram.com/u_hyuuun/',
-            },
-            {
-              name: '이준영',
-              role: '호스트',
-              university: 'Yonsei University',
-              field: 'Computer Science',
-              note: '첫 KBO 파일럿 로컬 버디 호스트입니다.',
-              instagramUrl: 'https://www.instagram.com/_may1b/',
-            },
+            { role: '팀 리드', name: '김민형', school: 'University of Seoul', field: 'Computer Science', url: 'https://www.instagram.com/kminbro/' },
+            { role: '호스트', name: '김유현', school: 'Inha University', field: 'Artificial Intelligence Engineering', url: 'https://www.instagram.com/u_hyuuun/' },
+            { role: '호스트', name: '이준영', school: 'Yonsei University', field: 'Computer Science', url: 'https://www.instagram.com/_may1b/' },
           ],
+          instagram: '인스타그램',
         },
         finalCta: {
-          eyebrow: '외국인 참가자 3자리 남음',
-          title: '로컬 버디와 함께 KBO 경기를 경험해볼까요?',
-          body: '카카오톡 오픈채팅에 참여하세요. 이 페이지에는 개인 이름, 개인 식별 정보, 비공개 ID를 표시하지 않습니다.',
-          fallback: '버튼이 열리지 않으면 이 URL을 복사하세요:',
-          button: '카카오톡 오픈채팅 열기',
-          guideButton: '사전 가이드 보기',
+          eyebrow: '다음 활동 신청',
+          title: '7월 18일 또는 7월 19일 신청이 곧 열립니다.',
+          body: '구글폼 링크가 곧 이 페이지에 추가됩니다. 그전까지 KakaoTalk은 임시 문의와 업데이트 fallback으로만 운영합니다.',
+          fallback: '임시 KakaoTalk 문의:',
+          formButton: '구글폼 곧 오픈',
+          contactButton: 'KakaoTalk으로 문의/업데이트 받기',
+          guideButton: '1회차 가이드 보기',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
-          note: '첫 KBO 파일럿 모집 - 2026년 6월 25일 잠실야구장.',
-          link: '카카오톡 오픈채팅',
+          note: '1회차는 2026년 6월 25일 잠실야구장에서 완료했습니다.',
+          link: 'KakaoTalk 임시 문의',
         },
       },
     });
@@ -767,7 +767,7 @@
       while (node.firstChild) node.removeChild(node.firstChild);
     };
 
-    const createTextNode = (tagName, className, text) => {
+    const textNode = (tagName, className, text) => {
       const node = document.createElement(tagName);
       node.className = className;
       node.textContent = text;
@@ -796,8 +796,12 @@
         const key = el.getAttribute('data-cta');
         const url = CONFIG[key];
         if (!url) return;
-
         el.setAttribute('href', url);
+        if (url.startsWith('#')) {
+          el.removeAttribute('target');
+          el.removeAttribute('rel');
+          return;
+        }
         el.setAttribute('target', '_blank');
         el.setAttribute('rel', 'noopener');
       });
@@ -808,12 +812,10 @@
         const text = getByPath(copy, el.getAttribute('data-i18n'));
         if (typeof text === 'string') el.textContent = text;
       });
-
       document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
         const text = getByPath(copy, el.getAttribute('data-i18n-aria'));
         if (typeof text === 'string') el.setAttribute('aria-label', text);
       });
-
       document.querySelectorAll('[data-i18n-alt]').forEach((el) => {
         const text = getByPath(copy, el.getAttribute('data-i18n-alt'));
         if (typeof text === 'string') el.setAttribute('alt', text);
@@ -831,207 +833,176 @@
     const renderNav = (copy) => {
       const container = document.querySelector('[data-nav-links]');
       if (!container) return;
-
       clear(container);
       copy.nav.links.forEach((link) => {
         const anchor = document.createElement('a');
-        anchor.className = 'focusable rounded-full hover:text-white';
+        anchor.className = 'focusable rounded-lg transition hover:text-ink';
         anchor.href = link.href;
         anchor.textContent = link.label;
         container.appendChild(anchor);
       });
     };
 
-    const renderHeroFacts = (copy) => {
-      const container = document.querySelector('[data-hero-facts]');
+    const renderProblemCards = (copy) => {
+      const container = document.querySelector('[data-problem-cards]');
       if (!container) return;
-
       clear(container);
-      copy.hero.facts.forEach((fact) => {
-        const card = document.createElement('div');
-        card.className = 'rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur';
-        card.append(
-          createTextNode('p', 'text-xs font-bold uppercase tracking-[0.14em] text-white/50', fact.label),
-          createTextNode('p', 'mt-2 text-3xl font-black text-amber-300', fact.value),
-          createTextNode('p', 'mt-1 text-sm text-white/70', fact.detail),
-        );
-        container.appendChild(card);
-      });
-    };
-
-    const renderMatchStats = (copy) => {
-      const container = document.querySelector('[data-match-stats]');
-      if (!container) return;
-
-      clear(container);
-      copy.matchCard.stats.forEach((stat) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'rounded-2xl bg-white p-4 ring-1 ring-ink-950/10';
-        wrapper.append(
-          createTextNode('dt', 'font-bold text-ink-950/50', stat.label),
-          createTextNode('dd', 'mt-1 font-extrabold', stat.value),
-        );
-        container.appendChild(wrapper);
-      });
-    };
-
-    const renderPilotCards = (copy) => {
-      const container = document.querySelector('[data-pilot-cards]');
-      if (!container) return;
-
-      clear(container);
-      copy.pilot.cards.forEach((card) => {
+      copy.problem.cards.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'card-lift rounded-3xl border border-ink-950/10 bg-white p-6';
+        article.className = 'rounded-xl border border-line-soft bg-canvas p-5 shadow-subtle';
         article.append(
-          createTextNode('p', 'text-sm font-bold uppercase tracking-[0.14em] text-ink-950/50', card.label),
-          createTextNode('h3', 'mt-2 text-xl font-black', card.title),
-          createTextNode('p', 'mt-3 text-sm leading-6 text-ink-800/75', card.body),
+          textNode('p', 'text-xs font-extrabold text-clay', item.label),
+          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-ink', item.title),
+          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
         );
         container.appendChild(article);
       });
     };
 
-    const renderIncludedItems = (copy) => {
-      const container = document.querySelector('[data-included-items]');
+    const renderWorkflowItems = (copy) => {
+      const container = document.querySelector('[data-workflow-items]');
       if (!container) return;
-
       clear(container);
-      copy.included.items.forEach((item) => {
-        const li = document.createElement('li');
-        li.className = 'flex gap-4';
-        const dot = document.createElement('span');
-        dot.className = 'mt-1 h-3 w-3 shrink-0 rounded-full bg-field-500';
-        dot.setAttribute('aria-hidden', 'true');
-        const text = document.createElement('span');
-        text.append(
-          createTextNode('strong', '', item.title),
-          document.createElement('br'),
-          createTextNode('span', 'text-sm text-ink-800/70', item.body),
-        );
-        li.append(dot, text);
-        container.appendChild(li);
-      });
-    };
-
-    const renderHowSteps = (copy) => {
-      const container = document.querySelector('[data-how-steps]');
-      if (!container) return;
-
-      clear(container);
-      copy.howToJoin.steps.forEach((step) => {
+      copy.workflow.items.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-3xl bg-ink-950 p-6 text-white';
+        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-6 shadow-subtle';
         article.append(
-          createTextNode('p', 'text-sm font-black text-amber-300', step.step),
-          createTextNode('h3', 'mt-4 text-xl font-black', step.title),
-          createTextNode('p', 'mt-3 text-sm leading-6 text-white/70', step.body),
+          textNode('p', 'inline-flex rounded-lg bg-mint px-3 py-1.5 text-xs font-extrabold text-sage', item.step),
+          textNode('h3', 'mt-4 text-2xl font-extrabold leading-tight text-ink', item.title),
+          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
         );
         container.appendChild(article);
       });
     };
 
-    const renderPaymentItems = (copy) => {
-      const container = document.querySelector('[data-payment-items]');
+    const renderRoleCards = (copy) => {
+      const container = document.querySelector('[data-role-cards]');
       if (!container) return;
-
       clear(container);
-      copy.beforeYouPay.items.forEach((item) => {
-        const card = document.createElement('div');
-        card.className = 'rounded-3xl border border-ink-950/10 bg-clay-50 p-5';
-        card.append(
-          createTextNode('h3', 'text-lg font-black', item.title),
-          createTextNode('p', 'mt-2 text-sm leading-6 text-ink-800/75', item.body),
+      copy.roles.cards.forEach((item) => {
+        const article = document.createElement('article');
+        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-6 shadow-subtle';
+        article.append(
+          textNode('p', 'text-xs font-extrabold text-clay', item.label),
+          textNode('h3', 'mt-3 text-2xl font-extrabold leading-tight text-ink', item.title),
+          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
         );
+        container.appendChild(article);
+      });
+    };
 
-        if (Array.isArray(item.methods)) {
-          const list = document.createElement('ul');
-          list.className = 'mt-4 space-y-2';
-          item.methods.forEach((method) => {
-            const li = document.createElement('li');
-            li.className = 'flex items-center gap-2 text-sm font-bold text-ink-950';
-            const dot = document.createElement('span');
-            dot.className = 'h-2 w-2 rounded-full bg-field-500';
-            dot.setAttribute('aria-hidden', 'true');
-            li.append(dot, document.createTextNode(method));
-            list.appendChild(li);
-          });
-          card.appendChild(list);
-        }
+    const renderAiItems = (copy) => {
+      const container = document.querySelector('[data-ai-items]');
+      if (!container) return;
+      clear(container);
+      copy.ai.items.forEach((item) => {
+        const article = document.createElement('article');
+        article.className = 'rounded-xl border border-line-strong/20 bg-sage/20 p-5';
+        article.append(
+          textNode('p', 'text-xs font-extrabold text-mint', item.label),
+          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-canvas-soft', item.title),
+          textNode('p', 'mt-4 text-sm leading-6 text-line-soft', item.body),
+        );
+        container.appendChild(article);
+      });
+    };
 
-        container.appendChild(card);
+    const renderEvidenceCards = (copy) => {
+      const container = document.querySelector('[data-evidence-cards]');
+      if (!container) return;
+      clear(container);
+      copy.evidence.cards.forEach((item) => {
+        const article = document.createElement('article');
+        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-5 shadow-subtle';
+        article.append(
+          textNode('p', 'text-xs font-extrabold text-clay', item.label),
+          textNode('h3', 'mt-3 text-2xl font-extrabold leading-tight text-ink', item.value),
+          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
+        );
+        container.appendChild(article);
+      });
+    };
+
+    const renderPolicyItems = (copy) => {
+      const container = document.querySelector('[data-policy-items]');
+      if (!container) return;
+      clear(container);
+      copy.policy.items.forEach((item) => {
+        const article = document.createElement('article');
+        article.className = 'rounded-xl border border-line-soft bg-canvas p-5 shadow-subtle';
+        article.append(
+          textNode('p', 'text-xs font-extrabold text-clay', item.label),
+          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-ink', item.title),
+          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
+        );
+        container.appendChild(article);
       });
     };
 
     const renderTeamMembers = (copy) => {
       const container = document.querySelector('[data-team-members]');
       if (!container) return;
-
       clear(container);
-      copy.teamTrust.members.forEach((member) => {
+      copy.team.members.forEach((member) => {
         const article = document.createElement('article');
-        article.className = 'flex flex-col rounded-3xl border border-ink-950/10 bg-white p-6';
+        article.className = 'flex flex-col rounded-xl border border-line-soft bg-panel-raised p-5';
         article.append(
-          createTextNode('p', 'text-xs font-black uppercase tracking-[0.16em] text-score-500', member.role),
-          createTextNode('h3', 'mt-3 text-xl font-black', member.name),
-          createTextNode('p', 'mt-3 text-sm font-bold leading-6 text-ink-950', member.university),
-          createTextNode('p', 'text-sm leading-6 text-ink-800/70', member.field),
-          createTextNode('p', 'mt-4 text-sm leading-6 text-ink-800/75', member.note),
+          textNode('p', 'text-xs font-extrabold text-clay', member.role),
+          textNode('h3', 'mt-3 font-serif text-2xl font-medium leading-tight', member.name),
+          textNode('p', 'mt-4 text-sm font-semibold leading-6 text-ink', member.school),
+          textNode('p', 'text-sm leading-6 text-muted', member.field),
         );
 
-        if (member.instagramUrl) {
-          const linkWrap = document.createElement('div');
-          linkWrap.className = 'mt-auto pt-5';
-          const instagramLink = document.createElement('a');
-          instagramLink.className = 'focusable inline-flex w-fit items-center rounded-full border border-ink-950/10 px-4 py-2 text-sm font-extrabold text-field-700 transition hover:border-field-700/40 hover:bg-clay-50 active:scale-[0.98]';
-          instagramLink.href = member.instagramUrl;
-          instagramLink.target = '_blank';
-          instagramLink.rel = 'noopener';
-          instagramLink.textContent = 'Instagram';
-          linkWrap.appendChild(instagramLink);
-          article.appendChild(linkWrap);
-        }
-
+        const link = document.createElement('a');
+        link.href = member.url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.className = 'focusable mt-5 inline-flex w-fit rounded-lg border border-line-soft px-3 py-2 text-sm font-bold text-ink transition hover:bg-panel';
+        link.textContent = copy.team.instagram;
+        article.appendChild(link);
         container.appendChild(article);
       });
     };
 
-    const updateToggleState = (lang) => {
+    const renderDynamicContent = (copy) => {
+      renderNav(copy);
+      renderProblemCards(copy);
+      renderWorkflowItems(copy);
+      renderRoleCards(copy);
+      renderAiItems(copy);
+      renderEvidenceCards(copy);
+      renderPolicyItems(copy);
+      renderTeamMembers(copy);
+    };
+
+    const setLanguageButtonState = (lang) => {
       document.querySelectorAll('[data-lang]').forEach((button) => {
-        const isActive = button.getAttribute('data-lang') === lang;
-        button.setAttribute('aria-pressed', String(isActive));
-        button.classList.toggle('bg-amber-300', isActive);
-        button.classList.toggle('text-ink-950', isActive);
-        button.classList.toggle('text-white/75', !isActive);
-        button.classList.toggle('hover:text-white', !isActive);
+        const selected = button.getAttribute('data-lang') === lang;
+        button.setAttribute('aria-pressed', String(selected));
+        button.classList.toggle('bg-ink', selected);
+        button.classList.toggle('text-canvas-soft', selected);
+        button.classList.toggle('text-muted', !selected);
       });
     };
 
-    const applyLanguage = (lang, shouldPersist = true) => {
-      const safeLang = SUPPORTED_LANGUAGES.includes(lang) ? lang : 'en';
-      const copy = CONTENT_MAP[safeLang];
-
-      syncMeta(copy);
+    const applyLanguage = (lang) => {
+      const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
       syncStaticText(copy);
-      renderNav(copy);
-      renderHeroFacts(copy);
-      renderMatchStats(copy);
-      renderPilotCards(copy);
-      renderIncludedItems(copy);
-      renderHowSteps(copy);
-      renderPaymentItems(copy);
-      renderTeamMembers(copy);
-      updateToggleState(safeLang);
-      syncCtas();
-
-      if (shouldPersist) persistLanguage(safeLang);
+      syncMeta(copy);
+      renderDynamicContent(copy);
+      setLanguageButtonState(lang);
+      persistLanguage(lang);
     };
 
     document.querySelectorAll('[data-lang]').forEach((button) => {
-      button.addEventListener('click', () => applyLanguage(button.getAttribute('data-lang')));
+      button.addEventListener('click', () => {
+        const lang = button.getAttribute('data-lang');
+        if (SUPPORTED_LANGUAGES.includes(lang)) applyLanguage(lang);
+      });
     });
 
-    applyLanguage(safeStoredLanguage(), false);
+    syncCtas();
+    applyLanguage(safeStoredLanguage());
   </script>
 </body>
 </html>

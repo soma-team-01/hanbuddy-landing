@@ -1,176 +1,182 @@
 # HanBuddy Landing Design System
 
-## 1. Atmosphere & Identity
+This is the source of truth for the HanBuddy MVP Figma-derived landing redesign. The active direction is product-led and app-system aligned. The previous Mastercard-inspired, orbital/orange poster direction is retired history and must not be used for new implementation decisions.
 
-HanBuddy feels like a trusted local host bringing foreign guests into a real Korean baseball night. The signature is stadium warmth: warm clay surfaces, ink-heavy contrast, amber calls to action, field green support marks, score red urgency, and actual Jamsil stadium imagery. The page should feel human, practical, and event-specific rather than like a generic AI product.
+## 1. Atmosphere
+
+HanBuddy should feel like a quiet local experience OS: human enough to trust before meeting a local buddy, structured enough to feel product-ready, and calm enough to avoid looking like a one-off promo poster. The signature is app-like local context: thin bordered surfaces, compact activity modules, role-aware chips, and public Run 1 proof supporting recruitment for international participants and Korean/local buddies.
 
 ## 2. Color
 
 ### Palette
 
-| Role | Token | Light | Usage |
-|------|-------|-------|-------|
-| Text/primary | `ink-950` | `#101316` | Body text, dark hero base, high-contrast buttons |
-| Text/strong | `ink-900` | `#171b20` | Hero gradient depth and dark surfaces |
-| Text/secondary | `ink-800` | `#242a31` | Paragraph text and subdued body copy |
-| Text/muted | `ink-700` | `#343c46` | Secondary labels when more restraint is needed |
-| Surface/base | `clay-50` | `#fbf7ef` | Main warm clay page background |
-| Surface/soft | `clay-100` | `#f3eadb` | Soft panels and included-section containers |
-| Surface/warm-line | `clay-200` | `#e3d0ae` | Warm dividers, subtle fills, and secondary surfaces |
-| Accent/cta | `amber-300` | `#f6c96d` | Primary CTA fill, focus ring, hero highlights |
-| Accent/cta-hover | `amber-400` | `#edac2f` | CTA hover state and warm hero glow |
-| Accent/cta-pressed | `amber-500` | `#c77a17` | CTA pressed state and warm border emphasis |
-| Support/field | `field-500` | `#2f855a` | Included-list dots, stadium field references |
-| Support/field-strong | `field-700` | `#1e5f43` | Section labels and darker field stripe states |
-| Accent/score | `score-500` | `#bf3f32` | Run labels, scarcity accents, event urgency |
-| Hero/warm-shadow | `stadium-brown` | `#2b2016` | Existing hero gradient tail, not a general surface |
-| Surface/plain | `white` | `#ffffff` | Cards and high-readability content blocks |
+| Role | Token | Value | Usage |
+| --- | --- | --- | --- |
+| Page canvas | `canvas` | `#fbf9f4` | Default page background and first visual read |
+| Soft canvas | `canvas-soft` | `#fbf9f7` | Alternate section background and nav surface |
+| Text primary | `ink` | `#182820` | Headlines, body, primary CTA fill |
+| Text strong / CTA hover | `sage` | `#2d3e35` | Hover states, active tabs, app chrome |
+| Text secondary | `muted` | `#434844` | Paragraphs, captions, helper copy |
+| Border strong | `line-strong` | `#c3c8c3` | App preview outlines, focused chips, structural dividers |
+| Border soft | `line-soft` | `#e4e2dd` | Cards, gallery frames, quiet separators |
+| Panel muted | `panel` | `#f0eee9` | Product/activity cards and grouped modules |
+| Panel raised | `panel-raised` | `#f5f3ee` | Elevated app preview pieces and final CTA surface |
+| Warm accent | `clay` | `#735a3e` | Restrained emphasis, small labels, Run 1 evidence tags |
+| Success support | `mint` | `#cee9da` | Optional positive status chip, used only for confirmed/ready states |
 
 ### Rules
 
-- Clay is the dominant public-page background; avoid cold or synthetic campaign colors.
-- Ink is the main contrast system. Use amber only for CTAs, focus, and a few key highlights.
-- Field green supports baseball context and included-benefit markers; score red is reserved for urgency and pilot labels.
-- Raw hex values in UI code must map to the tokens above or be added here first.
-- Real stadium photography carries the atmosphere. Gradients may support legibility, but they cannot replace the actual stadium asset.
+- Use `canvas` or `canvas-soft` as the page base; do not introduce pure white as the dominant surface.
+- `ink` and `sage` carry interaction and authority. `clay` is a small supporting accent, not a decorative theme.
+- Borders do most of the separation. Prefer `line-soft`; use `line-strong` only for app preview structure or clear active states.
+- `mint` is optional and should appear only when a product status needs a positive semantic state.
+- Do not add decorative colors, gradients, glows, or campaign accents unless they are first promoted into this table for a real component need.
 
 ## 3. Typography
 
 ### Font Stack
 
-- Primary: `Outfit, system-ui, -apple-system, Segoe UI, Roboto, sans-serif`
-- Mono: none in the current page.
-- Serif: none in the current page.
+- Primary UI and body: `Manrope, "Noto Sans", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+- Korean fallback: `"Noto Sans KR", "Noto Sans", system-ui, sans-serif`
+- Restrained display serif, optional only for a single editorial welcome/proof moment: `"Liberation Serif", Georgia, ui-serif, serif`
 
 ### Scale
 
-| Level | Size | Weight | Line Height | Tracking | Usage |
-|-------|------|--------|-------------|----------|-------|
-| Display | `text-4xl` to `lg:text-7xl` | 900 | `0.98` | tight | Hero headline |
-| Section H2 | `text-4xl` to `sm:text-5xl` | 900 | tight | tight | Major section titles |
-| Card H3 | `text-lg` to `text-xl` | 900 | normal | normal | Card and step titles |
-| Lead | `text-lg` to `sm:text-2xl` | 500 | relaxed | normal | Hero and section lead copy |
-| Body | `text-base` | 400 to 600 | relaxed | normal | Default explanations |
-| Small | `text-sm` | 400 to 700 | relaxed | normal | Details, helper text, footer |
-| Overline | `text-xs` or `text-sm` | 800 to 900 | normal | `0.14em` to `0.18em` | Section labels and metadata |
+| Level | Size | Weight | Line height | Tracking | Usage |
+| --- | --- | --- | --- | --- | --- |
+| Display | `48px` to `72px` | 700 | 1.05 | 0 | Hero headline |
+| H1 | `40px` to `56px` | 700 | 1.10 | 0 | Major section title |
+| H2 | `28px` to `36px` | 650 | 1.18 | 0 | Product workflow and role headings |
+| H3 | `20px` to `24px` | 650 | 1.25 | 0 | Card titles, app module titles |
+| Body large | `18px` | 400 to 500 | 1.65 | 0 | Hero lead and section lead |
+| Body | `16px` | 400 to 500 | 1.65 | 0 | Default readable copy |
+| Body small | `14px` | 400 to 600 | 1.55 | 0 | Captions, metadata, helper text |
+| Label | `12px` | 650 to 700 | 1.35 | 0 | Chips, tabs, nav labels, compact statuses |
 
 ### Rules
 
-- Outfit is part of the brand feel. Do not swap it unless the whole page is revalidated.
-- Use heavy weights for event clarity, but keep paragraphs at readable weights and relaxed line heights.
-- Body text must stay at 14px or larger.
-- Uppercase overlines are allowed for rhythm, but keep tracking at zero for ordinary readable text.
+- Typography should feel like an MVP product surface, not an event poster. Keep headings confident but compact.
+- Manrope carries the app-like geometry; Noto Sans and Noto Sans KR keep bilingual copy stable.
+- The serif is optional and should not become the main brand voice unless the implementation explicitly needs one human editorial accent.
+- Body text never goes below `14px`. Letter spacing stays `0`.
+- Keep paragraph measures comfortable, usually 58 to 70 characters.
 
-## 4. Spacing & Layout
+## 4. Spacing
 
-### Spacing
+### Rhythm
 
-All spacing follows Tailwind's 4px-based scale.
+Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. Smaller 4px steps are allowed only for icon/text optical alignment and tight internal offsets.
 
-| Token | Value | Current usage |
-|-------|-------|---------------|
-| `space-1` | 4px | Tight icon, dot, and focus offsets |
-| `space-2` | 8px | Compact inline rhythm |
-| `space-3` | 12px | Small gaps and pill padding |
-| `space-4` | 16px | Mobile card padding and CTA vertical rhythm |
-| `space-5` | 20px | Page side padding |
-| `space-6` | 24px | Default card padding |
-| `space-8` | 32px | Hero and section grid gaps |
-| `space-10` | 40px | Larger section gaps |
-| `space-14` | 56px | Final CTA vertical rhythm |
-| `space-16` | 64px | Standard section vertical padding |
-| `space-20` | 80px | Large desktop section padding |
+| Token | Value | Usage |
+| --- | --- | --- |
+| `space-0-5` | `4px` | Optical adjustment, icon gap, fine border offset |
+| `space-1` | `8px` | Base gap, chip padding, compact stacks |
+| `space-1-5` | `12px` | Card inner gaps, tab padding, small module padding |
+| `space-2` | `16px` | Default component padding, grid gaps on mobile |
+| `space-3` | `24px` | Card padding, section intro spacing |
+| `space-4` | `32px` | Group spacing, app preview lanes |
+| `space-6` | `48px` | Compact section vertical rhythm |
+| `space-8` | `64px` | Standard section vertical rhythm |
+| `space-10` | `80px` | Hero and final CTA vertical rhythm |
 
-### Responsive Breakpoints
+### Radius
 
-| Viewport | Role | Layout rule |
-|----------|------|-------------|
-| `390px` | Mobile QA target | Single-column layout, CTAs stack, no horizontal scroll |
-| `768px` | Tablet QA target | Navigation can reveal desktop links, grids may become 2 to 3 columns |
-| `1440px` | Desktop QA target | Content stays constrained with `max-w-6xl`, hero may use two columns |
+| Token | Value | Usage |
+| --- | --- | --- |
+| `radius-sm` | `8px` | Chips, small buttons, thumbnail corners |
+| `radius-md` | `12px` | Cards, tabs, app preview modules, CTA buttons |
+| `radius-shell` | `24px` to `32px` | Device/app shells only, when the UI preview needs a contained screen shape |
 
-### Rules
+### Layout
 
-- The page uses constrained content width, not edge-to-edge card stacks.
-- Sections should feel rounded but not over-carded. Use cards for repeated facts and steps, not every page band.
-- Keep hero height responsive with `dvh` where full-viewport behavior is needed.
-- Do not add framework layout systems. The current static HTML plus Tailwind CDN structure is the source of truth.
+- Max content width: `1200px` for main sections; `1040px` for dense explanatory copy.
+- Use CSS grid for section structure and app-preview compositions. Avoid symmetrical three-card rows when a workflow or role split is clearer.
+- First viewport should introduce the product and recruitment path, then show proof. Run 1 imagery supports the product story rather than dominating it.
+- Every fixed-format UI element, card, tab row, and preview shell needs stable dimensions or responsive constraints so labels and bilingual copy do not resize the layout unexpectedly.
 
 ## 5. Components
 
-### CTA Button
+### Navigation
 
-- **Structure**: anchor with `data-cta`, rounded-full shape, amber fill, ink text, bold label.
-- **Variants**: primary amber, secondary outline on dark hero, text link in footer.
-- **Spacing**: horizontal padding from `space-4` to `space-8`, vertical padding from `space-2` to `space-4`.
-- **States**: hover uses `amber-400`; active uses a small scale transform; focus uses the shared focus ring.
-- **Accessibility**: must remain keyboard reachable and keep `target="_blank"` plus `rel="noopener"` when JavaScript enhances Kakao links.
+- Structure: compact top bar with brand, section anchors, language control, and a clear recruitment CTA. Until the real Google Form URL exists, the CTA may point to an in-page "Google Form coming soon" state with KakaoTalk as temporary contact/fallback.
+- Surface: `canvas-soft` with `line-soft`; avoid floating glass or heavy shadow.
+- States: active/hover text shifts to `sage`; focus uses a visible `line-strong` outline.
 
-### Information Card
+### CTA
 
-- **Structure**: rounded card with border or ring, short overline, strong title, concise support copy.
-- **Variants**: white cards on clay, translucent cards on dark hero, ink cards in the how-to section.
-- **Spacing**: default padding is `space-6`; compact hero stat cards may use `space-4`.
-- **States**: repeated informational cards may use `.card-lift` hover only when the card is not visually noisy.
-- **Accessibility**: cards are content containers unless they are actual links or controls.
+- Primary CTA: `ink` fill, `canvas-soft` text, `12px` radius, no glow.
+- Secondary CTA or guide link: transparent or `panel` surface with `line-soft`.
+- All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
-### Stadium Image Frame
+### Product and Activity Cards
 
-- **Structure**: rounded image container with real Jamsil stadium imagery and a dark legibility overlay.
-- **Variants**: hero card frame and social preview image.
-- **Spacing**: keep internal caption padding at `space-4` or `space-5`.
-- **Accessibility**: image alt text must identify the real stadium context without exposing private details.
-- **Rules**: no QR codes, seat details, prominent private faces, or irrelevant product branding in primary public imagery.
+- Use `panel` or `panel-raised`, `12px` radius, `line-soft` border, and app-like metadata rows.
+- Cards should describe real MVP concepts: activity discovery, activity detail, application status, buddy preparation, and manual operations.
+- Do not create decorative cards that only repeat marketing adjectives.
 
-### Language Toggle
+### Role Chips and Tabs
 
-- **Structure**: keyboard-reachable segmented control or paired buttons labeled for English and Korean.
-- **Variants**: compact header control, optional repeated footer control only if discoverability requires it.
-- **States**: current language must be visually selected and exposed with `aria-pressed` or equivalent state.
-- **Behavior**: default language is English. Switching to Korean updates visible copy and `document.documentElement.lang`.
-- **Persistence**: only store the language preference in `localStorage`; do not collect names, contacts, or analytics data for the toggle.
-- **Content rule**: every visible navigation, hero, section, CTA, payment, safety, team trust, footer, and image-alt string controlled by the language toggle needs an English and Korean value.
+- Roles: Tourist, Buddy, Operations/Admin.
+- Chips use `8px` or `12px` radius, tight 8px/12px padding, and clear selected states.
+- They should explain permission and flow differences without pretending that the static landing implements those flows.
 
-### Team Social Link
+### App Preview Modules
 
-- **Structure**: external anchor inside each team card, labeled by the social platform name.
-- **Variants**: compact rounded outline link using field green text on white cards.
-- **Spacing**: sits below the member note with `space-5` top rhythm and compact horizontal padding.
-- **States**: hover may add a clay fill and darker field border; active uses a small scale transform.
-- **Accessibility**: must use `target="_blank"` and `rel="noopener"` for external social links.
-- **Content rule**: use only user-approved public profile links, and keep the link label concise so foreign participants can recognize the destination quickly.
+- Use HTML/CSS UI previews, not Figma temporary images.
+- Modules may show activity cards, application status, AI context notes, payment confirmation, or buddy checklists.
+- Device shells may use `radius-shell`; inner modules return to `8px` or `12px`.
 
-## 6. Motion & Interaction
+### Run 1 Evidence
 
-### Timing
+- Public Run 1 proof should mention only completed-operation facts, approved photos, and the approved testimonial quote.
+- Use the completed 2026-06-25 Jamsil KBO operation as factual proof that HanBuddy has hosted a real local baseball-culture experience with local Koreans.
+- Use this exact English quote when showing the participant testimonial publicly: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
+- Use this fixed Korean translation when the same testimonial appears in Korean: "한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!"
+- Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
+- Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
+
+### Gallery
+
+- Gallery is supporting context, not the main product explanation.
+- Use thin borders, stable aspect ratios, and plain captions that say what the image proves: real participants, a completed Korean baseball-culture activity, and a local buddy atmosphere.
+
+### Team and Final CTA
+
+- Team section should establish ZeroOne credibility and current MVP direction without turning into a founder poster.
+- Final CTA repeats the recruitment action for the next activity planned for July 18 or July 19, says the Google Form link is forthcoming when no real URL exists, keeps KakaoTalk as temporary contact/fallback, and avoids implying in-page data collection.
+
+## 6. Motion
 
 | Type | Duration | Easing | Usage |
-|------|----------|--------|-------|
-| Micro | 150ms to 180ms | ease | CTA hover, card lift, focus entry |
-| Standard | 180ms to 220ms | ease | Toggle state and small surface changes |
+| --- | --- | --- | --- |
+| Micro | `120ms` to `160ms` | `ease-out` | Button press, chip hover, focus reveal |
+| Standard | `180ms` to `240ms` | `ease-in-out` | Tab switch, card hover, nav state |
+| Emphasis | `320ms` to `420ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | First-load product preview entry only |
 
 ### Rules
 
-- Animate only transform, opacity, border color, and shadow strength.
-- Respect `prefers-reduced-motion` by shortening or disabling non-essential transitions.
-- Every interactive element needs a visible focus state. The shared focus ring is `3px` amber with a `4px` offset.
-- Hover states must not be the only cue for a control's purpose.
+- Motion is low and purposeful. It should clarify state, not entertain.
+- Animate only `transform`, `opacity`, `filter`, border color, and shadow strength.
+- Respect `prefers-reduced-motion`; disable non-essential entry motion and keep state changes instant but visible.
+- Hover can lift by at most 1 to 2px. No loud parallax, no orbit drawing, no glow pulses.
+- Every interactive element needs hover, active, focus-visible, and disabled/loading treatment where the state exists.
 
-## 7. Depth & Surface
+## 7. Depth
 
 ### Strategy
 
-Use mixed depth with restraint: tonal clay surfaces, thin borders, occasional rings, and one strong lift shadow for key cards. The page should not become a stack of nested panels.
+Use thin borders plus low shadows. Depth should read like a trustworthy product interface, not a campaign composition.
 
-| Level | Token or value | Usage |
-|-------|----------------|-------|
-| Flat | `clay-50`, `white`, `ink-950` | Main page bands |
-| Subtle | `border-ink-950/10`, `ring-ink-950/10` | Cards, dividers, contained lists |
-| Elevated | `shadow-lift` or `0 24px 80px -48px rgba(16, 19, 22, 0.65)` | Hero card and final trust-critical surfaces |
-| Hover lift | `translateY(-3px)` plus `0 22px 64px -42px rgba(16, 19, 22, 0.72)` | Optional repeated info-card affordance |
+| Level | Value | Usage |
+| --- | --- | --- |
+| Border soft | `1px solid #e4e2dd` | Default cards, section dividers, gallery frames |
+| Border strong | `1px solid #c3c8c3` | Focus, active tabs, app shell structure |
+| Shadow subtle | `0 1px 2px rgba(24, 40, 32, 0.05)` | Cards at rest, small modules |
+| Shadow raised | `0 8px 24px rgba(24, 40, 32, 0.08)` | Device/app shell or final CTA surface only |
 
 ### Rules
 
-- No card inside another card unless the inner card is a genuine media or stat frame.
-- Rounded corners can be generous, but repeated content should not all compete as isolated feature cards.
-- The dark hero can use grain and glow for depth; content sections should stay quieter and more readable.
+- No loud glow, no decorative campaign composition, no heavy colored shadows.
+- Do not stack cards inside cards unless the inner element is clearly an app preview module.
+- Use tonal shifts between `canvas`, `canvas-soft`, `panel`, and `panel-raised` before adding shadows.
+- Any new elevation level must be tied to a named component in Section 5 before it is used.
