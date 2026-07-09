@@ -7,7 +7,7 @@
   <meta name="description" content="HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial." />
 
   <meta property="og:title" content="HanBuddy by ZeroOne | Join Korean local experiences with buddies" />
-  <meta property="og:description" content="Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 will open soon, and the Google Form link will be added here." />
+  <meta property="og:description" content="Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 are open through the Google Form." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/run1-group.webp" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -23,18 +23,19 @@
             'canvas-soft': '#fbf9f7',
             ink: '#182820',
             sage: '#2d3e35',
+            'sage-mist': '#96a99d',
             muted: '#434844',
             'line-strong': '#c3c8c3',
             'line-soft': '#e4e2dd',
             panel: '#f0eee9',
             'panel-raised': '#f5f3ee',
-            clay: '#735a3e',
-            mint: '#cee9da',
+            earth: '#8a6c33',
+            success: '#3f6b46',
+            'success-soft': '#dcead9',
           },
           fontFamily: {
-            sans: ['Manrope', 'Noto Sans', 'Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-            kr: ['Noto Sans KR', 'Noto Sans', 'system-ui', 'sans-serif'],
-            serif: ['Liberation Serif', 'Georgia', 'ui-serif', 'serif'],
+            sans: ['Be Vietnam Pro', 'Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            display: ['Manrope', 'Noto Sans KR', 'system-ui', 'sans-serif'],
           },
           boxShadow: {
             subtle: '0 1px 2px rgba(24, 40, 32, 0.05)',
@@ -46,7 +47,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -55,13 +56,15 @@
       --color-canvas-soft: #fbf9f7;
       --color-ink: #182820;
       --color-sage: #2d3e35;
+      --color-sage-mist: #96a99d;
       --color-muted: #434844;
       --color-line-strong: #c3c8c3;
       --color-line-soft: #e4e2dd;
       --color-panel: #f0eee9;
       --color-panel-raised: #f5f3ee;
-      --color-clay: #735a3e;
-      --color-mint: #cee9da;
+      --color-earth: #8a6c33;
+      --color-success: #3f6b46;
+      --color-success-soft: #dcead9;
     }
 
     html {
@@ -70,6 +73,14 @@
 
     body {
       text-rendering: optimizeLegibility;
+    }
+
+    :lang(ko) body,
+    :lang(ko) h1,
+    :lang(ko) h2,
+    :lang(ko) h3,
+    :lang(ko) p {
+      word-break: keep-all;
     }
 
     .skip-link {
@@ -96,73 +107,45 @@
       outline-offset: 4px;
     }
 
-    .chapter-line {
-      background-image: linear-gradient(90deg, var(--color-line-soft) 1px, transparent 1px);
-      background-size: 28px 1px;
-      background-repeat: repeat-x;
-      background-position: left bottom;
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-earth);
     }
 
-    .app-canvas {
+    .photo-card {
       position: relative;
-      isolation: isolate;
+      overflow: hidden;
+      border-radius: 1rem;
+      background: var(--color-panel);
     }
 
-    .app-canvas::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      opacity: 0.28;
-      background-image:
-        linear-gradient(var(--color-line-soft) 1px, transparent 1px),
-        linear-gradient(90deg, var(--color-line-soft) 1px, transparent 1px);
-      background-size: 100% 32px, 32px 100%;
+    .photo-card img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform 240ms ease;
     }
 
-    .ui-card {
-      border: 1px solid var(--color-line-soft);
-      border-radius: 0.75rem;
-      background: var(--color-panel-raised);
-      box-shadow: 0 1px 2px rgba(24, 40, 32, 0.05);
-    }
-
-    .app-preview-stage {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .app-preview-stage::before {
+    .photo-card::after {
       content: '';
       position: absolute;
-      z-index: -1;
-      inset: 1rem 0 0 2rem;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(24, 40, 32, 0) 45%, rgba(24, 40, 32, 0.72) 100%);
       pointer-events: none;
-      border: 1px solid var(--color-line-strong);
-      border-radius: 2rem;
-      background: var(--color-panel);
-      transform: translate3d(0, 0, 0);
     }
 
-    .app-shell {
-      border: 1px solid var(--color-line-strong);
-      border-radius: 2rem;
-      background: var(--color-panel-raised);
-      box-shadow: 0 8px 24px rgba(24, 40, 32, 0.08);
+    .photo-card:hover img {
+      transform: scale(1.02);
     }
 
-    .device-media {
-      border-radius: 1.5rem;
-    }
-
-    .ui-chip {
-      border-radius: 0.75rem;
-    }
-
-    .brand-mark {
-      background: var(--color-clay);
-      box-shadow: 14px 0 0 var(--color-mint);
+    .photo-card-copy {
+      position: absolute;
+      inset: auto 1.25rem 1.1rem 1.25rem;
+      z-index: 1;
+      color: #fbf9f7;
     }
 
     .photo-lift {
@@ -186,30 +169,26 @@
   </style>
 </head>
 
-<body class="app-canvas bg-canvas font-sans text-ink antialiased">
+<body class="bg-canvas font-sans text-ink antialiased">
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
     <nav class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
-      <a href="#top" class="focusable flex shrink-0 items-center gap-3 rounded-full" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
-        <span class="relative grid h-9 w-9 place-items-center rounded-xl bg-ink text-sm font-extrabold text-canvas-soft" aria-hidden="true">
-          HB
-          <span class="brand-mark absolute -bottom-1 left-2 h-2 w-2 rounded-full"></span>
-        </span>
-        <span class="font-semibold">HanBuddy</span>
+      <a href="#top" class="focusable shrink-0 rounded-full font-display text-lg font-extrabold tracking-tight text-ink" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
+        HanBuddy
       </a>
 
       <div class="hidden items-center gap-5 text-sm font-semibold text-muted lg:flex" data-nav-links></div>
 
       <div class="flex shrink-0 items-center gap-2">
-        <div class="flex rounded-xl border border-line-soft bg-panel-raised p-1" role="group" aria-label="Select language" data-i18n-aria="languageToggle.aria">
-          <button type="button" class="focusable rounded-lg px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
-          <button type="button" class="focusable rounded-lg px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
+        <div class="flex rounded-full border border-line-soft bg-panel-raised p-1" role="group" aria-label="Select language" data-i18n-aria="languageToggle.aria">
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
         <a href="#apply" data-cta="apply"
-           class="focusable rounded-xl bg-ink px-3.5 py-2 text-sm font-extrabold text-canvas-soft transition hover:bg-sage active:translate-y-px sm:px-4">
-          <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Form soon</span>
-          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Google Form coming soon</span>
+           class="focusable rounded-full bg-ink px-4 py-2 text-sm font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px sm:px-5">
+          <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Apply</span>
+          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Apply via Google Form</span>
         </a>
       </div>
     </nav>
@@ -217,151 +196,110 @@
 
   <main id="main">
     <section id="top" class="overflow-hidden">
-      <div class="mx-auto grid max-w-7xl gap-8 px-5 pb-8 pt-7 md:pt-10 lg:min-h-[calc(100dvh-5.5rem)] lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:pb-10">
-        <div class="max-w-3xl">
-          <p class="inline-flex ui-chip border border-line-soft bg-panel-raised px-3 py-2 text-xs font-extrabold text-clay shadow-subtle" data-i18n="hero.eyebrow">
-            Recruiting guests and local buddies for Korean culture nights
-          </p>
-          <h1 class="mt-5 max-w-3xl text-[2.35rem] font-extrabold leading-[1.06] text-ink sm:text-6xl lg:text-7xl" data-i18n="hero.title">
-            Join Korean local experiences with a HanBuddy.
-          </h1>
-          <p class="mt-5 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-            HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.
-          </p>
+      <div class="mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
+        <p class="eyebrow" data-i18n="hero.eyebrow">
+          Recruiting guests and local buddies
+        </p>
+        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl lg:text-7xl" data-i18n="hero.title">
+          Join Korean local experiences with a HanBuddy.
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
+          HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.
+        </p>
 
-          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href="#apply" data-cta="apply"
-               class="focusable rounded-xl bg-ink px-7 py-3.5 text-center text-base font-extrabold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="hero.primaryCta">
-              Google Form coming soon
-            </a>
-            <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
-               class="focusable hidden rounded-xl border border-line-soft bg-panel-raised px-7 py-3.5 text-center text-base font-bold text-ink transition hover:bg-panel active:translate-y-px sm:block" data-i18n="hero.guideCta">
-              Read the Run 1 guide
-            </a>
-            <a href="#evidence"
-               class="focusable hidden rounded-xl px-7 py-3.5 text-center text-base font-bold text-muted transition hover:bg-panel-raised active:translate-y-px sm:block" data-i18n="hero.secondaryCta">
-              Read the testimonial
-            </a>
-          </div>
-          <div class="mt-6 hidden max-w-xl grid-cols-3 overflow-hidden rounded-2xl border border-line-soft bg-panel-raised text-center shadow-subtle sm:grid">
-            <div class="border-r border-line-soft px-2 py-3 sm:px-3">
-              <p class="text-xl font-extrabold text-ink sm:text-2xl">Guest</p>
-              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microOne">recommended</p>
-            </div>
-            <div class="border-r border-line-soft px-2 py-3 sm:px-3">
-              <p class="text-xl font-extrabold text-ink sm:text-2xl">Run 1</p>
-              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microTwo">completed pilot</p>
-            </div>
-            <div class="px-2 py-3 sm:px-3">
-              <p class="text-xl font-extrabold text-ink sm:text-2xl">Jul 18/19</p>
-              <p class="mt-1 text-[0.7rem] font-bold leading-4 text-muted sm:text-xs" data-i18n="hero.microThree">applications soon</p>
-            </div>
-          </div>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+             class="focusable rounded-full bg-ink px-8 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="hero.primaryCta">
+            Apply via Google Form
+          </a>
+          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
+             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-ink transition hover:text-sage">
+            <span data-i18n="hero.guideCta">Read the Run 1 guide</span> <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
 
-        <div class="app-preview-stage px-0 py-2 sm:px-5 lg:py-8">
-          <div class="app-shell mx-auto max-w-[600px] p-3 sm:p-4">
-            <div class="flex items-center justify-between border-b border-line-soft px-1 pb-3">
-              <div>
-                <p class="text-xs font-extrabold text-clay" data-i18n="hero.mockupLabel">MVP activity detail</p>
-                <h2 class="mt-1 text-lg font-extrabold leading-tight text-ink sm:text-2xl" data-i18n="hero.mockupTitle">KBO stadium night with a local buddy</h2>
-              </div>
-              <span class="rounded-lg bg-mint px-3 py-1.5 text-xs font-extrabold text-sage" data-i18n="hero.mockupStatus">Run 1 completed</span>
-            </div>
-
-            <div class="grid gap-3 pt-3 sm:grid-cols-[0.9fr_1.1fr] sm:gap-4 sm:pt-4">
-              <figure class="relative overflow-hidden rounded-xl border border-line-soft bg-panel">
-                <img src="assets/run1-group.webp" width="975" height="1300" fetchpriority="high"
-                     class="aspect-[16/10] w-full object-cover object-[50%_34%] sm:aspect-[0.8]" alt="Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands" data-i18n-alt="meta.heroAlt" />
-                <figcaption class="absolute bottom-2 left-2 right-2 rounded-lg bg-canvas-soft/95 px-3 py-2 text-xs font-extrabold leading-4 text-clay shadow-subtle backdrop-blur">
-                  <span data-i18n="hero.caption">Approved Run 1 photo</span>
-                </figcaption>
-              </figure>
-
-              <div class="grid gap-3">
-                <div class="rounded-xl border border-line-soft bg-panel px-3 py-3 sm:px-4">
-                  <div class="flex flex-wrap gap-2">
-                    <span class="rounded-lg border border-line-strong bg-canvas-soft px-3 py-1.5 text-xs font-extrabold text-ink" data-i18n="hero.roleTourist">Tourist</span>
-                    <span class="rounded-lg border border-line-soft bg-panel-raised px-3 py-1.5 text-xs font-bold text-muted" data-i18n="hero.roleBuddy">Buddy</span>
-                    <span class="rounded-lg border border-line-soft bg-panel-raised px-3 py-1.5 text-xs font-bold text-muted" data-i18n="hero.roleOps">Operations</span>
-                  </div>
-                  <p class="mt-3 text-sm font-semibold leading-6 text-muted" data-i18n="hero.mockupBody">
-                    Browse the experience, understand the buddy role, and check application status once the Google Form opens.
-                  </p>
-                </div>
-
-                <div class="rounded-xl border border-line-soft bg-canvas-soft px-3 py-3 sm:px-4">
-                  <p class="text-xs font-extrabold text-clay" data-i18n="hero.aiLabel">AI context planned</p>
-                  <p class="mt-2 text-sm font-semibold leading-6 text-ink" data-i18n="hero.aiBody">
-                    Planned support: cultural briefs, cheering cues, food tips, and reviewable prompts buddies can use on site.
-                  </p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                  <div class="rounded-xl border border-line-soft bg-panel-raised px-3 py-3">
-                    <p class="text-lg font-extrabold text-ink">Quote</p>
-                    <p class="text-xs font-bold leading-4 text-muted" data-i18n="hero.cardOne">guest recommendation</p>
-                  </div>
-                  <div class="rounded-xl border border-line-soft bg-panel-raised px-3 py-3">
-                    <p class="text-lg font-extrabold text-ink">06.25</p>
-                    <p class="text-xs font-bold leading-4 text-muted" data-i18n="hero.cardTwo">Jamsil KBO pilot</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <span class="rounded-full bg-success-soft px-4 py-2 text-xs font-bold text-success" data-i18n="hero.statusDone">Run 1 completed &middot; Jamsil, June 25</span>
+          <span class="rounded-full border border-line-soft bg-panel-raised px-4 py-2 text-xs font-bold text-muted" data-i18n="hero.statusNext">Run 2 &middot; July 18/19 &middot; applications open</span>
         </div>
+      </div>
+
+      <div class="mx-auto grid max-w-7xl gap-4 px-5 pb-16 sm:grid-cols-3 sm:pb-20">
+        <figure class="photo-card aspect-[16/10] sm:aspect-[4/5]">
+          <img src="assets/run1-group.webp" width="975" height="1300" fetchpriority="high" class="object-[50%_30%]"
+               alt="Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands" data-i18n-alt="meta.heroAlt" />
+          <figcaption class="photo-card-copy">
+            <p class="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-canvas-soft/80" data-i18n="hero.photoOneLabel">Run 1 &middot; June 25</p>
+            <p class="mt-1 font-display text-lg font-bold leading-tight" data-i18n="hero.photoOneTitle">Guests and buddies at Jamsil</p>
+          </figcaption>
+        </figure>
+        <figure class="photo-card aspect-[16/10] sm:aspect-[4/5]">
+          <img src="assets/run1-night.webp" width="1100" height="610" loading="lazy" class="object-[38%_50%]"
+               alt="Fans waving phone lights under the night scoreboard at Jamsil Baseball Stadium during HanBuddy Run 1" data-i18n-alt="meta.nightAlt" />
+          <figcaption class="photo-card-copy">
+            <p class="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-canvas-soft/80" data-i18n="hero.photoTwoLabel">Night game</p>
+            <p class="mt-1 font-display text-lg font-bold leading-tight" data-i18n="hero.photoTwoTitle">Phone-light cheering</p>
+          </figcaption>
+        </figure>
+        <figure class="photo-card aspect-[16/10] sm:aspect-[4/5]">
+          <img src="assets/run1-opening.webp" width="1100" height="825" loading="lazy" class="object-[50%_60%]"
+               alt="Jamsil Baseball Stadium field before the game during HanBuddy Run 1" data-i18n-alt="meta.openingAlt" />
+          <figcaption class="photo-card-copy">
+            <p class="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-canvas-soft/80" data-i18n="hero.photoThreeLabel">On the field</p>
+            <p class="mt-1 font-display text-lg font-bold leading-tight" data-i18n="hero.photoThreeTitle">Before the first pitch</p>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
-    <section id="problem" class="chapter-line border-y border-line-soft bg-canvas-soft">
-      <div class="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+    <section id="problem" class="border-y border-line-soft bg-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:py-24">
         <div>
-          <p class="text-sm font-bold text-clay" data-i18n="problem.eyebrow">Tourist problem</p>
-          <h2 class="mt-4 max-w-2xl text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="problem.title">
+          <p class="eyebrow" data-i18n="problem.eyebrow">Tourist problem</p>
+          <h2 class="mt-4 max-w-2xl font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="problem.title">
             The best local moments are easier to enter with someone beside you.
           </h2>
           <p class="mt-5 max-w-2xl text-base leading-8 text-muted" data-i18n="problem.body">
             Korean stadiums, food spots, fan rituals, and neighborhood activities become more welcoming when a local buddy explains what is happening, when to join in, and what feels natural.
           </p>
         </div>
-        <div class="grid gap-4 md:grid-cols-3" data-problem-cards></div>
+        <div class="border-t border-line-strong" data-problem-cards></div>
       </div>
     </section>
 
     <section id="workflow" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
       <div class="max-w-3xl">
-        <p class="text-sm font-bold text-clay" data-i18n="workflow.eyebrow">How HanBuddy works</p>
-        <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="workflow.title">
+        <p class="eyebrow" data-i18n="workflow.eyebrow">How HanBuddy works</p>
+        <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="workflow.title">
             HanBuddy connects guests, buddies, and operators around one clear experience.
         </h2>
         <p class="mt-5 text-base leading-8 text-muted" data-i18n="workflow.body">
-            Guests get context before joining, buddies prepare to host, and ZeroOne keeps confirmation manual while the Google Form application link is being prepared.
+            Guests get context before joining, buddies prepare to host, and ZeroOne confirms every Google Form application directly.
         </p>
       </div>
-      <div class="mt-10 grid gap-4 md:grid-cols-3" data-workflow-items></div>
+      <div class="mt-12 grid gap-8 md:grid-cols-3 md:gap-6" data-workflow-items></div>
     </section>
 
     <section id="roles" class="border-y border-line-soft bg-canvas-soft">
       <div class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
         <div>
-          <p class="text-sm font-bold text-clay" data-i18n="roles.eyebrow">MVP role surfaces</p>
-          <h2 class="mt-4 max-w-3xl text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="roles.title">
+          <p class="eyebrow" data-i18n="roles.eyebrow">MVP role surfaces</p>
+          <h2 class="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="roles.title">
             International guests join; Korean/local buddies host and guide.
           </h2>
           <p class="mt-5 max-w-3xl text-base leading-8 text-muted" data-i18n="roles.body">
             The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.
           </p>
         </div>
-        <div class="mt-10 grid gap-4 lg:grid-cols-[1fr_1fr_0.86fr]" data-role-cards></div>
+        <div class="mt-12 grid gap-4 md:grid-cols-2" data-role-cards></div>
       </div>
     </section>
 
     <section id="ai" class="bg-ink text-canvas-soft">
       <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-24">
         <div>
-          <p class="text-sm font-bold text-mint" data-i18n="ai.eyebrow">AI support standard</p>
-          <h2 class="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl" data-i18n="ai.title">
+          <p class="eyebrow" style="color: var(--color-sage-mist)" data-i18n="ai.eyebrow">AI support standard</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="ai.title">
             Planned AI support should make every buddy better prepared.
           </h2>
           <p class="mt-5 text-base leading-8 text-line-soft" data-i18n="ai.body">
@@ -375,8 +313,8 @@
     <section id="evidence" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
       <div class="grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
         <div>
-          <p class="text-sm font-bold text-clay" data-i18n="evidence.eyebrow">Run 1 testimonial</p>
-          <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="evidence.title">
+          <p class="eyebrow" data-i18n="evidence.eyebrow">Run 1 testimonial</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="evidence.title">
             A real guest recommends the HanBuddy baseball-culture experience.
           </h2>
           <p class="mt-5 text-base leading-8 text-muted" data-i18n="evidence.body">
@@ -384,47 +322,37 @@
           </p>
           <div class="mt-8 grid gap-4" data-evidence-cards></div>
         </div>
-        <div class="grid gap-4">
-          <figure class="photo-lift overflow-hidden rounded-3xl bg-panel-raised shadow-raised ring-1 ring-line-soft">
-            <img src="assets/run1-hero.webp" width="1800" height="1350" loading="eager"
-                 class="aspect-[16/9] w-full object-cover object-[50%_24%]" alt="Jamsil Baseball Stadium field during HanBuddy Run 1" data-i18n-alt="meta.stadiumAlt" />
-            <figcaption class="grid gap-3 p-4 text-sm leading-6 text-muted sm:grid-cols-[1fr_auto] sm:items-center">
-              <span data-i18n="evidence.stadiumCaption">The field context: cheering timing, rules, food, and fan culture that need local explanation.</span>
-              <span class="ui-chip bg-panel px-4 py-2 text-xs font-extrabold text-clay" data-i18n="evidence.stadiumBadge">Jamsil / June 25</span>
-            </figcaption>
-          </figure>
-          <figure class="photo-lift overflow-hidden rounded-3xl bg-panel-raised shadow-raised ring-1 ring-line-soft">
-            <img src="assets/run1-night.webp" width="1100" height="610" loading="lazy"
-                 class="aspect-[16/9] w-full object-cover object-[50%_45%]" alt="Fans waving phone lights under the night scoreboard at Jamsil Baseball Stadium during HanBuddy Run 1" data-i18n-alt="meta.nightAlt" />
-            <figcaption class="grid gap-3 p-4 text-sm leading-6 text-muted sm:grid-cols-[1fr_auto] sm:items-center">
-              <span data-i18n="evidence.nightCaption">Night-game energy: phone-light cheering and the live scoreboard guests experience together.</span>
-              <span class="ui-chip bg-panel px-4 py-2 text-xs font-extrabold text-clay" data-i18n="evidence.nightBadge">Jamsil / Night game</span>
-            </figcaption>
-          </figure>
-        </div>
+        <figure class="photo-lift">
+          <img src="assets/run1-hero.webp" width="1800" height="1350" loading="lazy"
+               class="aspect-[4/3] w-full rounded-2xl object-cover object-[50%_24%] sm:aspect-[16/10]" alt="Jamsil Baseball Stadium field during HanBuddy Run 1" data-i18n-alt="meta.stadiumAlt" />
+          <figcaption class="mt-4 flex flex-col gap-2 text-sm leading-6 text-muted sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+            <span data-i18n="evidence.stadiumCaption">The field context: cheering timing, rules, food, and fan culture that need local explanation.</span>
+            <span class="shrink-0 text-xs font-bold uppercase tracking-[0.16em] text-earth" data-i18n="evidence.stadiumBadge">Jamsil / June 25</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
     <section id="policy" class="border-y border-line-soft bg-canvas-soft">
       <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-24">
         <div>
-          <p class="text-sm font-bold text-clay" data-i18n="policy.eyebrow">Safety and privacy</p>
-          <h2 class="mt-4 text-3xl font-extrabold leading-tight text-ink sm:text-4xl" data-i18n="policy.title">
+          <p class="eyebrow" data-i18n="policy.eyebrow">Safety and privacy</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="policy.title">
             Safety, privacy, and confirmation stay clear before anyone joins.
           </h2>
           <p class="mt-5 text-base leading-8 text-muted" data-i18n="policy.body">
             This page does not collect personal information. Applications and questions will go through external channels, and ZeroOne will confirm participation details directly before each activity.
           </p>
         </div>
-        <div class="grid gap-4 sm:grid-cols-3" data-policy-items></div>
+        <div class="grid gap-8 sm:grid-cols-3 sm:gap-6" data-policy-items></div>
       </div>
     </section>
 
     <section id="team" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
       <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
         <div>
-          <p class="text-sm font-bold text-clay" data-i18n="team.eyebrow">Hosted by ZeroOne</p>
-          <h2 class="mt-4 font-serif text-4xl font-medium leading-tight sm:text-5xl" data-i18n="team.title">
+          <p class="eyebrow" data-i18n="team.eyebrow">Hosted by ZeroOne</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="team.title">
             A small ZeroOne team hosting carefully before scaling.
           </h2>
           <p class="mt-5 text-base leading-8 text-muted" data-i18n="team.body">
@@ -438,29 +366,29 @@
     <section id="apply" class="bg-ink text-canvas-soft">
       <div class="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <p class="text-sm font-bold text-mint" data-i18n="finalCta.eyebrow">Next activity applications</p>
-          <h2 class="mt-4 max-w-3xl font-serif text-4xl font-medium leading-tight sm:text-5xl" data-i18n="finalCta.title">
-            Applications for July 18 or 19 will open soon.
+          <p class="eyebrow" style="color: var(--color-sage-mist)" data-i18n="finalCta.eyebrow">Next activity applications</p>
+          <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
+            Applications for July 18 or 19 are open.
           </h2>
           <p id="application-status-note" class="mt-5 max-w-2xl text-base leading-8 text-line-soft" data-i18n="finalCta.body">
-            The Google Form link will be added here soon. Until then, KakaoTalk is available only as a temporary contact and update fallback.
+            Apply through the Google Form. For questions and updates, the KakaoTalk open chat is also available.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-line-soft">
-            <span data-i18n="finalCta.fallback">Temporary KakaoTalk contact:</span>
+            <span data-i18n="finalCta.fallback">KakaoTalk open chat:</span>
             <span class="font-semibold text-canvas-soft">https://open.kakao.com/o/gDBFqEyi</span>
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <button type="button" disabled aria-describedby="application-status-note"
-             class="rounded-xl border border-line-strong/40 bg-canvas-soft/20 px-7 py-3.5 text-center text-base font-extrabold text-line-soft opacity-90 cursor-not-allowed" data-i18n="finalCta.formButton">
-            Google Form coming soon
-          </button>
+          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+             class="focusable rounded-full bg-canvas-soft px-7 py-3.5 text-center text-base font-bold text-ink transition hover:bg-panel active:translate-y-px" data-i18n="finalCta.formButton">
+            Apply via Google Form
+          </a>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable rounded-xl bg-canvas-soft px-7 py-3.5 text-center text-base font-extrabold text-ink transition hover:bg-panel active:translate-y-px" data-i18n="finalCta.contactButton">
-            Ask on KakaoTalk for updates
+             class="focusable rounded-full border border-line-strong/30 px-7 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="finalCta.contactButton">
+            Ask on KakaoTalk
           </a>
           <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide"
-             class="focusable rounded-xl border border-line-strong/30 px-7 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="finalCta.guideButton">
+             class="focusable rounded-full border border-line-strong/30 px-7 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="finalCta.guideButton">
             Read the Run 1 guide
           </a>
         </div>
@@ -470,20 +398,17 @@
 
   <footer class="border-t border-line-soft bg-canvas">
     <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex items-center gap-3 font-semibold text-ink">
-        <span class="grid h-8 w-8 place-items-center rounded-lg bg-ink text-xs font-extrabold text-canvas-soft" aria-hidden="true">HB</span>
-        <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
-      </div>
+      <p class="font-display font-bold tracking-tight text-ink" data-i18n="footer.brand">HanBuddy by ZeroOne</p>
       <p data-i18n="footer.note">Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.</p>
       <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
-        KakaoTalk fallback contact
+        KakaoTalk open chat
       </a>
     </div>
   </footer>
 
   <script>
     const CONFIG = {
-      apply: '#apply',
+      apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
       contact: 'https://open.kakao.com/o/gDBFqEyi',
       guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
     };
@@ -497,10 +422,11 @@
           title: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
           description: 'HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial.',
           ogTitle: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
-          ogDescription: 'Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 will open soon, and the Google Form link will be added here.',
+          ogDescription: 'Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 are open through the Google Form.',
           heroAlt: 'Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands',
           stadiumAlt: 'Jamsil Baseball Stadium field during HanBuddy Run 1',
           nightAlt: 'Fans waving phone lights under the night scoreboard at Jamsil Baseball Stadium during HanBuddy Run 1',
+          openingAlt: 'Jamsil Baseball Stadium field before the game during HanBuddy Run 1',
         },
         nav: {
           aria: 'Main navigation',
@@ -514,31 +440,23 @@
             { href: '#policy', label: 'Safety' },
             { href: '#team', label: 'Team' },
           ],
-          primaryCta: 'Google Form coming soon',
-          primaryCtaShort: 'Form soon',
+          primaryCta: 'Apply via Google Form',
+          primaryCtaShort: 'Apply',
         },
         hero: {
-          eyebrow: 'Recruiting guests and local buddies for Korean culture nights',
+          eyebrow: 'Recruiting guests and local buddies',
           title: 'Join Korean local experiences with a HanBuddy.',
           subtitle: 'HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.',
-          primaryCta: 'Google Form coming soon',
+          primaryCta: 'Apply via Google Form',
           guideCta: 'Read the Run 1 guide',
-          secondaryCta: 'Read the testimonial',
-          microOne: 'recommended',
-          microTwo: 'completed pilot',
-          microThree: 'applications soon',
-          caption: 'Approved Run 1 photo',
-          mockupLabel: 'MVP activity detail',
-          mockupTitle: 'KBO stadium night with a local buddy',
-          mockupStatus: 'Run 1 completed',
-          roleTourist: 'Tourist',
-          roleBuddy: 'Buddy',
-          roleOps: 'Operations',
-          mockupBody: 'Browse the experience, understand the buddy role, and check application status once the Google Form opens.',
-          aiLabel: 'AI context planned',
-          aiBody: 'Planned support: cultural briefs, cheering cues, food tips, and reviewable prompts buddies can use on site.',
-          cardOne: 'guest recommendation',
-          cardTwo: 'Jamsil KBO pilot',
+          statusDone: 'Run 1 completed · Jamsil, June 25',
+          statusNext: 'Run 2 · July 18/19 · applications open',
+          photoOneLabel: 'Run 1 · June 25',
+          photoOneTitle: 'Guests and buddies at Jamsil',
+          photoTwoLabel: 'Night game',
+          photoTwoTitle: 'Phone-light cheering',
+          photoThreeLabel: 'On the field',
+          photoThreeTitle: 'Before the first pitch',
         },
         problem: {
           eyebrow: 'Tourist problem',
@@ -553,7 +471,7 @@
         workflow: {
           eyebrow: 'How HanBuddy works',
           title: 'HanBuddy connects guests, buddies, and operators around one clear experience.',
-          body: 'Guests get context before joining, buddies prepare to host, and ZeroOne keeps confirmation manual while the Google Form application link is being prepared.',
+          body: 'Guests get context before joining, buddies prepare to host, and ZeroOne confirms every Google Form application directly.',
           items: [
             { step: 'Before', title: 'Choose a local activity and get context.', body: 'Guests review the activity theme, buddy introduction, safety notes, and planned AI context before joining.' },
             { step: 'During', title: 'Meet the Buddy and follow the local rhythm.', body: 'The Buddy explains culture in plain English, prompts interaction, and helps guests avoid feeling like outsiders.' },
@@ -565,9 +483,9 @@
           title: 'International guests join; Korean/local buddies host and guide.',
           body: 'The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.',
           cards: [
-            { label: 'Guest path', title: 'Discover a local activity and apply.', body: 'International guests can understand the experience, check the buddy-led format, and return when the Google Form opens.' },
+            { label: 'Guest path', title: 'Discover a local activity and apply.', body: 'International guests can understand the experience, check the buddy-led format, and apply right away through the Google Form.' },
             { label: 'Buddy path', title: 'Host, guide, and share culture.', body: 'Korean/local buddies can prepare activities, explain cultural context, and help guests enjoy moments that locals understand naturally.' },
-            { label: 'Operations path', title: 'Manual confirmation for now.', body: 'ZeroOne keeps participant communication, safety checks, and status updates direct while the public application flow is being prepared.' },
+            { label: 'Operations path', title: 'Manual confirmation for every application.', body: 'ZeroOne keeps participant communication, safety checks, and status updates direct for every Google Form application.' },
           ],
         },
         ai: {
@@ -586,8 +504,6 @@
           body: 'HanBuddy hosted a Korean baseball-culture experience at Jamsil Baseball Stadium on June 25, 2026. The approved public quote and photos show what guests can expect from joining with local Koreans.',
           stadiumCaption: 'The field context: cheering timing, rules, food, and fan culture that need local explanation.',
           stadiumBadge: 'Jamsil / June 25',
-          nightCaption: 'Night-game energy: phone-light cheering and the live scoreboard guests experience together.',
-          nightBadge: 'Jamsil / June 25, night',
           cards: [
             { label: 'Participant testimonial', value: 'If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!', body: 'Approved quote from a Run 1 participant.' },
             { label: 'Completed experience', value: 'Hosted at Jamsil on June 25', body: 'Run 1 brought guests into a real Korean baseball-culture setting with local support.' },
@@ -617,17 +533,17 @@
         },
         finalCta: {
           eyebrow: 'Next activity applications',
-          title: 'Applications for July 18 or 19 will open soon.',
-          body: 'The Google Form link will be added here soon. Until then, KakaoTalk is available only as a temporary contact and update fallback.',
-          fallback: 'Temporary KakaoTalk contact:',
-          formButton: 'Google Form coming soon',
-          contactButton: 'Ask on KakaoTalk for updates',
+          title: 'Applications for July 18 or 19 are open.',
+          body: 'Apply through the Google Form. For questions and updates, the KakaoTalk open chat is also available.',
+          fallback: 'KakaoTalk open chat:',
+          formButton: 'Apply via Google Form',
+          contactButton: 'Ask on KakaoTalk',
           guideButton: 'Read the Run 1 guide',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
           note: 'Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.',
-          link: 'KakaoTalk fallback contact',
+          link: 'KakaoTalk open chat',
         },
       },
       ko: {
@@ -638,10 +554,11 @@
           title: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
           description: 'HanBuddy는 외국인 게스트와 한국인/로컬 버디를 모집해 한국 로컬 문화 경험을 함께 만드는 공개 모집 랜딩입니다.',
           ogTitle: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
-          ogDescription: '외국인 게스트 또는 로컬 버디로 HanBuddy에 참여하세요. 7월 18일 또는 7월 19일 신청은 곧 열리며, 구글폼 링크가 이 페이지에 추가됩니다.',
+          ogDescription: '외국인 게스트 또는 로컬 버디로 HanBuddy에 참여하세요. 7월 18일 또는 7월 19일 신청이 구글폼으로 열려 있습니다.',
           heroAlt: '잠실야구장 관중석에서 촬영한 HanBuddy 1회차 승인 단체 사진',
           stadiumAlt: 'HanBuddy 1회차가 진행된 잠실야구장 그라운드',
           nightAlt: 'HanBuddy 1회차 야간 경기, 전광판 아래에서 휴대폰 조명으로 응원하는 관중',
+          openingAlt: 'HanBuddy 1회차, 경기 시작 전 잠실야구장 그라운드',
         },
         nav: {
           aria: '주요 내비게이션',
@@ -655,31 +572,23 @@
             { href: '#policy', label: '안전' },
             { href: '#team', label: '팀' },
           ],
-          primaryCta: '구글폼 곧 오픈',
-          primaryCtaShort: '폼 예정',
+          primaryCta: '구글폼으로 신청하기',
+          primaryCtaShort: '신청하기',
         },
         hero: {
-          eyebrow: '외국인 게스트와 로컬 버디를 모집하는 한국 문화 경험',
+          eyebrow: '외국인 게스트 · 로컬 버디 모집',
           title: '한국 로컬 경험을 HanBuddy와 함께하세요.',
           subtitle: 'HanBuddy는 외국인 게스트가 한국 현장 문화를 로컬 버디와 함께 경험하도록 돕고, 한국인 버디가 직접 호스트하고 안내할 수 있는 기회를 만듭니다.',
-          primaryCta: '구글폼 곧 오픈',
+          primaryCta: '구글폼으로 신청하기',
           guideCta: '1회차 가이드 보기',
-          secondaryCta: '참가자 후기 보기',
-          microOne: '추천 후기',
-          microTwo: '완료된 파일럿',
-          microThree: '신청 곧 오픈',
-          caption: '승인된 1회차 사진',
-          mockupLabel: 'MVP 활동 상세',
-          mockupTitle: '로컬 버디와 함께하는 KBO 직관 밤',
-          mockupStatus: '1회차 완료',
-          roleTourist: '관광객',
-          roleBuddy: '버디',
-          roleOps: '운영',
-          mockupBody: '경험을 확인하고 버디 역할을 이해한 뒤, 구글폼이 열리면 신청 상태를 확인할 수 있습니다.',
-          aiLabel: 'AI 맥락 지원 설계 중',
-          aiBody: '계획 중인 지원: 문화 브리프, 응원 타이밍, 음식 팁, 현장에서 버디가 참고할 수 있는 검수형 프롬프트.',
-          cardOne: '참가자 추천 후기',
-          cardTwo: '잠실 KBO 파일럿',
+          statusDone: '1회차 완료 · 잠실 · 6월 25일',
+          statusNext: '2회차 · 7월 18/19일 · 신청 접수 중',
+          photoOneLabel: '1회차 · 6월 25일',
+          photoOneTitle: '잠실에서 게스트와 버디가 함께',
+          photoTwoLabel: '야간 경기',
+          photoTwoTitle: '휴대폰 조명 응원',
+          photoThreeLabel: '그라운드',
+          photoThreeTitle: '경기 시작 전 풍경',
         },
         problem: {
           eyebrow: '관광객 문제',
@@ -694,7 +603,7 @@
         workflow: {
           eyebrow: 'HanBuddy 작동 방식',
           title: 'HanBuddy는 게스트, 버디, 운영을 하나의 분명한 경험으로 연결합니다.',
-          body: '게스트는 참여 전 맥락을 얻고, 버디는 호스트를 준비하며, ZeroOne은 구글폼 신청 링크를 준비하는 동안 확인 절차를 수동으로 관리합니다.',
+          body: '게스트는 참여 전 맥락을 얻고, 버디는 호스트를 준비하며, ZeroOne은 모든 구글폼 신청을 직접 확인합니다.',
           items: [
             { step: '전', title: '로컬 활동을 고르고 사전 맥락을 확인합니다.', body: '게스트는 활동 주제, 버디 소개, 안전 안내, 계획 중인 AI 맥락 요약을 확인합니다.' },
             { step: '중', title: '버디와 만나 현지 리듬을 따라갑니다.', body: '버디는 문화를 쉬운 영어로 설명하고, 상호작용을 돕고, 게스트가 외부인처럼 느끼지 않게 보조합니다.' },
@@ -706,9 +615,9 @@
           title: '외국인 게스트는 참여하고, 한국인/로컬 버디는 호스트하고 안내합니다.',
           body: '이 페이지는 한국 로컬 문화를 경험하고 싶은 게스트와 방문객이 더 잘 즐기도록 돕고 싶은 버디를 함께 모집합니다.',
           cards: [
-            { label: '게스트 경로', title: '로컬 활동을 발견하고 신청합니다.', body: '외국인 게스트는 경험 내용을 이해하고, 버디가 함께하는 방식을 확인한 뒤 구글폼 오픈 시 신청할 수 있습니다.' },
+            { label: '게스트 경로', title: '로컬 활동을 발견하고 신청합니다.', body: '외국인 게스트는 경험 내용을 이해하고, 버디가 함께하는 방식을 확인한 뒤 구글폼으로 바로 신청할 수 있습니다.' },
             { label: '버디 경로', title: '호스트하고, 안내하고, 문화를 나눕니다.', body: '한국인/로컬 버디는 활동을 준비하고 문화 맥락을 설명하며, 게스트가 현장을 자연스럽게 즐기도록 돕습니다.' },
-            { label: '운영 경로', title: '지금은 수동 확인으로 운영합니다.', body: 'ZeroOne은 공개 신청 흐름이 준비되는 동안 참가자 커뮤니케이션, 안전 확인, 상태 안내를 직접 관리합니다.' },
+            { label: '운영 경로', title: '모든 신청을 직접 확인합니다.', body: 'ZeroOne은 모든 구글폼 신청 건에 대해 참가자 커뮤니케이션, 안전 확인, 상태 안내를 직접 관리합니다.' },
           ],
         },
         ai: {
@@ -727,8 +636,6 @@
           body: 'HanBuddy는 2026년 6월 25일 잠실야구장에서 한국 야구 문화 경험을 운영했습니다. 승인된 공개 후기와 사진은 로컬 한국인과 함께하는 경험을 보여줍니다.',
           stadiumCaption: '응원 타이밍, 규칙, 음식, 팬 문화처럼 로컬 설명이 필요한 현장 맥락입니다.',
           stadiumBadge: '잠실 / 6월 25일',
-          nightCaption: '휴대폰 조명 응원과 실시간 전광판까지, 게스트가 함께 느끼는 야간 경기의 에너지입니다.',
-          nightBadge: '잠실 / 6월 25일 야간',
           cards: [
             { label: '참가자 후기', value: '한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!', body: '1회차 참가자의 승인된 공개 후기입니다.' },
             { label: '완료된 경험', value: '6월 25일 잠실에서 운영', body: '1회차는 로컬 지원과 함께 실제 한국 야구 문화 현장에 게스트를 초대한 경험이었습니다.' },
@@ -758,17 +665,17 @@
         },
         finalCta: {
           eyebrow: '다음 활동 신청',
-          title: '7월 18일 또는 7월 19일 신청이 곧 열립니다.',
-          body: '구글폼 링크가 곧 이 페이지에 추가됩니다. 그전까지 KakaoTalk은 임시 문의와 업데이트 fallback으로만 운영합니다.',
-          fallback: '임시 KakaoTalk 문의:',
-          formButton: '구글폼 곧 오픈',
-          contactButton: 'KakaoTalk으로 문의/업데이트 받기',
+          title: '7월 18일 또는 7월 19일 신청이 열렸습니다.',
+          body: '구글폼으로 신청해 주세요. 문의와 업데이트는 KakaoTalk 오픈채팅으로도 가능합니다.',
+          fallback: 'KakaoTalk 오픈채팅:',
+          formButton: '구글폼으로 신청하기',
+          contactButton: 'KakaoTalk으로 문의하기',
           guideButton: '1회차 가이드 보기',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
           note: '1회차는 2026년 6월 25일 잠실야구장에서 완료했습니다.',
-          link: 'KakaoTalk 임시 문의',
+          link: 'KakaoTalk 오픈채팅',
         },
       },
     });
@@ -863,11 +770,15 @@
       clear(container);
       copy.problem.cards.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-soft bg-canvas p-5 shadow-subtle';
+        article.className = 'grid gap-2 border-b border-line-soft py-6 md:grid-cols-[8.5rem_1fr] md:gap-6';
+        const content = document.createElement('div');
+        content.append(
+          textNode('h3', 'text-xl font-bold leading-snug text-ink', item.title),
+          textNode('p', 'mt-2 text-sm leading-6 text-muted', item.body),
+        );
         article.append(
-          textNode('p', 'text-xs font-extrabold text-clay', item.label),
-          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-ink', item.title),
-          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
+          textNode('p', 'pt-1 text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+          content,
         );
         container.appendChild(article);
       });
@@ -879,11 +790,11 @@
       clear(container);
       copy.workflow.items.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-6 shadow-subtle';
+        article.className = 'border-t-2 border-ink pt-5';
         article.append(
-          textNode('p', 'inline-flex rounded-lg bg-mint px-3 py-1.5 text-xs font-extrabold text-sage', item.step),
-          textNode('h3', 'mt-4 text-2xl font-extrabold leading-tight text-ink', item.title),
-          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
+          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.step),
+          textNode('h3', 'mt-3 font-display text-xl font-bold leading-snug text-ink sm:text-2xl', item.title),
+          textNode('p', 'mt-3 text-sm leading-7 text-muted sm:text-base', item.body),
         );
         container.appendChild(article);
       });
@@ -893,14 +804,27 @@
       const container = document.querySelector('[data-role-cards]');
       if (!container) return;
       clear(container);
-      copy.roles.cards.forEach((item) => {
+      copy.roles.cards.forEach((item, index) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-6 shadow-subtle';
-        article.append(
-          textNode('p', 'text-xs font-extrabold text-clay', item.label),
-          textNode('h3', 'mt-3 text-2xl font-extrabold leading-tight text-ink', item.title),
-          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
-        );
+        if (index < 2) {
+          article.className = 'rounded-2xl bg-panel p-7 sm:p-8';
+          article.append(
+            textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+            textNode('h3', 'mt-4 font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', item.title),
+            textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
+          );
+        } else {
+          article.className = 'grid gap-2 rounded-2xl border border-line-soft bg-canvas px-7 py-6 md:col-span-2 md:grid-cols-[8.5rem_1fr] md:gap-6';
+          const content = document.createElement('div');
+          content.append(
+            textNode('h3', 'text-base font-bold leading-snug text-ink', item.title),
+            textNode('p', 'mt-1 text-sm leading-6 text-muted', item.body),
+          );
+          article.append(
+            textNode('p', 'pt-0.5 text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+            content,
+          );
+        }
         container.appendChild(article);
       });
     };
@@ -911,11 +835,11 @@
       clear(container);
       copy.ai.items.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-strong/20 bg-sage/20 p-5';
+        article.className = 'rounded-2xl border border-canvas-soft/10 bg-canvas-soft/5 p-6';
         article.append(
-          textNode('p', 'text-xs font-extrabold text-mint', item.label),
-          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-canvas-soft', item.title),
-          textNode('p', 'mt-4 text-sm leading-6 text-line-soft', item.body),
+          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-sage-mist', item.label),
+          textNode('h3', 'mt-3 text-lg font-bold leading-snug text-canvas-soft', item.title),
+          textNode('p', 'mt-3 text-sm leading-6 text-line-soft', item.body),
         );
         container.appendChild(article);
       });
@@ -925,14 +849,26 @@
       const container = document.querySelector('[data-evidence-cards]');
       if (!container) return;
       clear(container);
-      copy.evidence.cards.forEach((item) => {
+      copy.evidence.cards.forEach((item, index) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-soft bg-panel-raised p-5 shadow-subtle';
-        article.append(
-          textNode('p', 'text-xs font-extrabold text-clay', item.label),
-          textNode('h3', 'mt-3 text-2xl font-extrabold leading-tight text-ink', item.value),
-          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
-        );
+        if (index === 0) {
+          article.className = 'border-l-2 border-earth py-1 pl-6';
+          const quote = document.createElement('blockquote');
+          quote.className = 'font-display text-2xl font-bold leading-snug tracking-tight text-ink';
+          quote.textContent = '“' + item.value + '”';
+          article.append(
+            quote,
+            textNode('p', 'mt-4 text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+            textNode('p', 'mt-1 text-sm leading-6 text-muted', item.body),
+          );
+        } else {
+          article.className = 'rounded-2xl bg-panel px-6 py-5';
+          article.append(
+            textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+            textNode('h3', 'mt-2 text-lg font-bold leading-snug text-ink', item.value),
+            textNode('p', 'mt-2 text-sm leading-6 text-muted', item.body),
+          );
+        }
         container.appendChild(article);
       });
     };
@@ -943,11 +879,11 @@
       clear(container);
       copy.policy.items.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-xl border border-line-soft bg-canvas p-5 shadow-subtle';
+        article.className = 'border-t border-line-soft pt-5';
         article.append(
-          textNode('p', 'text-xs font-extrabold text-clay', item.label),
-          textNode('h3', 'mt-3 text-xl font-extrabold leading-tight text-ink', item.title),
-          textNode('p', 'mt-3 text-sm leading-6 text-muted', item.body),
+          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+          textNode('h3', 'mt-3 text-lg font-bold leading-snug text-ink', item.title),
+          textNode('p', 'mt-2 text-sm leading-6 text-muted', item.body),
         );
         container.appendChild(article);
       });
@@ -959,11 +895,11 @@
       clear(container);
       copy.team.members.forEach((member) => {
         const article = document.createElement('article');
-        article.className = 'flex flex-col rounded-xl border border-line-soft bg-panel-raised p-5';
+        article.className = 'flex flex-col rounded-2xl bg-panel p-6';
         article.append(
-          textNode('p', 'text-xs font-extrabold text-clay', member.role),
-          textNode('h3', 'mt-3 font-serif text-2xl font-medium leading-tight', member.name),
-          textNode('p', 'mt-4 text-sm font-semibold leading-6 text-ink', member.school),
+          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', member.role),
+          textNode('h3', 'mt-3 font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', member.name),
+          textNode('p', 'mt-3 text-sm font-semibold leading-6 text-ink', member.school),
           textNode('p', 'text-sm leading-6 text-muted', member.field),
         );
 
@@ -971,7 +907,7 @@
         link.href = member.url;
         link.target = '_blank';
         link.rel = 'noopener';
-        link.className = 'focusable mt-5 inline-flex w-fit rounded-lg border border-line-soft px-3 py-2 text-sm font-bold text-ink transition hover:bg-panel';
+        link.className = 'focusable mt-5 inline-flex w-fit rounded-full border border-line-strong px-4 py-2 text-sm font-bold text-ink transition hover:bg-canvas-soft';
         link.textContent = copy.team.instagram;
         article.appendChild(link);
         container.appendChild(article);

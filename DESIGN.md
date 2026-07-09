@@ -1,10 +1,10 @@
 # HanBuddy Landing Design System
 
-This is the source of truth for the HanBuddy MVP Figma-derived landing redesign. The active direction is product-led and app-system aligned. The previous Mastercard-inspired, orbital/orange poster direction is retired history and must not be used for new implementation decisions.
+This is the source of truth for the HanBuddy landing. The active direction mirrors the live MVP frontend (hanbuddy-frontend.vercel.app): photography-led, centered hero, pill CTAs, and the MVP's own token set. The previous app-preview/mockup direction and the Mastercard-inspired orbital/orange poster direction are retired history and must not be used for new implementation decisions.
 
 ## 1. Atmosphere
 
-HanBuddy should feel like a quiet local experience OS: human enough to trust before meeting a local buddy, structured enough to feel product-ready, and calm enough to avoid looking like a one-off promo poster. The signature is app-like local context: thin bordered surfaces, compact activity modules, role-aware chips, and public Run 1 proof supporting recruitment for international participants and Korean/local buddies.
+HanBuddy should feel like the marketing surface of the same product the MVP app is: warm, photographic, and quiet. Real Run 1 photography is the primary material — text modules support the photos, not the other way around. Chrome stays minimal (few borders, few boxes); recruitment proof (completed Run 1, approved testimonial) carries the persuasion for international participants and Korean/local buddies.
 
 ## 2. Color
 
@@ -12,33 +12,36 @@ HanBuddy should feel like a quiet local experience OS: human enough to trust bef
 
 | Role | Token | Value | Usage |
 | --- | --- | --- | --- |
-| Page canvas | `canvas` | `#fbf9f4` | Default page background and first visual read |
-| Soft canvas | `canvas-soft` | `#fbf9f7` | Alternate section background and nav surface |
-| Text primary | `ink` | `#182820` | Headlines, body, primary CTA fill |
-| Text strong / CTA hover | `sage` | `#2d3e35` | Hover states, active tabs, app chrome |
-| Text secondary | `muted` | `#434844` | Paragraphs, captions, helper copy |
-| Border strong | `line-strong` | `#c3c8c3` | App preview outlines, focused chips, structural dividers |
-| Border soft | `line-soft` | `#e4e2dd` | Cards, gallery frames, quiet separators |
-| Panel muted | `panel` | `#f0eee9` | Product/activity cards and grouped modules |
-| Panel raised | `panel-raised` | `#f5f3ee` | Elevated app preview pieces and final CTA surface |
-| Warm accent | `clay` | `#735a3e` | Restrained emphasis, small labels, Run 1 evidence tags |
-| Success support | `mint` | `#cee9da` | Optional positive status chip, used only for confirmed/ready states |
+| Page canvas | `canvas` | `#fbf9f4` | Default page background and first visual read (MVP `cream`) |
+| Soft canvas | `canvas-soft` | `#fbf9f7` | Nav surface, text on dark bands |
+| Text primary | `ink` | `#182820` | Headlines, body, primary CTA fill (MVP `forest`) |
+| Text strong / CTA hover | `sage` | `#2d3e35` | Hover states, dark-band chrome (MVP `forest-soft`) |
+| Muted sage | `sage-mist` | `#96a99d` | Eyebrows and labels on dark bands only (MVP `sage`) |
+| Text secondary | `muted` | `#434844` | Paragraphs, captions, helper copy (MVP `ink-soft`) |
+| Border strong | `line-strong` | `#c3c8c3` | List head rules, pill link borders, active states |
+| Border soft | `line-soft` | `#e4e2dd` | Hairline dividers, quiet separators |
+| Panel muted | `panel` | `#f0eee9` | Role/team cards and grouped modules (MVP `sand`) |
+| Panel raised | `panel-raised` | `#f5f3ee` | Status chips, language toggle (MVP `chip`) |
+| Warm accent | `earth` | `#8a6c33` | Eyebrows, uppercase labels, evidence tags (MVP `earth`) |
+| Success | `success` | `#3f6b46` | Text inside completed-status chips (MVP `success`) |
+| Success surface | `success-soft` | `#dcead9` | Completed-status chip fill (MVP `success-soft`) |
 
 ### Rules
 
+- Token values are copied from the MVP frontend's CSS variables. If the MVP palette changes, update this table from the app, never invent new values locally.
 - Use `canvas` or `canvas-soft` as the page base; do not introduce pure white as the dominant surface.
-- `ink` and `sage` carry interaction and authority. `clay` is a small supporting accent, not a decorative theme.
-- Borders do most of the separation. Prefer `line-soft`; use `line-strong` only for app preview structure or clear active states.
-- `mint` is optional and should appear only when a product status needs a positive semantic state.
-- Do not add decorative colors, gradients, glows, or campaign accents unless they are first promoted into this table for a real component need.
+- `ink` and `sage` carry interaction and authority. `earth` is a small supporting accent for uppercase labels, not a decorative theme.
+- `success`/`success-soft` appear only for genuinely completed states (e.g. "Run 1 completed"). `sage-mist` appears only on the dark `ink` bands.
+- Hairline dividers do most of the separation; boxed cards are the exception, not the default.
+- Do not add decorative colors, gradients, glows, or campaign accents unless they are first promoted into this table for a real component need. The only permitted gradient is the photo-card scrim (transparent to `ink` at 72%).
 
 ## 3. Typography
 
 ### Font Stack
 
-- Primary UI and body: `Manrope, "Noto Sans", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
-- Korean fallback: `"Noto Sans KR", "Noto Sans", system-ui, sans-serif`
-- Restrained display serif, optional only for a single editorial welcome/proof moment: `"Liberation Serif", Georgia, ui-serif, serif`
+- Body and UI (`font-sans`): `"Be Vietnam Pro", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+- Display and headings (`font-display`): `Manrope, "Noto Sans KR", system-ui, sans-serif`
+- No serif. The pairing matches the MVP frontend (Manrope display over Be Vietnam Pro body).
 
 ### Scale
 
@@ -55,10 +58,10 @@ HanBuddy should feel like a quiet local experience OS: human enough to trust bef
 
 ### Rules
 
-- Typography should feel like an MVP product surface, not an event poster. Keep headings confident but compact.
-- Manrope carries the app-like geometry; Noto Sans and Noto Sans KR keep bilingual copy stable.
-- The serif is optional and should not become the main brand voice unless the implementation explicitly needs one human editorial accent.
-- Body text never goes below `14px`. Letter spacing stays `0`.
+- Typography should feel like the same product as the MVP app. Keep headings confident but compact.
+- Manrope (with `tracking-tight`) carries display geometry; Be Vietnam Pro and Noto Sans KR keep bilingual body copy stable.
+- Eyebrows and small labels are the one tracked element: uppercase, `0.16em`–`0.18em` letter spacing, `earth` (or `sage-mist` on dark bands). Everything else stays at `0` tracking; display headings may go negative (`-0.025em`).
+- Body text never goes below `14px`.
 - Keep paragraph measures comfortable, usually 58 to 70 characters.
 
 ## 4. Spacing
@@ -74,7 +77,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 | `space-1-5` | `12px` | Card inner gaps, tab padding, small module padding |
 | `space-2` | `16px` | Default component padding, grid gaps on mobile |
 | `space-3` | `24px` | Card padding, section intro spacing |
-| `space-4` | `32px` | Group spacing, app preview lanes |
+| `space-4` | `32px` | Group spacing between related modules |
 | `space-6` | `48px` | Compact section vertical rhythm |
 | `space-8` | `64px` | Standard section vertical rhythm |
 | `space-10` | `80px` | Hero and final CTA vertical rhythm |
@@ -84,47 +87,43 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 | Token | Value | Usage |
 | --- | --- | --- |
 | `radius-sm` | `8px` | Chips, small buttons, thumbnail corners |
-| `radius-md` | `12px` | Cards, tabs, app preview modules, CTA buttons |
-| `radius-shell` | `24px` to `32px` | Device/app shells only, when the UI preview needs a contained screen shape |
+| `radius-md` | `16px` | Photo cards, panel cards (`rounded-2xl`) |
+| `radius-pill` | `9999px` | All buttons, status chips, language toggle |
 
 ### Layout
 
-- Max content width: `1200px` for main sections; `1040px` for dense explanatory copy.
-- Use CSS grid for section structure and app-preview compositions. Avoid symmetrical three-card rows when a workflow or role split is clearer.
-- First viewport should introduce the product and recruitment path, then show proof. Run 1 imagery supports the product story rather than dominating it.
-- Every fixed-format UI element, card, tab row, and preview shell needs stable dimensions or responsive constraints so labels and bilingual copy do not resize the layout unexpectedly.
+- Max content width: `1280px` (`max-w-7xl`) for main sections; the hero copy block narrows to `max-w-4xl`, centered.
+- The hero is centered: eyebrow, display headline, lead, pill CTA row, status chips, then a three-across Run 1 photo-card row. Run 1 photography IS the first visual read.
+- Avoid repeating the same boxed three-card grid across sections. Vary the device per section: editorial hairline lists (problem, policy), ruled step columns (workflow), two large cards plus a full-width note (roles), quiet dark-band cards (AI).
+- Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
 
 ### Navigation
 
-- Structure: compact top bar with brand, section anchors, language control, and a clear recruitment CTA. Until the real Google Form URL exists, the CTA may point to an in-page "Google Form coming soon" state with KakaoTalk as temporary contact/fallback.
+- Structure: compact top bar with a text-only "HanBuddy" brand (no logo mark), section anchors, language control, and a clear recruitment CTA linking to the live Google Form.
 - Surface: `canvas-soft` with `line-soft`; avoid floating glass or heavy shadow.
 - States: active/hover text shifts to `sage`; focus uses a visible `line-strong` outline.
 
 ### CTA
 
-- Primary CTA: `ink` fill, `canvas-soft` text, `12px` radius, no glow.
-- Secondary CTA or guide link: transparent or `panel` surface with `line-soft`.
+- All buttons are pills (`rounded-full`), matching the MVP app.
+- Primary CTA: `ink` fill, `canvas-soft` text, no glow.
+- Secondary CTA: plain text link with a trailing arrow (`→`), `ink` text shifting to `sage` on hover; on dark bands, `canvas-soft` fill or thin `line-strong` border.
 - All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
-### Product and Activity Cards
+### Photo Cards (signature)
 
-- Use `panel` or `panel-raised`, `12px` radius, `line-soft` border, and app-like metadata rows.
-- Cards should describe real MVP concepts: activity discovery, activity detail, application status, buddy preparation, and manual operations.
-- Do not create decorative cards that only repeat marketing adjectives.
+- The signature element: real Run 1 photos in `rounded-2xl` frames with a bottom scrim (transparent → `ink` at 72%) and overlaid copy — a small uppercase tracked label over a bold Manrope title, both in `canvas-soft`.
+- Hero uses a three-across row (`aspect-[4/5]` on desktop, `16/10` on mobile); evidence uses a single editorial figure with the caption below the image, not on it.
+- Only approved public WebP photos may appear. Captions state completed-operation facts.
+- Hover: image scales to at most 1.02 inside the fixed frame; the frame itself does not move.
 
-### Role Chips and Tabs
+### Editorial Lists and Step Columns
 
-- Roles: Tourist, Buddy, Operations/Admin.
-- Chips use `8px` or `12px` radius, tight 8px/12px padding, and clear selected states.
-- They should explain permission and flow differences without pretending that the static landing implements those flows.
-
-### App Preview Modules
-
-- Use HTML/CSS UI previews, not Figma temporary images.
-- Modules may show activity cards, application status, AI context notes, payment confirmation, or buddy checklists.
-- Device shells may use `radius-shell`; inner modules return to `8px` or `12px`.
+- Problem/policy content renders as hairline-divided rows or columns: uppercase `earth` label, bold title, muted body. No boxes, no shadows.
+- Workflow steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Before/During/After) — the rule communicates sequence without fake numbering.
+- Role cards: Guest and Buddy get large `panel` cards; Operations is a full-width bordered note row, visually subordinate.
 
 ### Run 1 Evidence
 
@@ -143,7 +142,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### Team and Final CTA
 
 - Team section should establish ZeroOne credibility and current MVP direction without turning into a founder poster.
-- Final CTA repeats the recruitment action for the next activity planned for July 18 or July 19, says the Google Form link is forthcoming when no real URL exists, keeps KakaoTalk as temporary contact/fallback, and avoids implying in-page data collection.
+- Final CTA repeats the recruitment action for the next activity planned for July 18 or July 19, links to the live Google Form as the primary action, keeps KakaoTalk open chat for questions/updates, and avoids implying in-page data collection.
 
 ## 6. Motion
 
@@ -169,14 +168,14 @@ Use thin borders plus low shadows. Depth should read like a trustworthy product 
 
 | Level | Value | Usage |
 | --- | --- | --- |
-| Border soft | `1px solid #e4e2dd` | Default cards, section dividers, gallery frames |
-| Border strong | `1px solid #c3c8c3` | Focus, active tabs, app shell structure |
-| Shadow subtle | `0 1px 2px rgba(24, 40, 32, 0.05)` | Cards at rest, small modules |
-| Shadow raised | `0 8px 24px rgba(24, 40, 32, 0.08)` | Device/app shell or final CTA surface only |
+| Border soft | `1px solid #e4e2dd` | Hairline dividers, quiet separators |
+| Border strong | `1px solid #c3c8c3` | Focus outlines, list head rules, pill link borders |
+| Shadow subtle | `0 1px 2px rgba(24, 40, 32, 0.05)` | Rarely; only when a floating surface truly needs it |
+| Photo scrim | `linear-gradient(transparent 45%, rgba(24,40,32,0.72))` | Photo-card caption legibility only |
 
 ### Rules
 
 - No loud glow, no decorative campaign composition, no heavy colored shadows.
-- Do not stack cards inside cards unless the inner element is clearly an app preview module.
-- Use tonal shifts between `canvas`, `canvas-soft`, `panel`, and `panel-raised` before adding shadows.
+- Do not stack cards inside cards.
+- Use tonal shifts between `canvas`, `canvas-soft`, `panel`, and `panel-raised` before adding borders, and borders before shadows.
 - Any new elevation level must be tied to a named component in Section 5 before it is used.

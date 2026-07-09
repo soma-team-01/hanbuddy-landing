@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing page. The page is being refocused as a public recruitment/promotion landing for international participants and Korean/local buddies. Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote, while the next activity application is planned for July 18 or July 19 with a forthcoming Google Form link. KakaoTalk remains temporary contact/fallback until the real form URL exists. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
+HanBuddy by ZeroOne static landing page. The page is being refocused as a public recruitment/promotion landing for international participants and Korean/local buddies. Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote, while the next activity application is planned for July 18 or July 19 through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). KakaoTalk open chat remains available for questions and updates. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
 
 ## STRUCTURE
 
@@ -31,7 +31,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 |------|----------|-------|
 | Edit visible landing copy | `index.html` | English/Korean copy lives in `CONTENT_MAP` plus initial fallback DOM text |
 | Update design direction | `DESIGN.md`, then `index.html` | Keep tokens aligned with the inline Tailwind config |
-| Change application/contact CTA | `index.html` `CONFIG`, hardcoded anchors, visible CTA copy | Google Form is forthcoming; KakaoTalk is temporary contact/fallback until a real form URL exists |
+| Change application/contact CTA | `index.html` `CONFIG`, hardcoded anchors, visible CTA copy | Google Form is live (`forms.gle/B1fWgX3MjtHUHGNt5`); KakaoTalk open chat handles questions/updates |
 | Change guide CTA | `index.html` `CONFIG.guide` and hardcoded guide anchors | Current guide URL points to the Run 1 Notion guide |
 | Replace public photos | `assets/run1-*.webp` and OG image in `index.html` | Use WebP derivatives only, strip EXIF, preserve meaningful alt text; photos support product proof |
 | Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
@@ -41,17 +41,12 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 
 | Symbol / Section | Type | Location | Role |
 |------------------|------|----------|------|
-| `tailwind.config` | inline config | `index.html` head | Defines MVP Figma-derived palette, font stacks, radius, and shadow tokens |
+| `tailwind.config` | inline config | `index.html` head | Defines the MVP-app-aligned palette (forest/cream/earth/success), Manrope+Be Vietnam Pro font stacks, and shadow tokens |
 | `.skip-link` | CSS utility | `index.html` style block | Keyboard accessibility entry to `#main` |
 | `.focusable` | CSS utility | `index.html` style block | Shared focus-visible ring |
-| `.chapter-line` | CSS utility | `index.html` style block | Subtle section divider treatment |
-| `.app-canvas` | CSS utility | `index.html` style block | App-like product preview background |
-| `.ui-card` | CSS utility | `index.html` style block | Product module card hover/focus treatment |
-| `.app-preview-stage` | CSS utility | `index.html` style block | Hero product preview layout surface |
-| `.app-shell` | CSS utility | `index.html` style block | Device/app shell for the MVP preview |
-| `.device-media` | CSS utility | `index.html` style block | Stable media framing inside app preview modules |
-| `.ui-chip` | CSS utility | `index.html` style block | Compact labels and status chips |
-| `.brand-mark` | CSS utility | `index.html` style block | HB brand mark styling |
+| `.eyebrow` | CSS utility | `index.html` style block | Uppercase tracked section label in `earth` |
+| `.photo-card` | CSS utility | `index.html` style block | Signature Run 1 photo card: rounded frame, bottom scrim, hover zoom |
+| `.photo-card-copy` | CSS utility | `index.html` style block | Overlaid label/title copy inside a photo card |
 | `.photo-lift` | CSS utility | `index.html` style block | Low-risk image hover treatment |
 | `#top` | section | `index.html` | Hero and primary CTA |
 | `#problem` | section | `index.html` | Tourist/local-context problem framing |
@@ -60,9 +55,8 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `#ai` | section | `index.html` | Planned AI context-support framing |
 | `#evidence` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
 | `#policy` | section | `index.html` | Safety, payment, and manual confirmation expectations |
-| `#gallery` | section | `index.html` | Public-ready photo evidence |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
-| `#apply` | section | `index.html` | Final recruitment CTA for the July 18 or July 19 next activity, Google Form forthcoming state, and KakaoTalk fallback |
+| `#apply` | section | `index.html` | Final recruitment CTA for the July 18 or July 19 next activity: live Google Form link plus KakaoTalk open chat |
 | `CONFIG` | inline JS object | `index.html` footer script | Maps CTA keys to external URLs |
 | `CONTENT_MAP` | inline JS object | `index.html` footer script | English/Korean visible copy, nav, cards, alt strings, meta |
 
@@ -70,12 +64,12 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 
 - Keep this as a buildless static page unless the scope materially grows.
 - Production surface is `index.html` plus referenced WebP assets only.
-- Current design direction is the HanBuddy MVP Figma-derived product system: app-like local context, thin bordered surfaces, compact activity modules, role-aware chips, and public Run 1 proof.
-- The hero is product-led. Approved Run 1 photos support proof and trust, while MVP UI previews explain the tourist/buddy/operations flow.
+- Current design direction mirrors the live MVP frontend (hanbuddy-frontend.vercel.app): photography-led, centered hero, pill CTAs, hairline editorial lists, and the MVP's own token set. See `DESIGN.md` for the full system.
+- The hero is photo-led: centered copy with pill CTAs and status chips, then a three-across row of approved Run 1 photo cards. There is no app-mockup preview anymore.
 - Body copy defaults to English for foreign/international participants; Korean toggle exists for local buddies and internal/stakeholder sharing.
 - Public page copy recruits two audiences: foreign/international participants who want Korean local-culture experiences and Korean/local buddies who want to host or guide.
 - The next activity application window is planned for July 18 or July 19 / 7월 18일 또는 7월 19일. Do not invent price, venue, capacity, exact time, activity type, payment method, included items, cancellation terms, refund terms, or guarantees.
-- The Google Form application link is forthcoming. Until the real URL exists, keep KakaoTalk open chat as temporary contact/fallback and do not add fake form URLs.
+- The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (set in `CONFIG.apply`). KakaoTalk open chat stays as the questions/updates channel.
 - The page intentionally does not store personal information. Applications/questions must go through external channels only.
 - Public Run 1 proof should use approved photos, completed-operation facts, and this exact testimonial quote: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
 - Use this fixed Korean testimonial translation: "한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!"
