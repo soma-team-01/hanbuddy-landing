@@ -13,6 +13,15 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23182820'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='20' font-weight='800' fill='%23fbf9f7'%3EHB%3C/text%3E%3C/svg%3E" />
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MW7MFVL50G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-MW7MFVL50G');
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -882,14 +891,55 @@
       persistLanguage(lang);
     };
 
+    const track = (name, params = {}) => {
+      if (typeof window.gtag === 'function') window.gtag('event', name, params);
+    };
+
+    const ctaPlacement = (el) => {
+      if (el.closest('header')) return 'nav';
+      if (el.closest('footer')) return 'footer';
+      return el.closest('section[id]')?.id ?? 'page';
+    };
+
+    const initAnalytics = () => {
+      document.querySelectorAll('[data-cta]').forEach((el) => {
+        el.addEventListener('click', () => {
+          track(`${el.getAttribute('data-cta')}_click`, {
+            placement: ctaPlacement(el),
+            language: document.documentElement.lang,
+          });
+        });
+      });
+
+      if (!('IntersectionObserver' in window)) return;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          track('section_view', {
+            section_id: entry.target.id,
+            language: document.documentElement.lang,
+          });
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.2 });
+      ['programs', 'why', 'how', 'testimonial', 'apply'].forEach((id) => {
+        const section = document.getElementById(id);
+        if (section) observer.observe(section);
+      });
+    };
+
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
         const lang = button.getAttribute('data-lang');
-        if (SUPPORTED_LANGUAGES.includes(lang)) applyLanguage(lang);
+        if (!SUPPORTED_LANGUAGES.includes(lang)) return;
+        const previous = document.documentElement.lang;
+        applyLanguage(lang);
+        if (previous !== lang) track('language_switch', { language: lang, previous_language: previous });
       });
     });
 
     syncCtas();
+    initAnalytics();
     applyLanguage(safeStoredLanguage());
   </script>
 </body>
