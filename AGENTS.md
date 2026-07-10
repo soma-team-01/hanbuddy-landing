@@ -35,7 +35,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | Change guide CTA | `index.html` `CONFIG.guide` and hardcoded guide anchors | Current guide URL points to the Run 1 Notion guide |
 | Replace public photos | `assets/run1-*.webp` and OG image in `index.html` | Use WebP derivatives only, strip EXIF, preserve meaningful alt text; photos support product proof |
 | Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
-| Deploy artifact | `/tmp/hanbuddy-landing-deploy` | Copy only `index.html` and referenced `assets/run1-*.webp` |
+| Deploy artifact | `.vercelignore` allowlist | `npx vercel --prod` uploads only `index.html` and `assets/*.webp`; everything else (docs, raw JPGs, tool folders) is excluded by `.vercelignore` |
 
 ## CODE MAP
 
@@ -116,4 +116,5 @@ find /tmp/hanbuddy-landing-deploy -maxdepth 3 -type f | sort
 - `assets/run1-group.webp` is referenced by Open Graph metadata and as approved Run 1 proof media.
 - `assets/run1-hero.webp` is kept as supporting stadium context, not the main first-viewport image.
 - `.gitignore` excludes local tool folders and raw image patterns, but Git ignore rules do not protect drag-and-drop deploys.
+- `.vercelignore` (added 2026-07-10) is the deploy guardrail: Vercel CLI uploads the working directory, not the git tree, so without it internal docs and raw JPGs get publicly served (this actually happened until 2026-07-10 — `AGENTS.md`, `DESIGN.md`, and `assets/KakaoTalk_*.jpg` returned 200 on the production domain). Keep the allowlist in sync when adding new public assets.
 - There are no tests or CI workflows. For meaningful visual changes, run local preview and capture desktop/tablet/mobile screenshots before sharing.
