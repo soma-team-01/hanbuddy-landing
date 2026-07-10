@@ -1,5 +1,5 @@
-*
-!index.html
-!assets/
-assets/*
-!assets/*.webp
+/*
+!/index.html
+!/assets
+/assets/*
+!/assets/*.webp
