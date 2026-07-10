@@ -1,9 +1,10 @@
 # HanBuddy Landing (공개 모집/홍보 랜딩)
 
-ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 랜딩페이지. 외국인 참가자(foreign/international participants)와 한국인·로컬 buddy를 모집하고, 2026-06-25 잠실 KBO Run 1 운영 사실과 승인된 참가자 후기를 홍보용 proof로 보여준다.
+ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 랜딩페이지. **주 타깃은 외국인 게스트(international guests) 모집**이며, 페이지 전체가 게스트 화법으로 구성된다. 한국인·로컬 buddy 모집은 최종 CTA 섹션의 한 줄 안내(KakaoTalk 오픈채팅 유도)로만 노출한다. 2026-06-25 잠실 KBO Run 1 운영 사실과 승인된 참가자 후기를 홍보용 proof로 보여준다.
 
 - 1차 운영: 2026-06-25 Samsung Lions vs LG Twins, Jamsil Baseball Stadium
-- 다음 활동 신청: July 18 or July 19 / 7월 18일 또는 7월 19일 예정
+- 다음 활동(Run 2) 신청: July 18/19 & 25/26 / 7월 18·19일과 25·26일
+- Run 2 프로그램 2종(구글폼 선택지와 동일 표기): "KBO Baseball Game in Seoul with Local Buddy", "Han River Tour with Local Buddy"
 - Google Form: 실제 신청 링크 `https://forms.gle/B1fWgX3MjtHUHGNt5`가 `index.html`의 `CONFIG.apply`에 연결되어 있다. 링크가 바뀌면 CTA와 문구를 함께 교체한다.
 - 문의/알림 채널: KakaoTalk https://open.kakao.com/o/gDBFqEyi
 - 사전 가이드 링크: https://www.notion.so/388d889585858177b58dc513bd5517c0

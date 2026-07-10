@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HanBuddy by ZeroOne | Join Korean local experiences with buddies</title>
-  <meta name="description" content="HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial." />
+  <title>HanBuddy | Experience Korea with a local buddy</title>
+  <meta name="description" content="HanBuddy matches international visitors with Korean local buddies for real local experiences in Seoul — a KBO baseball night or a Han River day. Applications for July 18/19 and 25/26 are open." />
 
-  <meta property="og:title" content="HanBuddy by ZeroOne | Join Korean local experiences with buddies" />
-  <meta property="og:description" content="Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 are open through the Google Form." />
+  <meta property="og:title" content="HanBuddy | Experience Korea with a local buddy" />
+  <meta property="og:description" content="Join a KBO baseball game or a Han River tour with a Korean local buddy. Applications for July 18/19 and 25/26 are open through the Google Form." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/run1-group.webp" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -69,6 +69,10 @@
 
     html {
       scroll-behavior: smooth;
+    }
+
+    section[id] {
+      scroll-margin-top: 5rem;
     }
 
     body {
@@ -198,13 +202,13 @@
     <section id="top" class="overflow-hidden">
       <div class="mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
         <p class="eyebrow" data-i18n="hero.eyebrow">
-          Recruiting guests and local buddies
+          For international visitors in Korea
         </p>
         <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl lg:text-7xl" data-i18n="hero.title">
-          Join Korean local experiences with a HanBuddy.
+          Experience Korea like a local, not a tourist.
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-          HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.
+          HanBuddy matches you with a friendly Korean buddy for real local experiences in Seoul — cheer at a KBO baseball game or spend a day on the Han River, with everything explained in plain English.
         </p>
 
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -220,7 +224,7 @@
 
         <div class="mt-8 flex flex-wrap items-center justify-center gap-2">
           <span class="rounded-full bg-success-soft px-4 py-2 text-xs font-bold text-success" data-i18n="hero.statusDone">Run 1 completed &middot; Jamsil, June 25</span>
-          <span class="rounded-full border border-line-soft bg-panel-raised px-4 py-2 text-xs font-bold text-muted" data-i18n="hero.statusNext">Run 2 &middot; July 18/19 &middot; applications open</span>
+          <span class="rounded-full border border-line-soft bg-panel-raised px-4 py-2 text-xs font-bold text-muted" data-i18n="hero.statusNext">Run 2 &middot; July 18/19 &amp; 25/26 &middot; applications open</span>
         </div>
       </div>
 
@@ -252,82 +256,65 @@
       </div>
     </section>
 
-    <section id="problem" class="border-y border-line-soft bg-canvas-soft">
-      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:py-24">
-        <div>
-          <p class="eyebrow" data-i18n="problem.eyebrow">Tourist problem</p>
-          <h2 class="mt-4 max-w-2xl font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="problem.title">
-            The best local moments are easier to enter with someone beside you.
-          </h2>
-          <p class="mt-5 max-w-2xl text-base leading-8 text-muted" data-i18n="problem.body">
-            Korean stadiums, food spots, fan rituals, and neighborhood activities become more welcoming when a local buddy explains what is happening, when to join in, and what feels natural.
-          </p>
-        </div>
-        <div class="border-t border-line-strong" data-problem-cards></div>
-      </div>
-    </section>
-
-    <section id="workflow" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+    <section id="programs" class="mx-auto max-w-7xl px-5 pb-16 lg:pb-24">
       <div class="max-w-3xl">
-        <p class="eyebrow" data-i18n="workflow.eyebrow">How HanBuddy works</p>
-        <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="workflow.title">
-            HanBuddy connects guests, buddies, and operators around one clear experience.
+        <p class="eyebrow" data-i18n="programs.eyebrow">Run 2 programs</p>
+        <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="programs.title">
+          Pick your Korean experience.
         </h2>
-        <p class="mt-5 text-base leading-8 text-muted" data-i18n="workflow.body">
-            Guests get context before joining, buddies prepare to host, and ZeroOne confirms every Google Form application directly.
+        <p class="mt-5 text-base leading-8 text-muted" data-i18n="programs.body">
+          Applications are open for July 18, 19, 25, and 26. Choose your program and date when you apply through the Google Form.
         </p>
       </div>
-      <div class="mt-12 grid gap-8 md:grid-cols-3 md:gap-6" data-workflow-items></div>
+      <div class="mt-10 grid gap-4 md:grid-cols-2" data-program-cards></div>
     </section>
 
-    <section id="roles" class="border-y border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+    <section id="why" class="border-y border-line-soft bg-canvas-soft">
+      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:py-24">
         <div>
-          <p class="eyebrow" data-i18n="roles.eyebrow">MVP role surfaces</p>
-          <h2 class="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="roles.title">
-            International guests join; Korean/local buddies host and guide.
+          <p class="eyebrow" data-i18n="why.eyebrow">Why go with a buddy</p>
+          <h2 class="mt-4 max-w-2xl font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="why.title">
+            The best local moments are easier to enter with someone beside you.
           </h2>
-          <p class="mt-5 max-w-3xl text-base leading-8 text-muted" data-i18n="roles.body">
-            The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.
+          <p class="mt-5 max-w-2xl text-base leading-8 text-muted" data-i18n="why.body">
+            Stadium cheering, street food, fan rituals — everything is more welcoming when a local buddy tells you what is happening, when to join in, and what feels natural.
           </p>
         </div>
-        <div class="mt-12 grid gap-4 md:grid-cols-2" data-role-cards></div>
+        <div class="border-t border-line-strong" data-why-cards></div>
       </div>
     </section>
 
-    <section id="ai" class="bg-ink text-canvas-soft">
-      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-24">
-        <div>
-          <p class="eyebrow" style="color: var(--color-sage-mist)" data-i18n="ai.eyebrow">AI support standard</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="ai.title">
-            Planned AI support should make every buddy better prepared.
-          </h2>
-          <p class="mt-5 text-base leading-8 text-line-soft" data-i18n="ai.body">
-            HanBuddy should not replace the local buddy. The planned AI layer turns short buddy input into clearer briefs, multilingual activity copy, cultural context notes, and reviewable checklists.
-          </p>
-        </div>
-        <div class="grid gap-4 sm:grid-cols-3" data-ai-items></div>
+    <section id="how" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+      <div class="max-w-3xl">
+        <p class="eyebrow" data-i18n="how.eyebrow">How it works</p>
+        <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
+            From application to meet-up in three simple steps.
+        </h2>
+        <p class="mt-5 text-base leading-8 text-muted" data-i18n="how.body">
+            You apply once through the Google Form, and the ZeroOne team confirms everything with you directly before the activity.
+        </p>
       </div>
+      <div class="mt-12 grid gap-8 md:grid-cols-3 md:gap-6" data-how-items></div>
     </section>
 
-    <section id="evidence" class="mx-auto max-w-7xl px-5 py-16 lg:py-24">
+    <section id="testimonial" class="mx-auto max-w-7xl border-t border-line-soft px-5 py-16 lg:py-24">
       <div class="grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
         <div>
-          <p class="eyebrow" data-i18n="evidence.eyebrow">Run 1 testimonial</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="evidence.title">
+          <p class="eyebrow" data-i18n="testimonial.eyebrow">Run 1 testimonial</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="testimonial.title">
             A real guest recommends the HanBuddy baseball-culture experience.
           </h2>
-          <p class="mt-5 text-base leading-8 text-muted" data-i18n="evidence.body">
+          <p class="mt-5 text-base leading-8 text-muted" data-i18n="testimonial.body">
             HanBuddy hosted a Korean baseball-culture experience at Jamsil Baseball Stadium on June 25, 2026. The approved public quote and photos show what guests can expect from joining with local Koreans.
           </p>
-          <div class="mt-8 grid gap-4" data-evidence-cards></div>
+          <div class="mt-8 grid gap-4" data-testimonial-cards></div>
         </div>
         <figure class="photo-lift">
           <img src="assets/run1-hero.webp" width="1800" height="1350" loading="lazy"
                class="aspect-[4/3] w-full rounded-2xl object-cover object-[50%_24%] sm:aspect-[16/10]" alt="Jamsil Baseball Stadium field during HanBuddy Run 1" data-i18n-alt="meta.stadiumAlt" />
           <figcaption class="mt-4 flex flex-col gap-2 text-sm leading-6 text-muted sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-            <span data-i18n="evidence.stadiumCaption">The field context: cheering timing, rules, food, and fan culture that need local explanation.</span>
-            <span class="shrink-0 text-xs font-bold uppercase tracking-[0.16em] text-earth" data-i18n="evidence.stadiumBadge">Jamsil / June 25</span>
+            <span data-i18n="testimonial.stadiumCaption">The field context: cheering timing, rules, food, and fan culture that need local explanation.</span>
+            <span class="shrink-0 text-xs font-bold uppercase tracking-[0.16em] text-earth" data-i18n="testimonial.stadiumBadge">Jamsil / June 25</span>
           </figcaption>
         </figure>
       </div>
@@ -368,14 +355,17 @@
         <div>
           <p class="eyebrow" style="color: var(--color-sage-mist)" data-i18n="finalCta.eyebrow">Next activity applications</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
-            Applications for July 18 or 19 are open.
+            Applications for July 18/19 and 25/26 are open.
           </h2>
           <p id="application-status-note" class="mt-5 max-w-2xl text-base leading-8 text-line-soft" data-i18n="finalCta.body">
-            Apply through the Google Form. For questions and updates, the KakaoTalk open chat is also available.
+            Choose your program and date in the Google Form. For questions and updates, the KakaoTalk open chat is also available.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-line-soft">
             <span data-i18n="finalCta.fallback">KakaoTalk open chat:</span>
             <span class="font-semibold text-canvas-soft">https://open.kakao.com/o/gDBFqEyi</span>
+          </p>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-line-soft" data-i18n="finalCta.buddyNote">
+            Korean local who wants to host? Buddies are welcome too — reach out through the KakaoTalk open chat.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
@@ -419,10 +409,10 @@
         languageToggle: { aria: 'Select language' },
         meta: {
           htmlLang: 'en',
-          title: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
-          description: 'HanBuddy recruits international guests and Korean/local buddies for Korean local-culture experiences, with public Run 1 photos and an approved participant testimonial.',
-          ogTitle: 'HanBuddy by ZeroOne | Join Korean local experiences with buddies',
-          ogDescription: 'Join HanBuddy as an international guest or local buddy. Applications for July 18 or 19 are open through the Google Form.',
+          title: 'HanBuddy | Experience Korea with a local buddy',
+          description: 'HanBuddy matches international visitors with Korean local buddies for real local experiences in Seoul — a KBO baseball night or a Han River day. Applications for July 18/19 and 25/26 are open.',
+          ogTitle: 'HanBuddy | Experience Korea with a local buddy',
+          ogDescription: 'Join a KBO baseball game or a Han River tour with a Korean local buddy. Applications for July 18/19 and 25/26 are open through the Google Form.',
           heroAlt: 'Approved HanBuddy Run 1 group photo in the Jamsil Baseball Stadium stands',
           stadiumAlt: 'Jamsil Baseball Stadium field during HanBuddy Run 1',
           nightAlt: 'Fans waving phone lights under the night scoreboard at Jamsil Baseball Stadium during HanBuddy Run 1',
@@ -432,11 +422,10 @@
           aria: 'Main navigation',
           homeAria: 'HanBuddy home',
           links: [
-            { href: '#problem', label: 'Why' },
-            { href: '#workflow', label: 'Flow' },
-            { href: '#roles', label: 'Roles' },
-            { href: '#ai', label: 'AI support' },
-            { href: '#evidence', label: 'Testimonial' },
+            { href: '#programs', label: 'Programs' },
+            { href: '#why', label: 'Why a buddy' },
+            { href: '#how', label: 'How it works' },
+            { href: '#testimonial', label: 'Testimonial' },
             { href: '#policy', label: 'Safety' },
             { href: '#team', label: 'Team' },
           ],
@@ -444,13 +433,13 @@
           primaryCtaShort: 'Apply',
         },
         hero: {
-          eyebrow: 'Recruiting guests and local buddies',
-          title: 'Join Korean local experiences with a HanBuddy.',
-          subtitle: 'HanBuddy helps international guests experience Korean live culture with local buddies, while Korean buddies can host, guide, and share the rhythm locals already know.',
+          eyebrow: 'For international visitors in Korea',
+          title: 'Experience Korea like a local, not a tourist.',
+          subtitle: 'HanBuddy matches you with a friendly Korean buddy for real local experiences in Seoul — cheer at a KBO baseball game or spend a day on the Han River, with everything explained in plain English.',
           primaryCta: 'Apply via Google Form',
           guideCta: 'Read the Run 1 guide',
           statusDone: 'Run 1 completed · Jamsil, June 25',
-          statusNext: 'Run 2 · July 18/19 · applications open',
+          statusNext: 'Run 2 · July 18/19 & 25/26 · applications open',
           photoOneLabel: 'Run 1 · June 25',
           photoOneTitle: 'Guests and buddies at Jamsil',
           photoTwoLabel: 'Night game',
@@ -458,47 +447,36 @@
           photoThreeLabel: 'On the field',
           photoThreeTitle: 'Before the first pitch',
         },
-        problem: {
-          eyebrow: 'Tourist problem',
+        programs: {
+          eyebrow: 'Run 2 programs',
+          title: 'Pick your Korean experience.',
+          body: 'Applications are open for July 18, 19, 25, and 26. Choose your program and date when you apply through the Google Form.',
+          cards: [
+            { label: 'Program 01', title: 'KBO Baseball Game in Seoul with Local Buddy', body: 'Watch a KBO baseball game in Seoul with a local buddy who explains the cheering culture, stadium food, and the flow of the game as it happens.' },
+            { label: 'Program 02', title: 'Han River Tour with Local Buddy', body: 'Experience the Han River the way Seoul locals do — riverside food, picnic culture, and the city views, with a local buddy guiding the day.' },
+          ],
+        },
+        why: {
+          eyebrow: 'Why go with a buddy',
           title: 'The best local moments are easier to enter with someone beside you.',
-          body: 'Korean stadiums, food spots, fan rituals, and neighborhood activities become more welcoming when a local buddy explains what is happening, when to join in, and what feels natural.',
+          body: 'Stadium cheering, street food, fan rituals — everything is more welcoming when a local buddy tells you what is happening, when to join in, and what feels natural.',
           cards: [
-            { label: 'Context gap', title: 'Translation does not explain timing.', body: 'A schedule or map rarely tells a Tourist when to cheer, what to order, or how local fans behave.' },
-            { label: 'Culture gap', title: 'Being present is not the same as joining in.', body: 'HanBuddy gives guests a local buddy who can explain rituals, answer questions, and make the moment easier to share.' },
-            { label: 'Trust gap', title: 'Meeting a stranger needs structure.', body: 'The experience needs a visible purpose, manual confirmation, safety expectations, and a clear activity boundary.' },
+            { label: 'No guesswork', title: 'Know what to do, and when.', body: 'Your buddy tells you when to cheer, what to order, and how local fans enjoy the moment — the things schedules and maps never explain.' },
+            { label: 'Plain English', title: 'Ask anything as it happens.', body: 'Buddies explain the culture in plain English and help you join in instead of watching from the outside.' },
+            { label: 'Clear structure', title: 'A planned activity, not a blind meetup.', body: 'Every experience has a visible purpose and a clear boundary, and the ZeroOne team confirms the details with you directly before the day.' },
           ],
         },
-        workflow: {
-          eyebrow: 'How HanBuddy works',
-          title: 'HanBuddy connects guests, buddies, and operators around one clear experience.',
-          body: 'Guests get context before joining, buddies prepare to host, and ZeroOne confirms every Google Form application directly.',
+        how: {
+          eyebrow: 'How it works',
+          title: 'From application to meet-up in three simple steps.',
+          body: 'You apply once through the Google Form, and the ZeroOne team confirms everything with you directly before the activity.',
           items: [
-            { step: 'Before', title: 'Choose a local activity and get context.', body: 'Guests review the activity theme, buddy introduction, safety notes, and planned AI context before joining.' },
-            { step: 'During', title: 'Meet the Buddy and follow the local rhythm.', body: 'The Buddy explains culture in plain English, prompts interaction, and helps guests avoid feeling like outsiders.' },
-            { step: 'After', title: 'Share feedback so the next run feels better.', body: 'A short follow-up helps the team improve guest comfort, buddy preparation, safety, and communication.' },
+            { step: 'Apply', title: 'Pick your program and date.', body: 'Fill in the Google Form and choose the KBO baseball game or the Han River tour for July 18, 19, 25, or 26.' },
+            { step: 'Confirm', title: 'Get the details confirmed.', body: 'The team reviews every application and confirms the meeting details with you directly — questions are welcome in the KakaoTalk open chat.' },
+            { step: 'Meet up', title: 'Enjoy the day with your buddy.', body: 'Your local buddy walks you through the culture in plain English and helps you join in like a local.' },
           ],
         },
-        roles: {
-          eyebrow: 'MVP role surfaces',
-          title: 'International guests join; Korean/local buddies host and guide.',
-          body: 'The page is built for two recruiting paths: guests who want to experience Korean local culture and buddies who want to help visitors enjoy it with confidence.',
-          cards: [
-            { label: 'Guest path', title: 'Discover a local activity and apply.', body: 'International guests can understand the experience, check the buddy-led format, and apply right away through the Google Form.' },
-            { label: 'Buddy path', title: 'Host, guide, and share culture.', body: 'Korean/local buddies can prepare activities, explain cultural context, and help guests enjoy moments that locals understand naturally.' },
-            { label: 'Operations path', title: 'Manual confirmation for every application.', body: 'ZeroOne keeps participant communication, safety checks, and status updates direct for every Google Form application.' },
-          ],
-        },
-        ai: {
-          eyebrow: 'AI support standard',
-          title: 'Planned AI support should make every buddy better prepared.',
-          body: 'HanBuddy should not replace the local buddy. The planned AI layer turns short buddy input into clearer briefs, multilingual activity copy, cultural context notes, and reviewable checklists.',
-          items: [
-            { label: 'Preparation', title: 'Buddy brief from short input.', body: 'AI can help convert a Buddy idea into meeting notes, local rules, and guest-ready context.' },
-            { label: 'Content', title: 'Multilingual activity copy.', body: 'AI-generated drafts can support English and Korean descriptions, while operators still review what goes public.' },
-            { label: 'Quality', title: 'Repeatable checklist standard.', body: 'The goal is consistent preparation and safer hosting, not a claim that every AI feature is already live.' },
-          ],
-        },
-        evidence: {
+        testimonial: {
           eyebrow: 'Run 1 testimonial',
           title: 'A real guest recommends the HanBuddy baseball-culture experience.',
           body: 'HanBuddy hosted a Korean baseball-culture experience at Jamsil Baseball Stadium on June 25, 2026. The approved public quote and photos show what guests can expect from joining with local Koreans.',
@@ -507,7 +485,7 @@
           cards: [
             { label: 'Participant testimonial', value: 'If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!', body: 'Approved quote from a Run 1 participant.' },
             { label: 'Completed experience', value: 'Hosted at Jamsil on June 25', body: 'Run 1 brought guests into a real Korean baseball-culture setting with local support.' },
-            { label: 'For the next run', value: 'Guests and buddies are both welcome', body: 'HanBuddy is recruiting international guests who want local culture and Korean/local buddies who want to host or guide.' },
+            { label: 'For the next run', value: 'Your turn: July 18/19 & 25/26', body: 'Run 2 applications are open — pick the baseball game or the Han River tour in the Google Form.' },
           ],
         },
         policy: {
@@ -533,9 +511,10 @@
         },
         finalCta: {
           eyebrow: 'Next activity applications',
-          title: 'Applications for July 18 or 19 are open.',
-          body: 'Apply through the Google Form. For questions and updates, the KakaoTalk open chat is also available.',
+          title: 'Applications for July 18/19 and 25/26 are open.',
+          body: 'Choose your program and date in the Google Form. For questions and updates, the KakaoTalk open chat is also available.',
           fallback: 'KakaoTalk open chat:',
+          buddyNote: 'Korean local who wants to host? Buddies are welcome too — reach out through the KakaoTalk open chat.',
           formButton: 'Apply via Google Form',
           contactButton: 'Ask on KakaoTalk',
           guideButton: 'Read the Run 1 guide',
@@ -551,10 +530,10 @@
         languageToggle: { aria: '언어 선택' },
         meta: {
           htmlLang: 'ko',
-          title: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
-          description: 'HanBuddy는 외국인 게스트와 한국인/로컬 버디를 모집해 한국 로컬 문화 경험을 함께 만드는 공개 모집 랜딩입니다.',
-          ogTitle: 'HanBuddy by ZeroOne | 로컬 버디와 함께하는 한국 현장 경험',
-          ogDescription: '외국인 게스트 또는 로컬 버디로 HanBuddy에 참여하세요. 7월 18일 또는 7월 19일 신청이 구글폼으로 열려 있습니다.',
+          title: 'HanBuddy | 로컬 버디와 함께하는 한국 경험',
+          description: 'HanBuddy는 외국인 게스트를 한국인 로컬 버디와 연결해 서울의 진짜 로컬 경험을 만듭니다 — KBO 야구 직관과 한강 투어. 7월 18·19일과 25·26일 신청이 열려 있습니다.',
+          ogTitle: 'HanBuddy | 로컬 버디와 함께하는 한국 경험',
+          ogDescription: '로컬 버디와 함께 KBO 야구 직관 또는 한강 투어에 참여하세요. 7월 18·19일과 25·26일 신청이 구글폼으로 열려 있습니다.',
           heroAlt: '잠실야구장 관중석에서 촬영한 HanBuddy 1회차 승인 단체 사진',
           stadiumAlt: 'HanBuddy 1회차가 진행된 잠실야구장 그라운드',
           nightAlt: 'HanBuddy 1회차 야간 경기, 전광판 아래에서 휴대폰 조명으로 응원하는 관중',
@@ -564,11 +543,10 @@
           aria: '주요 내비게이션',
           homeAria: 'HanBuddy 홈',
           links: [
-            { href: '#problem', label: '왜 필요한가' },
-            { href: '#workflow', label: '흐름' },
-            { href: '#roles', label: '역할' },
-            { href: '#ai', label: 'AI 지원' },
-            { href: '#evidence', label: '후기' },
+            { href: '#programs', label: '프로그램' },
+            { href: '#why', label: '버디가 필요한 이유' },
+            { href: '#how', label: '참여 방법' },
+            { href: '#testimonial', label: '후기' },
             { href: '#policy', label: '안전' },
             { href: '#team', label: '팀' },
           ],
@@ -576,13 +554,13 @@
           primaryCtaShort: '신청하기',
         },
         hero: {
-          eyebrow: '외국인 게스트 · 로컬 버디 모집',
-          title: '한국 로컬 경험을 HanBuddy와 함께하세요.',
-          subtitle: 'HanBuddy는 외국인 게스트가 한국 현장 문화를 로컬 버디와 함께 경험하도록 돕고, 한국인 버디가 직접 호스트하고 안내할 수 있는 기회를 만듭니다.',
+          eyebrow: '외국인 게스트를 위한 로컬 경험',
+          title: '관광객이 아니라 로컬처럼 한국을 경험하세요.',
+          subtitle: 'HanBuddy는 외국인 게스트를 친절한 한국인 로컬 버디와 연결합니다. KBO 야구 직관도, 한강에서의 하루도, 버디가 쉬운 영어로 설명하며 함께합니다.',
           primaryCta: '구글폼으로 신청하기',
           guideCta: '1회차 가이드 보기',
           statusDone: '1회차 완료 · 잠실 · 6월 25일',
-          statusNext: '2회차 · 7월 18/19일 · 신청 접수 중',
+          statusNext: '2회차 · 7월 18/19 · 25/26일 · 신청 접수 중',
           photoOneLabel: '1회차 · 6월 25일',
           photoOneTitle: '잠실에서 게스트와 버디가 함께',
           photoTwoLabel: '야간 경기',
@@ -590,47 +568,36 @@
           photoThreeLabel: '그라운드',
           photoThreeTitle: '경기 시작 전 풍경',
         },
-        problem: {
-          eyebrow: '관광객 문제',
+        programs: {
+          eyebrow: '2회차 프로그램',
+          title: '원하는 한국 경험을 선택하세요.',
+          body: '신청은 7월 18일, 19일, 25일, 26일 회차로 열려 있습니다. 구글폼에서 원하는 프로그램과 날짜를 선택해 신청해 주세요.',
+          cards: [
+            { label: '프로그램 01', title: 'KBO Baseball Game in Seoul with Local Buddy', body: '로컬 버디와 함께 서울에서 KBO 야구 경기를 직관합니다. 응원 문화, 구장 음식, 경기 흐름을 현장에서 바로 설명해 드립니다.' },
+            { label: '프로그램 02', title: 'Han River Tour with Local Buddy', body: '서울 사람들이 즐기는 방식 그대로 한강을 경험합니다. 강변 음식, 피크닉 문화, 도시 풍경을 로컬 버디가 함께 안내합니다.' },
+          ],
+        },
+        why: {
+          eyebrow: '버디가 필요한 이유',
           title: '좋은 로컬 순간은 곁에 함께하는 사람이 있을 때 더 쉽게 들어갈 수 있습니다.',
-          body: '야구장, 음식점, 응원 문화, 동네 활동은 로컬 버디가 지금 무엇이 일어나고 있는지, 언제 함께하면 좋은지, 무엇이 자연스러운지 설명해줄 때 더 환영받는 경험이 됩니다.',
+          body: '응원, 길거리 음식, 팬 문화 — 로컬 버디가 지금 무엇이 일어나고 있는지, 언제 함께하면 좋은지 알려줄 때 모든 순간이 더 환영받는 경험이 됩니다.',
           cards: [
-            { label: '맥락 공백', title: '번역은 타이밍을 설명하지 못합니다.', body: '일정과 지도만으로는 관광객이 언제 응원하고, 무엇을 주문하고, 현지 팬들이 어떻게 행동하는지 알기 어렵습니다.' },
-            { label: '문화 공백', title: '그 자리에 있는 것과 함께 즐기는 것은 다릅니다.', body: 'HanBuddy는 게스트가 의식, 질문, 분위기를 더 쉽게 나눌 수 있도록 로컬 버디를 연결합니다.' },
-            { label: '신뢰 공백', title: '낯선 사람과의 만남에는 구조가 필요합니다.', body: '목적이 분명한 활동, 수동 확인, 안전 기대치, 명확한 활동 범위가 함께 필요합니다.' },
+            { label: '헤매지 않기', title: '언제 무엇을 해야 하는지 바로 알 수 있습니다.', body: '언제 응원하고, 무엇을 주문하고, 현지 팬들이 어떻게 즐기는지 — 일정표와 지도가 알려주지 않는 것을 버디가 알려줍니다.' },
+            { label: '쉬운 영어', title: '궁금한 것은 그 자리에서 물어보세요.', body: '버디가 문화를 쉬운 영어로 설명하고, 밖에서 구경만 하는 대신 함께 즐길 수 있게 돕습니다.' },
+            { label: '분명한 구조', title: '즉흥 만남이 아니라 계획된 활동입니다.', body: '모든 경험에는 분명한 목적과 활동 범위가 있고, ZeroOne 팀이 활동 전 세부 사항을 직접 확인해 드립니다.' },
           ],
         },
-        workflow: {
-          eyebrow: 'HanBuddy 작동 방식',
-          title: 'HanBuddy는 게스트, 버디, 운영을 하나의 분명한 경험으로 연결합니다.',
-          body: '게스트는 참여 전 맥락을 얻고, 버디는 호스트를 준비하며, ZeroOne은 모든 구글폼 신청을 직접 확인합니다.',
+        how: {
+          eyebrow: '참여 방법',
+          title: '신청부터 만남까지 세 단계면 충분합니다.',
+          body: '구글폼으로 한 번 신청하면, ZeroOne 팀이 활동 전 모든 세부 사항을 직접 확인해 드립니다.',
           items: [
-            { step: '전', title: '로컬 활동을 고르고 사전 맥락을 확인합니다.', body: '게스트는 활동 주제, 버디 소개, 안전 안내, 계획 중인 AI 맥락 요약을 확인합니다.' },
-            { step: '중', title: '버디와 만나 현지 리듬을 따라갑니다.', body: '버디는 문화를 쉬운 영어로 설명하고, 상호작용을 돕고, 게스트가 외부인처럼 느끼지 않게 보조합니다.' },
-            { step: '후', title: '후속 피드백으로 다음 회차를 더 좋게 만듭니다.', body: '짧은 후속 확인으로 게스트 편안함, 버디 준비, 안전, 커뮤니케이션을 더 나아지게 합니다.' },
+            { step: '신청', title: '프로그램과 날짜를 선택합니다.', body: '구글폼을 작성하고 7월 18·19·25·26일 중 KBO 야구 직관 또는 한강 투어를 선택하세요.' },
+            { step: '확인', title: '세부 사항을 안내받습니다.', body: '팀이 모든 신청을 검토하고 만남 세부 사항을 직접 안내합니다. 문의는 KakaoTalk 오픈채팅으로 환영합니다.' },
+            { step: '만남', title: '버디와 함께 하루를 즐깁니다.', body: '로컬 버디가 문화를 쉬운 영어로 설명하며, 로컬처럼 함께 즐길 수 있게 돕습니다.' },
           ],
         },
-        roles: {
-          eyebrow: 'MVP 역할 화면',
-          title: '외국인 게스트는 참여하고, 한국인/로컬 버디는 호스트하고 안내합니다.',
-          body: '이 페이지는 한국 로컬 문화를 경험하고 싶은 게스트와 방문객이 더 잘 즐기도록 돕고 싶은 버디를 함께 모집합니다.',
-          cards: [
-            { label: '게스트 경로', title: '로컬 활동을 발견하고 신청합니다.', body: '외국인 게스트는 경험 내용을 이해하고, 버디가 함께하는 방식을 확인한 뒤 구글폼으로 바로 신청할 수 있습니다.' },
-            { label: '버디 경로', title: '호스트하고, 안내하고, 문화를 나눕니다.', body: '한국인/로컬 버디는 활동을 준비하고 문화 맥락을 설명하며, 게스트가 현장을 자연스럽게 즐기도록 돕습니다.' },
-            { label: '운영 경로', title: '모든 신청을 직접 확인합니다.', body: 'ZeroOne은 모든 구글폼 신청 건에 대해 참가자 커뮤니케이션, 안전 확인, 상태 안내를 직접 관리합니다.' },
-          ],
-        },
-        ai: {
-          eyebrow: 'AI 지원 기준',
-          title: '계획 중인 AI 지원은 모든 버디가 더 잘 준비되도록 돕는 방향입니다.',
-          body: 'HanBuddy의 AI는 로컬 버디를 대체하지 않습니다. 짧은 버디 입력을 더 명확한 브리프, 다국어 활동 문안, 문화 맥락 노트, 검수 가능한 체크리스트로 바꾸는 보조 계층입니다.',
-          items: [
-            { label: '준비', title: '짧은 입력에서 버디 브리프 생성.', body: 'AI는 버디 아이디어를 집합 안내, 현장 규칙, 게스트용 맥락으로 정리하는 데 도움을 줄 수 있습니다.' },
-            { label: '콘텐츠', title: '다국어 활동 문안 초안.', body: 'AI 초안은 영어와 한국어 설명을 보조하되, 공개 전 운영자가 검수합니다.' },
-            { label: '품질', title: '반복 가능한 체크리스트.', body: '목표는 모든 AI 기능이 이미 완성됐다고 말하는 것이 아니라 준비 품질과 호스팅 안정성을 맞추는 것입니다.' },
-          ],
-        },
-        evidence: {
+        testimonial: {
           eyebrow: '1회차 참가자 후기',
           title: '실제 게스트가 HanBuddy의 한국 야구 문화 경험을 추천했습니다.',
           body: 'HanBuddy는 2026년 6월 25일 잠실야구장에서 한국 야구 문화 경험을 운영했습니다. 승인된 공개 후기와 사진은 로컬 한국인과 함께하는 경험을 보여줍니다.',
@@ -639,7 +606,7 @@
           cards: [
             { label: '참가자 후기', value: '한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!', body: '1회차 참가자의 승인된 공개 후기입니다.' },
             { label: '완료된 경험', value: '6월 25일 잠실에서 운영', body: '1회차는 로컬 지원과 함께 실제 한국 야구 문화 현장에 게스트를 초대한 경험이었습니다.' },
-            { label: '다음 회차 모집', value: '게스트와 버디 모두 환영합니다', body: 'HanBuddy는 로컬 문화를 원하는 외국인 게스트와 호스트하거나 안내하고 싶은 한국인/로컬 버디를 모집합니다.' },
+            { label: '다음 회차 모집', value: '이제 당신 차례: 7월 18·19 & 25·26', body: '2회차 신청이 열려 있습니다. 구글폼에서 야구 직관 또는 한강 투어를 선택하세요.' },
           ],
         },
         policy: {
@@ -665,9 +632,10 @@
         },
         finalCta: {
           eyebrow: '다음 활동 신청',
-          title: '7월 18일 또는 7월 19일 신청이 열렸습니다.',
-          body: '구글폼으로 신청해 주세요. 문의와 업데이트는 KakaoTalk 오픈채팅으로도 가능합니다.',
+          title: '7월 18·19일과 25·26일 신청이 열렸습니다.',
+          body: '구글폼에서 프로그램과 날짜를 선택해 신청해 주세요. 문의와 업데이트는 KakaoTalk 오픈채팅으로도 가능합니다.',
           fallback: 'KakaoTalk 오픈채팅:',
+          buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. KakaoTalk 오픈채팅으로 문의해 주세요.',
           formButton: '구글폼으로 신청하기',
           contactButton: 'KakaoTalk으로 문의하기',
           guideButton: '1회차 가이드 보기',
@@ -764,11 +732,27 @@
       });
     };
 
-    const renderProblemCards = (copy) => {
-      const container = document.querySelector('[data-problem-cards]');
+    const renderProgramCards = (copy) => {
+      const container = document.querySelector('[data-program-cards]');
       if (!container) return;
       clear(container);
-      copy.problem.cards.forEach((item) => {
+      copy.programs.cards.forEach((item) => {
+        const article = document.createElement('article');
+        article.className = 'rounded-2xl bg-panel p-7 sm:p-8';
+        article.append(
+          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
+          textNode('h3', 'mt-4 font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', item.title),
+          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
+        );
+        container.appendChild(article);
+      });
+    };
+
+    const renderWhyCards = (copy) => {
+      const container = document.querySelector('[data-why-cards]');
+      if (!container) return;
+      clear(container);
+      copy.why.cards.forEach((item) => {
         const article = document.createElement('article');
         article.className = 'grid gap-2 border-b border-line-soft py-6 md:grid-cols-[8.5rem_1fr] md:gap-6';
         const content = document.createElement('div');
@@ -784,11 +768,11 @@
       });
     };
 
-    const renderWorkflowItems = (copy) => {
-      const container = document.querySelector('[data-workflow-items]');
+    const renderHowItems = (copy) => {
+      const container = document.querySelector('[data-how-items]');
       if (!container) return;
       clear(container);
-      copy.workflow.items.forEach((item) => {
+      copy.how.items.forEach((item) => {
         const article = document.createElement('article');
         article.className = 'border-t-2 border-ink pt-5';
         article.append(
@@ -800,56 +784,11 @@
       });
     };
 
-    const renderRoleCards = (copy) => {
-      const container = document.querySelector('[data-role-cards]');
+    const renderTestimonialCards = (copy) => {
+      const container = document.querySelector('[data-testimonial-cards]');
       if (!container) return;
       clear(container);
-      copy.roles.cards.forEach((item, index) => {
-        const article = document.createElement('article');
-        if (index < 2) {
-          article.className = 'rounded-2xl bg-panel p-7 sm:p-8';
-          article.append(
-            textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
-            textNode('h3', 'mt-4 font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', item.title),
-            textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
-          );
-        } else {
-          article.className = 'grid gap-2 rounded-2xl border border-line-soft bg-canvas px-7 py-6 md:col-span-2 md:grid-cols-[8.5rem_1fr] md:gap-6';
-          const content = document.createElement('div');
-          content.append(
-            textNode('h3', 'text-base font-bold leading-snug text-ink', item.title),
-            textNode('p', 'mt-1 text-sm leading-6 text-muted', item.body),
-          );
-          article.append(
-            textNode('p', 'pt-0.5 text-xs font-bold uppercase tracking-[0.16em] text-earth', item.label),
-            content,
-          );
-        }
-        container.appendChild(article);
-      });
-    };
-
-    const renderAiItems = (copy) => {
-      const container = document.querySelector('[data-ai-items]');
-      if (!container) return;
-      clear(container);
-      copy.ai.items.forEach((item) => {
-        const article = document.createElement('article');
-        article.className = 'rounded-2xl border border-canvas-soft/10 bg-canvas-soft/5 p-6';
-        article.append(
-          textNode('p', 'text-xs font-bold uppercase tracking-[0.16em] text-sage-mist', item.label),
-          textNode('h3', 'mt-3 text-lg font-bold leading-snug text-canvas-soft', item.title),
-          textNode('p', 'mt-3 text-sm leading-6 text-line-soft', item.body),
-        );
-        container.appendChild(article);
-      });
-    };
-
-    const renderEvidenceCards = (copy) => {
-      const container = document.querySelector('[data-evidence-cards]');
-      if (!container) return;
-      clear(container);
-      copy.evidence.cards.forEach((item, index) => {
+      copy.testimonial.cards.forEach((item, index) => {
         const article = document.createElement('article');
         if (index === 0) {
           article.className = 'border-l-2 border-earth py-1 pl-6';
@@ -916,11 +855,10 @@
 
     const renderDynamicContent = (copy) => {
       renderNav(copy);
-      renderProblemCards(copy);
-      renderWorkflowItems(copy);
-      renderRoleCards(copy);
-      renderAiItems(copy);
-      renderEvidenceCards(copy);
+      renderProgramCards(copy);
+      renderWhyCards(copy);
+      renderHowItems(copy);
+      renderTestimonialCards(copy);
       renderPolicyItems(copy);
       renderTeamMembers(copy);
     };

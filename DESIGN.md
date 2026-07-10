@@ -4,7 +4,7 @@ This is the source of truth for the HanBuddy landing. The active direction mirro
 
 ## 1. Atmosphere
 
-HanBuddy should feel like the marketing surface of the same product the MVP app is: warm, photographic, and quiet. Real Run 1 photography is the primary material — text modules support the photos, not the other way around. Chrome stays minimal (few borders, few boxes); recruitment proof (completed Run 1, approved testimonial) carries the persuasion for international participants and Korean/local buddies.
+HanBuddy should feel like the marketing surface of the same product the MVP app is: warm, photographic, and quiet. Real Run 1 photography is the primary material — text modules support the photos, not the other way around. Chrome stays minimal (few borders, few boxes); recruitment proof (completed Run 1, approved testimonial) carries the persuasion. The page speaks to one primary reader — the international guest deciding whether to apply — and every section is written in guest-benefit voice; buddy recruitment is a single quiet note in the final CTA.
 
 ## 2. Color
 
@@ -94,7 +94,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - Max content width: `1280px` (`max-w-7xl`) for main sections; the hero copy block narrows to `max-w-4xl`, centered.
 - The hero is centered: eyebrow, display headline, lead, pill CTA row, status chips, then a three-across Run 1 photo-card row. Run 1 photography IS the first visual read.
-- Avoid repeating the same boxed three-card grid across sections. Vary the device per section: editorial hairline lists (problem, policy), ruled step columns (workflow), two large cards plus a full-width note (roles), quiet dark-band cards (AI).
+- Avoid repeating the same boxed three-card grid across sections. Vary the device per section: two large panel cards (programs), editorial hairline lists (why, policy), ruled step columns (how), editorial testimonial figure (testimonial).
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
@@ -121,9 +121,9 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Editorial Lists and Step Columns
 
-- Problem/policy content renders as hairline-divided rows or columns: uppercase `earth` label, bold title, muted body. No boxes, no shadows.
-- Workflow steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Before/During/After) — the rule communicates sequence without fake numbering.
-- Role cards: Guest and Buddy get large `panel` cards; Operations is a full-width bordered note row, visually subordinate.
+- Why/policy content renders as hairline-divided rows or columns: uppercase `earth` label, bold title, muted body. No boxes, no shadows.
+- How-it-works steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Apply/Confirm/Meet up) — the rule communicates sequence without fake numbering.
+- Program cards: the two Run 2 programs get large `panel` cards with the exact Google Form program names as titles in both languages.
 
 ### Run 1 Evidence
 
@@ -142,7 +142,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### Team and Final CTA
 
 - Team section should establish ZeroOne credibility and current MVP direction without turning into a founder poster.
-- Final CTA repeats the recruitment action for the next activity planned for July 18 or July 19, links to the live Google Form as the primary action, keeps KakaoTalk open chat for questions/updates, and avoids implying in-page data collection.
+- Final CTA repeats the recruitment action for the Run 2 dates (July 18/19 and 25/26), links to the live Google Form as the primary action, keeps KakaoTalk open chat for questions/updates, carries the one-line buddy-recruitment note, and avoids implying in-page data collection.
 
 ## 6. Motion
 

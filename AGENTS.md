@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing page. The page is being refocused as a public recruitment/promotion landing for international participants and Korean/local buddies. Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote, while the next activity application is planned for July 18 or July 19 through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). KakaoTalk open chat remains available for questions and updates. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
+HanBuddy by ZeroOne static landing page. The page is a public recruitment/promotion landing whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote. Run 2 applications are open for July 18/19 and 25/26 through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`) with two programs matching the form options exactly: "KBO Baseball Game in Seoul with Local Buddy" and "Han River Tour with Local Buddy". KakaoTalk open chat remains available for questions and updates. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
 
 ## STRUCTURE
 
@@ -48,15 +48,14 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `.photo-card` | CSS utility | `index.html` style block | Signature Run 1 photo card: rounded frame, bottom scrim, hover zoom |
 | `.photo-card-copy` | CSS utility | `index.html` style block | Overlaid label/title copy inside a photo card |
 | `.photo-lift` | CSS utility | `index.html` style block | Low-risk image hover treatment |
-| `#top` | section | `index.html` | Hero and primary CTA |
-| `#problem` | section | `index.html` | Tourist/local-context problem framing |
-| `#workflow` | section | `index.html` | Before/during/after HanBuddy flow |
-| `#roles` | section | `index.html` | Tourist, buddy, and operations surfaces |
-| `#ai` | section | `index.html` | Planned AI context-support framing |
-| `#evidence` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
-| `#policy` | section | `index.html` | Safety, payment, and manual confirmation expectations |
+| `#top` | section | `index.html` | Hero and primary CTA (guest-voiced) |
+| `#programs` | section | `index.html` | Run 2 program cards: KBO baseball game and Han River tour, dates July 18/19 & 25/26 |
+| `#why` | section | `index.html` | Guest benefits of joining with a local buddy (hairline rows) |
+| `#how` | section | `index.html` | Guest journey step columns: Apply / Confirm / Meet up |
+| `#testimonial` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
+| `#policy` | section | `index.html` | Safety, privacy, and manual confirmation expectations |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
-| `#apply` | section | `index.html` | Final recruitment CTA for the July 18 or July 19 next activity: live Google Form link plus KakaoTalk open chat |
+| `#apply` | section | `index.html` | Final recruitment CTA for July 18/19 & 25/26: live Google Form link, KakaoTalk open chat, one-line buddy-recruitment note |
 | `CONFIG` | inline JS object | `index.html` footer script | Maps CTA keys to external URLs |
 | `CONTENT_MAP` | inline JS object | `index.html` footer script | English/Korean visible copy, nav, cards, alt strings, meta |
 
@@ -67,8 +66,8 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 - Current design direction mirrors the live MVP frontend (hanbuddy-frontend.vercel.app): photography-led, centered hero, pill CTAs, hairline editorial lists, and the MVP's own token set. See `DESIGN.md` for the full system.
 - The hero is photo-led: centered copy with pill CTAs and status chips, then a three-across row of approved Run 1 photo cards. There is no app-mockup preview anymore.
 - Body copy defaults to English for foreign/international participants; Korean toggle exists for local buddies and internal/stakeholder sharing.
-- Public page copy recruits two audiences: foreign/international participants who want Korean local-culture experiences and Korean/local buddies who want to host or guide.
-- The next activity application window is planned for July 18 or July 19 / 7월 18일 또는 7월 19일. Do not invent price, venue, capacity, exact time, activity type, payment method, included items, cancellation terms, refund terms, or guarantees.
+- Public page copy targets one primary audience: foreign/international guests who want Korean local-culture experiences. Korean/local buddy recruitment is a secondary one-line note in `#apply` only; do not re-expand it into its own section.
+- The Run 2 application window is July 18/19 and 25/26 / 7월 18·19일과 25·26일, with two programs named exactly as in the Google Form: "KBO Baseball Game in Seoul with Local Buddy" and "Han River Tour with Local Buddy" (keep the English program names in both languages so applicants can match the form options). Do not invent price, venue, capacity, exact time, program-to-date mapping, payment method, included items, cancellation terms, refund terms, or guarantees.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (set in `CONFIG.apply`). KakaoTalk open chat stays as the questions/updates channel.
 - The page intentionally does not store personal information. Applications/questions must go through external channels only.
 - Public Run 1 proof should use approved photos, completed-operation facts, and this exact testimonial quote: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
