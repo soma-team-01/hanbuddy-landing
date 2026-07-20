@@ -13,13 +13,16 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23182820'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='20' font-weight='800' fill='%23fbf9f7'%3EHB%3C/text%3E%3C/svg%3E" />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MW7MFVL50G"></script>
+  <!-- Analytics consent defaults. Google Analytics and Meta Pixel load only after opt-in. -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-MW7MFVL50G');
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+    });
   </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -399,17 +402,55 @@
     <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
       <p class="font-display font-bold tracking-tight text-ink" data-i18n="footer.brand">HanBuddy by ZeroOne</p>
       <p data-i18n="footer.note">Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.</p>
-      <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
-        KakaoTalk open chat
-      </a>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
+          KakaoTalk open chat
+        </a>
+        <button type="button" data-consent-settings aria-controls="analytics-consent"
+                class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
+                data-i18n="consent.settings">
+          Cookie settings
+        </button>
+      </div>
     </div>
   </footer>
+
+  <section id="analytics-consent" data-consent-banner role="dialog" aria-labelledby="analytics-consent-title"
+           aria-describedby="analytics-consent-description" aria-hidden="true"
+           class="fixed inset-x-4 bottom-4 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-raised sm:left-auto sm:max-w-xl sm:p-6">
+    <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div>
+        <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink" data-i18n="consent.title">
+          Help us improve HanBuddy
+        </p>
+        <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted" data-i18n="consent.body">
+          With your permission, Google Analytics and Meta Pixel measure visits, application-form opens, and contact clicks. This page never sends your form answers to these tools.
+        </p>
+      </div>
+      <div class="flex flex-col-reverse gap-2 sm:min-w-52">
+        <button type="button" data-consent-action="reject"
+                class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-panel"
+                data-i18n="consent.reject">
+          Continue without optional cookies
+        </button>
+        <button type="button" data-consent-action="accept"
+                class="focusable rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-canvas-soft transition hover:bg-sage"
+                data-i18n="consent.accept">
+          Allow analytics &amp; ads
+        </button>
+      </div>
+    </div>
+  </section>
 
   <script>
     const CONFIG = {
       apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
       contact: 'https://open.kakao.com/o/gDBFqEyi',
       guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
+      analytics: {
+        googleMeasurementId: 'G-MW7MFVL50G',
+        metaPixelId: '4569887956575986',
+      },
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -533,6 +574,13 @@
           note: 'Run 1 completed on June 25, 2026 at Jamsil Baseball Stadium.',
           link: 'KakaoTalk open chat',
         },
+        consent: {
+          title: 'Help us improve HanBuddy',
+          body: 'With your permission, Google Analytics and Meta Pixel measure visits, application-form opens, and contact clicks. This page never sends your form answers to these tools.',
+          reject: 'Continue without optional cookies',
+          accept: 'Allow analytics & ads',
+          settings: 'Cookie settings',
+        },
       },
       ko: {
         skipLink: '본문으로 이동',
@@ -654,11 +702,22 @@
           note: '1회차는 2026년 6월 25일 잠실야구장에서 완료했습니다.',
           link: 'KakaoTalk 오픈채팅',
         },
+        consent: {
+          title: 'HanBuddy 개선에 동의해 주세요',
+          body: '동의하면 Google Analytics와 Meta Pixel로 방문, 신청 폼 열기, 문의 클릭을 측정합니다. 이 페이지는 작성한 신청서 내용을 해당 도구로 전송하지 않습니다.',
+          reject: '선택 쿠키 없이 계속하기',
+          accept: '분석 및 광고 허용',
+          settings: '쿠키 설정',
+        },
       },
     });
 
     const STORAGE_KEY = 'hanbuddy.language';
+    const ANALYTICS_CONSENT_KEY = 'hanbuddy.analyticsConsent';
     const SUPPORTED_LANGUAGES = ['en', 'ko'];
+    const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
+    let analyticsLoaded = false;
+    let sectionObserverStarted = false;
 
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
     const clear = (node) => {
@@ -891,8 +950,85 @@
       persistLanguage(lang);
     };
 
+    const safeStoredAnalyticsConsent = () => {
+      try {
+        const consent = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
+        return consent === 'granted' || consent === 'denied' ? consent : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const persistAnalyticsConsent = (consent) => {
+      try {
+        window.localStorage.setItem(ANALYTICS_CONSENT_KEY, consent);
+      } catch {
+        // Tracking stays disabled when storage is unavailable.
+      }
+    };
+
+    const isTrackableHost = () => !LOCAL_HOSTNAMES.has(window.location.hostname);
+
+    const updateGoogleConsent = (consent) => {
+      if (typeof window.gtag !== 'function') return;
+      window.gtag('consent', 'update', {
+        ad_storage: consent,
+        ad_user_data: consent,
+        ad_personalization: consent,
+        analytics_storage: consent,
+      });
+    };
+
+    const loadGoogleAnalytics = () => {
+      updateGoogleConsent('granted');
+      if (document.getElementById('google-analytics-script')) return;
+
+      window.gtag('js', new Date());
+      window.gtag('config', CONFIG.analytics.googleMeasurementId);
+
+      const script = document.createElement('script');
+      script.id = 'google-analytics-script';
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.analytics.googleMeasurementId)}`;
+      document.head.appendChild(script);
+    };
+
+    const loadMetaPixel = () => {
+      if (typeof window.fbq === 'function') {
+        window.fbq('consent', 'grant');
+        window.fbq('track', 'PageView');
+        return;
+      }
+
+      !function(f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function() {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = true;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = true;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+      window.fbq('init', CONFIG.analytics.metaPixelId);
+      window.fbq('track', 'PageView');
+    };
+
     const track = (name, params = {}) => {
+      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
       if (typeof window.gtag === 'function') window.gtag('event', name, params);
+    };
+
+    const trackMetaCustom = (name, params = {}) => {
+      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
+      if (typeof window.fbq === 'function') window.fbq('trackCustom', name, params);
     };
 
     const ctaPlacement = (el) => {
@@ -901,17 +1037,9 @@
       return el.closest('section[id]')?.id ?? 'page';
     };
 
-    const initAnalytics = () => {
-      document.querySelectorAll('[data-cta]').forEach((el) => {
-        el.addEventListener('click', () => {
-          track(`${el.getAttribute('data-cta')}_click`, {
-            placement: ctaPlacement(el),
-            language: document.documentElement.lang,
-          });
-        });
-      });
-
-      if (!('IntersectionObserver' in window)) return;
+    const startSectionAnalytics = () => {
+      if (sectionObserverStarted || !('IntersectionObserver' in window)) return;
+      sectionObserverStarted = true;
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
@@ -928,6 +1056,77 @@
       });
     };
 
+    const loadAnalytics = () => {
+      if (analyticsLoaded || !isTrackableHost()) return;
+      analyticsLoaded = true;
+      loadGoogleAnalytics();
+      loadMetaPixel();
+      startSectionAnalytics();
+    };
+
+    const revokeAnalytics = () => {
+      updateGoogleConsent('denied');
+      if (typeof window.fbq === 'function') window.fbq('consent', 'revoke');
+      analyticsLoaded = false;
+    };
+
+    const hideConsentBanner = () => {
+      const banner = document.querySelector('[data-consent-banner]');
+      if (!banner) return;
+      banner.classList.add('hidden');
+      banner.setAttribute('aria-hidden', 'true');
+    };
+
+    const showConsentBanner = (moveFocus = false) => {
+      const banner = document.querySelector('[data-consent-banner]');
+      if (!banner) return;
+      banner.classList.remove('hidden');
+      banner.setAttribute('aria-hidden', 'false');
+      if (moveFocus) banner.querySelector('[data-consent-action="accept"]')?.focus();
+    };
+
+    const setAnalyticsConsent = (consent) => {
+      persistAnalyticsConsent(consent);
+      if (consent === 'granted') loadAnalytics();
+      else revokeAnalytics();
+      hideConsentBanner();
+    };
+
+    const initAnalyticsConsent = () => {
+      document.querySelectorAll('[data-consent-action]').forEach((button) => {
+        button.addEventListener('click', () => {
+          setAnalyticsConsent(button.getAttribute('data-consent-action') === 'accept' ? 'granted' : 'denied');
+        });
+      });
+      document.querySelectorAll('[data-consent-settings]').forEach((button) => {
+        button.addEventListener('click', () => showConsentBanner(true));
+      });
+
+      const consent = safeStoredAnalyticsConsent();
+      if (consent === 'granted') loadAnalytics();
+      else if (consent === null) showConsentBanner();
+    };
+
+    const initAnalytics = () => {
+      document.querySelectorAll('[data-cta]').forEach((el) => {
+        el.addEventListener('click', () => {
+          const cta = el.getAttribute('data-cta');
+          const params = {
+            placement: ctaPlacement(el),
+            language: document.documentElement.lang,
+          };
+          track(`${cta}_click`, params);
+
+          const href = el.getAttribute('href');
+          if (cta === 'apply' && href === CONFIG.apply) {
+            trackMetaCustom('ApplicationFormOpen', { ...params, destination: 'google_form' });
+          } else if (cta === 'contact' && href === CONFIG.contact) {
+            trackMetaCustom('ContactClick', { ...params, destination: 'kakaotalk' });
+          }
+        });
+      });
+    };
+
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
         const lang = button.getAttribute('data-lang');
@@ -939,8 +1138,9 @@
     });
 
     syncCtas();
-    initAnalytics();
     applyLanguage(safeStoredLanguage());
+    initAnalytics();
+    initAnalyticsConsent();
   </script>
 </body>
 </html>
