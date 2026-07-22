@@ -297,18 +297,32 @@
   </main>
 
   <footer class="border-t border-line-soft bg-canvas">
-    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-      <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
-        <img src="assets/logo.webp" width="24" height="24" alt="" class="h-6 w-6 rounded-md" />
-        <span data-i18n="footer.brand">HanBuddy by ZeroOne &middot; Software Maestro 17th</span>
-      </p>
-      <div class="flex flex-wrap items-center gap-4">
-        <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.guideLink">
-          Baseball night pre-game guide
-        </a>
-        <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
-          KakaoTalk open chat
-        </a>
+    <div class="mx-auto max-w-6xl px-5 py-10">
+      <div class="flex flex-col gap-4 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
+          <img src="assets/logo.webp" width="24" height="24" alt="" class="h-6 w-6 rounded-md" />
+          <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.instagramLink">
+            Instagram
+          </a>
+          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.meetupLink">
+            Meetup group
+          </a>
+          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.guideLink">
+            Pre-game guide
+          </a>
+          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
+            KakaoTalk open chat
+          </a>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-col items-start gap-3 border-t border-line-soft pt-6 sm:flex-row sm:items-center">
+        <img src="assets/soma-logo.webp" width="262" height="120" loading="lazy" class="h-8 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
+        <p class="text-xs leading-5 text-muted" data-i18n="footer.credibility">
+          HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
+        </p>
       </div>
     </div>
   </footer>
@@ -318,6 +332,8 @@
       apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
       contact: 'https://open.kakao.com/o/gDBFqEyi',
       guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
+      instagram: 'https://www.instagram.com/hanbuddy_kr/',
+      meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -336,6 +352,7 @@
           foodAlt: 'Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River',
           baseballAlt: 'Jamsil Baseball Stadium field glowing before a night game',
           picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
+          somaAlt: 'AI·SW Maestro logo',
         },
         nav: {
           aria: 'Main navigation',
@@ -403,9 +420,12 @@
           contactButton: 'Ask on KakaoTalk',
         },
         footer: {
-          brand: 'HanBuddy by ZeroOne · Software Maestro 17th',
-          guideLink: 'Baseball night pre-game guide',
+          brand: 'HanBuddy by ZeroOne',
+          instagramLink: 'Instagram',
+          meetupLink: 'Meetup group',
+          guideLink: 'Pre-game guide',
           link: 'KakaoTalk open chat',
+          credibility: 'HanBuddy is run by team ZeroOne of AI·SW Maestro, a national talent program hosted by Korea’s Ministry of Science and ICT.',
         },
       },
       ko: {
@@ -423,6 +443,7 @@
           foodAlt: '한강 피크닉 테이블 위의 치킨, 라면, 음료',
           baseballAlt: '야간 경기를 앞두고 빛나는 잠실야구장 그라운드',
           picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
+          somaAlt: 'AI·SW마에스트로 로고',
         },
         nav: {
           aria: '주요 내비게이션',
@@ -490,9 +511,12 @@
           contactButton: 'KakaoTalk으로 문의하기',
         },
         footer: {
-          brand: 'HanBuddy by ZeroOne · SW마에스트로 17기',
+          brand: 'HanBuddy by ZeroOne',
+          instagramLink: '인스타그램',
+          meetupLink: 'Meetup 그룹',
           guideLink: '야구 직관 사전 가이드',
           link: 'KakaoTalk 오픈채팅',
+          credibility: 'HanBuddy는 과학기술정보통신부 주최 AI·SW마에스트로 17기 팀 ZeroOne이 운영합니다.',
         },
       },
     });
