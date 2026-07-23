@@ -55,7 +55,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `#testimonial` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
 | `#policy` | section | `index.html` | Safety, privacy, and manual confirmation expectations |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
-| `#apply` | section | `index.html` | Final recruitment CTA for July 18/19 & 25/26: live Google Form link, KakaoTalk open chat, one-line buddy-recruitment note |
+| `#apply` | section | `index.html` | Final recruitment CTA for July 18/19 & 25/26: live Google Form application, Instagram DM primary inquiry, KakaoTalk secondary/local-buddy channel, and one-line buddy-recruitment note |
 | `CONFIG` | inline JS object | `index.html` footer script | Maps CTA keys to external URLs |
 | `CONTENT_MAP` | inline JS object | `index.html` footer script | English/Korean visible copy, nav, cards, alt strings, meta |
 
