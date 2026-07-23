@@ -19,7 +19,7 @@ const approvedTokens = [
   ['line-soft', '#e9e3e7'],
   ['panel', '#f7f5f7'],
   ['panel-raised', '#fbf8fa'],
-  ['on-primary', '#201a20'],
+  ['on-primary', '#ffffff'],
   ['on-primary-strong', '#ffffff'],
 ];
 
@@ -73,7 +73,7 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
   assert.doesNotMatch(html, /\b(?:sage|sage-mist|earth)\b/i);
 });
 
-test('maps interactive and emphasized components to accessible pink roles', () => {
+test('maps interactive and emphasized components to the approved pink roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
   assert.match(
     html,
@@ -108,6 +108,10 @@ test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
     );
   }
 
+  assert.match(
+    design,
+    /Primary CTA: HanBuddy-pink `primary` fill, white `on-primary` text/i,
+  );
   assert.match(
     design,
     /HanBuddy pink is the only interactive brand color/i,

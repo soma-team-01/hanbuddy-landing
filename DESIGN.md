@@ -24,7 +24,7 @@ HanBuddy should feel like the marketing surface of the same product the MVP app 
 | Border soft | `line-soft` | `#e9e3e7` | Hairline dividers and quiet outlines |
 | Panel | `panel` | `#f7f5f7` | Neutral cards and grouped content |
 | Panel raised | `panel-raised` | `#fbf8fa` | Language toggle and subtle raised surfaces |
-| On-primary | `on-primary` | `#201a20` | Text and icons on the bright HanBuddy-pink fill |
+| On-primary | `on-primary` | `#ffffff` | Text and icons on the bright HanBuddy-pink fill |
 | On-primary strong | `on-primary-strong` | `#ffffff` | Text and icons on `primary-strong` surfaces |
 
 Semantic success colors remain reserved for genuinely completed states:
@@ -115,7 +115,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### CTA
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
-- Primary CTA: HanBuddy-pink `primary` fill, dark `on-primary` text, `primary-hover` hover, and no glow.
+- Primary CTA: HanBuddy-pink `primary` fill, white `on-primary` text, `primary-hover` hover, and no glow.
 - Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
 - All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
