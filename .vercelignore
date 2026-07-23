@@ -8,4 +8,9 @@
 !/assets/brand/*.png
 !/assets/photos
 /assets/photos/*
-!/assets/photos/*.webp
+!/assets/photos/kbo
+/assets/photos/kbo/*
+!/assets/photos/kbo/*.webp
+!/assets/photos/hanriver
+/assets/photos/hanriver/*
+!/assets/photos/hanriver/*.webp
