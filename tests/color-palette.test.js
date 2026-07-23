@@ -98,8 +98,8 @@ test('maps interactive and emphasized components to the approved warm-red roles'
 });
 
 test('keeps the logo as the only decorative gradient source', () => {
-  assert.match(html, /assets\/logo\.webp/);
-  assert.doesNotMatch(html, /linear-gradient\s*\(/i);
+  assert.match(html, /assets\/logo-borderless\.webp/);
+  assert.doesNotMatch(html, /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i);
 });
 
 test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
