@@ -63,7 +63,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Caveat:wght@600&family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -162,6 +162,113 @@
       transform: scale(1.03);
     }
 
+    /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
+    .hero-polaroid {
+      position: relative;
+      background: #fff;
+      padding: 8px 8px 34px;
+      box-shadow: 0 6px 18px rgba(38, 27, 24, 0.15), 0 2px 4px rgba(38, 27, 24, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .hero-polaroid .hp-frame {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-polaroid img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-polaroid .hp-cap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 6px;
+      text-align: center;
+      font-family: 'Caveat', 'Nanum Pen Script', cursive;
+      font-size: 17px;
+      font-weight: 600;
+      color: #4a3f3a;
+      white-space: nowrap;
+    }
+
+    .hero-polaroid .hp-tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 64px;
+      height: 20px;
+      background: rgba(233, 205, 160, 0.75);
+      box-shadow: 0 1px 3px rgba(38, 27, 24, 0.12);
+      transform: translateX(-50%) rotate(-4deg);
+    }
+
+    .hp2 .hp-tape { transform: translateX(-50%) rotate(3deg); background: rgba(214, 197, 191, 0.8); }
+    .hp3 .hp-tape { transform: translateX(-50%) rotate(-2deg); background: rgba(255, 240, 236, 0.95); }
+
+    .hero-polaroid:hover {
+      transform: rotate(0deg) scale(1.05) !important;
+      box-shadow: 0 16px 36px rgba(38, 27, 24, 0.22);
+      z-index: 20;
+    }
+
+    /* 모바일·태블릿(<1024px): 콘텐츠 아래, 어긋나게 겹친 콜라주 */
+    .hero-polaroids {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 10px;
+      max-width: 430px;
+      margin: 52px auto 0;
+      padding: 0 14px 78px;
+    }
+
+    .hp1 { transform: rotate(-4deg); }
+    .hp2 { transform: rotate(3deg) translateY(22px); }
+    .hp3 { transform: rotate(3deg) translateY(-6px); margin-top: 18px; }
+    .hp4 { transform: rotate(-3.5deg) translateY(14px); margin-top: 18px; }
+
+    .hero-polaroids .hp-frame { height: 158px; }
+
+    /* 데스크톱(≥1024px): 히어로 네 모서리에 흩어진 배경 폴라로이드 */
+    @media (min-width: 1024px) {
+      #top { min-height: 780px; }
+
+      .hero-polaroids {
+        display: contents;
+      }
+
+      .hero-polaroid {
+        position: absolute;
+        z-index: 1;
+        margin: 0;
+      }
+
+      .hero-polaroids .hp-frame { width: 176px; height: 176px; }
+      .hero-polaroid .hp-cap { font-size: 16px; }
+
+      .hp1 { top: 72px; left: 1%; transform: rotate(-7deg); }
+      .hp2 { top: 100px; right: 1%; transform: rotate(6deg); }
+      .hp3 { top: auto; bottom: 52px; left: 3%; transform: rotate(4deg); }
+      .hp4 { top: auto; bottom: 40px; right: 3%; transform: rotate(-5deg); }
+    }
+
+    /* 넓은 화면(≥1440px): 사진을 키우고 살짝 안쪽으로 */
+    @media (min-width: 1440px) {
+      .hero-polaroid { padding: 9px 9px 38px; }
+      .hero-polaroids .hp-frame { width: 232px; height: 232px; }
+      .hero-polaroid .hp-cap { font-size: 21px; }
+      .hero-polaroid .hp-tape { width: 78px; height: 24px; }
+
+      .hp1 { left: 2.5%; }
+      .hp2 { right: 3%; }
+      .hp3 { left: 6%; }
+      .hp4 { right: 6%; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -202,8 +309,8 @@
 
   <main id="main">
     <!-- Hero -->
-    <section id="top" class="overflow-hidden">
-      <div class="mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
+    <section id="top" class="relative overflow-hidden">
+      <div class="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
         <p class="eyebrow" data-i18n="hero.eyebrow">
           Seoul &middot; Every Saturday &amp; Sunday
         </p>
@@ -236,22 +343,39 @@
         </figure>
       </div>
 
-      <div class="mx-auto grid max-w-6xl grid-cols-2 gap-3 px-5 pb-16 sm:grid-cols-4 sm:gap-4 sm:pb-20">
-        <figure class="photo-card aspect-square">
-          <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" fetchpriority="high" class="object-[50%_30%]"
-               alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
+      <!-- 사진첩에 붙여놓은 듯한 폴라로이드: 데스크톱은 네 모서리 배경, 모바일은 콘텐츠 아래 콜라주 -->
+      <div class="hero-polaroids">
+        <figure class="hero-polaroid hp1">
+          <span class="hp-tape" aria-hidden="true"></span>
+          <span class="hp-frame">
+            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" fetchpriority="high" class="object-[50%_30%]"
+                 alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
+          </span>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap1">first baseball night ⚾</figcaption>
         </figure>
-        <figure class="photo-card aspect-square">
-          <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy"
-               alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
+        <figure class="hero-polaroid hp2">
+          <span class="hp-tape" aria-hidden="true"></span>
+          <span class="hp-frame">
+            <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy"
+                 alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
+          </span>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap2">Banpo rainbow 🌈</figcaption>
         </figure>
-        <figure class="photo-card aspect-square">
-          <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" class="object-[38%_50%]"
-               alt="Fans waving phone lights during a night game at Jamsil Baseball Stadium" data-i18n-alt="meta.nightAlt" />
+        <figure class="hero-polaroid hp3">
+          <span class="hp-tape" aria-hidden="true"></span>
+          <span class="hp-frame">
+            <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" class="object-[38%_50%]"
+                 alt="Fans waving phone lights during a night game at Jamsil Baseball Stadium" data-i18n-alt="meta.nightAlt" />
+          </span>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap3">10th inning lights</figcaption>
         </figure>
-        <figure class="photo-card aspect-square">
-          <img src="assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" loading="lazy" class="object-[50%_55%]"
-               alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" data-i18n-alt="meta.foodAlt" />
+        <figure class="hero-polaroid hp4">
+          <span class="hp-tape" aria-hidden="true"></span>
+          <span class="hp-frame">
+            <img src="assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" loading="lazy" class="object-[50%_55%]"
+                 alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" data-i18n-alt="meta.foodAlt" />
+          </span>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap4">chimaek by the river 🍗</figcaption>
         </figure>
       </div>
     </section>
@@ -462,6 +586,10 @@
           contactCta: 'DM us on Instagram',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
           quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
+          photoCap1: 'first baseball night ⚾',
+          photoCap2: 'Banpo rainbow 🌈',
+          photoCap3: '10th inning lights',
+          photoCap4: 'chimaek by the river 🍗',
         },
         programs: {
           eyebrow: 'Pick your plan',
@@ -561,6 +689,10 @@
           contactCta: 'Instagram DM으로 문의하세요',
           quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
           quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
+          photoCap1: '첫 야구 직관 ⚾',
+          photoCap2: '반포 무지개분수 🌈',
+          photoCap3: '10회말 응원 불빛',
+          photoCap4: '한강 치맥 🍗',
         },
         programs: {
           eyebrow: '원하는 플랜 선택',
