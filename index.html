@@ -219,9 +219,9 @@
              class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
             Join this weekend
           </a>
-          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
+          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
              class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
-            <span data-i18n="hero.contactCta">Ask us anything on KakaoTalk</span> <span aria-hidden="true">&rarr;</span>
+            <span data-i18n="hero.contactCta">DM us on Instagram</span> <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
 
@@ -272,7 +272,7 @@
         <div class="mt-12 grid gap-6 md:grid-cols-2" data-program-cards></div>
 
         <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-6 text-muted" data-i18n="programs.note">
-          Each run opens when 3 or more guests join, and we confirm every detail with you on KakaoTalk before the day — no surprises.
+          We’ll confirm the activity details with you directly before the day.
         </p>
       </div>
     </section>
@@ -296,7 +296,7 @@
             See you this weekend?
           </h2>
           <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
-            Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? The KakaoTalk open chat is the fastest way to reach us.
+            Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
             Korean local who wants to host? Buddies are welcome too — say hi in the open chat.
@@ -310,9 +310,13 @@
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
             Join this weekend
           </a>
-          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.contactButton">
-            Ask on KakaoTalk
+          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.instagramButton">
+            DM us on Instagram
+          </a>
+          <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.kakaoButton">
+            KakaoTalk open chat
           </a>
         </div>
       </div>
@@ -327,30 +331,57 @@
           <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
         </p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.instagramLink">
-            Instagram
-          </a>
-          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.meetupLink">
-            Meetup group
-          </a>
-          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.guideLink">
-            Pre-game guide
-          </a>
-          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary" data-i18n="footer.link">
-            KakaoTalk open chat
-          </a>
-          <button type="button" data-consent-settings aria-controls="analytics-consent"
-                  class="focusable rounded-lg font-bold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary"
-                  data-i18n="consent.settings">
-            Cookie settings
-          </button>
+          <div class="flex items-center gap-2" role="group" aria-label="Contact channels"
+               data-footer-social-icons data-i18n-aria="footer.contactChannelsAria">
+            <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+               data-footer-social-icon aria-label="Send HanBuddy a direct message on Instagram"
+               data-i18n-aria="footer.instagramAria" title="Instagram DM"
+               class="focusable inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-soft bg-panel-raised text-ink transition hover:border-primary/35 hover:text-primary-strong">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.5" cy="6.5" r="1" class="fill-current stroke-none"></circle>
+              </svg>
+            </a>
+            <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+               data-footer-social-icon aria-label="Ask HanBuddy in KakaoTalk open chat"
+               data-i18n-aria="footer.kakaoAria" title="KakaoTalk open chat"
+               class="focusable inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-soft bg-panel-raised text-ink transition hover:border-primary/35 hover:text-primary-strong">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-5 w-5">
+                <path fill="currentColor" d="M12 3.5c-5.52 0-10 3.36-10 7.5 0 2.68 1.88 5.03 4.7 6.36L5.5 21l4.24-2.35c.73.12 1.49.18 2.26.18 5.52 0 10-3.36 10-7.5S17.52 3.5 12 3.5Z"></path>
+                <circle cx="8.5" cy="11.2" r="0.9" fill="white"></circle>
+                <circle cx="12" cy="11.2" r="0.9" fill="white"></circle>
+                <circle cx="15.5" cy="11.2" r="0.9" fill="white"></circle>
+              </svg>
+            </a>
+            <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup"
+               data-footer-social-icon aria-label="Visit HanBuddy's Meetup group"
+               data-i18n-aria="footer.meetupAria" title="Meetup group"
+               class="focusable inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-soft bg-panel-raised text-ink transition hover:border-primary/35 hover:text-primary-strong">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
-      <div class="mt-8 flex flex-col items-start gap-3 border-t border-line-soft pt-6 sm:flex-row sm:items-center">
-        <img src="assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-8 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
-        <p class="text-xs leading-5 text-muted" data-i18n="footer.credibility">
-          HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
-        </p>
+      <div class="mt-8 flex flex-col gap-4 border-t border-line-soft pt-6 sm:flex-row sm:items-center sm:justify-between"
+           data-footer-utility>
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <img src="assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-8 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
+          <p class="text-xs leading-5 text-muted" data-i18n="footer.credibility">
+            HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
+          </p>
+        </div>
+        <button type="button" data-consent-settings aria-controls="analytics-consent"
+                class="focusable shrink-0 self-start rounded-lg text-xs font-semibold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary sm:self-auto"
+                data-i18n="consent.settings">
+          Cookie settings
+        </button>
       </div>
     </div>
   </footer>
@@ -385,8 +416,7 @@
   <script>
     const CONFIG = {
       apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
-      contact: 'https://open.kakao.com/o/gDBFqEyi',
-      guide: 'https://www.notion.so/388d889585858177b58dc513bd5517c0',
+      contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
       analytics: {
@@ -429,7 +459,7 @@
           title: 'Experience Korea like a local!',
           subtitle: 'Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
           primaryCta: 'Join this weekend',
-          contactCta: 'Ask us anything on KakaoTalk',
+          contactCta: 'DM us on Instagram',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
           quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
         },
@@ -437,7 +467,7 @@
           eyebrow: 'Pick your plan',
           title: 'Two ways to spend a Seoul weekend.',
           body: 'We run both every Saturday and Sunday. Pick one — or do both.',
-          note: 'Each run opens when 3 or more guests join, and we confirm every detail with you on KakaoTalk before the day — no surprises.',
+          note: 'We’ll confirm the activity details with you directly before the day.',
           cards: [
             {
               emoji: '⚾',
@@ -472,18 +502,19 @@
         finalCta: {
           eyebrow: 'Every Saturday & Sunday',
           title: 'See you this weekend?',
-          body: 'Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? The KakaoTalk open chat is the fastest way to reach us.',
+          body: 'Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
           buddyNote: 'Korean local who wants to host? Buddies are welcome too — say hi in the open chat.',
           privacyNote: 'This page never stores your application answers — you apply through the Google Form and we confirm details with you directly. With your consent, Google Analytics and Meta Pixel measure visits and clicks; you can change this anytime under Cookie settings.',
           formButton: 'Join this weekend',
-          contactButton: 'Ask on KakaoTalk',
+          instagramButton: 'DM us on Instagram',
+          kakaoButton: 'KakaoTalk open chat',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
-          instagramLink: 'Instagram',
-          meetupLink: 'Meetup group',
-          guideLink: 'Pre-game guide',
-          link: 'KakaoTalk open chat',
+          contactChannelsAria: 'Community and contact channels',
+          instagramAria: 'Send HanBuddy a direct message on Instagram',
+          kakaoAria: 'Ask HanBuddy in KakaoTalk open chat',
+          meetupAria: 'Visit HanBuddy’s Meetup group',
           credibility: 'HanBuddy is run by team ZeroOne of AI·SW Maestro, a national talent program hosted by Korea’s Ministry of Science and ICT.',
         },
         consent: {
@@ -527,15 +558,15 @@
           title: 'Experience Korea like a local!',
           subtitle: 'KBO 야구 직관도, 한강 피크닉도 — 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 주는 로컬 버디와 함께하세요.',
           primaryCta: '이번 주말 함께하기',
-          contactCta: 'KakaoTalk으로 무엇이든 물어보세요',
-          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, 바로 이 프로그램에 참여하세요!”',
+          contactCta: 'Instagram DM으로 문의하세요',
+          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
           quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
         },
         programs: {
           eyebrow: '원하는 플랜 선택',
           title: '서울의 주말을 즐기는 두 가지 방법.',
           body: '두 프로그램 모두 매주 토요일과 일요일에 진행됩니다. 하나만 골라도, 둘 다 해도 좋아요.',
-          note: '각 회차는 게스트 3명 이상이 모이면 확정되며, 활동 전 KakaoTalk으로 모든 세부 사항을 직접 안내해 드립니다.',
+          note: '활동 전 세부 사항을 직접 안내해 드립니다.',
           cards: [
             {
               emoji: '⚾',
@@ -570,18 +601,19 @@
         finalCta: {
           eyebrow: '매주 토 & 일',
           title: '이번 주말에 만날까요?',
-          body: '구글폼에서 원하는 날짜와 플랜을 알려주세요 — 2분이면 충분합니다. 궁금한 점은 KakaoTalk 오픈채팅이 가장 빠릅니다.',
+          body: '구글폼에서 원하는 날짜와 플랜을 알려주세요 — 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
           buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
           privacyNote: '이 페이지는 신청 내용을 저장하지 않습니다 — 신청은 구글폼으로 진행하고, 세부 사항은 직접 확인해 드립니다. 동의하시면 Google Analytics와 Meta Pixel이 방문·클릭 통계를 측정하며, 쿠키 설정에서 언제든 변경할 수 있습니다.',
           formButton: '이번 주말 함께하기',
-          contactButton: 'KakaoTalk으로 문의하기',
+          instagramButton: 'Instagram DM으로 문의하기',
+          kakaoButton: 'KakaoTalk 오픈채팅',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
-          instagramLink: '인스타그램',
-          meetupLink: 'Meetup 그룹',
-          guideLink: '야구 직관 사전 가이드',
-          link: 'KakaoTalk 오픈채팅',
+          contactChannelsAria: '커뮤니티 및 문의 채널',
+          instagramAria: 'HanBuddy Instagram DM으로 문의하기',
+          kakaoAria: 'HanBuddy KakaoTalk 오픈채팅으로 문의하기',
+          meetupAria: 'HanBuddy Meetup 그룹 보기',
           credibility: 'HanBuddy는 과학기술정보통신부 주최 AI·SW마에스트로 17기 팀 ZeroOne이 운영합니다.',
         },
         consent: {
@@ -926,6 +958,8 @@
           const href = el.getAttribute('href');
           if (cta === 'apply' && href === CONFIG.apply) {
             trackMetaCustom('ApplicationFormOpen', { ...params, destination: 'google_form' });
+          } else if (cta === 'instagram' && href === CONFIG.instagram) {
+            trackMetaCustom('ContactClick', { ...params, destination: 'instagram' });
           } else if (cta === 'contact' && href === CONFIG.contact) {
             trackMetaCustom('ContactClick', { ...params, destination: 'kakaotalk' });
           }
