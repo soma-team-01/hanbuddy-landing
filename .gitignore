@@ -2,8 +2,9 @@
 .omo/
 
 # Raw local photos are not production assets. Keep only processed WebP assets deployable.
-assets/*.jpg
-assets/*.jpeg
-assets/*.JPG
-assets/*.JPEG
+assets/**/*.jpg
+assets/**/*.jpeg
+assets/**/*.JPG
+assets/**/*.JPEG
 .vercel
+.DS_Store
