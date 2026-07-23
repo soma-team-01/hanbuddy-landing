@@ -9,17 +9,18 @@ const design = readFileSync(join(__dirname, '..', 'DESIGN.md'), 'utf8');
 const approvedTokens = [
   ['canvas', '#fcfcfd'],
   ['canvas-soft', '#ffffff'],
-  ['primary', '#b13f8f'],
-  ['primary-hover', '#943476'],
-  ['primary-strong', '#79285f'],
-  ['primary-soft', '#fceff7'],
+  ['primary', '#ff635a'],
+  ['primary-hover', '#f0524b'],
+  ['primary-strong', '#a8322d'],
+  ['primary-soft', '#fff1ef'],
   ['ink', '#201a20'],
   ['muted', '#625a61'],
   ['line-strong', '#cfc6cc'],
   ['line-soft', '#e9e3e7'],
   ['panel', '#f7f5f7'],
   ['panel-raised', '#fbf8fa'],
-  ['on-primary', '#ffffff'],
+  ['on-primary', '#201a20'],
+  ['on-primary-strong', '#ffffff'],
 ];
 
 const retiredHexValues = [
@@ -34,9 +35,13 @@ const retiredHexValues = [
   '#f0eee9',
   '#f5f3ee',
   '#8a6c33',
+  '#b13f8f',
+  '#943476',
+  '#79285f',
+  '#fceff7',
 ];
 
-test('defines the approved Berry Violet tokens in Tailwind and CSS', () => {
+test('defines the approved HanBuddy logo coral tokens in Tailwind and CSS', () => {
   for (const [token, value] of approvedTokens) {
     const tailwindToken = new RegExp(
       `['"]?${token}['"]?\\s*:\\s*['"]${value}['"]`,
@@ -64,17 +69,17 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
   assert.doesNotMatch(html, /\b(?:sage|sage-mist|earth)\b/i);
 });
 
-test('maps interactive and emphasized components to semantic primary roles', () => {
+test('maps interactive and emphasized components to accessible coral roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
   assert.match(
     html,
-    /<section id="apply" class="bg-primary-strong text-on-primary">/,
+    /<section id="apply" class="bg-primary-strong text-on-primary-strong">/,
   );
   assert.match(html, /bg-primary-soft/);
   assert.match(html, /text-primary(?:-strong)?/);
   assert.match(html, /classList\.toggle\('bg-primary', selected\)/);
   assert.match(html, /classList\.toggle\('text-on-primary', selected\)/);
-  assert.match(html, /color:\s*var\(--color-primary\)/);
+  assert.match(html, /color:\s*var\(--color-primary-strong\)/);
 });
 
 test('keeps the logo as the only decorative gradient source', () => {
@@ -101,7 +106,7 @@ test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
 
   assert.match(
     design,
-    /Berry Violet is the only interactive brand color/i,
+    /HanBuddy logo coral is the only interactive brand color/i,
   );
   assert.match(
     design,

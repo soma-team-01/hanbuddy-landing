@@ -34,17 +34,18 @@
           colors: {
             canvas: '#fcfcfd',
             'canvas-soft': '#ffffff',
-            primary: '#b13f8f',
-            'primary-hover': '#943476',
-            'primary-strong': '#79285f',
-            'primary-soft': '#fceff7',
+            primary: '#ff635a',
+            'primary-hover': '#f0524b',
+            'primary-strong': '#a8322d',
+            'primary-soft': '#fff1ef',
             ink: '#201a20',
             muted: '#625a61',
             'line-strong': '#cfc6cc',
             'line-soft': '#e9e3e7',
             panel: '#f7f5f7',
             'panel-raised': '#fbf8fa',
-            'on-primary': '#ffffff',
+            'on-primary': '#201a20',
+            'on-primary-strong': '#ffffff',
             success: '#3f6b46',
             'success-soft': '#dcead9',
           },
@@ -69,17 +70,18 @@
       color-scheme: light;
       --color-canvas: #fcfcfd;
       --color-canvas-soft: #ffffff;
-      --color-primary: #b13f8f;
-      --color-primary-hover: #943476;
-      --color-primary-strong: #79285f;
-      --color-primary-soft: #fceff7;
+      --color-primary: #ff635a;
+      --color-primary-hover: #f0524b;
+      --color-primary-strong: #a8322d;
+      --color-primary-soft: #fff1ef;
       --color-ink: #201a20;
       --color-muted: #625a61;
       --color-line-strong: #cfc6cc;
       --color-line-soft: #e9e3e7;
       --color-panel: #f7f5f7;
       --color-panel-raised: #fbf8fa;
-      --color-on-primary: #ffffff;
+      --color-on-primary: #201a20;
+      --color-on-primary-strong: #ffffff;
     }
 
     html {
@@ -122,12 +124,12 @@
     }
 
     .focusable:focus-visible {
-      outline: 3px solid var(--color-primary);
+      outline: 3px solid var(--color-primary-strong);
       outline-offset: 4px;
     }
 
-    .focusable-on-primary:focus-visible {
-      outline-color: var(--color-on-primary);
+    .focusable-on-primary-strong:focus-visible {
+      outline-color: var(--color-on-primary-strong);
     }
 
     .eyebrow {
@@ -135,7 +137,7 @@
       font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--color-primary);
+      color: var(--color-primary-strong);
     }
 
     .eyebrow-on-primary {
@@ -218,7 +220,7 @@
             Join this weekend
           </a>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary transition hover:text-primary-hover">
+             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
             <span data-i18n="hero.contactCta">Ask us anything on KakaoTalk</span> <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
@@ -286,30 +288,30 @@
     </section>
 
     <!-- Apply -->
-    <section id="apply" class="bg-primary-strong text-on-primary">
+    <section id="apply" class="bg-primary-strong text-on-primary-strong">
       <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
         <div>
           <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Every Saturday &amp; Sunday</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
             See you this weekend?
           </h2>
-          <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary/85" data-i18n="finalCta.body">
+          <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
             Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? The KakaoTalk open chat is the fastest way to reach us.
           </p>
-          <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary/85" data-i18n="finalCta.buddyNote">
+          <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
             Korean local who wants to host? Buddies are welcome too — say hi in the open chat.
           </p>
-          <p class="mt-2 max-w-2xl text-xs leading-6 text-on-primary/70" data-i18n="finalCta.privacyNote">
+          <p class="mt-2 max-w-2xl text-xs leading-6 text-on-primary-strong/70" data-i18n="finalCta.privacyNote">
             This page collects no personal data. Applications go through the Google Form, and we confirm everything with you directly before each activity.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
-             class="focusable focusable-on-primary rounded-full bg-on-primary px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
+             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
             Join this weekend
           </a>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable focusable-on-primary rounded-full border border-on-primary/40 px-7 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="finalCta.contactButton">
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.contactButton">
             Ask on KakaoTalk
           </a>
         </div>
@@ -325,20 +327,20 @@
           <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
         </p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.instagramLink">
+          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.instagramLink">
             Instagram
           </a>
-          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.meetupLink">
+          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.meetupLink">
             Meetup group
           </a>
-          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.guideLink">
+          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-primary/35 underline-offset-4 hover:text-primary-strong" data-i18n="footer.guideLink">
             Pre-game guide
           </a>
-          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-primary/30 underline-offset-4 hover:text-primary hover:decoration-primary" data-i18n="footer.link">
+          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary" data-i18n="footer.link">
             KakaoTalk open chat
           </a>
           <button type="button" data-consent-settings aria-controls="analytics-consent"
-                  class="focusable rounded-lg font-bold text-ink underline decoration-primary/30 underline-offset-4 hover:text-primary hover:decoration-primary"
+                  class="focusable rounded-lg font-bold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary"
                   data-i18n="consent.settings">
             Cookie settings
           </button>
@@ -673,7 +675,7 @@
       clear(container);
       copy.nav.links.forEach((link) => {
         const anchor = document.createElement('a');
-        anchor.className = 'focusable rounded-lg transition hover:text-primary';
+        anchor.className = 'focusable rounded-lg transition hover:text-primary-strong';
         anchor.href = link.href;
         anchor.textContent = link.label;
         container.appendChild(anchor);
@@ -704,7 +706,7 @@
           textNode('h3', 'font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', `${item.emoji} ${item.title}`),
           textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
           textNode('p', 'mt-5 text-sm font-bold text-ink', item.price),
-          textNode('p', 'mt-1 text-sm font-semibold text-primary', item.schedule),
+          textNode('p', 'mt-1 text-sm font-semibold text-primary-strong', item.schedule),
         );
 
         article.append(figure, content);
