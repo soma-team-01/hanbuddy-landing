@@ -149,7 +149,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### Team and Final CTA
 
 - Team section should establish ZeroOne credibility and current MVP direction without turning into a founder poster.
-- Final CTA repeats the recruitment action for the Run 2 dates (July 18/19 and 25/26), links to the live Google Form as the primary action, keeps KakaoTalk open chat for questions/updates, carries the one-line buddy-recruitment note, and avoids implying in-page data collection.
+- Final CTA repeats the recruitment action for the active dates, links to the live Google Form as the primary action, presents Instagram DM as the default guest inquiry channel, keeps KakaoTalk open chat as a secondary and local-buddy channel, carries the one-line buddy-recruitment note, and avoids implying in-page data collection.
 
 ## 6. Motion
 
