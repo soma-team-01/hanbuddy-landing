@@ -2,5 +2,15 @@
 !/index.html
 !/assets
 /assets/*
-!/assets/*.webp
-!/assets/*.png
+!/assets/brand
+/assets/brand/*
+!/assets/brand/*.webp
+!/assets/brand/*.png
+!/assets/photos
+/assets/photos/*
+!/assets/photos/kbo
+/assets/photos/kbo/*
+!/assets/photos/kbo/*.webp
+!/assets/photos/hanriver
+/assets/photos/hanriver/*
+!/assets/photos/hanriver/*.webp
