@@ -1,6 +1,6 @@
 # HanBuddy Landing Design System
 
-This is the source of truth for the HanBuddy landing. The active direction mirrors the live MVP frontend (hanbuddy-frontend.vercel.app): photography-led, centered hero, pill CTAs, and the MVP's own token set. The previous app-preview/mockup direction and the Mastercard-inspired orbital/orange poster direction are retired history and must not be used for new implementation decisions.
+This is the source of truth for the HanBuddy landing. The active direction is photography-led, centered, and quiet, with pill CTAs and a Berry Violet brand system derived from the current HanBuddy logo. The previous cream/forest palette, app-preview mockup, and Mastercard-inspired orbital/orange poster direction are retired history and must not be used for new implementation decisions.
 
 ## 1. Atmosphere
 
@@ -12,28 +12,34 @@ HanBuddy should feel like the marketing surface of the same product the MVP app 
 
 | Role | Token | Value | Usage |
 | --- | --- | --- | --- |
-| Page canvas | `canvas` | `#fbf9f4` | Default page background and first visual read (MVP `cream`) |
-| Soft canvas | `canvas-soft` | `#fbf9f7` | Nav surface, text on dark bands |
-| Text primary | `ink` | `#182820` | Headlines, body, primary CTA fill (MVP `forest`) |
-| Text strong / CTA hover | `sage` | `#2d3e35` | Hover states, dark-band chrome (MVP `forest-soft`) |
-| Muted sage | `sage-mist` | `#96a99d` | Eyebrows and labels on dark bands only (MVP `sage`) |
-| Text secondary | `muted` | `#434844` | Paragraphs, captions, helper copy (MVP `ink-soft`) |
-| Border strong | `line-strong` | `#c3c8c3` | List head rules, pill link borders, active states |
-| Border soft | `line-soft` | `#e4e2dd` | Hairline dividers, quiet separators |
-| Panel muted | `panel` | `#f0eee9` | Role/team cards and grouped modules (MVP `sand`) |
-| Panel raised | `panel-raised` | `#f5f3ee` | Status chips, language toggle (MVP `chip`) |
-| Warm accent | `earth` | `#8a6c33` | Eyebrows, uppercase labels, evidence tags (MVP `earth`) |
-| Success | `success` | `#3f6b46` | Text inside completed-status chips (MVP `success`) |
-| Success surface | `success-soft` | `#dcead9` | Completed-status chip fill (MVP `success-soft`) |
+| Page canvas | `canvas` | `#fcfcfd` | Default near-white page background |
+| Clean surface | `canvas-soft` | `#ffffff` | Sticky header and high-clarity surfaces |
+| Primary | `primary` | `#b13f8f` | CTA, active state, branded link, eyebrow |
+| Primary hover | `primary-hover` | `#943476` | Hover and pressed emphasis |
+| Primary strong | `primary-strong` | `#79285f` | Final CTA band and high-contrast primary text |
+| Primary soft | `primary-soft` | `#fceff7` | Testimonial, selection, and quiet branded surface |
+| Text primary | `ink` | `#201a20` | Headlines and long-form body text |
+| Text secondary | `muted` | `#625a61` | Supporting copy and metadata |
+| Border strong | `line-strong` | `#cfc6cc` | Focus-adjacent and selected boundaries |
+| Border soft | `line-soft` | `#e9e3e7` | Hairline dividers and quiet outlines |
+| Panel | `panel` | `#f7f5f7` | Neutral cards and grouped content |
+| Panel raised | `panel-raised` | `#fbf8fa` | Language toggle and subtle raised surfaces |
+| On-primary | `on-primary` | `#ffffff` | Text and icons on solid primary surfaces |
+
+Semantic success colors remain reserved for genuinely completed states:
+`success` is `#3f6b46` and `success-soft` is `#dcead9`.
 
 ### Rules
 
-- Token values are copied from the MVP frontend's CSS variables. If the MVP palette changes, update this table from the app, never invent new values locally.
-- Use `canvas` or `canvas-soft` as the page base; do not introduce pure white as the dominant surface.
-- `ink` and `sage` carry interaction and authority. `earth` is a small supporting accent for uppercase labels, not a decorative theme.
-- `success`/`success-soft` appear only for genuinely completed states (e.g. "Run 1 completed"). `sage-mist` appears only on the dark `ink` bands.
+- Berry Violet is the only interactive brand color. CTA fills, branded links, active states, focus rings, and short section labels use `primary`.
+- Headings and long-form text remain neutral `ink`; supporting copy uses `muted`.
+- `primary-soft` is a quiet branded surface, not a second accent.
+- The final application section is the single large color field and uses `primary-strong` with `on-primary` text.
+- The existing logo gradient remains the only multi-color brand treatment. Do not add CSS gradients to buttons, text, panels, or section backgrounds.
+- The photo-card scrim remains allowed when needed because it is a functional image-legibility treatment rather than a decorative brand gradient.
+- Semantic success colors appear only for genuinely completed states.
 - Hairline dividers do most of the separation; boxed cards are the exception, not the default.
-- Do not add decorative colors, gradients, glows, or campaign accents unless they are first promoted into this table for a real component need. The only permitted gradient is the photo-card scrim (transparent to `ink` at 72%).
+- Do not add decorative colors, glows, or campaign accents unless they are first promoted into this table for a real component need.
 
 ## 3. Typography
 
@@ -60,7 +66,7 @@ HanBuddy should feel like the marketing surface of the same product the MVP app 
 
 - Typography should feel like the same product as the MVP app. Keep headings confident but compact.
 - Manrope (with `tracking-tight`) carries display geometry; Be Vietnam Pro and Noto Sans KR keep bilingual body copy stable.
-- Eyebrows and small labels are the one tracked element: uppercase, `0.16em`–`0.18em` letter spacing, `earth` (or `sage-mist` on dark bands). Everything else stays at `0` tracking; display headings may go negative (`-0.025em`).
+- Eyebrows and small labels are the one tracked element: uppercase, `0.16em`–`0.18em` letter spacing, `primary` on light surfaces or reduced-opacity `on-primary` on primary surfaces. Everything else stays at `0` tracking; display headings may go negative (`-0.025em`).
 - Body text never goes below `14px`.
 - Keep paragraph measures comfortable, usually 58 to 70 characters.
 
@@ -101,27 +107,27 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Navigation
 
-- Structure: compact top bar with a text-only "HanBuddy" brand (no logo mark), section anchors, language control, and a clear recruitment CTA linking to the live Google Form.
+- Structure: compact top bar with the existing HanBuddy logo mark and wordmark, section anchors, language control, and a clear recruitment CTA linking to the live Google Form.
 - Surface: `canvas-soft` with `line-soft`; avoid floating glass or heavy shadow.
-- States: active/hover text shifts to `sage`; focus uses a visible `line-strong` outline.
+- States: active/hover text shifts to `primary` or `primary-hover`; focus uses a visible `primary` outline.
 
 ### CTA
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
-- Primary CTA: `ink` fill, `canvas-soft` text, no glow.
-- Secondary CTA: plain text link with a trailing arrow (`→`), `ink` text shifting to `sage` on hover; on dark bands, `canvas-soft` fill or thin `line-strong` border.
+- Primary CTA: `primary` fill, `on-primary` text, `primary-hover` hover, and no glow.
+- Secondary CTA: plain `primary` text with a trailing arrow (`→`) shifting to `primary-hover` on hover; on the final primary band, use an `on-primary` fill or thin `on-primary` border.
 - All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
 ### Photo Cards (signature)
 
-- The signature element: real Run 1 photos in `rounded-2xl` frames with a bottom scrim (transparent → `ink` at 72%) and overlaid copy — a small uppercase tracked label over a bold Manrope title, both in `canvas-soft`.
+- The signature element is real Run 1 photography in stable `rounded-2xl` frames. A bottom scrim is allowed only when overlaid copy needs contrast; the current gallery uses unoverlaid images.
 - Hero uses a three-across row (`aspect-[4/5]` on desktop, `16/10` on mobile); evidence uses a single editorial figure with the caption below the image, not on it.
 - Only approved public WebP photos may appear. Captions state completed-operation facts.
 - Hover: image scales to at most 1.02 inside the fixed frame; the frame itself does not move.
 
 ### Editorial Lists and Step Columns
 
-- Why/policy content renders as hairline-divided rows or columns: uppercase `earth` label, bold title, muted body. No boxes, no shadows.
+- Why/policy content renders as hairline-divided rows or columns: uppercase `primary` label, bold title, muted body. No boxes, no shadows.
 - How-it-works steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Apply/Confirm/Meet up) — the rule communicates sequence without fake numbering.
 - Program cards: the two Run 2 programs get large `panel` cards with the exact Google Form program names as titles in both languages.
 
@@ -168,10 +174,11 @@ Use thin borders plus low shadows. Depth should read like a trustworthy product 
 
 | Level | Value | Usage |
 | --- | --- | --- |
-| Border soft | `1px solid #e4e2dd` | Hairline dividers, quiet separators |
-| Border strong | `1px solid #c3c8c3` | Focus outlines, list head rules, pill link borders |
-| Shadow subtle | `0 1px 2px rgba(24, 40, 32, 0.05)` | Rarely; only when a floating surface truly needs it |
-| Photo scrim | `linear-gradient(transparent 45%, rgba(24,40,32,0.72))` | Photo-card caption legibility only |
+| Border soft | `1px solid #e9e3e7` | Hairline dividers, quiet separators |
+| Border strong | `1px solid #cfc6cc` | Selected boundaries and supporting outlines |
+| Focus outline | `3px solid #b13f8f` | Visible keyboard focus on light surfaces |
+| Shadow subtle | `0 1px 2px rgba(32, 26, 32, 0.05)` | Rarely; only when a floating surface truly needs it |
+| Photo scrim | `linear-gradient(transparent 45%, rgba(32,26,32,0.72))` | Photo-card caption legibility only |
 
 ### Rules
 

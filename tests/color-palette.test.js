@@ -4,6 +4,7 @@ const { join } = require('node:path');
 const test = require('node:test');
 
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
+const design = readFileSync(join(__dirname, '..', 'DESIGN.md'), 'utf8');
 
 const approvedTokens = [
   ['canvas', '#fcfcfd'],
@@ -79,4 +80,31 @@ test('maps interactive and emphasized components to semantic primary roles', () 
 test('keeps the logo as the only decorative gradient source', () => {
   assert.match(html, /assets\/logo\.webp/);
   assert.doesNotMatch(html, /linear-gradient\s*\(/i);
+});
+
+test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
+  for (const [token, value] of approvedTokens) {
+    assert.match(
+      design,
+      new RegExp(`\\| \`${token}\` \\| \`${value}\` \\|`, 'i'),
+      `DESIGN.md is missing ${token} ${value}`,
+    );
+  }
+
+  for (const value of retiredHexValues) {
+    assert.doesNotMatch(
+      design,
+      new RegExp(value, 'i'),
+      `DESIGN.md still documents retired color ${value}`,
+    );
+  }
+
+  assert.match(
+    design,
+    /Berry Violet is the only interactive brand color/i,
+  );
+  assert.match(
+    design,
+    /existing logo gradient remains the only multi-color brand treatment/i,
+  );
 });
