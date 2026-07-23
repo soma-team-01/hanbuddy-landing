@@ -46,9 +46,9 @@ Semantic success colors remain reserved for genuinely completed states:
 
 ### Font Stack
 
-- Body and UI (`font-sans`): `"Be Vietnam Pro", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
-- Display and headings (`font-display`): `Manrope, "Noto Sans KR", system-ui, sans-serif`
-- No serif. The pairing matches the MVP frontend (Manrope display over Be Vietnam Pro body).
+- Body and UI (`font-sans`): `"DM Sans", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+- Display and headings (`font-display`): `"Plus Jakarta Sans", "Noto Sans KR", system-ui, sans-serif`
+- No serif. Plus Jakarta Sans gives the display layer friendly polish while DM Sans keeps body and UI copy calm and approachable.
 
 ### Scale
 
@@ -66,7 +66,7 @@ Semantic success colors remain reserved for genuinely completed states:
 ### Rules
 
 - Typography should feel like the same product as the MVP app. Keep headings confident but compact.
-- Manrope (with `tracking-tight`) carries display geometry; Be Vietnam Pro and Noto Sans KR keep bilingual body copy stable.
+- Plus Jakarta Sans (with `tracking-tight`) carries display geometry; DM Sans and Noto Sans KR keep bilingual body copy stable.
 - Eyebrows and small labels are the one tracked element: uppercase, `0.16em`–`0.18em` letter spacing, `primary-strong` on light surfaces or reduced-opacity `on-primary-strong` on strong primary surfaces. Everything else stays at `0` tracking; display headings may go negative (`-0.025em`).
 - Body text never goes below `14px`.
 - Keep paragraph measures comfortable, usually 58 to 70 characters.
