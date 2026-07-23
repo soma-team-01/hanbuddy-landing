@@ -1,6 +1,6 @@
 # HanBuddy Landing Design System
 
-This is the source of truth for the HanBuddy landing. The active direction is photography-led, centered, and quiet, with pill CTAs and a logo-coral brand system sampled directly from the current HanBuddy logo. Previous alternate palettes, the app-preview mockup, and the Mastercard-inspired orbital/orange poster direction are retired history and must not be used for new implementation decisions.
+This is the source of truth for the HanBuddy landing. The active direction is photography-led, centered, and quiet, with pill CTAs and a clear HanBuddy-pink brand system. Previous alternate palettes, the app-preview mockup, and the Mastercard-inspired orbital/orange poster direction are retired history and must not be used for new implementation decisions.
 
 ## 1. Atmosphere
 
@@ -14,17 +14,17 @@ HanBuddy should feel like the marketing surface of the same product the MVP app 
 | --- | --- | --- | --- |
 | Page canvas | `canvas` | `#fcfcfd` | Default near-white page background |
 | Clean surface | `canvas-soft` | `#ffffff` | Sticky header and high-clarity surfaces |
-| Primary | `primary` | `#ff635a` | Logo-matched CTA and selected-state fill |
-| Primary hover | `primary-hover` | `#f0524b` | CTA hover and pressed fill |
-| Primary strong | `primary-strong` | `#a8322d` | Accessible branded text, focus, and final CTA band |
-| Primary soft | `primary-soft` | `#fff1ef` | Testimonial, selection, and quiet branded surface |
+| Primary | `primary` | `#ff4a79` | HanBuddy-pink CTA and selected-state fill |
+| Primary hover | `primary-hover` | `#f74572` | CTA hover and pressed fill |
+| Primary strong | `primary-strong` | `#a51f48` | Accessible branded text, focus, and final CTA band |
+| Primary soft | `primary-soft` | `#fff0f4` | Testimonial, selection, and quiet branded surface |
 | Text primary | `ink` | `#201a20` | Headlines and long-form body text |
 | Text secondary | `muted` | `#625a61` | Supporting copy and metadata |
 | Border strong | `line-strong` | `#cfc6cc` | Focus-adjacent and selected boundaries |
 | Border soft | `line-soft` | `#e9e3e7` | Hairline dividers and quiet outlines |
 | Panel | `panel` | `#f7f5f7` | Neutral cards and grouped content |
 | Panel raised | `panel-raised` | `#fbf8fa` | Language toggle and subtle raised surfaces |
-| On-primary | `on-primary` | `#201a20` | Text and icons on the light logo-coral fill |
+| On-primary | `on-primary` | `#201a20` | Text and icons on the bright HanBuddy-pink fill |
 | On-primary strong | `on-primary-strong` | `#ffffff` | Text and icons on `primary-strong` surfaces |
 
 Semantic success colors remain reserved for genuinely completed states:
@@ -32,7 +32,7 @@ Semantic success colors remain reserved for genuinely completed states:
 
 ### Rules
 
-- HanBuddy logo coral is the only interactive brand color. CTA fills and active surfaces use `primary`; branded text and focus rings use the accessible same-hue `primary-strong`.
+- HanBuddy pink is the only interactive brand color. CTA fills and active surfaces use `primary`; branded text and focus rings use the accessible same-hue `primary-strong`.
 - Headings and long-form text remain neutral `ink`; supporting copy uses `muted`.
 - `primary-soft` is a quiet branded surface, not a second accent.
 - The final application section is the single large color field and uses `primary-strong` with `on-primary-strong` text.
@@ -115,7 +115,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### CTA
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
-- Primary CTA: logo-matched `primary` fill, dark `on-primary` text, `primary-hover` hover, and no glow.
+- Primary CTA: HanBuddy-pink `primary` fill, dark `on-primary` text, `primary-hover` hover, and no glow.
 - Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
 - All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
@@ -177,7 +177,7 @@ Use thin borders plus low shadows. Depth should read like a trustworthy product 
 | --- | --- | --- |
 | Border soft | `1px solid #e9e3e7` | Hairline dividers, quiet separators |
 | Border strong | `1px solid #cfc6cc` | Selected boundaries and supporting outlines |
-| Focus outline | `3px solid #a8322d` | Visible keyboard focus on light surfaces |
+| Focus outline | `3px solid #a51f48` | Visible keyboard focus on light surfaces |
 | Shadow subtle | `0 1px 2px rgba(32, 26, 32, 0.05)` | Rarely; only when a floating surface truly needs it |
 | Photo scrim | `linear-gradient(transparent 45%, rgba(32,26,32,0.72))` | Photo-card caption legibility only |
 

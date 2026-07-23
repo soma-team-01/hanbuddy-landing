@@ -9,10 +9,10 @@ const design = readFileSync(join(__dirname, '..', 'DESIGN.md'), 'utf8');
 const approvedTokens = [
   ['canvas', '#fcfcfd'],
   ['canvas-soft', '#ffffff'],
-  ['primary', '#ff635a'],
-  ['primary-hover', '#f0524b'],
-  ['primary-strong', '#a8322d'],
-  ['primary-soft', '#fff1ef'],
+  ['primary', '#ff4a79'],
+  ['primary-hover', '#f74572'],
+  ['primary-strong', '#a51f48'],
+  ['primary-soft', '#fff0f4'],
   ['ink', '#201a20'],
   ['muted', '#625a61'],
   ['line-strong', '#cfc6cc'],
@@ -39,9 +39,13 @@ const retiredHexValues = [
   '#943476',
   '#79285f',
   '#fceff7',
+  '#ff635a',
+  '#f0524b',
+  '#a8322d',
+  '#fff1ef',
 ];
 
-test('defines the approved HanBuddy logo coral tokens in Tailwind and CSS', () => {
+test('defines the approved HanBuddy pink tokens in Tailwind and CSS', () => {
   for (const [token, value] of approvedTokens) {
     const tailwindToken = new RegExp(
       `['"]?${token}['"]?\\s*:\\s*['"]${value}['"]`,
@@ -69,7 +73,7 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
   assert.doesNotMatch(html, /\b(?:sage|sage-mist|earth)\b/i);
 });
 
-test('maps interactive and emphasized components to accessible coral roles', () => {
+test('maps interactive and emphasized components to accessible pink roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
   assert.match(
     html,
@@ -106,7 +110,7 @@ test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
 
   assert.match(
     design,
-    /HanBuddy logo coral is the only interactive brand color/i,
+    /HanBuddy pink is the only interactive brand color/i,
   );
   assert.match(
     design,
