@@ -31,8 +31,8 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 |------|----------|-------|
 | Edit visible landing copy | `index.html` | English/Korean copy lives in `CONTENT_MAP` plus initial fallback DOM text |
 | Update design direction | `DESIGN.md`, then `index.html` | Keep tokens aligned with the inline Tailwind config |
-| Change application/contact CTA | `index.html` `CONFIG`, hardcoded anchors, visible CTA copy | Google Form is live (`forms.gle/B1fWgX3MjtHUHGNt5`); KakaoTalk open chat handles questions/updates |
-| Change guide CTA | `index.html` `CONFIG.guide` and hardcoded guide anchors | Current guide URL points to the Run 1 Notion guide |
+| Change application/contact CTA | `index.html` `CONFIG`, hardcoded anchors, visible CTA copy | Google Form is live (`forms.gle/B1fWgX3MjtHUHGNt5`); Instagram DM is the primary inquiry channel and KakaoTalk remains secondary |
+| Add a public guide CTA | `index.html` footer and `CONFIG` | The June 25 Run 1 guide is historical and requires an explicitly approved current replacement |
 | Replace public photos | `assets/run1-*.webp` and OG image in `index.html` | Use WebP derivatives only, strip EXIF, preserve meaningful alt text; photos support product proof |
 | Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
 | Deploy artifact | `.vercelignore` allowlist | `npx vercel --prod` uploads only `index.html` and `assets/*.webp`; everything else (docs, raw JPGs, tool folders) is excluded by `.vercelignore` |
@@ -75,7 +75,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public copy, metadata, alt text, README public summary, or deploy artifacts.
 - Participant photo use was approved for marketing, but original JPG/EXIF must not be deployed.
 - CTA URLs may appear both as anchor `href` values and in the `CONFIG` object; keep hardcoded anchors, `CONFIG`, and visible labels aligned so the page works before JS enhancement.
-- Guide URL appears both as anchor `href` values and in the `CONFIG` object; keep `https://www.notion.so/388d889585858177b58dc513bd5517c0` aligned with the Run 1 Notion guide.
+- The June 25 Run 1 Notion guide is historical and intentionally absent from the public footer, CTA, and `CONFIG`. Do not restore it without explicit approval for a current guide.
 - Tailwind is loaded from CDN and configured inline. Broad public release should consider precompiled or inline CSS.
 
 ## ANTI-PATTERNS
