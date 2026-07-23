@@ -98,10 +98,10 @@ test('maps interactive and emphasized components to the approved warm-red roles'
 });
 
 test('keeps the logo as the only decorative gradient source', () => {
-  assert.match(html, /assets\/logo-borderless\.webp/);
+  assert.match(html, /assets\/brand\/logo-borderless\.webp/);
   assert.ok(
-    existsSync(join(__dirname, '..', 'assets', 'logo-borderless.webp')),
-    'referenced logo asset assets/logo-borderless.webp must exist on disk',
+    existsSync(join(__dirname, '..', 'assets', 'brand', 'logo-borderless.webp')),
+    'referenced logo asset assets/brand/logo-borderless.webp must exist on disk',
   );
   assert.doesNotMatch(html, /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i);
 });
