@@ -32,17 +32,19 @@
       theme: {
         extend: {
           colors: {
-            canvas: '#fbf9f4',
-            'canvas-soft': '#fbf9f7',
-            ink: '#182820',
-            sage: '#2d3e35',
-            'sage-mist': '#96a99d',
-            muted: '#434844',
-            'line-strong': '#c3c8c3',
-            'line-soft': '#e4e2dd',
-            panel: '#f0eee9',
-            'panel-raised': '#f5f3ee',
-            earth: '#8a6c33',
+            canvas: '#fcfcfd',
+            'canvas-soft': '#ffffff',
+            primary: '#b13f8f',
+            'primary-hover': '#943476',
+            'primary-strong': '#79285f',
+            'primary-soft': '#fceff7',
+            ink: '#201a20',
+            muted: '#625a61',
+            'line-strong': '#cfc6cc',
+            'line-soft': '#e9e3e7',
+            panel: '#f7f5f7',
+            'panel-raised': '#fbf8fa',
+            'on-primary': '#ffffff',
             success: '#3f6b46',
             'success-soft': '#dcead9',
           },
@@ -51,8 +53,8 @@
             display: ['Manrope', 'Noto Sans KR', 'system-ui', 'sans-serif'],
           },
           boxShadow: {
-            subtle: '0 1px 2px rgba(24, 40, 32, 0.05)',
-            raised: '0 8px 24px rgba(24, 40, 32, 0.08)',
+            subtle: '0 1px 2px rgba(32, 26, 32, 0.05)',
+            raised: '0 8px 24px rgba(32, 26, 32, 0.08)',
           },
         },
       },
@@ -65,11 +67,19 @@
   <style>
     :root {
       color-scheme: light;
-      --color-canvas: #fbf9f4;
-      --color-canvas-soft: #fbf9f7;
-      --color-ink: #182820;
-      --color-line-strong: #c3c8c3;
-      --color-earth: #8a6c33;
+      --color-canvas: #fcfcfd;
+      --color-canvas-soft: #ffffff;
+      --color-primary: #b13f8f;
+      --color-primary-hover: #943476;
+      --color-primary-strong: #79285f;
+      --color-primary-soft: #fceff7;
+      --color-ink: #201a20;
+      --color-muted: #625a61;
+      --color-line-strong: #cfc6cc;
+      --color-line-soft: #e9e3e7;
+      --color-panel: #f7f5f7;
+      --color-panel-raised: #fbf8fa;
+      --color-on-primary: #ffffff;
     }
 
     html {
@@ -98,8 +108,8 @@
       top: -4rem;
       z-index: 80;
       border-radius: 0.75rem;
-      background: var(--color-ink);
-      color: var(--color-canvas-soft);
+      background: var(--color-primary);
+      color: var(--color-on-primary);
       padding: 0.75rem 1rem;
       font-weight: 800;
       transition: top 180ms ease;
@@ -107,13 +117,17 @@
 
     .skip-link:focus {
       top: 1rem;
-      outline: 3px solid var(--color-line-strong);
+      outline: 3px solid var(--color-primary-strong);
       outline-offset: 4px;
     }
 
     .focusable:focus-visible {
-      outline: 3px solid var(--color-line-strong);
+      outline: 3px solid var(--color-primary);
       outline-offset: 4px;
+    }
+
+    .focusable-on-primary:focus-visible {
+      outline-color: var(--color-on-primary);
     }
 
     .eyebrow {
@@ -121,14 +135,18 @@
       font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--color-earth);
+      color: var(--color-primary);
+    }
+
+    .eyebrow-on-primary {
+      color: rgba(255, 255, 255, 0.84);
     }
 
     .photo-card {
       position: relative;
       overflow: hidden;
       border-radius: 1rem;
-      background: #f0eee9;
+      background: var(--color-panel);
     }
 
     .photo-card img {
@@ -172,7 +190,7 @@
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
         <a href="#apply" data-cta="apply"
-           class="focusable rounded-full bg-ink px-4 py-2 text-sm font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px sm:px-5">
+           class="focusable rounded-full bg-primary px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px sm:px-5">
           <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Join</span>
           <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join this weekend</span>
         </a>
@@ -196,21 +214,21 @@
 
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
-             class="focusable rounded-full bg-ink px-8 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="hero.primaryCta">
+             class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
             Join this weekend
           </a>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-ink transition hover:text-sage">
+             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary transition hover:text-primary-hover">
             <span data-i18n="hero.contactCta">Ask us anything on KakaoTalk</span> <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
 
         <!-- Guest testimonial, front and center -->
-        <figure class="mx-auto mt-10 max-w-2xl rounded-2xl bg-panel px-7 py-6 text-left sm:px-9 sm:py-7">
+        <figure class="mx-auto mt-10 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left sm:px-9 sm:py-7">
           <blockquote class="font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
             &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
           </blockquote>
-          <figcaption class="mt-4 text-sm font-semibold text-earth" data-i18n="hero.quoteBy">
+          <figcaption class="mt-4 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
             — Guest at our first baseball night, Jamsil Stadium
           </figcaption>
         </figure>
@@ -268,30 +286,30 @@
     </section>
 
     <!-- Apply -->
-    <section id="apply" class="bg-ink text-canvas-soft">
+    <section id="apply" class="bg-primary-strong text-on-primary">
       <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
         <div>
-          <p class="eyebrow" style="color: var(--color-earth); color: #b9a97e" data-i18n="finalCta.eyebrow">Every Saturday &amp; Sunday</p>
+          <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Every Saturday &amp; Sunday</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
             See you this weekend?
           </h2>
-          <p class="mt-5 max-w-2xl text-base leading-8 text-line-soft" data-i18n="finalCta.body">
+          <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary/85" data-i18n="finalCta.body">
             Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? The KakaoTalk open chat is the fastest way to reach us.
           </p>
-          <p class="mt-4 max-w-2xl text-sm leading-6 text-line-soft" data-i18n="finalCta.buddyNote">
+          <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary/85" data-i18n="finalCta.buddyNote">
             Korean local who wants to host? Buddies are welcome too — say hi in the open chat.
           </p>
-          <p class="mt-2 max-w-2xl text-xs leading-6 text-sage-mist" data-i18n="finalCta.privacyNote">
+          <p class="mt-2 max-w-2xl text-xs leading-6 text-on-primary/70" data-i18n="finalCta.privacyNote">
             This page collects no personal data. Applications go through the Google Form, and we confirm everything with you directly before each activity.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
-             class="focusable rounded-full bg-canvas-soft px-7 py-3.5 text-center text-base font-bold text-ink transition hover:bg-panel active:translate-y-px" data-i18n="finalCta.formButton">
+             class="focusable focusable-on-primary rounded-full bg-on-primary px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
             Join this weekend
           </a>
           <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable rounded-full border border-line-strong/30 px-7 py-3.5 text-center text-base font-bold text-canvas-soft transition hover:bg-sage active:translate-y-px" data-i18n="finalCta.contactButton">
+             class="focusable focusable-on-primary rounded-full border border-on-primary/40 px-7 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="finalCta.contactButton">
             Ask on KakaoTalk
           </a>
         </div>
@@ -307,20 +325,20 @@
           <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
         </p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.instagramLink">
+          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.instagramLink">
             Instagram
           </a>
-          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.meetupLink">
+          <a href="https://www.meetup.com/discover-korea-with-local-buddies/" target="_blank" rel="noopener" data-cta="meetup" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.meetupLink">
             Meetup group
           </a>
-          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-ink/20 underline-offset-4 hover:text-ink" data-i18n="footer.guideLink">
+          <a href="https://www.notion.so/388d889585858177b58dc513bd5517c0" target="_blank" rel="noopener" data-cta="guide" class="focusable rounded-lg underline decoration-primary/25 underline-offset-4 hover:text-primary" data-i18n="footer.guideLink">
             Pre-game guide
           </a>
-          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink" data-i18n="footer.link">
+          <a href="https://open.kakao.com/o/gDBFqEyi" target="_blank" rel="noopener" data-cta="contact" class="focusable rounded-lg font-bold text-ink underline decoration-primary/30 underline-offset-4 hover:text-primary hover:decoration-primary" data-i18n="footer.link">
             KakaoTalk open chat
           </a>
           <button type="button" data-consent-settings aria-controls="analytics-consent"
-                  class="focusable rounded-lg font-bold text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink"
+                  class="focusable rounded-lg font-bold text-ink underline decoration-primary/30 underline-offset-4 hover:text-primary hover:decoration-primary"
                   data-i18n="consent.settings">
             Cookie settings
           </button>
@@ -349,12 +367,12 @@
       </div>
       <div class="flex flex-col-reverse gap-2 sm:min-w-52">
         <button type="button" data-consent-action="reject"
-                class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-panel"
+                class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft"
                 data-i18n="consent.reject">
           Continue without optional cookies
         </button>
         <button type="button" data-consent-action="accept"
-                class="focusable rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-canvas-soft transition hover:bg-sage"
+                class="focusable rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover"
                 data-i18n="consent.accept">
           Allow analytics &amp; ads
         </button>
@@ -655,7 +673,7 @@
       clear(container);
       copy.nav.links.forEach((link) => {
         const anchor = document.createElement('a');
-        anchor.className = 'focusable rounded-lg transition hover:text-ink';
+        anchor.className = 'focusable rounded-lg transition hover:text-primary';
         anchor.href = link.href;
         anchor.textContent = link.label;
         container.appendChild(anchor);
@@ -686,7 +704,7 @@
           textNode('h3', 'font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', `${item.emoji} ${item.title}`),
           textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
           textNode('p', 'mt-5 text-sm font-bold text-ink', item.price),
-          textNode('p', 'mt-1 text-sm font-semibold text-earth', item.schedule),
+          textNode('p', 'mt-1 text-sm font-semibold text-primary', item.schedule),
         );
 
         article.append(figure, content);
@@ -701,7 +719,7 @@
       copy.how.items.forEach((item) => {
         const article = document.createElement('article');
         article.className = 'rounded-2xl bg-panel px-6 py-6 text-center';
-        const badge = textNode('p', 'mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-ink font-display text-sm font-extrabold text-canvas-soft', item.step);
+        const badge = textNode('p', 'mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-primary font-display text-sm font-extrabold text-on-primary', item.step);
         article.append(
           badge,
           textNode('h3', 'mt-4 font-display text-lg font-bold leading-snug text-ink', item.title),
@@ -721,8 +739,8 @@
       document.querySelectorAll('[data-lang]').forEach((button) => {
         const selected = button.getAttribute('data-lang') === lang;
         button.setAttribute('aria-pressed', String(selected));
-        button.classList.toggle('bg-ink', selected);
-        button.classList.toggle('text-canvas-soft', selected);
+        button.classList.toggle('bg-primary', selected);
+        button.classList.toggle('text-on-primary', selected);
         button.classList.toggle('text-muted', !selected);
       });
     };

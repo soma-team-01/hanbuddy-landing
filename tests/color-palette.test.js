@@ -1,0 +1,82 @@
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const { join } = require('node:path');
+const test = require('node:test');
+
+const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
+
+const approvedTokens = [
+  ['canvas', '#fcfcfd'],
+  ['canvas-soft', '#ffffff'],
+  ['primary', '#b13f8f'],
+  ['primary-hover', '#943476'],
+  ['primary-strong', '#79285f'],
+  ['primary-soft', '#fceff7'],
+  ['ink', '#201a20'],
+  ['muted', '#625a61'],
+  ['line-strong', '#cfc6cc'],
+  ['line-soft', '#e9e3e7'],
+  ['panel', '#f7f5f7'],
+  ['panel-raised', '#fbf8fa'],
+  ['on-primary', '#ffffff'],
+];
+
+const retiredHexValues = [
+  '#fbf9f4',
+  '#fbf9f7',
+  '#182820',
+  '#2d3e35',
+  '#96a99d',
+  '#434844',
+  '#c3c8c3',
+  '#e4e2dd',
+  '#f0eee9',
+  '#f5f3ee',
+  '#8a6c33',
+];
+
+test('defines the approved Berry Violet tokens in Tailwind and CSS', () => {
+  for (const [token, value] of approvedTokens) {
+    const tailwindToken = new RegExp(
+      `['"]?${token}['"]?\\s*:\\s*['"]${value}['"]`,
+      'i',
+    );
+    const cssVariable = new RegExp(
+      `--color-${token}:\\s*${value}`,
+      'i',
+    );
+
+    assert.match(html, tailwindToken, `missing Tailwind token ${token}`);
+    assert.match(html, cssVariable, `missing CSS variable ${token}`);
+  }
+});
+
+test('removes the retired cream, forest, sage, and earth palette', () => {
+  for (const value of retiredHexValues) {
+    assert.doesNotMatch(
+      html,
+      new RegExp(value, 'i'),
+      `retired color ${value} must not remain in index.html`,
+    );
+  }
+
+  assert.doesNotMatch(html, /\b(?:sage|sage-mist|earth)\b/i);
+});
+
+test('maps interactive and emphasized components to semantic primary roles', () => {
+  assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
+  assert.match(
+    html,
+    /<section id="apply" class="bg-primary-strong text-on-primary">/,
+  );
+  assert.match(html, /bg-primary-soft/);
+  assert.match(html, /text-primary(?:-strong)?/);
+  assert.match(html, /classList\.toggle\('bg-primary', selected\)/);
+  assert.match(html, /classList\.toggle\('text-on-primary', selected\)/);
+  assert.match(html, /color:\s*var\(--color-primary\)/);
+});
+
+test('keeps the logo as the only decorative gradient source', () => {
+  assert.match(html, /assets\/logo\.webp/);
+  assert.doesNotMatch(html, /linear-gradient\s*\(/i);
+});
