@@ -7,18 +7,18 @@ const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 const design = readFileSync(join(__dirname, '..', 'DESIGN.md'), 'utf8');
 
 const approvedTokens = [
-  ['canvas', '#fcfcfd'],
+  ['canvas', '#fffaf7'],
   ['canvas-soft', '#ffffff'],
-  ['primary', '#ff4a79'],
-  ['primary-hover', '#f74572'],
-  ['primary-strong', '#a51f48'],
-  ['primary-soft', '#fff0f4'],
-  ['ink', '#201a20'],
-  ['muted', '#625a61'],
-  ['line-strong', '#cfc6cc'],
-  ['line-soft', '#e9e3e7'],
-  ['panel', '#f7f5f7'],
-  ['panel-raised', '#fbf8fa'],
+  ['primary', '#d13f32'],
+  ['primary-hover', '#b9342b'],
+  ['primary-strong', '#8f2f28'],
+  ['primary-soft', '#fff0ec'],
+  ['ink', '#261b18'],
+  ['muted', '#675b56'],
+  ['line-strong', '#d6c5bf'],
+  ['line-soft', '#eee2dd'],
+  ['panel', '#f8f3f0'],
+  ['panel-raised', '#fcf8f6'],
   ['on-primary', '#ffffff'],
   ['on-primary-strong', '#ffffff'],
 ];
@@ -43,9 +43,20 @@ const retiredHexValues = [
   '#f0524b',
   '#a8322d',
   '#fff1ef',
+  '#fcfcfd',
+  '#ff4a79',
+  '#f74572',
+  '#a51f48',
+  '#fff0f4',
+  '#201a20',
+  '#625a61',
+  '#cfc6cc',
+  '#e9e3e7',
+  '#f7f5f7',
+  '#fbf8fa',
 ];
 
-test('defines the approved HanBuddy pink tokens in Tailwind and CSS', () => {
+test('defines the approved HanBuddy warm-red tokens in Tailwind and CSS', () => {
   for (const [token, value] of approvedTokens) {
     const tailwindToken = new RegExp(
       `['"]?${token}['"]?\\s*:\\s*['"]${value}['"]`,
@@ -73,7 +84,7 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
   assert.doesNotMatch(html, /\b(?:sage|sage-mist|earth)\b/i);
 });
 
-test('maps interactive and emphasized components to the approved pink roles', () => {
+test('maps interactive and emphasized components to the approved warm-red roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
   assert.match(
     html,
@@ -110,11 +121,11 @@ test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
 
   assert.match(
     design,
-    /Primary CTA: HanBuddy-pink `primary` fill, white `on-primary` text/i,
+    /Primary CTA: warm-red `primary` fill, white `on-primary` text/i,
   );
   assert.match(
     design,
-    /HanBuddy pink is the only interactive brand color/i,
+    /HanBuddy red is the only interactive brand color/i,
   );
   assert.match(
     design,
