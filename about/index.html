@@ -231,20 +231,14 @@
             <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.2.body">Guest feedback shapes the next run.</p>
           </li>
         </ul>
-      </div>
-    </section>
-
-    <!-- ④ Where we're going -->
-    <section id="beyond" class="border-t border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-3xl px-5 py-14 lg:py-16">
-        <p class="text-lg font-semibold leading-8 text-ink sm:text-xl" data-i18n="beyond.body">
+        <p class="mt-8 text-lg font-semibold leading-8 text-ink sm:text-xl" data-i18n="beyond.body">
           Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we&rsquo;ll take you along.
         </p>
       </div>
     </section>
 
-    <!-- ⑤ Team + credibility -->
-    <section id="team">
+    <!-- ④ Team + credibility -->
+    <section id="team" class="border-t border-line-soft bg-canvas-soft">
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="team.title">
           Meet the team
@@ -252,6 +246,13 @@
         <p class="mt-4 text-base leading-7 text-muted" data-i18n="team.lead">
           We&rsquo;re ZeroOne — three friends from Seoul running HanBuddy together.
         </p>
+
+        <div class="mt-7 flex flex-col items-start gap-4 rounded-2xl bg-panel px-7 py-6 sm:flex-row sm:items-center">
+          <img src="/assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-10 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
+          <p class="text-sm leading-6 text-muted" data-i18n="team.backed">
+            Backed by AI&middot;SW Maestro — a national tech talent program run by Korea&rsquo;s Ministry of Science and ICT. HanBuddy is our official project.
+          </p>
+        </div>
 
         <ul class="mt-8 divide-y divide-line-soft border-y border-line-soft">
           <li class="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
@@ -279,23 +280,16 @@
               <p class="font-display text-lg font-bold text-ink" data-i18n="team.members.2.name">Junyoung Lee</p>
               <p class="mt-0.5 text-sm leading-6 text-muted" data-i18n="team.members.2.role">Keeps bookings &amp; matching smooth</p>
             </div>
-            <a href="https://github.com/junilyy" target="_blank" rel="noopener" data-cta="github_junyoung"
+            <a href="https://kr.linkedin.com/in/%EC%9D%B4%EC%A4%80%EC%98%81-undefined-a63590398" target="_blank" rel="noopener" data-cta="linkedin_junyoung"
                class="focusable shrink-0 rounded-full text-sm font-bold text-primary-strong transition hover:opacity-80">
-              GitHub <span aria-hidden="true">&#8599;</span>
+              LinkedIn <span aria-hidden="true">&#8599;</span>
             </a>
           </li>
         </ul>
-
-        <div class="mt-10 flex flex-col items-start gap-4 rounded-2xl bg-panel px-7 py-6 sm:flex-row sm:items-center">
-          <img src="/assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-10 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
-          <p class="text-sm leading-6 text-muted" data-i18n="team.backed">
-            Backed by AI&middot;SW Maestro — a national tech talent program run by Korea&rsquo;s Ministry of Science and ICT. HanBuddy is our official project.
-          </p>
-        </div>
       </div>
     </section>
 
-    <!-- ⑥ CTA -->
+    <!-- ⑤ CTA -->
     <section id="join" class="bg-primary-strong text-on-primary-strong">
       <div class="mx-auto flex max-w-3xl flex-col items-center gap-7 px-5 py-16 text-center lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
@@ -434,10 +428,10 @@
           aria: 'Main navigation',
           homeAria: 'HanBuddy home',
           links: [
+            { href: '/about', label: 'About' },
             { href: '/#programs', label: 'Programs' },
             { href: '/#how', label: 'How it works' },
             { href: '/#apply', label: 'Join' },
-            { href: '/about', label: 'About' },
           ],
           primaryCta: 'Join this weekend',
           primaryCtaShort: 'Join',
@@ -510,10 +504,10 @@
           aria: '주요 내비게이션',
           homeAria: 'HanBuddy 홈',
           links: [
+            { href: '/about', label: '소개' },
             { href: '/#programs', label: '프로그램' },
             { href: '/#how', label: '참여 방법' },
             { href: '/#apply', label: '신청' },
-            { href: '/about', label: '소개' },
           ],
           primaryCta: '이번 주말 함께하기',
           primaryCtaShort: '신청',
