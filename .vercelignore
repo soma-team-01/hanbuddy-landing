@@ -14,3 +14,6 @@
 !/assets/photos/hanriver
 /assets/photos/hanriver/*
 !/assets/photos/hanriver/*.webp
+!/about
+/about/*
+!/about/index.html
