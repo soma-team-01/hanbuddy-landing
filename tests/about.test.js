@@ -10,7 +10,7 @@ const aboutHtml = existsSync(aboutPath) ? readFileSync(aboutPath, 'utf8') : '';
 
 test('about page exists with core sections', () => {
   assert.ok(aboutHtml.length > 0, 'about/index.html must exist');
-  for (const id of ['top', 'why', 'operate', 'beyond', 'team', 'join']) {
+  for (const id of ['top', 'why', 'operate', 'team', 'join']) {
     assert.match(aboutHtml, new RegExp(`<section id="${id}"`), `missing section #${id}`);
   }
 });
@@ -35,7 +35,7 @@ test('about team links match the spec exactly and open safely', () => {
   const links = [
     ['linkedin_minhyung', 'https://www.linkedin.com/in/minbros/'],
     ['linkedin_yoohyun', 'https://www.linkedin.com/in/yoohyun-kim-6655ba409/'],
-    ['github_junyoung', 'https://github.com/junilyy'],
+    ['linkedin_junyoung', 'https://kr.linkedin.com/in/%EC%9D%B4%EC%A4%80%EC%98%81-undefined-a63590398'],
   ];
   for (const [cta, url] of links) {
     const pattern = new RegExp(
