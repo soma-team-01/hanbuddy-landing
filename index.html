@@ -286,10 +286,12 @@
 
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
     <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
-      <a href="#top" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-lg font-extrabold tracking-tight text-ink" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
+      <a href="#top" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink lg:text-lg" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
         <img src="assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
-        HanBuddy
+        <span class="hidden min-[380px]:inline">HanBuddy</span>
       </a>
+
+      <a href="/about" class="focusable rounded-full text-sm font-semibold text-muted transition hover:text-primary-strong lg:hidden" data-i18n="nav.aboutLabel">About</a>
 
       <div class="hidden items-center gap-5 text-sm font-semibold text-muted lg:flex" data-nav-links></div>
 
@@ -455,6 +457,7 @@
           <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
         </p>
         <div class="flex flex-wrap items-center gap-4">
+          <a href="/about" class="focusable rounded text-sm font-semibold text-muted transition hover:text-primary-strong" data-i18n="footer.aboutLink">About HanBuddy</a>
           <div class="flex items-center gap-2" role="group" aria-label="Contact channels"
                data-footer-social-icons data-i18n-aria="footer.contactChannelsAria">
             <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
@@ -574,7 +577,9 @@
             { href: '#programs', label: 'Programs' },
             { href: '#how', label: 'How it works' },
             { href: '#apply', label: 'Join' },
+            { href: '/about', label: 'About' },
           ],
+          aboutLabel: 'About',
           primaryCta: 'Join this weekend',
           primaryCtaShort: 'Join',
         },
@@ -639,6 +644,7 @@
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
+          aboutLink: 'About HanBuddy',
           contactChannelsAria: 'Community and contact channels',
           instagramAria: 'Send HanBuddy a direct message on Instagram',
           kakaoAria: 'Ask HanBuddy in KakaoTalk open chat',
@@ -677,7 +683,9 @@
             { href: '#programs', label: '프로그램' },
             { href: '#how', label: '참여 방법' },
             { href: '#apply', label: '신청' },
+            { href: '/about', label: '소개' },
           ],
+          aboutLabel: '소개',
           primaryCta: '이번 주말 함께하기',
           primaryCtaShort: '신청',
         },
@@ -742,6 +750,7 @@
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
+          aboutLink: 'HanBuddy 소개',
           contactChannelsAria: '커뮤니티 및 문의 채널',
           instagramAria: 'HanBuddy Instagram DM으로 문의하기',
           kakaoAria: 'HanBuddy KakaoTalk 오픈채팅으로 문의하기',
