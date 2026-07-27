@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HanBuddy | Korean baseball nights & Han River picnics with a local buddy</title>
-  <meta name="description" content="Join a KBO baseball night or a Han River picnic with a friendly Korean buddy. Runs every Saturday and Sunday in Seoul — apply in 2 minutes." />
+  <title>About HanBuddy | The team behind your Korean weekend</title>
+  <meta name="description" content="Meet the team that plans and runs HanBuddy — Korean baseball nights and Han River picnics for international guests, backed by AI·SW Maestro." />
 
-  <meta property="og:title" content="HanBuddy | Korean baseball nights & Han River picnics with a local buddy" />
-  <meta property="og:description" content="Cheer at a Korean baseball game or picnic by the Han River with a local buddy. Every Saturday & Sunday in Seoul." />
+  <meta property="og:title" content="About HanBuddy | The team behind your Korean weekend" />
+  <meta property="og:description" content="We plan it, run it, and improve it every week — you just show up." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://landing.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://landing.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
-  <link rel="icon" type="image/webp" href="assets/brand/logo-icon.webp" />
-  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+  <link rel="canonical" href="https://landing.hanbuddy.kr/about" />
+  <link rel="icon" type="image/webp" href="/assets/brand/logo-icon.webp" />
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
 
   <!-- Analytics consent defaults. Google Analytics and Meta Pixel load only after opt-in. -->
   <script>
@@ -64,7 +65,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Caveat:wght@600&family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -145,131 +146,6 @@
       color: rgba(255, 255, 255, 0.84);
     }
 
-    .photo-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 1rem;
-      background: var(--color-panel);
-    }
-
-    .photo-card img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-      transition: transform 240ms ease;
-    }
-
-    .photo-card:hover img {
-      transform: scale(1.03);
-    }
-
-    /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
-    .hero-polaroid {
-      position: relative;
-      background: #fff;
-      padding: 8px 8px 34px;
-      box-shadow: 0 6px 18px rgba(38, 27, 24, 0.15), 0 2px 4px rgba(38, 27, 24, 0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .hero-polaroid .hp-frame {
-      display: block;
-      overflow: hidden;
-    }
-
-    .hero-polaroid img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-polaroid .hp-cap {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 6px;
-      text-align: center;
-      font-family: 'Caveat', 'Nanum Pen Script', cursive;
-      font-size: 17px;
-      font-weight: 600;
-      color: #4a3f3a;
-      white-space: nowrap;
-    }
-
-    .hero-polaroid .hp-tape {
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      width: 64px;
-      height: 20px;
-      background: rgba(233, 205, 160, 0.75);
-      box-shadow: 0 1px 3px rgba(38, 27, 24, 0.12);
-      transform: translateX(-50%) rotate(-4deg);
-    }
-
-    .hp2 .hp-tape { transform: translateX(-50%) rotate(3deg); background: rgba(214, 197, 191, 0.8); }
-    .hp3 .hp-tape { transform: translateX(-50%) rotate(-2deg); background: rgba(255, 240, 236, 0.95); }
-
-    .hero-polaroid:hover {
-      transform: rotate(0deg) scale(1.05) !important;
-      box-shadow: 0 16px 36px rgba(38, 27, 24, 0.22);
-      z-index: 20;
-    }
-
-    /* 모바일·태블릿(<1024px): 콘텐츠 아래, 어긋나게 겹친 콜라주 */
-    .hero-polaroids {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 10px;
-      max-width: 430px;
-      margin: 52px auto 0;
-      padding: 0 14px 78px;
-    }
-
-    .hp1 { transform: rotate(-4deg); }
-    .hp2 { transform: rotate(3deg) translateY(22px); }
-    .hp3 { transform: rotate(3deg) translateY(-6px); margin-top: 18px; }
-    .hp4 { transform: rotate(-3.5deg) translateY(14px); margin-top: 18px; }
-
-    .hero-polaroids .hp-frame { height: 158px; }
-
-    /* 데스크톱(≥1024px): 히어로 네 모서리에 흩어진 배경 폴라로이드 */
-    @media (min-width: 1024px) {
-      #top { min-height: 780px; }
-
-      .hero-polaroids {
-        display: contents;
-      }
-
-      .hero-polaroid {
-        position: absolute;
-        z-index: 1;
-        margin: 0;
-      }
-
-      .hero-polaroids .hp-frame { width: 176px; height: 176px; }
-      .hero-polaroid .hp-cap { font-size: 16px; }
-
-      .hp1 { top: 72px; left: 1%; transform: rotate(-7deg); }
-      .hp2 { top: 100px; right: 1%; transform: rotate(6deg); }
-      .hp3 { top: auto; bottom: 52px; left: 3%; transform: rotate(4deg); }
-      .hp4 { top: auto; bottom: 40px; right: 3%; transform: rotate(-5deg); }
-    }
-
-    /* 넓은 화면(≥1440px): 사진을 키우고 살짝 안쪽으로 */
-    @media (min-width: 1440px) {
-      .hero-polaroid { padding: 9px 9px 38px; }
-      .hero-polaroids .hp-frame { width: 232px; height: 232px; }
-      .hero-polaroid .hp-cap { font-size: 21px; }
-      .hero-polaroid .hp-tape { width: 78px; height: 24px; }
-
-      .hp1 { left: 2.5%; }
-      .hp2 { right: 3%; }
-      .hp3 { left: 6%; }
-      .hp4 { right: 6%; }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -287,12 +163,11 @@
 
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
     <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
-      <a href="#top" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink lg:text-lg" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
-        <img src="assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
+      <a href="/" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink lg:text-lg" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
+        <img src="/assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
         <span class="hidden min-[380px]:inline">HanBuddy</span>
       </a>
-
-      <a href="/about" class="focusable rounded-full text-sm font-semibold text-muted transition hover:text-primary-strong lg:hidden" data-i18n="nav.aboutLabel">About</a>
+      <a href="/about" aria-current="page" class="focusable rounded-full text-sm font-semibold text-ink transition hover:text-primary-strong lg:hidden" data-i18n="nav.aboutLabel">About</a>
 
       <div class="hidden items-center gap-5 text-sm font-semibold text-muted lg:flex" data-nav-links></div>
 
@@ -301,7 +176,7 @@
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
-        <a href="#apply" data-cta="apply"
+        <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
            class="focusable rounded-full bg-primary px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px sm:px-5">
           <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Join</span>
           <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join this weekend</span>
@@ -311,139 +186,129 @@
   </header>
 
   <main id="main">
-    <!-- Hero -->
-    <section id="top" class="relative overflow-hidden">
-      <div class="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
-        <p class="eyebrow" data-i18n="hero.eyebrow">
-          Seoul &middot; Every Saturday &amp; Sunday
-        </p>
-        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl" data-i18n="hero.title">
-          Experience Korea like a local!
+    <!-- ① Hero -->
+    <section id="top">
+      <div class="mx-auto max-w-3xl px-5 pb-14 pt-14 text-center sm:pt-20">
+        <p class="eyebrow" data-i18n="hero.eyebrow">About HanBuddy</p>
+        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl" data-i18n="hero.title">
+          The team behind your Korean weekend.
         </h1>
-        <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-          Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
-        </p>
-
-        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
-             class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
-            Join this weekend
-          </a>
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
-             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
-            <span data-i18n="hero.contactCta">DM us on Instagram</span> <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <!-- Guest testimonial, front and center -->
-        <figure class="mx-auto mt-10 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left sm:px-9 sm:py-7">
-          <blockquote class="font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
-            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
-          </blockquote>
-          <figcaption class="mt-4 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
-            — Guest at our first baseball night, Jamsil Stadium
-          </figcaption>
-        </figure>
-      </div>
-
-      <!-- 사진첩에 붙여놓은 듯한 폴라로이드: 데스크톱은 네 모서리 배경, 모바일은 콘텐츠 아래 콜라주 -->
-      <div class="hero-polaroids">
-        <figure class="hero-polaroid hp1">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" fetchpriority="high" class="object-[50%_30%]"
-                 alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap1">first baseball night ⚾</figcaption>
-        </figure>
-        <figure class="hero-polaroid hp2">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy"
-                 alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap2">Banpo rainbow 🌈</figcaption>
-        </figure>
-        <figure class="hero-polaroid hp3">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" class="object-[38%_50%]"
-                 alt="Fans waving phone lights during a night game at Jamsil Baseball Stadium" data-i18n-alt="meta.nightAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap3">10th inning lights</figcaption>
-        </figure>
-        <figure class="hero-polaroid hp4">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" loading="lazy" class="object-[50%_55%]"
-                 alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" data-i18n-alt="meta.foodAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap4">chimaek by the river 🍗</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Programs -->
-    <section id="programs" class="border-t border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="eyebrow" data-i18n="programs.eyebrow">Pick your plan</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="programs.title">
-            Two ways to spend a Seoul weekend.
-          </h2>
-          <p class="mt-4 text-base leading-7 text-muted" data-i18n="programs.body">
-            We run both every Saturday and Sunday. Pick one — or do both.
-          </p>
-        </div>
-
-        <div class="mt-12 grid gap-6 md:grid-cols-2" data-program-cards></div>
-
-        <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-6 text-muted" data-i18n="programs.note">
-          We’ll confirm the activity details with you directly before the day.
+        <p class="mx-auto mt-6 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.lead">
+          We plan it, run it, and improve it every week — you just show up.
         </p>
       </div>
     </section>
 
-    <!-- How it works -->
-    <section id="how" class="mx-auto max-w-6xl px-5 py-16 lg:py-20">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
-          Joining takes 2 minutes.
+    <!-- ② Why we built this -->
+    <section id="why" class="border-t border-line-soft bg-canvas-soft">
+      <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
+        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="why.title">
+          Some of Korea&rsquo;s best moments are locked behind &ldquo;locals only.&rdquo;
         </h2>
+        <p class="mt-6 text-base leading-8 text-muted sm:text-lg" data-i18n="why.body">
+          Baseball tickets sell out on Korean-only apps. The best picnic spots, the river-delivery trick, the chants everyone knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.
+        </p>
       </div>
-      <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
     </section>
 
-    <!-- Apply -->
-    <section id="apply" class="bg-primary-strong text-on-primary-strong">
-      <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
-        <div>
-          <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Every Saturday &amp; Sunday</p>
-          <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
-            See you this weekend?
-          </h2>
-          <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
-            Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
-          </p>
-          <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
-            Korean local who wants to host? Buddies are welcome too — say hi in the open chat.
-          </p>
-          <p class="mt-2 max-w-2xl text-xs leading-6 text-on-primary-strong/70" data-i18n="finalCta.privacyNote">
-            This page never stores your application answers — you apply through the Google Form and we confirm details with you directly. With your consent, Google Analytics and Meta Pixel measure visits and clicks; you can change this anytime under Cookie settings.
+    <!-- ③ How we run it -->
+    <section id="operate">
+      <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
+        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="operate.title">
+          Run by us, every weekend.
+        </h2>
+        <ul class="mt-8 divide-y divide-line-soft border-y border-line-soft">
+          <li class="py-5">
+            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.0.title">We plan each activity ourselves</p>
+            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.0.body">Built around one real Korean moment.</p>
+          </li>
+          <li class="py-5">
+            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.1.title">We confirm details with you directly</p>
+            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.1.body">A real person, not a booking engine.</p>
+          </li>
+          <li class="py-5">
+            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.2.title">We improve every week</p>
+            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.2.body">Guest feedback shapes the next run.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ④ Where we're going -->
+    <section id="beyond" class="border-t border-line-soft bg-canvas-soft">
+      <div class="mx-auto max-w-3xl px-5 py-14 lg:py-16">
+        <p class="text-lg font-semibold leading-8 text-ink sm:text-xl" data-i18n="beyond.body">
+          Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we&rsquo;ll take you along.
+        </p>
+      </div>
+    </section>
+
+    <!-- ⑤ Team + credibility -->
+    <section id="team">
+      <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
+        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="team.title">
+          Meet the team
+        </h2>
+        <p class="mt-4 text-base leading-7 text-muted" data-i18n="team.lead">
+          We&rsquo;re ZeroOne — three friends from Seoul running HanBuddy together.
+        </p>
+
+        <ul class="mt-8 divide-y divide-line-soft border-y border-line-soft">
+          <li class="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="font-display text-lg font-bold text-ink" data-i18n="team.members.0.name">Minhyung Kim</p>
+              <p class="mt-0.5 text-sm leading-6 text-muted" data-i18n="team.members.0.role">Leads the team &amp; operations</p>
+            </div>
+            <a href="https://www.linkedin.com/in/minbros/" target="_blank" rel="noopener" data-cta="linkedin_minhyung"
+               class="focusable shrink-0 rounded-full text-sm font-bold text-primary-strong transition hover:opacity-80">
+              LinkedIn <span aria-hidden="true">&#8599;</span>
+            </a>
+          </li>
+          <li class="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="font-display text-lg font-bold text-ink" data-i18n="team.members.1.name">Yoohyun Kim</p>
+              <p class="mt-0.5 text-sm leading-6 text-muted" data-i18n="team.members.1.role">Designs the experiences &amp; content</p>
+            </div>
+            <a href="https://www.linkedin.com/in/yoohyun-kim-6655ba409/" target="_blank" rel="noopener" data-cta="linkedin_yoohyun"
+               class="focusable shrink-0 rounded-full text-sm font-bold text-primary-strong transition hover:opacity-80">
+              LinkedIn <span aria-hidden="true">&#8599;</span>
+            </a>
+          </li>
+          <li class="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="font-display text-lg font-bold text-ink" data-i18n="team.members.2.name">Junyoung Lee</p>
+              <p class="mt-0.5 text-sm leading-6 text-muted" data-i18n="team.members.2.role">Keeps bookings &amp; matching smooth</p>
+            </div>
+            <a href="https://github.com/junilyy" target="_blank" rel="noopener" data-cta="github_junyoung"
+               class="focusable shrink-0 rounded-full text-sm font-bold text-primary-strong transition hover:opacity-80">
+              GitHub <span aria-hidden="true">&#8599;</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="mt-10 flex flex-col items-start gap-4 rounded-2xl bg-panel px-7 py-6 sm:flex-row sm:items-center">
+          <img src="/assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-10 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
+          <p class="text-sm leading-6 text-muted" data-i18n="team.backed">
+            Backed by AI&middot;SW Maestro — a national tech talent program run by Korea&rsquo;s Ministry of Science and ICT. HanBuddy is our official project.
           </p>
         </div>
-        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+      </div>
+    </section>
+
+    <!-- ⑥ CTA -->
+    <section id="join" class="bg-primary-strong text-on-primary-strong">
+      <div class="mx-auto flex max-w-3xl flex-col items-center gap-7 px-5 py-16 text-center lg:py-20">
+        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
+          See you this weekend?
+        </h2>
+        <div class="flex flex-col gap-3 sm:flex-row">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
-             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
+             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
             Join this weekend
           </a>
           <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.instagramButton">
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.instagramButton">
             DM us on Instagram
-          </a>
-          <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.kakaoButton">
-            KakaoTalk open chat
           </a>
         </div>
       </div>
@@ -454,7 +319,7 @@
     <div class="mx-auto max-w-6xl px-5 py-10">
       <div class="flex flex-col gap-4 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
         <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
-          <img src="assets/brand/logo-borderless.webp" width="24" height="24" alt="" class="h-6 w-6" />
+          <img src="/assets/brand/logo-borderless.webp" width="24" height="24" alt="" class="h-6 w-6" />
           <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
         </p>
         <div class="flex flex-wrap items-center gap-4">
@@ -500,7 +365,7 @@
       <div class="mt-8 flex flex-col gap-4 border-t border-line-soft pt-6 sm:flex-row sm:items-center sm:justify-between"
            data-footer-utility>
         <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-          <img src="assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-8 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
+          <img src="/assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-8 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
           <p class="text-xs leading-5 text-muted" data-i18n="footer.credibility">
             HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
           </p>
@@ -559,89 +424,59 @@
         languageToggle: { aria: 'Select language' },
         meta: {
           htmlLang: 'en',
-          title: 'HanBuddy | Korean baseball nights & Han River picnics with a local buddy',
-          description: 'Join a KBO baseball night or a Han River picnic with a friendly Korean buddy. Runs every Saturday and Sunday in Seoul — apply in 2 minutes.',
-          ogTitle: 'HanBuddy | Korean baseball nights & Han River picnics with a local buddy',
-          ogDescription: 'Cheer at a Korean baseball game or picnic by the Han River with a local buddy. Every Saturday & Sunday in Seoul.',
-          groupAlt: 'HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium',
-          fountainAlt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
-          nightAlt: 'Fans waving phone lights during a night game at Jamsil Baseball Stadium',
-          foodAlt: 'Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River',
-          baseballAlt: 'Jamsil Baseball Stadium field glowing before a night game',
-          picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
+          title: 'About HanBuddy | The team behind your Korean weekend',
+          description: 'Meet the team that plans and runs HanBuddy — Korean baseball nights and Han River picnics for international guests, backed by AI·SW Maestro.',
+          ogTitle: 'About HanBuddy | The team behind your Korean weekend',
+          ogDescription: 'We plan it, run it, and improve it every week — you just show up.',
           somaAlt: 'AI·SW Maestro logo',
         },
         nav: {
           aria: 'Main navigation',
           homeAria: 'HanBuddy home',
           links: [
-            { href: '#programs', label: 'Programs' },
-            { href: '#how', label: 'How it works' },
-            { href: '#apply', label: 'Join' },
+            { href: '/#programs', label: 'Programs' },
+            { href: '/#how', label: 'How it works' },
+            { href: '/#apply', label: 'Join' },
             { href: '/about', label: 'About' },
           ],
-          aboutLabel: 'About',
           primaryCta: 'Join this weekend',
           primaryCtaShort: 'Join',
+          aboutLabel: 'About',
         },
         hero: {
-          eyebrow: 'Seoul · Every Saturday & Sunday',
-          title: 'Experience Korea like a local!',
-          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
-          primaryCta: 'Join this weekend',
-          contactCta: 'DM us on Instagram',
-          quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-          quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
-          photoCap1: 'first baseball night ⚾',
-          photoCap2: 'Banpo rainbow 🌈',
-          photoCap3: '10th inning lights',
-          photoCap4: 'chimaek by the river 🍗',
+          eyebrow: 'About HanBuddy',
+          title: 'The team behind your Korean weekend.',
+          lead: 'We plan it, run it, and improve it every week — you just show up.',
         },
-        programs: {
-          eyebrow: 'Pick your plan',
-          title: 'Two ways to spend a Seoul weekend.',
-          body: 'We run both every Saturday and Sunday. Pick one — or do both.',
-          note: 'We’ll confirm the activity details with you directly before the day.',
-          cards: [
-            {
-              emoji: '⚾',
-              title: 'KBO Baseball Night',
-              body: 'Fried chicken, beer, and 20,000 people singing every batter their own song — Korean baseball is a giant party. Your buddy teaches you the chants, grabs the food, and explains the game as it happens.',
-              price: '₩40,000 per person · game ticket & stadium snacks included',
-              schedule: 'Saturdays & Sundays · night games in Seoul',
-              image: 'assets/photos/kbo/run1-opening.webp',
-              imageAlt: 'meta.baseballAlt',
-              imagePos: 'object-[50%_60%]',
-            },
-            {
-              emoji: '🧺',
-              title: 'Han River Picnic',
-              body: 'Roll out a mat, get fried chicken delivered to the riverside, and watch the rainbow fountain light up Banpo Bridge. This is how Seoul actually spends its weekend — and you’re invited.',
-              price: '₩25,000 per person · picnic food included',
-              schedule: 'Saturdays & Sundays · afternoons by the Han River',
-              image: 'assets/photos/hanriver/hanriver-mat.webp',
-              imageAlt: 'meta.picnicAlt',
-              imagePos: 'object-[50%_40%]',
-            },
-          ],
+        why: {
+          title: 'Some of Korea’s best moments are locked behind “locals only.”',
+          body: 'Baseball tickets sell out on Korean-only apps. The best picnic spots, the river-delivery trick, the chants everyone knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.',
         },
-        how: {
-          title: 'Joining takes 2 minutes.',
+        operate: {
+          title: 'Run by us, every weekend.',
           items: [
-            { step: '1', title: 'Apply', body: 'Fill in the Google Form — pick your plan and your day.' },
-            { step: '2', title: 'We confirm', body: 'We message you directly with the meeting spot and details.' },
-            { step: '3', title: 'Have fun', body: 'Meet your buddy and enjoy the day like a local.' },
+            { title: 'We plan each activity ourselves', body: 'Built around one real Korean moment.' },
+            { title: 'We confirm details with you directly', body: 'A real person, not a booking engine.' },
+            { title: 'We improve every week', body: 'Guest feedback shapes the next run.' },
           ],
         },
-        finalCta: {
-          eyebrow: 'Every Saturday & Sunday',
+        beyond: {
+          body: 'Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we’ll take you along.',
+        },
+        team: {
+          title: 'Meet the team',
+          lead: 'We’re ZeroOne — three friends from Seoul running HanBuddy together.',
+          members: [
+            { name: 'Minhyung Kim', role: 'Leads the team & operations' },
+            { name: 'Yoohyun Kim', role: 'Designs the experiences & content' },
+            { name: 'Junyoung Lee', role: 'Keeps bookings & matching smooth' },
+          ],
+          backed: 'Backed by AI·SW Maestro — a national tech talent program run by Korea’s Ministry of Science and ICT. HanBuddy is our official project.',
+        },
+        join: {
           title: 'See you this weekend?',
-          body: 'Tell us which day and which plan in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
-          buddyNote: 'Korean local who wants to host? Buddies are welcome too — say hi in the open chat.',
-          privacyNote: 'This page never stores your application answers — you apply through the Google Form and we confirm details with you directly. With your consent, Google Analytics and Meta Pixel measure visits and clicks; you can change this anytime under Cookie settings.',
           formButton: 'Join this weekend',
           instagramButton: 'DM us on Instagram',
-          kakaoButton: 'KakaoTalk open chat',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -665,89 +500,59 @@
         languageToggle: { aria: '언어 선택' },
         meta: {
           htmlLang: 'ko',
-          title: 'HanBuddy | 로컬 버디와 함께하는 야구 직관 & 한강 피크닉',
-          description: '친절한 한국인 로컬 버디와 함께 KBO 야구 직관 또는 한강 피크닉을 즐기세요. 매주 토·일 서울에서 진행 — 신청은 2분이면 충분합니다.',
-          ogTitle: 'HanBuddy | 로컬 버디와 함께하는 야구 직관 & 한강 피크닉',
-          ogDescription: '로컬 버디와 함께 야구 직관 또는 한강 피크닉을 즐기세요. 매주 토·일 서울에서 진행됩니다.',
-          groupAlt: '잠실야구장 관중석에서 함께 웃고 있는 HanBuddy 게스트와 버디들',
-          fountainAlt: '노을 지는 한강, 반포대교 무지개분수',
-          nightAlt: '잠실야구장 야간 경기에서 휴대폰 조명으로 응원하는 관중',
-          foodAlt: '한강 피크닉 테이블 위의 치킨, 라면, 음료',
-          baseballAlt: '야간 경기를 앞두고 빛나는 잠실야구장 그라운드',
-          picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
+          title: 'HanBuddy 소개 | 당신의 한국 주말을 만드는 팀',
+          description: 'HanBuddy를 기획하고 운영하는 팀을 소개합니다 — AI·SW마에스트로와 함께하는, 외국인 게스트를 위한 한국 로컬 주말.',
+          ogTitle: 'HanBuddy 소개 | 당신의 한국 주말을 만드는 팀',
+          ogDescription: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
           somaAlt: 'AI·SW마에스트로 로고',
         },
         nav: {
           aria: '주요 내비게이션',
           homeAria: 'HanBuddy 홈',
           links: [
-            { href: '#programs', label: '프로그램' },
-            { href: '#how', label: '참여 방법' },
-            { href: '#apply', label: '신청' },
+            { href: '/#programs', label: '프로그램' },
+            { href: '/#how', label: '참여 방법' },
+            { href: '/#apply', label: '신청' },
             { href: '/about', label: '소개' },
           ],
-          aboutLabel: '소개',
           primaryCta: '이번 주말 함께하기',
           primaryCtaShort: '신청',
+          aboutLabel: '소개',
         },
         hero: {
-          eyebrow: '서울 · 매주 토 & 일',
-          title: 'Experience Korea like a local!',
-          subtitle: 'KBO 야구 직관도, 한강 피크닉도 — 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 주는 로컬 버디와 함께하세요.',
-          primaryCta: '이번 주말 함께하기',
-          contactCta: 'Instagram DM으로 문의하세요',
-          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-          quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
-          photoCap1: '첫 야구 직관 ⚾',
-          photoCap2: '반포 무지개분수 🌈',
-          photoCap3: '10회말 응원 불빛',
-          photoCap4: '한강 치맥 🍗',
+          eyebrow: 'HanBuddy 소개',
+          title: '당신의 한국 주말을 만드는 팀.',
+          lead: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
         },
-        programs: {
-          eyebrow: '원하는 플랜 선택',
-          title: '서울의 주말을 즐기는 두 가지 방법.',
-          body: '두 프로그램 모두 매주 토요일과 일요일에 진행됩니다. 하나만 골라도, 둘 다 해도 좋아요.',
-          note: '활동 전 세부 사항을 직접 안내해 드립니다.',
-          cards: [
-            {
-              emoji: '⚾',
-              title: 'KBO 야구 직관',
-              body: '치킨과 맥주, 그리고 타자마다 응원가를 함께 부르는 2만 명의 관중 — 한국 야구장은 거대한 축제입니다. 버디가 응원가를 알려주고, 음식을 챙기고, 경기 흐름을 그 자리에서 설명해 드립니다.',
-              price: '1인 ₩40,000 · 경기 티켓과 구장 간식 포함',
-              schedule: '매주 토·일 · 서울 야간 경기',
-              image: 'assets/photos/kbo/run1-opening.webp',
-              imageAlt: 'meta.baseballAlt',
-              imagePos: 'object-[50%_60%]',
-            },
-            {
-              emoji: '🧺',
-              title: '한강 피크닉',
-              body: '돗자리를 펴고, 강변으로 치킨을 배달시키고, 반포대교 무지개분수가 켜지는 순간을 함께 봅니다. 서울 사람들이 진짜로 주말을 보내는 방법 — 이제 당신도 함께해요.',
-              price: '1인 ₩25,000 · 피크닉 음식 포함',
-              schedule: '매주 토·일 · 한강에서의 오후',
-              image: 'assets/photos/hanriver/hanriver-mat.webp',
-              imageAlt: 'meta.picnicAlt',
-              imagePos: 'object-[50%_40%]',
-            },
-          ],
+        why: {
+          title: '한국의 진짜 재미는 “로컬 전용”으로 잠겨 있습니다.',
+          body: '야구 티켓은 한국 전용 앱에서 매진되고, 한강의 명당과 강변 배달 노하우, 모두가 아는 응원가는 영어로 어디에도 없습니다. HanBuddy가 그 문을 엽니다 — 막히는 부분은 저희가 처리하고, 즐기는 법은 함께 나눕니다.',
         },
-        how: {
-          title: '신청은 2분이면 충분합니다.',
+        operate: {
+          title: '매주, 저희가 직접 운영합니다.',
           items: [
-            { step: '1', title: '신청', body: '구글폼에서 원하는 플랜과 날짜를 선택하세요.' },
-            { step: '2', title: '확인', body: '만남 장소와 세부 사항을 직접 메시지로 안내해 드립니다.' },
-            { step: '3', title: '즐기기', body: '버디를 만나 로컬처럼 하루를 즐기세요.' },
+            { title: '모든 활동을 직접 기획합니다', body: '한국의 진짜 순간 하나를 중심으로 설계합니다.' },
+            { title: '세부 사항을 직접 확인해 드립니다', body: '예약 시스템이 아니라, 사람이 직접요.' },
+            { title: '매주 더 나아집니다', body: '게스트 피드백이 다음 주말 운영을 바꿉니다.' },
           ],
         },
-        finalCta: {
-          eyebrow: '매주 토 & 일',
+        beyond: {
+          body: '야구와 피크닉은 시작일 뿐입니다 — 축제, 축구, 시장까지: 한국 사람들이 노는 곳이라면 어디든 함께 갈 거예요.',
+        },
+        team: {
+          title: '팀을 소개합니다',
+          lead: '저희는 ZeroOne — HanBuddy를 함께 운영하는 서울의 세 친구입니다.',
+          members: [
+            { name: '김민형', role: '팀 리드 & 운영 총괄' },
+            { name: '김유현', role: '경험과 콘텐츠 설계' },
+            { name: '이준영', role: '예약과 매칭 담당' },
+          ],
+          backed: 'HanBuddy는 과학기술정보통신부 주최 국가 기술 인재 프로그램 AI·SW마에스트로의 공식 프로젝트입니다.',
+        },
+        join: {
           title: '이번 주말에 만날까요?',
-          body: '구글폼에서 원하는 날짜와 플랜을 알려주세요 — 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
-          buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
-          privacyNote: '이 페이지는 신청 내용을 저장하지 않습니다 — 신청은 구글폼으로 진행하고, 세부 사항은 직접 확인해 드립니다. 동의하시면 Google Analytics와 Meta Pixel이 방문·클릭 통계를 측정하며, 쿠키 설정에서 언제든 변경할 수 있습니다.',
           formButton: '이번 주말 함께하기',
           instagramButton: 'Instagram DM으로 문의하기',
-          kakaoButton: 'KakaoTalk 오픈채팅',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -778,13 +583,6 @@
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
     const clear = (node) => {
       while (node.firstChild) node.removeChild(node.firstChild);
-    };
-
-    const textNode = (tagName, className, text) => {
-      const node = document.createElement(tagName);
-      node.className = className;
-      node.textContent = text;
-      return node;
     };
 
     const safeStoredLanguage = () => {
@@ -849,66 +647,15 @@
       clear(container);
       copy.nav.links.forEach((link) => {
         const anchor = document.createElement('a');
-        anchor.className = 'focusable rounded-lg transition hover:text-primary-strong';
+        const isCurrent = link.href === '/about';
+        anchor.className = isCurrent
+          ? 'focusable rounded-lg text-ink transition hover:text-primary-strong'
+          : 'focusable rounded-lg transition hover:text-primary-strong';
+        if (isCurrent) anchor.setAttribute('aria-current', 'page');
         anchor.href = link.href;
         anchor.textContent = link.label;
         container.appendChild(anchor);
       });
-    };
-
-    const renderProgramCards = (copy) => {
-      const container = document.querySelector('[data-program-cards]');
-      if (!container) return;
-      clear(container);
-      copy.programs.cards.forEach((item) => {
-        const article = document.createElement('article');
-        article.className = 'flex flex-col overflow-hidden rounded-2xl bg-canvas shadow-raised';
-
-        const figure = document.createElement('figure');
-        figure.className = 'photo-card aspect-[16/10] rounded-none';
-        const img = document.createElement('img');
-        img.src = item.image;
-        img.loading = 'lazy';
-        img.className = item.imagePos ?? '';
-        const altText = getByPath(copy, item.imageAlt);
-        if (typeof altText === 'string') img.alt = altText;
-        figure.appendChild(img);
-
-        const content = document.createElement('div');
-        content.className = 'flex flex-1 flex-col p-7 sm:p-8';
-        content.append(
-          textNode('h3', 'font-display text-2xl font-extrabold leading-tight tracking-tight text-ink', `${item.emoji} ${item.title}`),
-          textNode('p', 'mt-4 text-base leading-7 text-muted', item.body),
-          textNode('p', 'mt-5 text-sm font-bold text-ink', item.price),
-          textNode('p', 'mt-1 text-sm font-semibold text-primary-strong', item.schedule),
-        );
-
-        article.append(figure, content);
-        container.appendChild(article);
-      });
-    };
-
-    const renderHowItems = (copy) => {
-      const container = document.querySelector('[data-how-items]');
-      if (!container) return;
-      clear(container);
-      copy.how.items.forEach((item) => {
-        const article = document.createElement('article');
-        article.className = 'rounded-2xl bg-panel px-6 py-6 text-center';
-        const badge = textNode('p', 'mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-primary font-display text-sm font-extrabold text-on-primary', item.step);
-        article.append(
-          badge,
-          textNode('h3', 'mt-4 font-display text-lg font-bold leading-snug text-ink', item.title),
-          textNode('p', 'mt-2 text-sm leading-6 text-muted', item.body),
-        );
-        container.appendChild(article);
-      });
-    };
-
-    const renderDynamicContent = (copy) => {
-      renderNav(copy);
-      renderProgramCards(copy);
-      renderHowItems(copy);
     };
 
     const setLanguageButtonState = (lang) => {
@@ -925,7 +672,7 @@
       const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
       syncStaticText(copy);
       syncMeta(copy);
-      renderDynamicContent(copy);
+      renderNav(copy);
       setLanguageButtonState(lang);
       persistLanguage(lang);
     };
@@ -1026,11 +773,12 @@
           track('section_view', {
             section_id: entry.target.id,
             language: document.documentElement.lang,
+            page: 'about',
           });
           observer.unobserve(entry.target);
         });
       }, { threshold: 0.2 });
-      ['programs', 'how', 'apply'].forEach((id) => {
+      ['why', 'operate', 'team', 'join'].forEach((id) => {
         const section = document.getElementById(id);
         if (section) observer.observe(section);
       });
@@ -1094,6 +842,7 @@
           const params = {
             placement: ctaPlacement(el),
             language: document.documentElement.lang,
+            page: 'about',
           };
           track(`${cta}_click`, params);
 
