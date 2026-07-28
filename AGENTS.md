@@ -52,6 +52,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `#programs` | section | `index.html` | Run 2 program cards: KBO baseball game and Han River tour, dates July 18/19 & 25/26 |
 | `#why` | section | `index.html` | Guest benefits of joining with a local buddy (hairline rows) |
 | `#how` | section | `index.html` | Guest journey step columns: Apply / Confirm / Meet up |
+| `#reviews` | section | `index.html` | Guest reviews: aggregate guest rating chip, approved survey quotes (rendered from `CONTENT_MAP.reviews.cards`), and the 2026-07-26 KBO photo gallery (`assets/photos/kbo/kbo-0726-*.webp`) |
 | `#testimonial` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
 | `#policy` | section | `index.html` | Safety, privacy, and manual confirmation expectations |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
@@ -72,6 +73,9 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 - The page intentionally does not store personal information. Applications/questions must go through external channels only.
 - Public Run 1 proof should use approved photos, completed-operation facts, and this exact testimonial quote: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
 - Use this fixed Korean testimonial translation: "한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!"
+- A second approved public quote exists from the 2026-07-26 KBO run's post-event survey (the survey field explicitly asks for a review "we can use for promotion"): "Great experience to enjoy a baseball game with a local" / KO "로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요". Survey answers from other fields (e.g. "What did you like") are NOT approved for public quoting.
+- The public aggregate "4.7 / 5 average guest rating" in `#reviews` is the average of all post-event survey satisfaction scores to date; update it only by recomputing from the survey sheet, and never expose any individual score.
+- 2026-07-26 KBO public photos (`kbo-0726-*.webp`) are EXIF-stripped WebP derivatives; bystander faces in `kbo-0726-group.webp` are blurred, and the two selfie shots are un-mirrored (the phone saved selfies mirrored).
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public copy, metadata, alt text, README public summary, or deploy artifacts.
 - Participant photo use was approved for marketing, but original JPG/EXIF must not be deployed.
 - CTA URLs may appear both as anchor `href` values and in the `CONFIG` object; keep hardcoded anchors, `CONFIG`, and visible labels aligned so the page works before JS enhancement.

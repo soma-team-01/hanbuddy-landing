@@ -141,6 +141,13 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
+### Guest Reviews
+
+- `#reviews` is the social-proof hub: centered header, one `primary-soft` pill chip with the aggregate star rating, a two-card grid of approved survey quotes, then a one-row moment gallery from the latest run.
+- Review cards are quiet boxed cards (`rounded-2xl`, `line-soft` border, `canvas` surface): display-font quote, `primary-soft` program tag chip, muted meta line. No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
+- The hero keeps only a compact star chip (`hero.ratingNote`) linking to `#reviews`; the long testimonial figure moved out of the hero into this section.
+- Moment-gallery images keep their native aspect ratio inside fixed-height rounded frames (`.moment-card`) so landscape group shots are never cropped down to a portrait frame.
+
 ### Gallery
 
 - Gallery is supporting context, not the main product explanation.

@@ -163,6 +163,19 @@
       transform: scale(1.03);
     }
 
+    /* 후기 섹션 갤러리: 원본 비율을 유지한 채 높이만 맞춘 스냅 카드 */
+    .moment-card {
+      overflow: hidden;
+      border-radius: 1rem;
+      background: var(--color-panel);
+    }
+
+    .moment-card img {
+      display: block;
+      height: 100%;
+      width: auto;
+    }
+
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -335,15 +348,12 @@
           </a>
         </div>
 
-        <!-- Guest testimonial, front and center -->
-        <figure class="mx-auto mt-10 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left sm:px-9 sm:py-7">
-          <blockquote class="font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
-            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
-          </blockquote>
-          <figcaption class="mt-4 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
-            — Guest at our first baseball night, Jamsil Stadium
-          </figcaption>
-        </figure>
+        <!-- Compact guest-rating proof linking to full reviews -->
+        <a href="#reviews" class="focusable mx-auto mt-8 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
+          <span aria-hidden="true" class="tracking-tight">★★★★★</span>
+          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests — read their reviews</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
 
       <!-- 사진첩에 붙여놓은 듯한 폴라로이드: 데스크톱은 네 모서리 배경, 모바일은 콘텐츠 아래 콜라주 -->
@@ -412,6 +422,51 @@
         </h2>
       </div>
       <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
+    </section>
+
+    <!-- Guest reviews -->
+    <section id="reviews" class="border-t border-line-soft bg-canvas-soft">
+      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="eyebrow" data-i18n="reviews.eyebrow">Guest reviews</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
+            Our guests say it best.
+          </h2>
+          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
+            Every guest fills in a short survey after each meetup — here&rsquo;s what they told us.
+          </p>
+          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
+            <span aria-hidden="true" class="tracking-tight">★★★★★</span>
+            <span data-i18n="reviews.rating">4.7 / 5 average guest rating</span>
+          </p>
+        </div>
+
+        <div class="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2" data-review-cards></div>
+
+        <div class="mx-auto mt-14 max-w-5xl">
+          <p class="text-center text-sm font-semibold text-muted" data-i18n="reviews.galleryTitle">
+            Moments from our latest baseball night — Jamsil, July 26
+          </p>
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+              <img src="assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy"
+                   alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
+            </figure>
+            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
+                   alt="Golden-hour view over the packed stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentSunsetAlt" />
+            </figure>
+            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy"
+                   alt="Jamsil Baseball Stadium field under the lights during a KBO night game" data-i18n-alt="meta.momentLightsAlt" />
+            </figure>
+            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+              <img src="assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy"
+                   alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
+            </figure>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Apply -->
@@ -569,6 +624,10 @@
           foodAlt: 'Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River',
           baseballAlt: 'Jamsil Baseball Stadium field glowing before a night game',
           picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
+          momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
+          momentSunsetAlt: 'Golden-hour view over the packed stands at Jamsil Baseball Stadium',
+          momentLightsAlt: 'Jamsil Baseball Stadium field under the lights during a KBO night game',
+          momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
           somaAlt: 'AI·SW Maestro logo',
         },
         nav: {
@@ -578,6 +637,7 @@
             { href: '/about', label: 'About' },
             { href: '#programs', label: 'Programs' },
             { href: '#how', label: 'How it works' },
+            { href: '#reviews', label: 'Reviews' },
             { href: '#apply', label: 'Join' },
           ],
           aboutLabel: 'About',
@@ -590,8 +650,7 @@
           subtitle: 'Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
           primaryCta: 'Join this weekend',
           contactCta: 'DM us on Instagram',
-          quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-          quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
+          ratingNote: '4.7 / 5 from our guests — read their reviews',
           photoCap1: 'first baseball night ⚾',
           photoCap2: 'Banpo rainbow 🌈',
           photoCap3: '10th inning lights',
@@ -631,6 +690,25 @@
             { step: '1', title: 'Apply', body: 'Fill in the Google Form — pick your plan and your day.' },
             { step: '2', title: 'We confirm', body: 'We message you directly with the meeting spot and details.' },
             { step: '3', title: 'Have fun', body: 'Meet your buddy and enjoy the day like a local.' },
+          ],
+        },
+        reviews: {
+          eyebrow: 'Guest reviews',
+          title: 'Our guests say it best.',
+          body: 'Every guest fills in a short survey after each meetup — here’s what they told us.',
+          rating: '4.7 / 5 average guest rating',
+          galleryTitle: 'Moments from our latest baseball night — Jamsil, July 26',
+          cards: [
+            {
+              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+              meta: '— Guest at our first baseball night · Jamsil, June 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
+            {
+              quote: '“Great experience to enjoy a baseball game with a local”',
+              meta: '— Guest at our July baseball night · Jamsil, July 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
           ],
         },
         finalCta: {
@@ -675,6 +753,10 @@
           foodAlt: '한강 피크닉 테이블 위의 치킨, 라면, 음료',
           baseballAlt: '야간 경기를 앞두고 빛나는 잠실야구장 그라운드',
           picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
+          momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
+          momentSunsetAlt: '노을이 내려앉은 잠실야구장 관중석 풍경',
+          momentLightsAlt: '야간 조명이 켜진 잠실야구장 그라운드',
+          momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
           somaAlt: 'AI·SW마에스트로 로고',
         },
         nav: {
@@ -684,6 +766,7 @@
             { href: '/about', label: '소개' },
             { href: '#programs', label: '프로그램' },
             { href: '#how', label: '참여 방법' },
+            { href: '#reviews', label: '후기' },
             { href: '#apply', label: '신청' },
           ],
           aboutLabel: '소개',
@@ -696,8 +779,7 @@
           subtitle: 'KBO 야구 직관도, 한강 피크닉도 — 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 주는 로컬 버디와 함께하세요.',
           primaryCta: '이번 주말 함께하기',
           contactCta: 'Instagram DM으로 문의하세요',
-          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-          quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
+          ratingNote: '게스트 평점 4.7 / 5 — 후기 보러 가기',
           photoCap1: '첫 야구 직관 ⚾',
           photoCap2: '반포 무지개분수 🌈',
           photoCap3: '10회말 응원 불빛',
@@ -737,6 +819,25 @@
             { step: '1', title: '신청', body: '구글폼에서 원하는 플랜과 날짜를 선택하세요.' },
             { step: '2', title: '확인', body: '만남 장소와 세부 사항을 직접 메시지로 안내해 드립니다.' },
             { step: '3', title: '즐기기', body: '버디를 만나 로컬처럼 하루를 즐기세요.' },
+          ],
+        },
+        reviews: {
+          eyebrow: '게스트 후기',
+          title: '게스트가 남긴 진짜 이야기.',
+          body: '모임이 끝나면 게스트가 짧은 설문을 남깁니다 — 그 답변을 그대로 옮겨왔어요.',
+          rating: '4.7 / 5 게스트 평균 평점',
+          galleryTitle: '가장 최근 야구 직관의 순간들 — 잠실, 7월 26일',
+          cards: [
+            {
+              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+              meta: '— 첫 야구 직관 참가 게스트 · 잠실, 2026년 6월',
+              tag: '⚾ KBO 야구 직관',
+            },
+            {
+              quote: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
+              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
+              tag: '⚾ KBO 야구 직관',
+            },
           ],
         },
         finalCta: {
@@ -888,6 +989,30 @@
       });
     };
 
+    const renderReviewCards = (copy) => {
+      const container = document.querySelector('[data-review-cards]');
+      if (!container) return;
+      clear(container);
+      copy.reviews.cards.forEach((item) => {
+        const figure = document.createElement('figure');
+        figure.className = 'flex flex-col rounded-2xl border border-line-soft bg-canvas p-7 sm:p-8';
+
+        const blockquote = document.createElement('blockquote');
+        blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
+        blockquote.textContent = item.quote;
+
+        const caption = document.createElement('figcaption');
+        caption.className = 'mt-5 flex flex-col gap-2';
+        caption.append(
+          textNode('span', 'self-start rounded-full bg-primary-soft px-3 py-1 text-xs font-bold text-primary-strong', item.tag),
+          textNode('span', 'text-sm font-semibold text-muted', item.meta),
+        );
+
+        figure.append(blockquote, caption);
+        container.appendChild(figure);
+      });
+    };
+
     const renderHowItems = (copy) => {
       const container = document.querySelector('[data-how-items]');
       if (!container) return;
@@ -908,6 +1033,7 @@
     const renderDynamicContent = (copy) => {
       renderNav(copy);
       renderProgramCards(copy);
+      renderReviewCards(copy);
       renderHowItems(copy);
     };
 
@@ -1030,7 +1156,7 @@
           observer.unobserve(entry.target);
         });
       }, { threshold: 0.2 });
-      ['programs', 'how', 'apply'].forEach((id) => {
+      ['programs', 'how', 'reviews', 'apply'].forEach((id) => {
         const section = document.getElementById(id);
         if (section) observer.observe(section);
       });
