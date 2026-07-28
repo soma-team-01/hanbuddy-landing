@@ -52,7 +52,7 @@
 
 <body class="bg-canvas font-sans text-ink antialiased">
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
-    <nav class="mx-auto flex min-h-16 max-w-4xl items-center justify-between gap-3 px-5 py-3">
+    <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3">
       <a href="/" class="flex items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink">
         <img src="/assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
         <span>HanBuddy</span>
@@ -61,60 +61,119 @@
     </nav>
   </header>
 
-  <main class="mx-auto max-w-4xl px-5 pb-20 pt-10">
-    <figure class="overflow-hidden rounded-2xl">
-      <img src="/assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" class="h-64 w-full object-cover sm:h-80"
-           alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" />
-    </figure>
-
-    <div class="mt-8">
-      <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Upcoming event</p>
-      <h1 class="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">🧺 Han River Picnic</h1>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sat, Aug 1</span>
-        <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sat, Aug 8</span>
-        <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sun, Aug 9</span>
-        <span class="rounded-full border border-line-soft px-4 py-1.5 text-sm font-semibold text-muted">More dates soon</span>
-      </div>
-      <p class="mt-3 text-sm font-bold text-ink">₩25,000 per person &middot; picnic food included</p>
+  <main class="mx-auto max-w-6xl px-5 pb-28 pt-8 lg:pb-20">
+    <!-- Title block -->
+    <div class="max-w-3xl">
+      <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Upcoming event &middot; Seoul</p>
+      <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">🧺 Han River Picnic</h1>
+      <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-muted">
+        <span class="text-ink"><span aria-hidden="true" class="text-primary">★</span> 4.7 / 5 guest rating</span>
+        <span aria-hidden="true">&middot;</span>
+        <span>Hosted by the HanBuddy team</span>
+      </p>
     </div>
 
-    <div class="mt-8 max-w-2xl space-y-4 text-base leading-7 text-muted">
-      <p>Roll out a mat, get fried chicken delivered straight to the riverside, and watch the rainbow fountain light up Banpo Bridge.</p>
-      <p>This is how Seoul actually spends its free time — and your buddy handles the ordering, the spots, and the stories. You just relax.</p>
+    <!-- Photo collage -->
+    <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
+      <figure class="lg:col-span-2 lg:row-span-2">
+        <img src="/assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" class="h-64 w-full object-cover sm:h-80 lg:h-[430px]"
+             alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" />
+      </figure>
+      <figure class="hidden lg:block">
+        <img src="/assets/photos/hanriver/hanriver-mat.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_40%]"
+             alt="Friends sharing chicken and pizza on a picnic mat by the Han River" />
+      </figure>
+      <figure class="hidden lg:block">
+        <img src="/assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_55%]"
+             alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" />
+      </figure>
     </div>
 
-    <div class="mt-10 grid gap-4 sm:grid-cols-3">
-      <div class="rounded-2xl bg-panel p-5">
-        <h2 class="font-display text-base font-bold">1 &middot; Apply</h2>
-        <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date in the Google Form — it takes 2 minutes.</p>
-      </div>
-      <div class="rounded-2xl bg-panel p-5">
-        <h2 class="font-display text-base font-bold">2 &middot; We confirm</h2>
-        <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the meeting spot and details.</p>
-      </div>
-      <div class="rounded-2xl bg-panel p-5">
-        <h2 class="font-display text-base font-bold">3 &middot; Chill out</h2>
-        <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddies by the river and enjoy the evening.</p>
-      </div>
-    </div>
+    <!-- Two-column: content + booking card -->
+    <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-2xl font-extrabold tracking-tight">This is how Seoul actually relaxes.</h2>
+        <div class="mt-4 space-y-4 text-base leading-7 text-muted">
+          <p>Roll out a mat, get fried chicken delivered straight to the riverside, and watch the rainbow fountain light up Banpo Bridge.</p>
+          <p>Your buddy handles the ordering, the spots, and the stories. You just relax and enjoy the evening.</p>
+        </div>
 
-    <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-      <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener"
-         class="rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px">
-        Apply for this event
-      </a>
-      <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener"
-         class="rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
-        Questions? DM us on Instagram &rarr;
-      </a>
-    </div>
+        <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
+          <li class="flex items-start gap-3">
+            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
+            <span><span class="font-bold text-ink">Picnic food included</span> — one price, no surprises.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
+            <span><span class="font-bold text-ink">English-friendly local buddies</span> — relax without the language barrier.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
+            <span><span class="font-bold text-ink">We confirm details with you directly</span> — a real person, not a booking engine.</span>
+          </li>
+        </ul>
 
-    <p class="mt-6 text-xs leading-6 text-muted">This page never stores your application answers — you apply through the Google Form and we confirm details with you directly.</p>
+        <h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">How joining works</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-2xl bg-panel p-5">
+            <h3 class="font-display text-base font-bold">1 &middot; Apply</h3>
+            <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date in the Google Form — it takes 2 minutes.</p>
+          </div>
+          <div class="rounded-2xl bg-panel p-5">
+            <h3 class="font-display text-base font-bold">2 &middot; We confirm</h3>
+            <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the meeting spot and details.</p>
+          </div>
+          <div class="rounded-2xl bg-panel p-5">
+            <h3 class="font-display text-base font-bold">3 &middot; Chill out</h3>
+            <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddies by the river and enjoy the evening.</p>
+          </div>
+        </div>
+
+        <p class="mt-6 text-xs leading-6 text-muted">This page never stores your application answers — you apply through the Google Form and we confirm details with you directly.</p>
+      </div>
+
+      <!-- Booking card (desktop) -->
+      <aside class="mt-10 hidden rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-raised lg:sticky lg:top-24 lg:mt-0 lg:block">
+        <p class="font-display text-2xl font-extrabold tracking-tight">₩25,000 <span class="text-sm font-semibold text-muted">/ person</span></p>
+        <p class="mt-1 text-sm font-semibold text-muted">Picnic food included</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sat, Aug 1</span>
+          <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sat, Aug 8</span>
+          <span class="rounded-full bg-primary-soft px-4 py-1.5 text-sm font-bold text-primary-strong">Sun, Aug 9</span>
+          <span class="rounded-full border border-line-soft px-4 py-1.5 text-sm font-semibold text-muted">More dates soon</span>
+        </div>
+        <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener"
+           class="mt-5 block rounded-full bg-primary px-7 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px">
+          Apply in 2 minutes
+        </a>
+        <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener"
+           class="mt-2 block rounded-full px-7 py-3 text-center text-sm font-bold text-primary-strong transition hover:opacity-80">
+          Questions? DM us on Instagram &rarr;
+        </a>
+        <ul class="mt-4 space-y-2 border-t border-line-soft pt-4 text-xs leading-5 text-muted">
+          <li class="flex items-start gap-2"><span aria-hidden="true" class="font-bold text-primary-strong">✓</span> We confirm the meeting spot and details with you directly</li>
+          <li class="flex items-start gap-2"><span aria-hidden="true" class="font-bold text-primary-strong">✓</span> Run by the HanBuddy team, every week</li>
+        </ul>
+      </aside>
+    </div>
   </main>
 
+  <!-- Mobile bottom bar -->
+  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line-soft bg-canvas-soft/95 px-5 py-3 backdrop-blur lg:hidden">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
+      <div>
+        <p class="font-display text-lg font-extrabold leading-tight">₩25,000 <span class="text-xs font-semibold text-muted">/ person</span></p>
+        <p class="text-[11px] font-semibold text-muted">Aug 1, 8 &amp; 9 &middot; picnic food included</p>
+      </div>
+      <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener"
+         class="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px">
+        Apply now
+      </a>
+    </div>
+  </div>
+
   <footer class="border-t border-line-soft bg-canvas">
-    <div class="mx-auto flex max-w-4xl items-center justify-between px-5 py-8 text-sm text-muted">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-8 text-sm text-muted">
       <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
         <img src="/assets/brand/logo-borderless.webp" width="24" height="24" alt="" class="h-6 w-6" />
         <span>HanBuddy by ZeroOne</span>
