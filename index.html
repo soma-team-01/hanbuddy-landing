@@ -163,19 +163,6 @@
       transform: scale(1.03);
     }
 
-    /* 후기 섹션 갤러리: 원본 비율을 유지한 채 높이만 맞춘 스냅 카드 */
-    .moment-card {
-      overflow: hidden;
-      border-radius: 1rem;
-      background: var(--color-panel);
-    }
-
-    .moment-card img {
-      display: block;
-      height: 100%;
-      width: auto;
-    }
-
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -421,9 +408,6 @@
         <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-6 text-muted" data-i18n="events.note">
           We&rsquo;ll confirm the meeting spot and details with you directly before the day.
         </p>
-        <p class="mx-auto mt-2 max-w-2xl text-center text-[11px] leading-5 text-muted/70" data-i18n="events.photoCredit">
-          Jjimjilbang photo: Yinxin / Korea.net &middot; CC BY-SA 2.0
-        </p>
       </div>
     </section>
 
@@ -456,24 +440,24 @@
 
         <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
 
-        <div class="mx-auto mt-14 max-w-5xl">
-          <p class="text-center text-sm font-semibold text-muted" data-i18n="reviews.galleryTitle">
+        <div class="mx-auto mt-16 max-w-5xl">
+          <h3 class="text-center font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="reviews.galleryTitle">
             Moments from our latest baseball night — Jamsil, July 26
-          </p>
-          <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy"
+          </h3>
+          <div class="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="object-[50%_35%]"
                    alt="Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium" data-i18n-alt="meta.momentCheersAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
                    alt="Golden-hour view over the packed stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentSunsetAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy"
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
                    alt="Jamsil Baseball Stadium field under the lights during a KBO night game" data-i18n-alt="meta.momentLightsAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+            <figure class="photo-card aspect-[4/3]">
               <img src="assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy"
                    alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
             </figure>
@@ -643,7 +627,7 @@
           momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
           momentCheersAlt: 'Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium',
           kleagueAlt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves',
-          jjimjilbangAlt: 'Guest in a sheep-head towel posing in front of a fire-kiln sauna at a Korean jjimjilbang',
+          jjimjilbangAlt: 'Warm stone kiln-sauna room with wooden pillows inside a Korean jjimjilbang',
           somaAlt: 'AI·SW Maestro logo',
         },
         nav: {
@@ -679,7 +663,6 @@
           title: 'Pick a day, meet us there.',
           body: 'Real dates you can join right now — plus a couple of experiences opening soon. Apply in 2 minutes and we’ll confirm the details with you.',
           note: 'We’ll confirm the meeting spot and details with you directly before the day.',
-          photoCredit: 'Jjimjilbang photo: Yinxin / Korea.net · CC BY-SA 2.0',
           detailAria: 'View event details',
           comingSoonBadge: 'Coming soon',
           comingSoonDate: 'Date coming soon',
@@ -735,7 +718,7 @@
               tagline: 'Fire-kiln saunas, sikhye, and sheep-head towels — the real K-spa.',
               price: '',
               badge: 'Coming soon',
-              image: 'assets/photos/jjimjilbang/jjimjilbang-friends.webp',
+              image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
               imagePos: '',
             },
@@ -821,7 +804,7 @@
           momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
           momentCheersAlt: '경기 전 잠실야구장 외야를 배경으로 맥주캔을 부딪치는 게스트들',
           kleagueAlt: '울산 HD 머플러를 든 축구 팬들로 가득한 서울월드컵경기장',
-          jjimjilbangAlt: '찜질방 불가마 앞에서 양머리 수건을 쓰고 포즈를 취한 게스트',
+          jjimjilbangAlt: '나무 목침이 놓인 찜질방의 따뜻한 돌 불가마방',
           somaAlt: 'AI·SW마에스트로 로고',
         },
         nav: {
@@ -857,7 +840,6 @@
           title: '날짜를 골라 바로 신청하세요.',
           body: '지금 바로 신청할 수 있는 실제 일정과 곧 오픈할 경험들입니다 — 2분 만에 신청하면 세부 사항을 직접 안내해 드려요.',
           note: '모임 전 만남 장소와 세부 사항을 직접 안내해 드립니다.',
-          photoCredit: '찜질방 사진: Yinxin / Korea.net · CC BY-SA 2.0',
           detailAria: '이벤트 상세 보기',
           comingSoonBadge: '오픈 예정',
           comingSoonDate: '날짜 공개 예정',
@@ -913,7 +895,7 @@
               tagline: '불가마, 식혜, 양머리 수건 — 진짜 K-스파 체험.',
               price: '',
               badge: '오픈 예정',
-              image: 'assets/photos/jjimjilbang/jjimjilbang-friends.webp',
+              image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
               imagePos: '',
             },
