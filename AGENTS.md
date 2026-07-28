@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing page. The page is a public recruitment/promotion landing whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote. Run 2 applications are open for July 18/19 and 25/26 through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`) with two programs matching the form options exactly: "KBO Baseball Game in Seoul with Local Buddy" and "Han River Tour with Local Buddy". KakaoTalk open chat remains available for questions and updates. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
+HanBuddy by ZeroOne static landing page. The page is a public recruitment/promotion landing whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Public proof should use approved Run 1 photos, completed-operation facts, and the approved testimonial quote. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`); the current published event dates and prices are listed in the CONVENTIONS section below (the July 18/19 & 25/26 "Run 2" window is history). KakaoTalk open chat remains available for questions and updates. Run 1 was operated at Jamsil Baseball Stadium on 2026-06-25 for Samsung Lions vs LG Twins. No app framework, package manager, build step, server code, or local data collection exists in this repo.
 
 ## STRUCTURE
 
@@ -57,7 +57,7 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `#testimonial` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
 | `#policy` | section | `index.html` | Safety, privacy, and manual confirmation expectations |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
-| `#apply` | section | `index.html` | Final recruitment CTA for July 18/19 & 25/26: live Google Form application, Instagram DM primary inquiry, KakaoTalk secondary/local-buddy channel, and one-line buddy-recruitment note |
+| `#apply` | section | `index.html` | Final recruitment CTA for the currently published events: live Google Form application, Instagram DM primary inquiry, KakaoTalk secondary/local-buddy channel, and one-line buddy-recruitment note |
 | `CONFIG` | inline JS object | `index.html` footer script | Maps CTA keys to external URLs |
 | `CONTENT_MAP` | inline JS object | `index.html` footer script | English/Korean visible copy, nav, cards, alt strings, meta |
 
