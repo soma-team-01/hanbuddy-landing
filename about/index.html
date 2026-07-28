@@ -179,7 +179,7 @@
         <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
            class="focusable rounded-full bg-primary px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px sm:px-5">
           <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Join</span>
-          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join this weekend</span>
+          <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join a meetup</span>
         </a>
       </div>
     </nav>
@@ -195,6 +195,31 @@
         </h1>
         <p class="mx-auto mt-6 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.lead">
           We plan it, run it, and improve it every week — you just show up.
+        </p>
+      </div>
+
+      <!-- Real moments from our meetups -->
+      <div class="mx-auto max-w-5xl px-5 pb-16">
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
+            <img src="/assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
+                 alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
+          </figure>
+          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
+            <img src="/assets/photos/hanriver/hanriver-mat.webp" width="1200" height="1600" loading="lazy" class="block h-full w-auto"
+                 alt="Friends sharing chicken and pizza on a picnic mat by the Han River" data-i18n-alt="meta.momentPicnicAlt" />
+          </figure>
+          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
+            <img src="/assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
+                 alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.momentFountainAlt" />
+          </figure>
+          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
+            <img src="/assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
+                 alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
+          </figure>
+        </div>
+        <p class="mt-4 text-center text-sm font-semibold text-muted" data-i18n="hero.photosNote">
+          Real moments from our meetups — June &amp; July 2026, Seoul
         </p>
       </div>
     </section>
@@ -215,7 +240,7 @@
     <section id="operate">
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="operate.title">
-          Run by us, every weekend.
+          Run by us, every week.
         </h2>
         <ul class="mt-8 divide-y divide-line-soft border-y border-line-soft">
           <li class="py-5">
@@ -293,12 +318,12 @@
     <section id="join" class="bg-primary-strong text-on-primary-strong">
       <div class="mx-auto flex max-w-3xl flex-col items-center gap-7 px-5 py-16 text-center lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
-          See you this weekend?
+          See you at the next meetup?
         </h2>
         <div class="flex flex-col gap-3 sm:flex-row">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
-            Join this weekend
+            Join a meetup
           </a>
           <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
              class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.instagramButton">
@@ -423,17 +448,22 @@
           ogTitle: 'About HanBuddy | The team behind your Korean weekend',
           ogDescription: 'We plan it, run it, and improve it every week — you just show up.',
           somaAlt: 'AI·SW Maestro logo',
+          momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
+          momentPicnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
+          momentFountainAlt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
+          momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
         },
         nav: {
           aria: 'Main navigation',
           homeAria: 'HanBuddy home',
           links: [
             { href: '/about', label: 'About' },
-            { href: '/#programs', label: 'Programs' },
+            { href: '/#events', label: 'Events' },
             { href: '/#how', label: 'How it works' },
+            { href: '/#reviews', label: 'Reviews' },
             { href: '/#apply', label: 'Join' },
           ],
-          primaryCta: 'Join this weekend',
+          primaryCta: 'Join a meetup',
           primaryCtaShort: 'Join',
           aboutLabel: 'About',
         },
@@ -441,13 +471,14 @@
           eyebrow: 'About HanBuddy',
           title: 'The team behind your Korean weekend.',
           lead: 'We plan it, run it, and improve it every week — you just show up.',
+          photosNote: 'Real moments from our meetups — June & July 2026, Seoul',
         },
         why: {
           title: 'Some of Korea’s best moments are locked behind “locals only.”',
           body: 'Baseball tickets sell out on Korean-only apps. The best picnic spots, the river-delivery trick, the chants everyone knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.',
         },
         operate: {
-          title: 'Run by us, every weekend.',
+          title: 'Run by us, every week.',
           items: [
             { title: 'We plan each activity ourselves', body: 'Built around one real Korean moment.' },
             { title: 'We confirm details with you directly', body: 'A real person, not a booking engine.' },
@@ -468,8 +499,8 @@
           backed: 'Backed by AI·SW Maestro — a national tech talent program run by Korea’s Ministry of Science and ICT. HanBuddy is our official project.',
         },
         join: {
-          title: 'See you this weekend?',
-          formButton: 'Join this weekend',
+          title: 'See you at the next meetup?',
+          formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
         },
         footer: {
@@ -499,17 +530,22 @@
           ogTitle: 'HanBuddy 소개 | 당신의 한국 주말을 만드는 팀',
           ogDescription: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
           somaAlt: 'AI·SW마에스트로 로고',
+          momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
+          momentPicnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
+          momentFountainAlt: '노을 지는 한강, 반포대교 무지개분수',
+          momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
         },
         nav: {
           aria: '주요 내비게이션',
           homeAria: 'HanBuddy 홈',
           links: [
             { href: '/about', label: '소개' },
-            { href: '/#programs', label: '프로그램' },
+            { href: '/#events', label: '이벤트' },
             { href: '/#how', label: '참여 방법' },
+            { href: '/#reviews', label: '후기' },
             { href: '/#apply', label: '신청' },
           ],
-          primaryCta: '이번 주말 함께하기',
+          primaryCta: '모임 참여하기',
           primaryCtaShort: '신청',
           aboutLabel: '소개',
         },
@@ -517,6 +553,7 @@
           eyebrow: 'HanBuddy 소개',
           title: '당신의 한국 주말을 만드는 팀.',
           lead: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
+          photosNote: '실제 모임의 순간들 — 2026년 6·7월, 서울',
         },
         why: {
           title: '한국의 진짜 재미는 “로컬 전용”으로 잠겨 있습니다.',
@@ -527,7 +564,7 @@
           items: [
             { title: '모든 활동을 직접 기획합니다', body: '한국의 진짜 순간 하나를 중심으로 설계합니다.' },
             { title: '세부 사항을 직접 확인해 드립니다', body: '예약 시스템이 아니라, 사람이 직접요.' },
-            { title: '매주 더 나아집니다', body: '게스트 피드백이 다음 주말 운영을 바꿉니다.' },
+            { title: '매주 더 나아집니다', body: '게스트 피드백이 다음 운영을 바꿉니다.' },
           ],
         },
         beyond: {
@@ -544,8 +581,8 @@
           backed: 'HanBuddy는 과학기술정보통신부 주최 국가 기술 인재 프로그램 AI·SW마에스트로의 공식 프로젝트입니다.',
         },
         join: {
-          title: '이번 주말에 만날까요?',
-          formButton: '이번 주말 함께하기',
+          title: '다음 모임에서 만날까요?',
+          formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
         },
         footer: {

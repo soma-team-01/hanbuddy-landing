@@ -163,19 +163,6 @@
       transform: scale(1.03);
     }
 
-    /* 후기 섹션 갤러리: 원본 비율을 유지한 채 높이만 맞춘 스냅 카드 */
-    .moment-card {
-      overflow: hidden;
-      border-radius: 1rem;
-      background: var(--color-panel);
-    }
-
-    .moment-card img {
-      display: block;
-      height: 100%;
-      width: auto;
-    }
-
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -354,6 +341,18 @@
           <span data-i18n="hero.ratingNote">4.7 / 5 from our guests — read their reviews</span>
           <span aria-hidden="true">&rarr;</span>
         </a>
+
+        <!-- Featured guest quote -->
+        <figure class="relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
+          <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
+          <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
+          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
+            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
+          </blockquote>
+          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
+            — Guest at our first baseball night, Jamsil Stadium
+          </figcaption>
+        </figure>
       </div>
 
       <!-- 사진첩에 붙여놓은 듯한 폴라로이드: 데스크톱은 네 모서리 배경, 모바일은 콘텐츠 아래 콜라주 -->
@@ -361,26 +360,26 @@
         <figure class="hero-polaroid hp1">
           <span class="hp-tape" aria-hidden="true"></span>
           <span class="hp-frame">
-            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" fetchpriority="high" class="object-[50%_30%]"
-                 alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
+            <img src="assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" fetchpriority="high" class="object-[60%_40%]"
+                 alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
           </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap1">first baseball night ⚾</figcaption>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap1">new friends, Jul 26 ⚾</figcaption>
         </figure>
         <figure class="hero-polaroid hp2">
+          <span class="hp-tape" aria-hidden="true"></span>
+          <span class="hp-frame">
+            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" loading="lazy" class="object-[50%_30%]"
+                 alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
+          </span>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap2">first baseball night ⚾</figcaption>
+        </figure>
+        <figure class="hero-polaroid hp3">
           <span class="hp-tape" aria-hidden="true"></span>
           <span class="hp-frame">
             <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy"
                  alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
           </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap2">Banpo rainbow 🌈</figcaption>
-        </figure>
-        <figure class="hero-polaroid hp3">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" class="object-[38%_50%]"
-                 alt="Fans waving phone lights during a night game at Jamsil Baseball Stadium" data-i18n-alt="meta.nightAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap3">10th inning lights</figcaption>
+          <figcaption class="hp-cap" data-i18n="hero.photoCap3">Banpo rainbow 🌈</figcaption>
         </figure>
         <figure class="hero-polaroid hp4">
           <span class="hp-tape" aria-hidden="true"></span>
@@ -441,26 +440,26 @@
           </p>
         </div>
 
-        <div class="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2" data-review-cards></div>
+        <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
 
-        <div class="mx-auto mt-14 max-w-5xl">
-          <p class="text-center text-sm font-semibold text-muted" data-i18n="reviews.galleryTitle">
+        <div class="mx-auto mt-16 max-w-5xl">
+          <h3 class="text-center font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="reviews.galleryTitle">
             Moments from our latest baseball night — Jamsil, July 26
-          </p>
-          <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy"
-                   alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
+          </h3>
+          <div class="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="object-[50%_35%]"
+                   alt="Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium" data-i18n-alt="meta.momentCheersAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
                    alt="Golden-hour view over the packed stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentSunsetAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
-              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy"
+            <figure class="photo-card aspect-[4/3]">
+              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
                    alt="Jamsil Baseball Stadium field under the lights during a KBO night game" data-i18n-alt="meta.momentLightsAlt" />
             </figure>
-            <figure class="moment-card h-44 sm:h-52 lg:h-56">
+            <figure class="photo-card aspect-[4/3]">
               <img src="assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy"
                    alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
             </figure>
@@ -628,8 +627,9 @@
           momentSunsetAlt: 'Golden-hour view over the packed stands at Jamsil Baseball Stadium',
           momentLightsAlt: 'Jamsil Baseball Stadium field under the lights during a KBO night game',
           momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
+          momentCheersAlt: 'Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium',
           kleagueAlt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves',
-          jjimjilbangAlt: 'Traditional fire-kiln sauna room inside a Korean jjimjilbang',
+          jjimjilbangAlt: 'Warm stone kiln-sauna room with wooden pillows inside a Korean jjimjilbang',
           somaAlt: 'AI·SW Maestro logo',
         },
         nav: {
@@ -653,9 +653,12 @@
           primaryCta: 'Join a meetup',
           contactCta: 'DM us on Instagram',
           ratingNote: '4.7 / 5 from our guests — read their reviews',
-          photoCap1: 'first baseball night ⚾',
-          photoCap2: 'Banpo rainbow 🌈',
-          photoCap3: '10th inning lights',
+          quoteEyebrow: 'Guest review',
+          quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+          quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
+          photoCap1: 'new friends, Jul 26 ⚾',
+          photoCap2: 'first baseball night ⚾',
+          photoCap3: 'Banpo rainbow 🌈',
           photoCap4: 'chimaek by the river 🍗',
         },
         events: {
@@ -669,74 +672,30 @@
           comingSoonToast: 'Almost ready! Follow @hanbuddy_kr on Instagram to hear first 🙌',
           cards: [
             {
-              id: 'kbo-0805',
+              id: 'kbo',
               status: 'open',
               href: '/events/kbo/',
               emoji: '⚾',
               title: 'KBO Baseball Night',
-              date: 'Wed, Aug 5',
+              date: 'Wed, Aug 5 & 12',
               tagline: 'Night-game cheering with local buddies — chants, chicken & beer.',
-              price: '₩50,000 · ticket & stadium snacks included',
-              badge: '₩50,000',
-              image: 'assets/photos/kbo/run1-opening.webp',
-              imageAlt: 'meta.baseballAlt',
-              imagePos: 'object-[50%_60%]',
-            },
-            {
-              id: 'kbo-0812',
-              status: 'open',
-              href: '/events/kbo/',
-              emoji: '⚾',
-              title: 'KBO Baseball Night',
-              date: 'Wed, Aug 12',
-              tagline: 'Under the lights at a Korean ballpark — your buddy explains it all.',
-              price: '₩50,000 · ticket & stadium snacks included',
               badge: '₩50,000',
               image: 'assets/photos/kbo/kbo-0726-lights.webp',
               imageAlt: 'meta.momentLightsAlt',
               imagePos: 'object-[50%_35%]',
             },
             {
-              id: 'han-0801',
+              id: 'hanriver',
               status: 'open',
               href: '/events/hanriver/',
               emoji: '🧺',
               title: 'Han River Picnic',
-              date: 'Sat, Aug 1',
+              date: 'Aug 1, 8 & 9 (Sat & Sun)',
               tagline: 'Mats, chimaek delivery, and the Banpo rainbow fountain.',
-              price: '₩25,000 · picnic food included',
               badge: '₩25,000',
               image: 'assets/photos/hanriver/hanriver-mat.webp',
               imageAlt: 'meta.picnicAlt',
               imagePos: 'object-[50%_40%]',
-            },
-            {
-              id: 'han-0808',
-              status: 'open',
-              href: '/events/hanriver/',
-              emoji: '🧺',
-              title: 'Han River Picnic',
-              date: 'Sat, Aug 8',
-              tagline: 'How Seoul actually spends its weekend — and you’re invited.',
-              price: '₩25,000 · picnic food included',
-              badge: '₩25,000',
-              image: 'assets/photos/hanriver/hanriver-food.webp',
-              imageAlt: 'meta.foodAlt',
-              imagePos: 'object-[50%_55%]',
-            },
-            {
-              id: 'han-0809',
-              status: 'open',
-              href: '/events/hanriver/',
-              emoji: '🧺',
-              title: 'Han River Picnic',
-              date: 'Sun, Aug 9',
-              tagline: 'Golden hour by the river, rainbow fountain at dusk.',
-              price: '₩25,000 · picnic food included',
-              badge: '₩25,000',
-              image: 'assets/photos/hanriver/hanriver-fountain.webp',
-              imageAlt: 'meta.fountainAlt',
-              imagePos: '',
             },
             {
               id: 'kleague',
@@ -745,7 +704,6 @@
               title: 'K League Football Day',
               date: 'Date coming soon',
               tagline: 'Feel the roar of Korean football with your buddy crew.',
-              price: '',
               badge: 'Coming soon',
               image: 'assets/photos/kleague/kleague-worldcup-day.webp',
               imageAlt: 'meta.kleagueAlt',
@@ -758,9 +716,8 @@
               title: 'Jjimjilbang Sauna Hangout',
               date: 'Date coming soon',
               tagline: 'Fire-kiln saunas, sikhye, and sheep-head towels — the real K-spa.',
-              price: '',
               badge: 'Coming soon',
-              image: 'assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
+              image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
               imagePos: '',
             },
@@ -789,6 +746,11 @@
             {
               quote: '“Great experience to enjoy a baseball game with a local”',
               meta: '— Guest at our July baseball night · Jamsil, July 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
+            {
+              quote: '“I had such a great evening — will definitely be going to another game with HanBuddy!”',
+              meta: '— Message from a guest after our July baseball night',
               tag: '⚾ KBO Baseball Night',
             },
           ],
@@ -839,8 +801,9 @@
           momentSunsetAlt: '노을이 내려앉은 잠실야구장 관중석 풍경',
           momentLightsAlt: '야간 조명이 켜진 잠실야구장 그라운드',
           momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
+          momentCheersAlt: '경기 전 잠실야구장 외야를 배경으로 맥주캔을 부딪치는 게스트들',
           kleagueAlt: '울산 HD 머플러를 든 축구 팬들로 가득한 서울월드컵경기장',
-          jjimjilbangAlt: '한국 찜질방의 전통 불가마 사우나',
+          jjimjilbangAlt: '나무 목침이 놓인 찜질방의 따뜻한 돌 불가마방',
           somaAlt: 'AI·SW마에스트로 로고',
         },
         nav: {
@@ -864,9 +827,12 @@
           primaryCta: '모임 참여하기',
           contactCta: 'Instagram DM으로 문의하세요',
           ratingNote: '게스트 평점 4.7 / 5 — 후기 보러 가기',
-          photoCap1: '첫 야구 직관 ⚾',
-          photoCap2: '반포 무지개분수 🌈',
-          photoCap3: '10회말 응원 불빛',
+          quoteEyebrow: '게스트 후기',
+          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+          quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
+          photoCap1: '새 친구들, 7월 26일 ⚾',
+          photoCap2: '첫 야구 직관 ⚾',
+          photoCap3: '반포 무지개분수 🌈',
           photoCap4: '한강 치맥 🍗',
         },
         events: {
@@ -880,74 +846,30 @@
           comingSoonToast: '준비 중이에요! 오픈 소식은 인스타그램 @hanbuddy_kr에서 가장 먼저 알려드릴게요 🙌',
           cards: [
             {
-              id: 'kbo-0805',
+              id: 'kbo',
               status: 'open',
               href: '/events/kbo/',
               emoji: '⚾',
               title: 'KBO 야구 직관',
-              date: '8월 5일 (수)',
+              date: '8월 5일 · 12일 (수)',
               tagline: '로컬 버디와 함께하는 야간 직관 — 응원가, 치킨, 맥주.',
-              price: '₩50,000 · 경기 티켓과 구장 간식 포함',
-              badge: '₩50,000',
-              image: 'assets/photos/kbo/run1-opening.webp',
-              imageAlt: 'meta.baseballAlt',
-              imagePos: 'object-[50%_60%]',
-            },
-            {
-              id: 'kbo-0812',
-              status: 'open',
-              href: '/events/kbo/',
-              emoji: '⚾',
-              title: 'KBO 야구 직관',
-              date: '8월 12일 (수)',
-              tagline: '야간 조명 아래 한국 야구장 — 버디가 경기 흐름을 설명해 드려요.',
-              price: '₩50,000 · 경기 티켓과 구장 간식 포함',
               badge: '₩50,000',
               image: 'assets/photos/kbo/kbo-0726-lights.webp',
               imageAlt: 'meta.momentLightsAlt',
               imagePos: 'object-[50%_35%]',
             },
             {
-              id: 'han-0801',
+              id: 'hanriver',
               status: 'open',
               href: '/events/hanriver/',
               emoji: '🧺',
               title: '한강 피크닉',
-              date: '8월 1일 (토)',
+              date: '8월 1일 · 8일 · 9일 (토·일)',
               tagline: '돗자리, 치맥 배달, 그리고 반포 무지개분수.',
-              price: '₩25,000 · 피크닉 음식 포함',
               badge: '₩25,000',
               image: 'assets/photos/hanriver/hanriver-mat.webp',
               imageAlt: 'meta.picnicAlt',
               imagePos: 'object-[50%_40%]',
-            },
-            {
-              id: 'han-0808',
-              status: 'open',
-              href: '/events/hanriver/',
-              emoji: '🧺',
-              title: '한강 피크닉',
-              date: '8월 8일 (토)',
-              tagline: '서울 사람들이 진짜로 주말을 보내는 방법.',
-              price: '₩25,000 · 피크닉 음식 포함',
-              badge: '₩25,000',
-              image: 'assets/photos/hanriver/hanriver-food.webp',
-              imageAlt: 'meta.foodAlt',
-              imagePos: 'object-[50%_55%]',
-            },
-            {
-              id: 'han-0809',
-              status: 'open',
-              href: '/events/hanriver/',
-              emoji: '🧺',
-              title: '한강 피크닉',
-              date: '8월 9일 (일)',
-              tagline: '노을 지는 강변, 해 질 무렵의 무지개분수.',
-              price: '₩25,000 · 피크닉 음식 포함',
-              badge: '₩25,000',
-              image: 'assets/photos/hanriver/hanriver-fountain.webp',
-              imageAlt: 'meta.fountainAlt',
-              imagePos: '',
             },
             {
               id: 'kleague',
@@ -956,7 +878,6 @@
               title: 'K리그 축구 직관',
               date: '날짜 공개 예정',
               tagline: '버디 크루와 함께 느끼는 한국 축구장의 함성.',
-              price: '',
               badge: '오픈 예정',
               image: 'assets/photos/kleague/kleague-worldcup-day.webp',
               imageAlt: 'meta.kleagueAlt',
@@ -969,9 +890,8 @@
               title: '찜질방 나들이',
               date: '날짜 공개 예정',
               tagline: '불가마, 식혜, 양머리 수건 — 진짜 K-스파 체험.',
-              price: '',
               badge: '오픈 예정',
-              image: 'assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
+              image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
               imagePos: '',
             },
@@ -1000,6 +920,11 @@
             {
               quote: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
               meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
+              tag: '⚾ KBO 야구 직관',
+            },
+            {
+              quote: '“정말 즐거운 저녁이었어요 — 다음 경기도 꼭 HanBuddy와 함께할 거예요!”',
+              meta: '— 7월 야구 직관 후 게스트가 보낸 메시지',
               tag: '⚾ KBO 야구 직관',
             },
           ],
@@ -1172,8 +1097,8 @@
         if (typeof altText === 'string') img.alt = altText;
         figure.appendChild(img);
         const badgeClass = isOpen
-          ? 'absolute left-3 top-3 rounded-full bg-canvas-soft/95 px-3 py-1 text-xs font-bold text-ink shadow-subtle'
-          : 'absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-bold text-on-primary shadow-subtle';
+          ? 'absolute left-3 top-3 rounded-full bg-canvas-soft px-3.5 py-1.5 text-sm font-extrabold tracking-tight text-ink shadow-raised'
+          : 'absolute left-3 top-3 rounded-full bg-primary px-3.5 py-1.5 text-sm font-extrabold tracking-tight text-on-primary shadow-raised';
         figure.appendChild(textNode('span', badgeClass, item.badge));
 
         const content = document.createElement('div');
@@ -1183,10 +1108,6 @@
           textNode('h3', 'mt-1.5 font-display text-lg font-extrabold leading-snug tracking-tight text-ink', `${item.emoji} ${item.title}`),
           textNode('p', 'mt-1.5 text-sm leading-6 text-muted', item.tagline),
         );
-        if (item.price) {
-          content.append(textNode('p', 'mt-auto pt-3 text-xs font-semibold text-muted', item.price));
-        }
-
         card.append(figure, content);
         container.appendChild(card);
       });
