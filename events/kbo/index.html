@@ -66,27 +66,27 @@
     <div class="max-w-3xl">
       <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Upcoming event &middot; Seoul</p>
       <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">⚾ KBO Baseball Night</h1>
-      <p class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-semibold text-muted">
-        <span class="text-ink"><span aria-hidden="true" class="text-primary">★</span> 4.7 / 5 guest rating</span>
-        <span aria-hidden="true">&middot;</span>
-        <span>Hosted by the HanBuddy team</span>
-      </p>
+      <p class="mt-3 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
     </div>
 
-    <!-- Photo collage -->
+    <!-- Photo collage (click to enlarge) -->
     <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
-      <figure class="lg:col-span-2 lg:row-span-2">
-        <img src="/assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" class="h-64 w-full object-cover object-[50%_35%] sm:h-80 lg:h-[430px]"
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 7 in full screen">
+        <img src="/assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" class="h-64 w-full object-cover object-[50%_35%] transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
              alt="Jamsil Baseball Stadium field under the lights during a KBO night game" />
-      </figure>
-      <figure class="hidden lg:block">
-        <img src="/assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover object-[60%_40%]"
+      </button>
+      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 7 in full screen">
+        <img src="/assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover object-[60%_40%] transition group-hover:opacity-95"
              alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" />
-      </figure>
-      <figure class="hidden lg:block">
-        <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_35%]"
+      </button>
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 7 in full screen">
+        <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_35%] transition group-hover:opacity-95"
              alt="Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium" />
-      </figure>
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 7 photos</span>
+      </button>
+      <button type="button" data-photo="1" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
+        📷 View all 7 photos
+      </button>
     </div>
 
     <!-- Two-column: content + booking card -->
@@ -189,5 +189,78 @@
       <a href="/" class="rounded font-semibold transition hover:text-primary-strong">hanbuddy.kr</a>
     </div>
   </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="fixed inset-0 z-[90] hidden items-center justify-center bg-ink/95 p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button type="button" data-lb-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-xl font-bold text-on-primary transition hover:bg-canvas-soft/30" aria-label="Close photo viewer">&times;</button>
+    <button type="button" data-lb-prev class="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:left-6" aria-label="Previous photo">&lsaquo;</button>
+    <figure class="flex max-h-full max-w-5xl flex-col items-center">
+      <img id="lightbox-img" src="" alt="" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
+      <figcaption id="lightbox-caption" class="mt-3 max-w-xl text-center text-sm font-semibold text-on-primary/80"></figcaption>
+    </figure>
+    <button type="button" data-lb-next class="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:right-6" aria-label="Next photo">&rsaquo;</button>
+    <p id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-bold text-on-primary/70"></p>
+  </div>
+
+  <script>
+    const PHOTOS = [
+      { src: '/assets/photos/kbo/kbo-0726-lights.webp', alt: 'Jamsil Baseball Stadium field under the lights during a KBO night game' },
+      { src: '/assets/photos/kbo/kbo-0726-group.webp', alt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium' },
+      { src: '/assets/photos/kbo/kbo-0726-cheers.webp', alt: 'Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium' },
+      { src: '/assets/photos/kbo/kbo-0726-night-crew.webp', alt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil' },
+      { src: '/assets/photos/kbo/kbo-0726-sunset.webp', alt: 'Golden-hour view over the packed stands at Jamsil Baseball Stadium' },
+      { src: '/assets/photos/kbo/run1-group.webp', alt: 'HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium' },
+      { src: '/assets/photos/kbo/run1-opening.webp', alt: 'Jamsil Baseball Stadium field glowing before a night game' },
+    ];
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    let photoIndex = 0;
+
+    const renderPhoto = () => {
+      const photo = PHOTOS[photoIndex];
+      lightboxImg.src = photo.src;
+      lightboxImg.alt = photo.alt;
+      lightboxCaption.textContent = photo.alt;
+      lightboxCounter.textContent = `${photoIndex + 1} / ${PHOTOS.length}`;
+    };
+
+    const openLightbox = (index) => {
+      photoIndex = index;
+      renderPhoto();
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    };
+
+    const stepPhoto = (delta) => {
+      photoIndex = (photoIndex + delta + PHOTOS.length) % PHOTOS.length;
+      renderPhoto();
+    };
+
+    document.querySelectorAll('[data-photo]').forEach((el) => {
+      el.addEventListener('click', () => openLightbox(Number(el.getAttribute('data-photo'))));
+    });
+    lightbox.querySelector('[data-lb-close]').addEventListener('click', closeLightbox);
+    lightbox.querySelector('[data-lb-prev]').addEventListener('click', () => stepPhoto(-1));
+    lightbox.querySelector('[data-lb-next]').addEventListener('click', () => stepPhoto(1));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') stepPhoto(-1);
+      else if (e.key === 'ArrowRight') stepPhoto(1);
+    });
+  </script>
 </body>
 </html>
