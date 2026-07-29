@@ -130,6 +130,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - Why/policy content renders as hairline-divided rows or columns: uppercase `primary` label, bold title, muted body. No boxes, no shadows.
 - How-it-works steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Apply/Confirm/Meet up) — the rule communicates sequence without fake numbering.
+- Event detail photo lightbox (`/events/*`): collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.
 - Event cards (`#events`): Meetup-style compact cards in a `sm:2 / lg:4` grid — 16/10 photo with a price (or "Coming soon") badge chip, uppercase date line in `primary-strong`, emoji + title, one-line tagline, and a muted price/included line. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
 
 ### Run 1 Evidence
