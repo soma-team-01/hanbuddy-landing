@@ -405,7 +405,7 @@
           </p>
         </div>
 
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-event-cards></div>
+        <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4" data-event-cards></div>
 
         <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-6 text-muted" data-i18n="events.note">
           We&rsquo;ll confirm the meeting spot and details with you directly before the day.
@@ -739,8 +739,8 @@
           galleryTitle: 'Moments from our latest baseball night — Jamsil, July 26',
           cards: [
             {
-              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-              meta: '— Guest at our first baseball night · Jamsil, June 2026',
+              quote: '“It was fun to watch the game and cheer together!”',
+              meta: '— Guest at our July baseball night · Jamsil, July 2026',
               tag: '⚾ KBO Baseball Night',
             },
             {
@@ -913,8 +913,8 @@
           galleryTitle: '가장 최근 야구 직관의 순간들 — 잠실, 7월 26일',
           cards: [
             {
-              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-              meta: '— 첫 야구 직관 참가 게스트 · 잠실, 2026년 6월',
+              quote: '“함께 응원하며 경기를 보는 게 정말 재미있었어요!”',
+              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
               tag: '⚾ KBO 야구 직관',
             },
             {
@@ -1097,15 +1097,15 @@
         if (typeof altText === 'string') img.alt = altText;
         figure.appendChild(img);
         const badgeClass = isOpen
-          ? 'absolute left-3 top-3 rounded-full bg-canvas-soft px-3.5 py-1.5 text-sm font-extrabold tracking-tight text-ink shadow-raised'
-          : 'absolute left-3 top-3 rounded-full bg-primary px-3.5 py-1.5 text-sm font-extrabold tracking-tight text-on-primary shadow-raised';
+          ? 'absolute left-2.5 top-2.5 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold tracking-tight text-ink shadow-raised sm:left-3 sm:top-3 sm:px-3.5 sm:py-1.5 sm:text-sm'
+          : 'absolute left-2.5 top-2.5 rounded-full bg-primary px-3 py-1 text-xs font-extrabold tracking-tight text-on-primary shadow-raised sm:left-3 sm:top-3 sm:px-3.5 sm:py-1.5 sm:text-sm';
         figure.appendChild(textNode('span', badgeClass, item.badge));
 
         const content = document.createElement('div');
-        content.className = 'flex flex-1 flex-col p-5';
+        content.className = 'flex flex-1 flex-col p-4 sm:p-5';
         content.append(
           textNode('p', 'text-xs font-bold uppercase tracking-[0.08em] text-primary-strong', item.date),
-          textNode('h3', 'mt-1.5 font-display text-lg font-extrabold leading-snug tracking-tight text-ink', `${item.emoji} ${item.title}`),
+          textNode('h3', 'mt-1.5 font-display text-base font-extrabold leading-snug tracking-tight text-ink sm:text-lg', `${item.emoji} ${item.title}`),
           textNode('p', 'mt-1.5 text-sm leading-6 text-muted', item.tagline),
         );
         card.append(figure, content);
