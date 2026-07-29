@@ -24,7 +24,7 @@ python3 -m http.server 8080
 
 ```bash
 # 글롭을 명시할 것 — `node --test tests/` 디렉터리 인자는 일부 Node에서 실패
-node --test tests/about.test.js tests/analytics.test.js tests/color-palette.test.js tests/typography.test.js
+node --test tests/*.test.js
 ```
 
 about 카피 동기화(메인↔about 공유 문구), 애널리틱스 동의 게이팅, `DESIGN.md`↔구현 팔레트·타이포 동기화를 검사한다. CI는 없으므로 푸시 전에 로컬에서 돌린다.
@@ -40,4 +40,3 @@ about 카피 동기화(메인↔about 공유 문구), 애널리틱스 동의 게
 - 이벤트 날짜·가격·포함 범위는 공개 확정된 사실만 쓴다. 장소·정원·시간·결제/환불 조건은 확정 전까지 임의로 쓰지 않는다.
 - 게스트 인용은 `AGENTS.md`의 **승인 인용 목록**(현재 4건)만, 원문 그대로 사용한다.
 - 사진은 승인된 WebP만. 배경/장식용 사진은 얼굴이 근접 식별되는 컷을 쓰지 않는다.
-- 검증 진행 로그 정본은 `soma-memory` 운영 로그에 남긴다.

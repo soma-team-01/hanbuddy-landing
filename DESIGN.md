@@ -99,7 +99,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Layout
 
-- Max content width: `1280px` for main sections; the hero copy block narrows to `max-w-4xl`, centered.
+- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review grid to `max-w-5xl` — all centered.
 - The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
 - Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards over a photo backdrop (`#reviews`), a solid `primary-strong` band (`#apply`).
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
@@ -162,7 +162,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section and a real-moments photo strip under the hero. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note that the page stores nothing.
+- Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
 
 ## 6. Motion
 

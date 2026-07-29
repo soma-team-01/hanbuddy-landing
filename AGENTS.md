@@ -97,7 +97,7 @@ hanbuddy-landing/
 
 ### Copy & structure
 
-- Keep this a buildless static site; production surface is the allowlisted HTML + WebP only.
+- Keep this a buildless static site; production surface is the allowlisted HTML + WebP photos, plus the brand PNGs in `assets/brand/` (apple-touch icon and the fixed email-signature logo).
 - Body copy defaults to English for international guests; the KO toggle serves local buddies and stakeholders. Keep `CONTENT_MAP` EN/KO and static fallback DOM text in sync (including `#events` grid classes and dynamic renderers).
 - Korean/local buddy recruitment stays a one-line note in `#apply`; do not re-expand it into its own section.
 - The page intentionally stores no personal information; applications/questions go through external channels only.
@@ -124,7 +124,7 @@ cd ~/projects/hanbuddy-landing
 python3 -m http.server 8080
 
 # Tests (pass the glob — `node --test tests/` fails on some Node versions)
-node --test tests/about.test.js tests/analytics.test.js tests/color-palette.test.js tests/typography.test.js
+node --test tests/*.test.js
 
 # Ship (team rule: never push main directly)
 git switch -c feat/<topic>   # work, commit
