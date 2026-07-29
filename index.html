@@ -163,8 +163,8 @@
       transform: scale(1.03);
     }
 
-    /* Moments 밴드: 배경 사진 크로스페이드 */
-    .moment-slide {
+    /* 리뷰 섹션 뒷배경: 사진 크로스페이드 */
+    .review-slide {
       transition: opacity 1000ms ease-in-out;
     }
 
@@ -428,18 +428,32 @@
       <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
     </section>
 
-    <!-- Guest reviews -->
-    <section id="reviews" class="border-t border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+    <!-- Guest reviews (crossfading photo backdrop) -->
+    <section id="reviews" class="relative overflow-hidden bg-ink">
+      <div class="absolute inset-0" aria-hidden="true">
+        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-100" />
+        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover object-[50%_40%] opacity-0" />
+        <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover object-[50%_35%] opacity-0" />
+        <div class="absolute inset-0 bg-ink/70"></div>
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
-          <p class="eyebrow" data-i18n="reviews.eyebrow">Guest reviews</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
+          <p class="eyebrow eyebrow-on-primary" data-i18n="reviews.eyebrow">Guest reviews</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-on-primary sm:text-4xl" data-i18n="reviews.title">
             Our guests say it best.
           </h2>
-          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
+          <p class="mt-4 text-base leading-7 text-on-primary/85" data-i18n="reviews.body">
             Every guest fills in a short survey after each meetup — here&rsquo;s what they told us.
           </p>
-          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
+          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-canvas-soft px-5 py-2 text-sm font-bold text-primary-strong shadow-raised">
             <span aria-hidden="true" class="tracking-tight">★★★★★</span>
             <span data-i18n="reviews.rating">4.7 / 5 average guest rating</span>
           </p>
@@ -447,53 +461,6 @@
 
         <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
 
-      </div>
-    </section>
-
-    <!-- Moments: full-bleed crossfading photo band -->
-    <section id="moments" class="relative overflow-hidden bg-ink" aria-roledescription="carousel" aria-label="Moments from HanBuddy meetups" data-i18n-aria="moments.aria">
-      <div class="relative h-[460px] sm:h-[540px]">
-        <img src="assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" data-slide="0"
-             class="moment-slide absolute inset-0 h-full w-full object-cover opacity-100"
-             alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
-        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" data-slide="1"
-             class="moment-slide absolute inset-0 h-full w-full object-cover opacity-0"
-             alt="Crowds picnicking on the Han River lawn at sunset" data-i18n-alt="meta.picnicFieldAlt" />
-        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" data-slide="2"
-             class="moment-slide absolute inset-0 h-full w-full object-cover opacity-0"
-             alt="Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves" data-i18n-alt="meta.kleagueAlt" />
-        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" data-slide="3"
-             class="moment-slide absolute inset-0 h-full w-full object-cover opacity-0"
-             alt="Packed stands at Jamsil Baseball Stadium on game day" data-i18n-alt="meta.stadiumAlt" />
-        <img src="assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" data-slide="4"
-             class="moment-slide absolute inset-0 h-full w-full object-cover object-[60%_40%] opacity-0"
-             alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
-
-        <div class="absolute inset-0 bg-ink/50" aria-hidden="true"></div>
-        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/80 to-transparent" aria-hidden="true"></div>
-
-        <div class="relative z-10 mx-auto flex h-full max-w-4xl flex-col items-center justify-center px-5 pb-16 text-center">
-          <p class="eyebrow eyebrow-on-primary" data-i18n="moments.eyebrow">Moments with HanBuddy</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-on-primary sm:text-5xl" data-i18n="moments.title">
-            Every week, new memories in Seoul.
-          </h2>
-          <p class="mt-4 max-w-xl text-base leading-7 text-on-primary/85 sm:text-lg" data-i18n="moments.body">
-            Baseball nights, riverside picnics — and more on the way.
-          </p>
-          <a href="#events" class="focusable focusable-on-primary-strong mt-7 rounded-full border border-on-primary-strong/50 px-7 py-3 text-sm font-bold text-on-primary transition hover:bg-canvas-soft/15">
-            <span data-i18n="moments.cta">See upcoming events</span> <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <button type="button" data-moment-prev aria-label="Previous photo" data-i18n-aria="moments.prevAria"
-                class="focusable focusable-on-primary-strong absolute left-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:flex">&lsaquo;</button>
-        <button type="button" data-moment-next aria-label="Next photo" data-i18n-aria="moments.nextAria"
-                class="focusable focusable-on-primary-strong absolute right-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:flex">&rsaquo;</button>
-
-        <div class="absolute inset-x-0 bottom-6 z-20 flex flex-col items-center gap-3">
-          <p data-moment-caption aria-live="polite" class="px-5 text-center text-sm font-semibold text-on-primary/85"></p>
-          <div class="flex items-center gap-2" data-moment-dots></div>
-        </div>
       </div>
     </section>
 
@@ -654,9 +621,6 @@
           picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
           momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
           momentLightsAlt: 'Jamsil Baseball Stadium field under the lights during a KBO night game',
-          momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
-          picnicFieldAlt: 'Crowds picnicking on the Han River lawn at sunset',
-          stadiumAlt: 'Packed stands at Jamsil Baseball Stadium on game day',
           kleagueAlt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves',
           jjimjilbangAlt: 'Warm stone kiln-sauna room with wooden pillows inside a Korean jjimjilbang',
           somaAlt: 'AI·SW Maestro logo',
@@ -783,23 +747,6 @@
             },
           ],
         },
-        moments: {
-          aria: 'Moments from HanBuddy meetups',
-          eyebrow: 'Moments with HanBuddy',
-          title: 'Every week, new memories in Seoul.',
-          body: 'Baseball nights, riverside picnics — and more on the way.',
-          cta: 'See upcoming events',
-          prevAria: 'Previous photo',
-          nextAria: 'Next photo',
-          goToAria: 'Go to photo',
-          captions: [
-            'KBO night · Jamsil, July 26',
-            'Sunset picnic by the Han River',
-            'K League — opening soon',
-            'Game day at Jamsil Baseball Stadium',
-            'New friends · July 26',
-          ],
-        },
         finalCta: {
           eyebrow: 'Baseball · Han River · more coming',
           title: 'See you at the next meetup?',
@@ -844,9 +791,6 @@
           picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
           momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
           momentLightsAlt: '야간 조명이 켜진 잠실야구장 그라운드',
-          momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
-          picnicFieldAlt: '노을 무렵 한강 잔디밭에서 피크닉을 즐기는 사람들',
-          stadiumAlt: '경기 날 관중으로 가득 찬 잠실야구장',
           kleagueAlt: '울산 HD 머플러를 든 축구 팬들로 가득한 서울월드컵경기장',
           jjimjilbangAlt: '나무 목침이 놓인 찜질방의 따뜻한 돌 불가마방',
           somaAlt: 'AI·SW마에스트로 로고',
@@ -971,23 +915,6 @@
               meta: '— 7월 야구 직관 후 게스트가 보낸 메시지',
               tag: '⚾ KBO 야구 직관',
             },
-          ],
-        },
-        moments: {
-          aria: 'HanBuddy 모임의 순간들',
-          eyebrow: 'HanBuddy의 순간들',
-          title: '매주, 서울에서 새로운 추억이 쌓입니다.',
-          body: '야구의 밤도, 강변의 피크닉도 — 그리고 더 많은 경험이 오고 있어요.',
-          cta: '다가오는 이벤트 보기',
-          prevAria: '이전 사진',
-          nextAria: '다음 사진',
-          goToAria: '사진으로 이동',
-          captions: [
-            '야구의 밤 · 잠실, 7월 26일',
-            '노을 지는 한강 피크닉',
-            'K리그 — 곧 열려요',
-            '잠실야구장의 경기 날',
-            '새 친구들 · 7월 26일',
           ],
         },
         finalCta: {
@@ -1180,7 +1107,7 @@
       clear(container);
       copy.reviews.cards.forEach((item) => {
         const figure = document.createElement('figure');
-        figure.className = 'flex flex-col rounded-2xl border border-line-soft bg-canvas p-7 sm:p-8';
+        figure.className = 'flex flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:p-8';
 
         const blockquote = document.createElement('blockquote');
         blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
@@ -1232,17 +1159,13 @@
       });
     };
 
-    let currentCopy = CONTENT_MAP.en;
-
     const applyLanguage = (lang) => {
       const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
-      currentCopy = copy;
       syncStaticText(copy);
       syncMeta(copy);
       renderDynamicContent(copy);
       setLanguageButtonState(lang);
       persistLanguage(lang);
-      refreshMomentUi();
     };
 
     const safeStoredAnalyticsConsent = () => {
@@ -1345,7 +1268,7 @@
           observer.unobserve(entry.target);
         });
       }, { threshold: 0.2 });
-      ['events', 'how', 'reviews', 'moments', 'apply'].forEach((id) => {
+      ['events', 'how', 'reviews', 'apply'].forEach((id) => {
         const section = document.getElementById(id);
         if (section) observer.observe(section);
       });
@@ -1387,68 +1310,20 @@
       hideConsentBanner();
     };
 
-    // ===== Moments 크로스페이드 캐러셀 =====
-    const momentSlides = [...document.querySelectorAll('#moments .moment-slide')];
-    const momentDotsWrap = document.querySelector('[data-moment-dots]');
-    const momentCaption = document.querySelector('[data-moment-caption]');
-    let momentIndex = 0;
-    let momentTimer = null;
-    const MOMENT_INTERVAL = 6000;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // ===== 리뷰 섹션 뒷배경 자동 크로스페이드 =====
+    const reviewSlides = [...document.querySelectorAll('#reviews .review-slide')];
+    let reviewSlideIndex = 0;
 
-    const refreshMomentUi = () => {
-      if (!momentSlides.length || !momentDotsWrap) return;
-      const captions = currentCopy.moments?.captions ?? [];
-      if (momentCaption) momentCaption.textContent = captions[momentIndex] ?? '';
-      [...momentDotsWrap.children].forEach((dot, i) => {
-        const active = i === momentIndex;
-        dot.setAttribute('aria-current', String(active));
-        dot.setAttribute('aria-label', `${currentCopy.moments?.goToAria ?? 'Go to photo'} ${i + 1} / ${momentSlides.length}`);
-        dot.classList.toggle('bg-on-primary', active);
-        dot.classList.toggle('w-6', active);
-        dot.classList.toggle('bg-on-primary/40', !active);
-        dot.classList.toggle('w-2', !active);
-      });
-    };
-
-    const showMoment = (index) => {
-      momentIndex = (index + momentSlides.length) % momentSlides.length;
-      momentSlides.forEach((slide, i) => {
-        slide.classList.toggle('opacity-100', i === momentIndex);
-        slide.classList.toggle('opacity-0', i !== momentIndex);
-      });
-      refreshMomentUi();
-    };
-
-    const restartMomentTimer = () => {
-      if (momentTimer) clearInterval(momentTimer);
-      if (prefersReducedMotion.matches) return;
-      momentTimer = setInterval(() => showMoment(momentIndex + 1), MOMENT_INTERVAL);
-    };
-
-    const initMoments = () => {
-      if (!momentSlides.length || !momentDotsWrap) return;
-      momentSlides.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'focusable focusable-on-primary-strong h-2 w-2 rounded-full bg-on-primary/40 transition-all duration-300';
-        dot.addEventListener('click', () => {
-          showMoment(i);
-          restartMomentTimer();
+    const startReviewBackdrop = () => {
+      if (reviewSlides.length < 2) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      setInterval(() => {
+        reviewSlideIndex = (reviewSlideIndex + 1) % reviewSlides.length;
+        reviewSlides.forEach((slide, i) => {
+          slide.classList.toggle('opacity-100', i === reviewSlideIndex);
+          slide.classList.toggle('opacity-0', i !== reviewSlideIndex);
         });
-        momentDotsWrap.appendChild(dot);
-      });
-      document.querySelector('[data-moment-prev]')?.addEventListener('click', () => {
-        showMoment(momentIndex - 1);
-        restartMomentTimer();
-      });
-      document.querySelector('[data-moment-next]')?.addEventListener('click', () => {
-        showMoment(momentIndex + 1);
-        restartMomentTimer();
-      });
-      prefersReducedMotion.addEventListener?.('change', restartMomentTimer);
-      showMoment(0);
-      restartMomentTimer();
+      }, 6000);
     };
 
     const initAnalyticsConsent = () => {
@@ -1499,7 +1374,7 @@
     });
 
     syncCtas();
-    initMoments();
+    startReviewBackdrop();
     applyLanguage(safeStoredLanguage());
     initAnalytics();
     initAnalyticsConsent();

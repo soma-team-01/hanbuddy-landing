@@ -149,12 +149,12 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking to `#reviews`; the long testimonial figure moved out of the hero into this section.
 - Moment-gallery images keep their native aspect ratio inside fixed-height rounded frames (`.moment-card`) so landscape group shots are never cropped down to a portrait frame.
 
-### Moments Band (`#moments`)
+### Reviews Backdrop (`#reviews`)
 
-- A full-bleed crossfading photo band between `#reviews` and `#apply`: 5 landscape photos mixing activities (baseball, Han River, K League), a dark `ink` scrim plus bottom gradient for text legibility, centered on-primary copy with a secondary CTA back to `#events`.
-- Autoplay crossfades every 6s (opacity only, 1s ease) and pauses under `prefers-reduced-motion`; dots and prev/next arrows give manual control and reset the timer. The per-slide caption is localized via `CONTENT_MAP.moments.captions` and announced with `aria-live="polite"`.
-- The photo-card scrim exception in Section 2 covers this band's overlay — it is functional image-legibility treatment, not a decorative gradient.
-- Captions state only approved facts (activity, place, date); no counts or guarantees.
+- The guest-reviews section sits on a full-bleed crossfading photo backdrop: 5 wide-shot photos mixing activities (Han River sunset, Jamsil crowds, K League), behind a uniform `ink`/70 scrim. Header copy switches to on-primary; review cards stay light (`canvas` + raised shadow) so quotes remain the foreground.
+- Backdrop photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
+- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
+- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
 ### Team and Final CTA
 
