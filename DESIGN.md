@@ -151,7 +151,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Reviews Backdrop (`#reviews`)
 
-- The guest-reviews section sits on a full-bleed crossfading photo backdrop: 5 wide-shot photos mixing activities (Han River sunset, Jamsil crowds, K League), behind a uniform `ink`/70 scrim. Header copy switches to on-primary; review cards stay light (`canvas` + raised shadow) so quotes remain the foreground.
+- The guest-reviews section sits on a full-bleed crossfading photo backdrop: 5 wide-shot photos balanced across activities (2 Han River — sunset lawn and Banpo fountain at night, 2 baseball — daytime crowds and night lights, 1 K League), behind a uniform `ink`/70 scrim. Header copy switches to on-primary; review cards stay light (`canvas` + raised shadow) so quotes remain the foreground.
 - Backdrop photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
 - Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
 - The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
