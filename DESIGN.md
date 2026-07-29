@@ -149,10 +149,12 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking to `#reviews`; the long testimonial figure moved out of the hero into this section.
 - Moment-gallery images keep their native aspect ratio inside fixed-height rounded frames (`.moment-card`) so landscape group shots are never cropped down to a portrait frame.
 
-### Gallery
+### Moments Band (`#moments`)
 
-- Gallery is supporting context, not the main product explanation.
-- Use thin borders, stable aspect ratios, and plain captions that say what the image proves: real participants, a completed Korean baseball-culture activity, and a local buddy atmosphere.
+- A full-bleed crossfading photo band between `#reviews` and `#apply`: 5 landscape photos mixing activities (baseball, Han River, K League), a dark `ink` scrim plus bottom gradient for text legibility, centered on-primary copy with a secondary CTA back to `#events`.
+- Autoplay crossfades every 6s (opacity only, 1s ease) and pauses under `prefers-reduced-motion`; dots and prev/next arrows give manual control and reset the timer. The per-slide caption is localized via `CONTENT_MAP.moments.captions` and announced with `aria-live="polite"`.
+- The photo-card scrim exception in Section 2 covers this band's overlay — it is functional image-legibility treatment, not a decorative gradient.
+- Captions state only approved facts (activity, place, date); no counts or guarantees.
 
 ### Team and Final CTA
 

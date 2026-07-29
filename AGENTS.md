@@ -53,7 +53,8 @@ Ignored raw KakaoTalk JPGs may exist locally under `assets/`; do not deploy them
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Lightweight EN event detail pages: dates, price/included, 3-step flow, apply CTA (Google Form) |
 | `#why` | section | `index.html` | Guest benefits of joining with a local buddy (hairline rows) |
 | `#how` | section | `index.html` | Guest journey step columns: Apply / Confirm / Meet up |
-| `#reviews` | section | `index.html` | Guest reviews: aggregate guest rating chip, approved survey quotes (rendered from `CONTENT_MAP.reviews.cards`), and the 2026-07-26 KBO photo gallery (`assets/photos/kbo/kbo-0726-*.webp`) |
+| `#reviews` | section | `index.html` | Guest reviews: aggregate guest rating chip and approved survey quotes (rendered from `CONTENT_MAP.reviews.cards`) |
+| `#moments` | section | `index.html` | Full-bleed crossfading photo band (5 slides across activities) with localized captions, dots, and prev/next arrows — see DESIGN.md "Moments Band" |
 | `#testimonial` | section | `index.html` | Public Run 1 proof, approved testimonial, and completed-operation facts |
 | `#policy` | section | `index.html` | Safety, privacy, and manual confirmation expectations |
 | `#team` | section | `index.html` | ZeroOne trust/team context |
