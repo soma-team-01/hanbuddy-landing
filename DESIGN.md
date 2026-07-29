@@ -142,17 +142,24 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
-### Guest Reviews
+### Guest Reviews (`#reviews`)
 
-- `#reviews` is the social-proof hub: centered header, one `primary-soft` pill chip with the aggregate star rating, a two-card grid of approved survey quotes, then a one-row moment gallery from the latest run.
-- Review cards are quiet boxed cards (`rounded-2xl`, `line-soft` border, `canvas` surface): display-font quote, `primary-soft` program tag chip, muted meta line. No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
-- The hero keeps only a compact star chip (`hero.ratingNote`) linking to `#reviews`; the long testimonial figure moved out of the hero into this section.
-- Moment-gallery images keep their native aspect ratio inside fixed-height rounded frames (`.moment-card`) so landscape group shots are never cropped down to a portrait frame.
+`#reviews` is the social-proof hub, laid out over a crossfading photo backdrop.
 
-### Gallery
+**Content layer**
 
-- Gallery is supporting context, not the main product explanation.
-- Use thin borders, stable aspect ratios, and plain captions that say what the image proves: real participants, a completed Korean baseball-culture activity, and a local buddy atmosphere.
+- Centered header: eyebrow, title, lead, and one pill chip carrying the aggregate star rating — on the dark backdrop the chip is a `canvas-soft` surface with `primary-strong` text; header copy is on-primary.
+- Below it, a three-card grid of approved survey quotes. Cards stay light (`rounded-2xl`, `canvas` surface, raised shadow, no border) so the quotes read as the foreground against the photo: display-font quote, `primary-soft` program tag chip, muted meta line.
+- No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
+- The hero keeps only a compact star chip (`hero.ratingNote`) linking here, plus the single featured quote card.
+
+**Backdrop layer**
+
+- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `ink`/70 scrim.
+- Portrait sources are not used here: at the band's ~2:1 ratio a 3:4 photo loses ~64% of its frame to `object-cover`, versus ~15–37% for landscape ones. Pick landscape crops instead of nudging `object-position`.
+- Photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
+- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
+- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
 ### Team and Final CTA
 

@@ -163,6 +163,11 @@
       transform: scale(1.03);
     }
 
+    /* 리뷰 섹션 뒷배경: 사진 크로스페이드 */
+    .review-slide {
+      transition: opacity 1000ms ease-in-out;
+    }
+
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -423,18 +428,32 @@
       <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
     </section>
 
-    <!-- Guest reviews -->
-    <section id="reviews" class="border-t border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+    <!-- Guest reviews (crossfading photo backdrop) -->
+    <section id="reviews" class="relative overflow-hidden bg-ink">
+      <div class="absolute inset-0" aria-hidden="true">
+        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-100" />
+        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" alt=""
+             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <div class="absolute inset-0 bg-ink/70"></div>
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
-          <p class="eyebrow" data-i18n="reviews.eyebrow">Guest reviews</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
+          <p class="eyebrow eyebrow-on-primary" data-i18n="reviews.eyebrow">Guest reviews</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-on-primary sm:text-4xl" data-i18n="reviews.title">
             Our guests say it best.
           </h2>
-          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
+          <p class="mt-4 text-base leading-7 text-on-primary/85" data-i18n="reviews.body">
             Every guest fills in a short survey after each meetup — here&rsquo;s what they told us.
           </p>
-          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
+          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-canvas-soft px-5 py-2 text-sm font-bold text-primary-strong shadow-raised">
             <span aria-hidden="true" class="tracking-tight">★★★★★</span>
             <span data-i18n="reviews.rating">4.7 / 5 average guest rating</span>
           </p>
@@ -442,29 +461,6 @@
 
         <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
 
-        <div class="mx-auto mt-16 max-w-5xl">
-          <h3 class="text-center font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="reviews.galleryTitle">
-            Moments from our latest baseball night — Jamsil, July 26
-          </h3>
-          <div class="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            <figure class="photo-card aspect-[4/3]">
-              <img src="assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="object-[50%_35%]"
-                   alt="Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium" data-i18n-alt="meta.momentCheersAlt" />
-            </figure>
-            <figure class="photo-card aspect-[4/3]">
-              <img src="assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
-                   alt="Golden-hour view over the packed stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentSunsetAlt" />
-            </figure>
-            <figure class="photo-card aspect-[4/3]">
-              <img src="assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" loading="lazy" class="object-[50%_45%]"
-                   alt="Jamsil Baseball Stadium field under the lights during a KBO night game" data-i18n-alt="meta.momentLightsAlt" />
-            </figure>
-            <figure class="photo-card aspect-[4/3]">
-              <img src="assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy"
-                   alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
-            </figure>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -624,10 +620,7 @@
           baseballAlt: 'Jamsil Baseball Stadium field glowing before a night game',
           picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
           momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
-          momentSunsetAlt: 'Golden-hour view over the packed stands at Jamsil Baseball Stadium',
           momentLightsAlt: 'Jamsil Baseball Stadium field under the lights during a KBO night game',
-          momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
-          momentCheersAlt: 'Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium',
           kleagueAlt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves',
           jjimjilbangAlt: 'Warm stone kiln-sauna room with wooden pillows inside a Korean jjimjilbang',
           somaAlt: 'AI·SW Maestro logo',
@@ -736,7 +729,6 @@
           title: 'Our guests say it best.',
           body: 'Every guest fills in a short survey after each meetup — here’s what they told us.',
           rating: '4.7 / 5 average guest rating',
-          galleryTitle: 'Moments from our latest baseball night — Jamsil, July 26',
           cards: [
             {
               quote: '“It was fun to watch the game and cheer together!”',
@@ -798,10 +790,7 @@
           baseballAlt: '야간 경기를 앞두고 빛나는 잠실야구장 그라운드',
           picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
           momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
-          momentSunsetAlt: '노을이 내려앉은 잠실야구장 관중석 풍경',
           momentLightsAlt: '야간 조명이 켜진 잠실야구장 그라운드',
-          momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
-          momentCheersAlt: '경기 전 잠실야구장 외야를 배경으로 맥주캔을 부딪치는 게스트들',
           kleagueAlt: '울산 HD 머플러를 든 축구 팬들로 가득한 서울월드컵경기장',
           jjimjilbangAlt: '나무 목침이 놓인 찜질방의 따뜻한 돌 불가마방',
           somaAlt: 'AI·SW마에스트로 로고',
@@ -910,7 +899,6 @@
           title: '게스트가 남긴 진짜 이야기.',
           body: '모임이 끝나면 게스트가 짧은 설문을 남깁니다 — 그 답변을 그대로 옮겨왔어요.',
           rating: '4.7 / 5 게스트 평균 평점',
-          galleryTitle: '가장 최근 야구 직관의 순간들 — 잠실, 7월 26일',
           cards: [
             {
               quote: '“함께 응원하며 경기를 보는 게 정말 재미있었어요!”',
@@ -1119,7 +1107,7 @@
       clear(container);
       copy.reviews.cards.forEach((item) => {
         const figure = document.createElement('figure');
-        figure.className = 'flex flex-col rounded-2xl border border-line-soft bg-canvas p-7 sm:p-8';
+        figure.className = 'flex flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:p-8';
 
         const blockquote = document.createElement('blockquote');
         blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
@@ -1322,6 +1310,22 @@
       hideConsentBanner();
     };
 
+    // ===== 리뷰 섹션 뒷배경 자동 크로스페이드 =====
+    const reviewSlides = [...document.querySelectorAll('#reviews .review-slide')];
+    let reviewSlideIndex = 0;
+
+    const startReviewBackdrop = () => {
+      if (reviewSlides.length < 2) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      setInterval(() => {
+        reviewSlideIndex = (reviewSlideIndex + 1) % reviewSlides.length;
+        reviewSlides.forEach((slide, i) => {
+          slide.classList.toggle('opacity-100', i === reviewSlideIndex);
+          slide.classList.toggle('opacity-0', i !== reviewSlideIndex);
+        });
+      }, 6000);
+    };
+
     const initAnalyticsConsent = () => {
       document.querySelectorAll('[data-consent-action]').forEach((button) => {
         button.addEventListener('click', () => {
@@ -1370,6 +1374,7 @@
     });
 
     syncCtas();
+    startReviewBackdrop();
     applyLanguage(safeStoredLanguage());
     initAnalytics();
     initAnalyticsConsent();
