@@ -1,16 +1,16 @@
 # HanBuddy Landing (공개 모집/홍보 랜딩)
 
-ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 랜딩페이지. **주 타깃은 외국인 게스트(international guests) 모집**이며, 페이지 전체가 게스트 화법으로 구성된다. 한국인·로컬 buddy 모집은 최종 CTA 섹션의 한 줄 안내(KakaoTalk 오픈채팅 유도)로만 노출한다. 2026-06-25 잠실 KBO Run 1 운영 사실과 승인된 참가자 후기를 홍보용 proof로 보여준다.
+ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 사이트. **주 타깃은 외국인 게스트(international guests) 모집**이며, 페이지 전체가 게스트 화법으로 구성된다. 한국인·로컬 buddy 모집은 최종 CTA 섹션의 한 줄 안내(KakaoTalk 오픈채팅 유도)로만 노출한다.
 
-- 1차 운영: 2026-06-25 Samsung Lions vs LG Twins, Jamsil Baseball Stadium
-- 다음 활동(Run 2) 신청: July 18/19 & 25/26 / 7월 18·19일과 25·26일
-- Run 2 프로그램 2종(구글폼 선택지와 동일 표기): "KBO Baseball Game in Seoul with Local Buddy", "Han River Tour with Local Buddy"
-- Google Form: 실제 신청 링크 `https://forms.gle/B1fWgX3MjtHUHGNt5`가 `index.html`의 `CONFIG.apply`에 연결되어 있다. 링크가 바뀌면 CTA와 문구를 함께 교체한다.
-- 문의/알림 채널: 외국인 게스트의 기본 문의는 Instagram DM https://www.instagram.com/hanbuddy_kr/ 으로 안내하고, KakaoTalk 오픈채팅 https://open.kakao.com/o/sP3n4rFi 을 보조 채널과 한국인 로컬 버디 문의에 사용한다.
-- 구조: 정적 `index.html` + 현재 페이지에서 참조하는 공개용 WebP 파생 이미지 4개 (빌드 불필요)
-- 현재 디자인 방향: 실서비스 MVP 프론트(hanbuddy-frontend.vercel.app)의 디자인 언어를 미러링한다. 사진 중심 히어로, 필(pill) CTA, 헤어라인 에디토리얼 리스트, MVP 토큰 팔레트. 상세는 `DESIGN.md`.
+포지셔닝은 **날짜 기반 이벤트**다(주말 전용 아님 — 야구는 평일에도 진행). `#events` 섹션의 Meetup 스타일 카드가 현재 공개된 일정을 보여주고, 각 카드는 `/events/`의 예약형 상세페이지로 연결된다. 완료된 운영(2026-06-25·07-26 잠실 KBO, 한강 피크닉)의 승인 사진과 게스트 후기를 홍보용 proof로 사용한다.
+
+- **프로덕션**: https://landing.hanbuddy.kr — `main` 머지 시 Vercel GitHub 연동으로 **자동 배포** (수동 배포 불필요)
+- **페이지**: `/` (메인) · `/about` (팀 소개) · `/events/kbo/` · `/events/hanriver/` (이벤트 상세)
+- **신청**: Google Form `https://forms.gle/B1fWgX3MjtHUHGNt5` (`index.html`의 `CONFIG.apply`). 링크가 바뀌면 hardcoded anchor·`CONFIG`·문구를 함께 교체
+- **문의**: 기본은 Instagram DM https://www.instagram.com/hanbuddy_kr/ , KakaoTalk 오픈채팅 https://open.kakao.com/o/sP3n4rFi 은 보조·한국인 버디 채널
+- **구조**: 빌드 없는 정적 HTML + 공개용 WebP 파생 이미지. 상세 구조와 규칙은 `AGENTS.md`, 디자인 시스템은 `DESIGN.md`(SSOT)
 - 개인정보는 이 페이지/레포에 저장하지 않는다. 신청과 문의는 외부 채널에서 처리한다.
-- 참가자 얼굴 사진은 마케팅 사용 동의를 받은 상태지만, 원본 JPG/EXIF는 배포하지 않는다.
+- 참가자 사진은 회차별 동의 기반으로 사용하며, 원본 JPG/EXIF는 배포하지 않는다(공개는 EXIF 제거 WebP만).
 
 ## 로컬 미리보기
 
@@ -20,31 +20,23 @@ python3 -m http.server 8080
 # http://localhost:8080 접속
 ```
 
-## 배포용 폴더 만들기
-
-프로젝트 폴더 전체를 그대로 드래그해서 배포하지 않는다. `.git/`, `.superpowers/`, `.omo/`, 원본 JPG, 로컬 도구 파일이 섞일 수 있다.
+## 테스트
 
 ```bash
-cd ~/projects/hanbuddy-landing
-rm -rf /tmp/hanbuddy-landing-deploy
-mkdir -p /tmp/hanbuddy-landing-deploy/assets
-cp index.html /tmp/hanbuddy-landing-deploy/index.html
-cp assets/run1-hero.webp assets/run1-group.webp assets/run1-night.webp assets/run1-opening.webp /tmp/hanbuddy-landing-deploy/assets/
+# 글롭을 명시할 것 — `node --test tests/` 디렉터리 인자는 일부 Node에서 실패
+node --test tests/*.test.js
 ```
 
-배포에는 `/tmp/hanbuddy-landing-deploy` 폴더만 사용한다.
-`assets/` 아래 원본 JPG/JPEG 사진은 배포 폴더에 복사하지 않는다.
+about 카피 동기화(메인↔about 공유 문구), 애널리틱스 동의 게이팅, `DESIGN.md`↔구현 팔레트·타이포 동기화를 검사한다. CI는 없으므로 푸시 전에 로컬에서 돌린다.
 
-## 무료 배포 (택 1)
+## 배포
 
-- **Netlify Drop**: https://app.netlify.com/drop 에 `/tmp/hanbuddy-landing-deploy` 폴더 드래그앤드롭
-- **Vercel**: `cd /tmp/hanbuddy-landing-deploy && npx vercel` → 안내 따라 배포
-- **GitHub Pages**: 배포용 브랜치/저장소에는 `/tmp/hanbuddy-landing-deploy` 안의 파일만 올린 뒤 Pages 지정
+수동 배포 절차는 없다. **브랜치 → PR → 리뷰 반영 → `main`에 squash 머지**하면 Vercel이 자동 배포한다(main 직접 push는 훅으로 차단됨).
 
-## 공개 카피 메모
+무엇이 서빙되는지는 `.vercelignore` **allowlist**가 결정한다 — Vercel은 git 트리가 아니라 작업 디렉터리를 업로드하므로, 공개 파일(새 사진 폴더·확장자·페이지)을 추가할 때는 같은 변경에서 `.vercelignore`도 갱신해야 한다. 원본 JPG·내부 문서·도구 폴더는 절대 allowlist에 넣지 않는다.
 
-- 다음 회차 가격, 장소, 정원, 시간, 포함 범위, 결제/환불 조건이 확정되기 전까지 임의로 쓰지 않는다.
-- Google Form URL이 바뀌면 `index.html`의 hardcoded CTA anchor, `CONFIG`, Hero/Final CTA 문구를 함께 수정한다.
-- Run 1 홍보에는 승인된 WebP 사진, 완료된 운영 사실, 참가자 추천 문구를 사용한다.
-- 검증 진행 로그 정본은 `soma-memory/60_execution/mvp-validation-log.md` 또는 현재 `soma-memory` 운영 로그에 남긴다.
-- `DESIGN.md`는 HanBuddy MVP Figma-derived landing design system의 현재 SSOT다. 구현 문구와 토큰을 바꿀 때는 `DESIGN.md`와 `index.html`의 inline Tailwind/CSS를 함께 확인한다.
+## 공개 카피 원칙 (요약 — 정본은 `AGENTS.md` CONVENTIONS)
+
+- 이벤트 날짜·가격·포함 범위는 공개 확정된 사실만 쓴다. 장소·정원·시간·결제/환불 조건은 확정 전까지 임의로 쓰지 않는다.
+- 게스트 인용은 `AGENTS.md`의 **승인 인용 목록**(현재 4건)만, 원문 그대로 사용한다.
+- 사진은 승인된 WebP만. 배경/장식용 사진은 얼굴이 근접 식별되는 컷을 쓰지 않는다.

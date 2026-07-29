@@ -4,7 +4,7 @@ This is the source of truth for the HanBuddy landing. The active direction is ph
 
 ## 1. Atmosphere
 
-HanBuddy should feel like the marketing surface of the same product the MVP app is: warm, photographic, and quiet. Real Run 1 photography is the primary material — text modules support the photos, not the other way around. Chrome stays minimal (few borders, few boxes); recruitment proof (completed Run 1, approved testimonial) carries the persuasion. The page speaks to one primary reader — the international guest deciding whether to apply — and every section is written in guest-benefit voice; buddy recruitment is a single quiet note in the final CTA.
+HanBuddy should feel like the marketing surface of the same product the MVP app is: warm, photographic, and quiet. Real photography from completed runs is the primary material — text modules support the photos, not the other way around. Chrome stays minimal (few borders, few boxes); recruitment proof (completed runs, approved guest quotes) carries the persuasion. The page speaks to one primary reader — the international guest deciding whether to apply — and every section is written in guest-benefit voice; buddy recruitment is a single quiet note in the final CTA.
 
 ## 2. Color
 
@@ -99,16 +99,16 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Layout
 
-- Max content width: `1280px` (`max-w-7xl`) for main sections; the hero copy block narrows to `max-w-4xl`, centered.
-- The hero is centered: eyebrow, display headline, lead, pill CTA row, status chips, then a three-across Run 1 photo-card row. Run 1 photography IS the first visual read.
-- Avoid repeating the same boxed three-card grid across sections. Vary the device per section: two large panel cards (programs), editorial hairline lists (why, policy), ruled step columns (how), editorial testimonial figure (testimonial).
+- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review grid to `max-w-5xl` — all centered.
+- The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
+- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards over a photo backdrop (`#reviews`), a solid `primary-strong` band (`#apply`).
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
 
 ### Navigation
 
-- Structure: compact top bar with the existing HanBuddy logo mark and wordmark, section anchors, language control, and a clear recruitment CTA linking to the live Google Form.
+- Structure: compact top bar with the HanBuddy logo mark and wordmark, section anchors (About is a real `/about` link), language control, and a clear recruitment CTA (any `data-cta="apply"` anchor is rewritten to the live Google Form via `CONFIG`).
 - Surface: `canvas-soft` with `line-soft`; avoid floating glass or heavy shadow.
 - States: active/hover text shifts to `primary-strong`; focus uses a visible `primary-strong` outline.
 
@@ -119,26 +119,24 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
 - All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
 
-### Photo Cards (signature)
+### Photography Components (signature)
 
-- The signature element is real Run 1 photography in stable `rounded-2xl` frames. A bottom scrim is allowed only when overlaid copy needs contrast; the current gallery uses unoverlaid images.
-- Hero uses a three-across row (`aspect-[4/5]` on desktop, `16/10` on mobile); evidence uses a single editorial figure with the caption below the image, not on it.
-- Only approved public WebP photos may appear. Captions state completed-operation facts.
-- Hover: image scales to at most 1.02 inside the fixed frame; the frame itself does not move.
+- **Hero polaroids** (`.hero-polaroid`, `.hp1–4`): white-bordered tilted snaps with a tape strip and handwritten caption (Caveat / Nanum Pen Script). Desktop pins them to the hero's four corners (hover straightens and lifts); mobile stacks them as an offset two-column collage below the copy. Captions state real moments (activity, place, date) only.
+- **Photo cards** (`.photo-card`): stable `rounded-2xl` frames with `object-cover` and a ≤1.03 hover zoom — used by event cards and detail-page collages. The frame itself never moves.
+- Only approved public WebP photos may appear anywhere; captions and alt text state completed-operation facts.
+- A scrim is allowed only as functional legibility treatment (photo backdrop, overlaid copy) — never as decoration.
 
-### Editorial Lists and Step Columns
+### Event Cards and Steps
 
-- Why/policy content renders as hairline-divided rows or columns: uppercase `primary` label, bold title, muted body. No boxes, no shadows.
-- How-it-works steps are columns opened by a `2px` `ink` top rule with an uppercase step tag (Apply/Confirm/Meet up) — the rule communicates sequence without fake numbering.
-- Event detail photo lightbox (`/events/*`): collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.
-- Event cards (`#events`): Meetup-style compact cards in a `sm:2 / lg:4` grid — 16/10 photo with a price (or "Coming soon") badge chip, uppercase date line in `primary-strong`, emoji + title, one-line tagline, and a muted price/included line. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
+- Event cards (`#events`): Meetup-style compact cards in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
+- How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
+- Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
+- Event detail photo lightbox: collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.
 
-### Run 1 Evidence
+### Completed-run Evidence
 
-- Public Run 1 proof should mention only completed-operation facts, approved photos, and the approved testimonial quote.
-- Use the completed 2026-06-25 Jamsil KBO operation as factual proof that HanBuddy has hosted a real local baseball-culture experience with local Koreans.
-- Use this exact English quote when showing the participant testimonial publicly: "If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!"
-- Use this fixed Korean translation when the same testimonial appears in Korean: "한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!"
+- Public proof mentions only completed-operation facts, approved photos, and the approved guest quotes (the verbatim list lives in `AGENTS.md` CONVENTIONS — currently 4 quotes; nothing else may be quoted).
+- Completed runs usable as proof: 2026-06-25 and 2026-07-26 Jamsil KBO, plus Han River picnic photography.
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
@@ -161,10 +159,10 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
 - The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
-### Team and Final CTA
+### About Page and Final CTA
 
-- Team section should establish ZeroOne credibility and current MVP direction without turning into a founder poster.
-- Final CTA repeats the recruitment action for the active dates, links to the live Google Form as the primary action, presents Instagram DM as the default guest inquiry channel, keeps KakaoTalk open chat as a secondary and local-buddy channel, carries the one-line buddy-recruitment note, and avoids implying in-page data collection.
+- Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section and a real-moments photo strip under the hero. The main page links to it from the nav and footer only.
+- Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
 
 ## 6. Motion
 
