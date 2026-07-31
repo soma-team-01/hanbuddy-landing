@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About HanBuddy | The team behind your Korean weekend</title>
-  <meta name="description" content="Meet the team that plans and runs HanBuddy — Korean baseball nights and Han River picnics for international guests, backed by AI·SW Maestro." />
+  <title>About HanBuddy | The team that makes “like a local” happen</title>
+  <meta name="description" content="Meet the team that plans and runs HanBuddy — KBO baseball nights and Han River picnics in Seoul, every week, backed by AI·SW Maestro." />
 
-  <meta property="og:title" content="About HanBuddy | The team behind your Korean weekend" />
+  <meta property="og:title" content="About HanBuddy | The team that makes “like a local” happen" />
   <meta property="og:description" content="We plan it, run it, and improve it every week — you just show up." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://landing.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
@@ -186,41 +186,31 @@
   </header>
 
   <main id="main">
-    <!-- ① Hero -->
-    <section id="top">
-      <div class="mx-auto max-w-3xl px-5 pb-14 pt-14 text-center sm:pt-20">
-        <p class="eyebrow" data-i18n="hero.eyebrow">About HanBuddy</p>
-        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl" data-i18n="hero.title">
-          The team behind your Korean weekend.
-        </h1>
-        <p class="mx-auto mt-6 max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.lead">
-          We plan it, run it, and improve it every week — you just show up.
-        </p>
-      </div>
+    <!-- ① Hero — full-bleed photo backdrop -->
+    <section id="top" class="relative isolate overflow-hidden">
+      <img src="/assets/photos/kbo/kbo-0726-lights.webp" width="1600" height="1200" fetchpriority="high" alt=""
+           class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%]" />
+      <div class="absolute inset-0 -z-10 bg-ink/60" aria-hidden="true"></div>
 
-      <!-- Real moments from our meetups -->
-      <div class="mx-auto max-w-5xl px-5 pb-16">
-        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
-            <img src="/assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
-                 alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.momentGroupAlt" />
-          </figure>
-          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
-            <img src="/assets/photos/hanriver/hanriver-mat.webp" width="1200" height="1600" loading="lazy" class="block h-full w-auto"
-                 alt="Friends sharing chicken and pizza on a picnic mat by the Han River" data-i18n-alt="meta.momentPicnicAlt" />
-          </figure>
-          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
-            <img src="/assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
-                 alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.momentFountainAlt" />
-          </figure>
-          <figure class="h-40 overflow-hidden rounded-2xl bg-panel sm:h-48">
-            <img src="/assets/photos/kbo/kbo-0726-night-crew.webp" width="1600" height="1200" loading="lazy" class="block h-full w-auto"
-                 alt="Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil" data-i18n-alt="meta.momentCrewAlt" />
-          </figure>
-        </div>
-        <p class="mt-4 text-center text-sm font-semibold text-muted" data-i18n="hero.photosNote">
-          Real moments from our meetups — June &amp; July 2026, Seoul
+      <div class="mx-auto max-w-3xl px-5 py-20 text-center sm:py-28">
+        <p class="eyebrow eyebrow-on-primary" data-i18n="hero.eyebrow">About HanBuddy</p>
+        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-on-primary-strong sm:text-5xl" data-i18n="hero.title">
+          The team that makes &ldquo;like a local&rdquo; happen.
+        </h1>
+        <p class="mx-auto mt-6 max-w-xl text-base leading-7 text-on-primary-strong/85 sm:text-lg sm:leading-8" data-i18n="hero.lead">
+          For anyone living in or passing through Seoul who wants the Korea locals actually enjoy. We plan it, run it, and improve it every week &mdash; you just show up.
         </p>
+
+        <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="hero.primaryCta">
+            Join a meetup
+          </a>
+          <a href="/#events"
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.secondaryCta">
+            See upcoming events
+          </a>
+        </div>
       </div>
     </section>
 
@@ -443,15 +433,11 @@
         languageToggle: { aria: 'Select language' },
         meta: {
           htmlLang: 'en',
-          title: 'About HanBuddy | The team behind your Korean weekend',
-          description: 'Meet the team that plans and runs HanBuddy — Korean baseball nights and Han River picnics for international guests, backed by AI·SW Maestro.',
-          ogTitle: 'About HanBuddy | The team behind your Korean weekend',
+          title: 'About HanBuddy | The team that makes “like a local” happen',
+          description: 'Meet the team that plans and runs HanBuddy — KBO baseball nights and Han River picnics in Seoul, every week, backed by AI·SW Maestro.',
+          ogTitle: 'About HanBuddy | The team that makes “like a local” happen',
           ogDescription: 'We plan it, run it, and improve it every week — you just show up.',
           somaAlt: 'AI·SW Maestro logo',
-          momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
-          momentPicnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
-          momentFountainAlt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
-          momentCrewAlt: 'Guests and buddies holding a Doosan Bears jersey during a night game at Jamsil',
         },
         nav: {
           aria: 'Main navigation',
@@ -469,9 +455,10 @@
         },
         hero: {
           eyebrow: 'About HanBuddy',
-          title: 'The team behind your Korean weekend.',
-          lead: 'We plan it, run it, and improve it every week — you just show up.',
-          photosNote: 'Real moments from our meetups — June & July 2026, Seoul',
+          title: 'The team that makes “like a local” happen.',
+          lead: 'For anyone living in or passing through Seoul who wants the Korea locals actually enjoy. We plan it, run it, and improve it every week — you just show up.',
+          primaryCta: 'Join a meetup',
+          secondaryCta: 'See upcoming events',
         },
         why: {
           title: 'Some of Korea’s best moments are locked behind “locals only.”',
@@ -525,15 +512,11 @@
         languageToggle: { aria: '언어 선택' },
         meta: {
           htmlLang: 'ko',
-          title: 'HanBuddy 소개 | 당신의 한국 주말을 만드는 팀',
-          description: 'HanBuddy를 기획하고 운영하는 팀을 소개합니다 — AI·SW마에스트로와 함께하는, 외국인 게스트를 위한 한국 로컬 주말.',
-          ogTitle: 'HanBuddy 소개 | 당신의 한국 주말을 만드는 팀',
+          title: 'HanBuddy 소개 | “like a local”을 실제로 만들어 내는 팀',
+          description: 'HanBuddy를 기획하고 운영하는 팀을 소개합니다 — 매주 서울에서 열리는 KBO 야구 직관과 한강 피크닉, AI·SW마에스트로와 함께.',
+          ogTitle: 'HanBuddy 소개 | “like a local”을 실제로 만들어 내는 팀',
           ogDescription: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
           somaAlt: 'AI·SW마에스트로 로고',
-          momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
-          momentPicnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
-          momentFountainAlt: '노을 지는 한강, 반포대교 무지개분수',
-          momentCrewAlt: '야간 경기 중 두산 베어스 유니폼을 함께 든 게스트와 버디들',
         },
         nav: {
           aria: '주요 내비게이션',
@@ -551,9 +534,10 @@
         },
         hero: {
           eyebrow: 'HanBuddy 소개',
-          title: '당신의 한국 주말을 만드는 팀.',
-          lead: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
-          photosNote: '실제 모임의 순간들 — 2026년 6·7월, 서울',
+          title: '“like a local”을 실제로 만들어 내는 팀.',
+          lead: '서울에 살고 있든 잠시 머물든, 한국 사람들이 실제로 즐기는 한국을 만나고 싶은 모두를 위해. 기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
+          primaryCta: '모임 참여하기',
+          secondaryCta: '예정된 이벤트 보기',
         },
         why: {
           title: '한국의 진짜 재미는 “로컬 전용”으로 잠겨 있습니다.',
