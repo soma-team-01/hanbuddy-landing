@@ -15,17 +15,7 @@
   <link rel="icon" type="image/webp" href="assets/brand/logo-icon.webp" />
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
 
-  <!-- Analytics consent defaults. Google Analytics and Meta Pixel load only after opt-in. -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-    });
-  </script>
+  <script src="/assets/analytics.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -287,7 +277,7 @@
   </style>
 </head>
 
-<body class="bg-canvas font-sans text-ink antialiased">
+<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="home">
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
@@ -306,7 +296,7 @@
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
-        <a href="#apply" data-cta="apply"
+        <a href="#apply" data-cta="apply_section"
            class="focusable rounded-full bg-primary px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px sm:px-5">
           <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Join</span>
           <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join a meetup</span>
@@ -398,7 +388,7 @@
     </section>
 
     <!-- Upcoming events -->
-    <section id="events" class="border-t border-line-soft bg-canvas-soft">
+    <section id="events" class="border-t border-line-soft bg-canvas-soft" data-analytics-section>
       <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
           <p class="eyebrow" data-i18n="events.eyebrow">Upcoming events</p>
@@ -419,7 +409,7 @@
     </section>
 
     <!-- How it works -->
-    <section id="how" class="mx-auto max-w-6xl px-5 py-16 lg:py-20">
+    <section id="how" class="mx-auto max-w-6xl px-5 py-16 lg:py-20" data-analytics-section>
       <div class="mx-auto max-w-2xl text-center">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
           Joining takes 2 minutes.
@@ -429,7 +419,7 @@
     </section>
 
     <!-- Guest reviews (crossfading photo backdrop) -->
-    <section id="reviews" class="relative overflow-hidden bg-ink">
+    <section id="reviews" class="relative overflow-hidden bg-ink" data-analytics-section>
       <div class="absolute inset-0" aria-hidden="true">
         <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
              class="review-slide absolute inset-0 h-full w-full object-cover opacity-100" />
@@ -465,7 +455,7 @@
     </section>
 
     <!-- Apply -->
-    <section id="apply" class="bg-primary-strong text-on-primary-strong">
+    <section id="apply" class="bg-primary-strong text-on-primary-strong" data-analytics-section>
       <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
         <div>
           <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Baseball &middot; Han River &middot; more coming</p>
@@ -597,10 +587,6 @@
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
-      analytics: {
-        googleMeasurementId: 'G-MW7MFVL50G',
-        metaPixelId: '4569887956575986',
-      },
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -947,11 +933,7 @@
     });
 
     const STORAGE_KEY = 'hanbuddy.language';
-    const ANALYTICS_CONSENT_KEY = 'hanbuddy.analyticsConsent';
     const SUPPORTED_LANGUAGES = ['en', 'ko'];
-    const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
-    let analyticsLoaded = false;
-    let sectionObserverStarted = false;
 
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
     const clear = (node) => {
@@ -1067,13 +1049,8 @@
           card.type = 'button';
           card.addEventListener('click', () => showToast(copy.events.comingSoonToast));
         }
-        card.addEventListener('click', () => {
-          track('event_card_click', {
-            event_id: item.id,
-            status: item.status,
-            language: document.documentElement.lang,
-          });
-        });
+        card.dataset.analyticsContentId = item.id;
+        card.dataset.analyticsContentStatus = item.status;
 
         const figure = document.createElement('figure');
         figure.className = 'photo-card relative aspect-[16/10] rounded-none';
@@ -1168,148 +1145,6 @@
       persistLanguage(lang);
     };
 
-    const safeStoredAnalyticsConsent = () => {
-      try {
-        const consent = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
-        return consent === 'granted' || consent === 'denied' ? consent : null;
-      } catch {
-        return null;
-      }
-    };
-
-    const persistAnalyticsConsent = (consent) => {
-      try {
-        window.localStorage.setItem(ANALYTICS_CONSENT_KEY, consent);
-      } catch {
-        // Tracking stays disabled when storage is unavailable.
-      }
-    };
-
-    const isTrackableHost = () => !LOCAL_HOSTNAMES.has(window.location.hostname);
-
-    const updateGoogleConsent = (consent) => {
-      if (typeof window.gtag !== 'function') return;
-      window.gtag('consent', 'update', {
-        ad_storage: consent,
-        ad_user_data: consent,
-        ad_personalization: consent,
-        analytics_storage: consent,
-      });
-    };
-
-    const loadGoogleAnalytics = () => {
-      updateGoogleConsent('granted');
-      if (document.getElementById('google-analytics-script')) return;
-
-      window.gtag('js', new Date());
-      window.gtag('config', CONFIG.analytics.googleMeasurementId);
-
-      const script = document.createElement('script');
-      script.id = 'google-analytics-script';
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.analytics.googleMeasurementId)}`;
-      document.head.appendChild(script);
-    };
-
-    const loadMetaPixel = () => {
-      if (typeof window.fbq === 'function') {
-        window.fbq('consent', 'grant');
-        window.fbq('track', 'PageView');
-        return;
-      }
-
-      !function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = true;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = true;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-      window.fbq('init', CONFIG.analytics.metaPixelId);
-      window.fbq('track', 'PageView');
-    };
-
-    const track = (name, params = {}) => {
-      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
-      if (typeof window.gtag === 'function') window.gtag('event', name, params);
-    };
-
-    const trackMetaCustom = (name, params = {}) => {
-      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
-      if (typeof window.fbq === 'function') window.fbq('trackCustom', name, params);
-    };
-
-    const ctaPlacement = (el) => {
-      if (el.closest('header')) return 'nav';
-      if (el.closest('footer')) return 'footer';
-      return el.closest('section[id]')?.id ?? 'page';
-    };
-
-    const startSectionAnalytics = () => {
-      if (sectionObserverStarted || !('IntersectionObserver' in window)) return;
-      sectionObserverStarted = true;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          track('section_view', {
-            section_id: entry.target.id,
-            language: document.documentElement.lang,
-          });
-          observer.unobserve(entry.target);
-        });
-      }, { threshold: 0.2 });
-      ['events', 'how', 'reviews', 'apply'].forEach((id) => {
-        const section = document.getElementById(id);
-        if (section) observer.observe(section);
-      });
-    };
-
-    const loadAnalytics = () => {
-      if (analyticsLoaded || !isTrackableHost()) return;
-      analyticsLoaded = true;
-      loadGoogleAnalytics();
-      loadMetaPixel();
-      startSectionAnalytics();
-    };
-
-    const revokeAnalytics = () => {
-      updateGoogleConsent('denied');
-      if (typeof window.fbq === 'function') window.fbq('consent', 'revoke');
-      analyticsLoaded = false;
-    };
-
-    const hideConsentBanner = () => {
-      const banner = document.querySelector('[data-consent-banner]');
-      if (!banner) return;
-      banner.classList.add('hidden');
-      banner.setAttribute('aria-hidden', 'true');
-    };
-
-    const showConsentBanner = (moveFocus = false) => {
-      const banner = document.querySelector('[data-consent-banner]');
-      if (!banner) return;
-      banner.classList.remove('hidden');
-      banner.setAttribute('aria-hidden', 'false');
-      if (moveFocus) banner.querySelector('[data-consent-action="accept"]')?.focus();
-    };
-
-    const setAnalyticsConsent = (consent) => {
-      persistAnalyticsConsent(consent);
-      if (consent === 'granted') loadAnalytics();
-      else revokeAnalytics();
-      hideConsentBanner();
-    };
-
     // ===== 리뷰 섹션 뒷배경 자동 크로스페이드 =====
     const reviewSlides = [...document.querySelectorAll('#reviews .review-slide')];
     let reviewSlideIndex = 0;
@@ -1326,58 +1161,19 @@
       }, 6000);
     };
 
-    const initAnalyticsConsent = () => {
-      document.querySelectorAll('[data-consent-action]').forEach((button) => {
-        button.addEventListener('click', () => {
-          setAnalyticsConsent(button.getAttribute('data-consent-action') === 'accept' ? 'granted' : 'denied');
-        });
-      });
-      document.querySelectorAll('[data-consent-settings]').forEach((button) => {
-        button.addEventListener('click', () => showConsentBanner(true));
-      });
-
-      const consent = safeStoredAnalyticsConsent();
-      if (consent === 'granted') loadAnalytics();
-      else if (consent === null) showConsentBanner();
-    };
-
-    const initAnalytics = () => {
-      document.querySelectorAll('[data-cta]').forEach((el) => {
-        el.addEventListener('click', () => {
-          const cta = el.getAttribute('data-cta');
-          const params = {
-            placement: ctaPlacement(el),
-            language: document.documentElement.lang,
-          };
-          track(`${cta}_click`, params);
-
-          const href = el.getAttribute('href');
-          if (cta === 'apply' && href === CONFIG.apply) {
-            trackMetaCustom('ApplicationFormOpen', { ...params, destination: 'google_form' });
-          } else if (cta === 'instagram' && href === CONFIG.instagram) {
-            trackMetaCustom('ContactClick', { ...params, destination: 'instagram' });
-          } else if (cta === 'contact' && href === CONFIG.contact) {
-            trackMetaCustom('ContactClick', { ...params, destination: 'kakaotalk' });
-          }
-        });
-      });
-    };
-
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
         const lang = button.getAttribute('data-lang');
         if (!SUPPORTED_LANGUAGES.includes(lang)) return;
         const previous = document.documentElement.lang;
         applyLanguage(lang);
-        if (previous !== lang) track('language_switch', { language: lang, previous_language: previous });
+        if (previous !== lang) HanBuddyAnalytics?.trackLanguageSwitch(lang, previous);
       });
     });
 
     syncCtas();
     startReviewBackdrop();
     applyLanguage(safeStoredLanguage());
-    initAnalytics();
-    initAnalyticsConsent();
   </script>
 </body>
 </html>

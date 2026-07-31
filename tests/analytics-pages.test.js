@@ -1,0 +1,106 @@
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const { join } = require('node:path');
+const test = require('node:test');
+
+const readPage = (...parts) => readFileSync(join(__dirname, '..', ...parts), 'utf8');
+const homeHtml = readPage('index.html');
+const aboutHtml = readPage('about', 'index.html');
+const detailPages = [
+  { name: 'KBO', experienceType: 'kbo', html: readPage('events', 'kbo', 'index.html') },
+  { name: 'Han River', experienceType: 'hanriver', html: readPage('events', 'hanriver', 'index.html') },
+];
+
+test('home and About load the shared analytics module with canonical page context', () => {
+  assert.match(homeHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(homeHtml, /<body[^>]*data-analytics-page-type="home"/);
+  assert.match(aboutHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(aboutHtml, /<body[^>]*data-analytics-page-type="about"/);
+});
+
+test('home and About no longer embed vendor loader implementations', () => {
+  for (const html of [homeHtml, aboutHtml]) {
+    assert.doesNotMatch(html, /googleMeasurementId|metaPixelId/);
+    assert.doesNotMatch(html, /const loadGoogleAnalytics|const loadMetaPixel/);
+    assert.doesNotMatch(html, /connect\.facebook\.net\/en_US\/fbevents\.js/);
+    assert.doesNotMatch(html, /googletagmanager\.com\/gtag\/js/);
+  }
+});
+
+test('tracked landing sections declare the shared section contract', () => {
+  for (const id of ['events', 'how', 'reviews', 'apply']) {
+    assert.match(
+      homeHtml,
+      new RegExp(`<section id="${id}"[^>]*data-analytics-section`),
+      `home section #${id} must be tracked`,
+    );
+  }
+  for (const id of ['why', 'operate', 'team', 'join']) {
+    assert.match(
+      aboutHtml,
+      new RegExp(`<section id="${id}"[^>]*data-analytics-section`),
+      `About section #${id} must be tracked`,
+    );
+  }
+});
+
+test('event cards expose canonical content-selection metadata', () => {
+  assert.match(homeHtml, /card\.dataset\.analyticsContentId = item\.id/);
+  assert.match(homeHtml, /card\.dataset\.analyticsContentStatus = item\.status/);
+  assert.doesNotMatch(homeHtml, /track\('event_card_click'/);
+});
+
+test('on-page application navigation is distinct from a Google Form open', () => {
+  assert.match(homeHtml, /href="#apply" data-cta="apply_section"/);
+  assert.doesNotMatch(homeHtml, /href="#apply" data-cta="apply"/);
+});
+
+test('language switches call the shared analytics API with both languages', () => {
+  for (const html of [homeHtml, aboutHtml]) {
+    assert.match(
+      html,
+      /HanBuddyAnalytics\?\.trackLanguageSwitch\(lang, previous\)/,
+    );
+    assert.doesNotMatch(html, /track\('language_switch'/);
+  }
+});
+
+test('event detail pages load shared analytics with canonical page and experience context', () => {
+  for (const { name, experienceType, html } of detailPages) {
+    assert.match(html, /<script src="\/assets\/analytics\.js"><\/script>/, `${name} analytics module`);
+    assert.match(
+      html,
+      new RegExp(`<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="${experienceType}"`),
+      `${name} detail context`,
+    );
+  }
+});
+
+test('event detail application and contact CTAs declare stable placements', () => {
+  for (const { name, html } of detailPages) {
+    assert.match(
+      html,
+      /<a[^>]*data-cta="apply"[^>]*data-analytics-placement="desktop_sidebar"/,
+      `${name} desktop application CTA`,
+    );
+    assert.match(
+      html,
+      /<a[^>]*data-cta="apply"[^>]*data-analytics-placement="mobile_sticky"/,
+      `${name} mobile application CTA`,
+    );
+    assert.match(
+      html,
+      /<a[^>]*data-cta="instagram"[^>]*data-analytics-placement="desktop_sidebar"/,
+      `${name} Instagram CTA`,
+    );
+  }
+});
+
+test('event detail pages expose the same explicit analytics consent controls', () => {
+  for (const { name, html } of detailPages) {
+    assert.match(html, /data-consent-banner/, `${name} consent banner`);
+    assert.match(html, /data-consent-action="accept"/, `${name} accept control`);
+    assert.match(html, /data-consent-action="reject"/, `${name} reject control`);
+    assert.match(html, /data-consent-settings/, `${name} settings control`);
+  }
+});
