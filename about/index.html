@@ -285,7 +285,25 @@
       </div>
     </section>
 
-    <!-- ④ Team + credibility -->
+    <!-- ④ Where we've been, where we're going -->
+    <section id="timeline" class="bg-ink text-on-primary-strong">
+      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="eyebrow eyebrow-on-primary" data-i18n="timeline.eyebrow">Our runs</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="timeline.title">
+            Where we&rsquo;ve been, and where we&rsquo;re going next.
+          </h2>
+        </div>
+
+        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-timeline-items></div>
+
+        <p class="mx-auto mt-12 max-w-2xl text-center text-base leading-8 text-on-primary-strong/85 sm:text-lg" data-i18n="timeline.closing">
+          Baseball and picnics are just the start &mdash; festivals, football, markets: anywhere Koreans have their fun, we&rsquo;ll take you along.
+        </p>
+      </div>
+    </section>
+
+    <!-- ⑤ Team + credibility -->
     <section id="team" class="border-t border-line-soft bg-canvas-soft">
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="team.title">
@@ -337,7 +355,7 @@
       </div>
     </section>
 
-    <!-- ⑤ CTA -->
+    <!-- ⑥ CTA -->
     <section id="join" class="bg-primary-strong text-on-primary-strong">
       <div class="mx-auto flex max-w-3xl flex-col items-center gap-7 px-5 py-16 text-center lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
@@ -511,6 +529,71 @@
             { title: 'We improve every week', body: 'Every guest fills in a short survey afterwards, and it changes how we run the next one.' },
           ],
         },
+        timeline: {
+          eyebrow: 'Our runs',
+          title: 'Where we’ve been, and where we’re going next.',
+          statusDone: 'Completed',
+          statusUpcoming: 'Coming up',
+          items: [
+            {
+              status: 'done',
+              date: '2026.06.25',
+              title: 'Jamsil KBO — our first baseball night',
+              image: '/assets/photos/kbo/run1-night.webp',
+              alt: 'Floodlights over Jamsil Baseball Stadium during HanBuddy’s first baseball night',
+              width: 1100,
+              height: 610,
+            },
+            {
+              status: 'done',
+              date: '2026.07.26',
+              title: 'Jamsil KBO — chants and chimaek in the stands',
+              image: '/assets/photos/kbo/kbo-0726-group.webp',
+              alt: 'HanBuddy guests and local buddies taking a group photo in the stands at Jamsil',
+              width: 1600,
+              height: 1200,
+            },
+            {
+              status: 'upcoming',
+              date: 'Aug 1 · 8 · 9',
+              title: 'Han River Picnic',
+              image: '/assets/photos/hanriver/hanriver-fountain.webp',
+              alt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
+              width: 1600,
+              height: 1200,
+              href: '/events/hanriver/',
+            },
+            {
+              status: 'upcoming',
+              date: 'Aug 5 · 12',
+              title: 'KBO Baseball Night',
+              image: '/assets/photos/kbo/run1-hero.webp',
+              alt: 'Jamsil Baseball Stadium during a HanBuddy baseball night',
+              width: 1800,
+              height: 1350,
+              href: '/events/kbo/',
+            },
+            {
+              status: 'upcoming',
+              date: 'Date coming soon',
+              title: 'K League Football Day',
+              image: '/assets/photos/kleague/kleague-worldcup-day.webp',
+              alt: 'A K League match day at Seoul World Cup Stadium',
+              width: 1600,
+              height: 1200,
+            },
+            {
+              status: 'upcoming',
+              date: 'Date coming soon',
+              title: 'Jjimjilbang Sauna Hangout',
+              image: '/assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
+              alt: 'A traditional fire-kiln sauna room at a Korean jjimjilbang',
+              width: 1600,
+              height: 1200,
+            },
+          ],
+          closing: 'Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we’ll take you along.',
+        },
         team: {
           title: 'Meet the team',
           lead: 'We’re ZeroOne — three friends from Seoul running HanBuddy together.',
@@ -592,6 +675,71 @@
             { title: '세부 사항은 사람이 직접 확인해 드립니다', body: '예약 시스템이 아닙니다. 모임 전에 만나는 곳과 필요한 것들을 직접 메시지로 보내드려요.' },
             { title: '매주 더 나아집니다', body: '모든 게스트가 모임 후 짧은 설문을 남기고, 그 답이 다음 운영을 바꿉니다.' },
           ],
+        },
+        timeline: {
+          eyebrow: '운영 기록',
+          title: '지금까지 간 곳, 그리고 다음에 갈 곳.',
+          statusDone: '완료',
+          statusUpcoming: '예정',
+          items: [
+            {
+              status: 'done',
+              date: '2026.06.25',
+              title: '잠실 KBO — 첫 번째 야구 나이트',
+              image: '/assets/photos/kbo/run1-night.webp',
+              alt: 'HanBuddy 첫 야구 나이트, 조명이 켜진 잠실야구장',
+              width: 1100,
+              height: 610,
+            },
+            {
+              status: 'done',
+              date: '2026.07.26',
+              title: '잠실 KBO — 관중석의 응원가와 치맥',
+              image: '/assets/photos/kbo/kbo-0726-group.webp',
+              alt: '잠실 관중석에서 단체 사진을 찍는 HanBuddy 게스트와 로컬 버디들',
+              width: 1600,
+              height: 1200,
+            },
+            {
+              status: 'upcoming',
+              date: '8월 1 · 8 · 9일',
+              title: '한강 피크닉',
+              image: '/assets/photos/hanriver/hanriver-fountain.webp',
+              alt: '노을 지는 한강, 반포대교 무지개분수',
+              width: 1600,
+              height: 1200,
+              href: '/events/hanriver/',
+            },
+            {
+              status: 'upcoming',
+              date: '8월 5 · 12일',
+              title: 'KBO 야구 나이트',
+              image: '/assets/photos/kbo/run1-hero.webp',
+              alt: 'HanBuddy 야구 나이트가 열린 잠실야구장',
+              width: 1800,
+              height: 1350,
+              href: '/events/kbo/',
+            },
+            {
+              status: 'upcoming',
+              date: '날짜 공개 예정',
+              title: 'K리그 축구 데이',
+              image: '/assets/photos/kleague/kleague-worldcup-day.webp',
+              alt: '서울월드컵경기장 K리그 경기가 열리는 날',
+              width: 1600,
+              height: 1200,
+            },
+            {
+              status: 'upcoming',
+              date: '날짜 공개 예정',
+              title: '찜질방 사우나',
+              image: '/assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
+              alt: '한국 찜질방의 전통 불가마',
+              width: 1600,
+              height: 1200,
+            },
+          ],
+          closing: '야구와 피크닉은 시작일 뿐입니다 — 축제, 축구, 시장까지: 한국 사람들이 노는 곳이라면 어디든 함께 갈 거예요.',
         },
         team: {
           title: '팀을 소개합니다',
@@ -712,6 +860,54 @@
       });
     };
 
+    const renderTimeline = (copy) => {
+      const container = document.querySelector('[data-timeline-items]');
+      if (!container) return;
+      clear(container);
+
+      copy.timeline.items.forEach((item) => {
+        const isDone = item.status === 'done';
+        const card = document.createElement(item.href ? 'a' : 'div');
+        card.className = item.href
+          ? 'focusable focusable-on-primary-strong group block rounded-2xl'
+          : 'block rounded-2xl';
+        if (item.href) card.href = item.href;
+
+        const frame = document.createElement('div');
+        frame.className = 'relative overflow-hidden rounded-2xl bg-panel';
+
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.alt;
+        img.width = item.width;
+        img.height = item.height;
+        img.loading = 'lazy';
+        img.className = 'block aspect-[16/10] w-full object-cover transition duration-200 group-hover:scale-[1.03]';
+        frame.appendChild(img);
+
+        const chip = document.createElement('span');
+        chip.className = isDone
+          ? 'absolute left-3 top-3 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold text-primary-strong'
+          : 'absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-extrabold text-on-primary';
+        chip.textContent = isDone ? copy.timeline.statusDone : copy.timeline.statusUpcoming;
+        frame.appendChild(chip);
+
+        card.appendChild(frame);
+
+        const date = document.createElement('p');
+        date.className = 'mt-4 text-xs font-extrabold uppercase tracking-[0.18em] text-on-primary-strong/70';
+        date.textContent = item.date;
+        card.appendChild(date);
+
+        const title = document.createElement('p');
+        title.className = 'mt-2 font-display text-lg font-bold leading-snug text-on-primary-strong';
+        title.textContent = item.title;
+        card.appendChild(title);
+
+        container.appendChild(card);
+      });
+    };
+
     const setLanguageButtonState = (lang) => {
       document.querySelectorAll('[data-lang]').forEach((button) => {
         const selected = button.getAttribute('data-lang') === lang;
@@ -727,6 +923,7 @@
       syncStaticText(copy);
       syncMeta(copy);
       renderNav(copy);
+      renderTimeline(copy);
       setLanguageButtonState(lang);
       persistLanguage(lang);
     };

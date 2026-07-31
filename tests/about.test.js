@@ -39,6 +39,15 @@ test('about page never says weekend (baseball runs on weeknights too)', () => {
 test('about page never claims un-operated activities as completed meetups', () => {
   assert.doesNotMatch(aboutHtml, /Real moments from our meetups/);
   assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
+
+  // 완료(status: 'done') 항목은 실제 운영한 잠실 KBO 사진만 쓸 수 있다.
+  // 한강·K리그·찜질방은 미운영이므로 완료 항목에 등장하면 안 된다.
+  const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
+  assert.equal(doneEntries.length, 4, '완료 항목은 EN/KO 각각 2건, 총 4건이어야 함');
+  for (const entry of doneEntries) {
+    assert.match(entry, /\/assets\/photos\/kbo\//, `완료 항목에 KBO 외 사진 사용: ${entry}`);
+    assert.doesNotMatch(entry, /hanriver|kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
+  }
 });
 
 test('about page does not duplicate the rating or guest quotes from index', () => {
