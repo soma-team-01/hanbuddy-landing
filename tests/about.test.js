@@ -56,7 +56,7 @@ test('about page does not duplicate the rating or guest quotes from index', () =
 });
 
 test('about hero image is not lazy-loaded (it is the LCP element)', () => {
-  const heroImg = aboutHtml.match(/<img[^>]*kbo-0726-lights\.webp[^>]*>/);
+  const heroImg = aboutHtml.match(/<img[^>]*kbo-stadium-hero\.webp[^>]*>/);
   assert.ok(heroImg, 'hero backdrop image missing');
   assert.doesNotMatch(heroImg[0], /loading="lazy"/, 'hero image must not be lazy');
   assert.match(heroImg[0], /fetchpriority="high"/);
