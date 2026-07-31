@@ -38,6 +38,8 @@
 - **한강은 미운영.** 한강 사진은 이준영님 개인 사진이며 HanBuddy 운영 회차가 아니다. 따라서 **"실제 모임의 순간"으로 표기 금지**. 메인 페이지 방식(장소·장면만 말하는 중립 캡션)을 따르고, 타임라인에서는 게시된 실제 일정(8/1·8/8·8/9)을 근거로 **"예정"**으로 노출한다.
 - **과기부 로고 미사용.** 부처는 소마의 주최일 뿐 HanBuddy를 후원·승인한 것이 아니어서 오인 소지가 있고, 정부상징은 별도 사용 승인 대상이며, 청색 계열이라 웜레드 단일 브랜드 체계와 충돌한다. 소마 로고는 사용하고 주최·주관은 텍스트로 표기한다. 부처 로고가 필요해지면 소마 사무국에 참여팀 대외 홍보물 사용 가이드라인을 확인받은 뒤 재검토한다.
 - **소마 표기 정정.** 현행 카피에 주관기관이 빠져 있다. "과학기술정보통신부 주최, 정보통신기획평가원(IITP) 주관"으로 보강한다.
+- **`weekend` 표현 전면 폐기.** 야구는 평일 저녁(수 8/5·8/12)에도 운영하므로 포지셔닝은 주말 한정이 아니다. 메인 `index.html`에는 `weekend`가 한 번도 없고 `Seoul · Meetups every week` / `서울 · 매주 열리는 모임`으로 통일되어 있다. About의 `Korean weekend` / `한국 주말` 표기(H1·`<title>`·`og:title`·`meta description` EN/KO 총 6곳)를 전부 제거하고 **week 계열 표현**으로 맞춘다.
+- **히어로는 메인 슬로건에 직접 연결.** 메인 히어로 슬로건은 EN·KO 양쪽 모두 영문 그대로 `Experience Korea like a local!`이다. About H1은 이 슬로건을 인용해 "그 문장을 만드는 팀"으로 받는다 — 기존 `weekend` 연결고리를 대체하는 새 연결고리이자 8문항 ①(누구인가)의 답이 된다. "같이 노는 가이드"가 아닌 **운영자** 포지셔닝은 `The team behind ~` 구문으로 유지된다.
 
 ### 유지되는 기존 확정 사항 (재론 금지)
 
@@ -60,10 +62,18 @@
 | 키 | EN | KO |
 | --- | --- | --- |
 | `hero.eyebrow` | About HanBuddy | HanBuddy 소개 |
-| `hero.title` | The team behind your Korean weekend. | 당신의 한국 주말을 만드는 팀. |
+| `hero.title` | The team behind “like a local.” | “like a local”을 만드는 팀. |
 | `hero.lead` | For anyone living in or passing through Seoul who wants the Korea locals actually enjoy. We plan it, run it, and improve it every week — you just show up. | 서울에 살고 있든 잠시 머물든, 한국 사람들이 실제로 즐기는 한국을 만나고 싶은 모두를 위해. 기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요. |
 | `hero.primaryCta` | Join a meetup | 모임 참여하기 |
 | `hero.secondaryCta` | See upcoming events | 예정된 이벤트 보기 |
+
+메타 카피도 함께 교체한다(`<title>`·`og:title`·`meta description`·`og:description`, EN/KO 양쪽 + `CONTENT_MAP.meta`).
+
+| 키 | EN | KO |
+| --- | --- | --- |
+| `meta.title` / `meta.ogTitle` | About HanBuddy \| The team behind “like a local” | HanBuddy 소개 \| “like a local”을 만드는 팀 |
+| `meta.description` | Meet the team that plans and runs HanBuddy — KBO baseball nights and Han River picnics in Seoul, every week, backed by AI·SW Maestro. | HanBuddy를 기획하고 운영하는 팀을 소개합니다 — 매주 서울에서 열리는 KBO 야구 직관과 한강 피크닉, AI·SW마에스트로와 함께. |
+| `meta.ogDescription` | We plan it, run it, and improve it every week — you just show up. | 기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요. |
 
 ### ② `#origin` — 창업 계기 (사진 좌 / 텍스트 우)
 
