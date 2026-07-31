@@ -618,13 +618,30 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
     };
 ```
 
-- [ ] **Step 6: 테스트를 돌린다**
+- [ ] **Step 6: 완료 표기가 KBO 사진에만 붙는지 검사하는 테스트를 추가한다**
+
+Task 1 리뷰에서 나온 지적을 여기서 닫는다. Task 1의 `Real moments from our meetups` 문자열 검사는 **그 한 문구만** 막을 뿐, 미운영 활동이 다른 문구로 완료 표기되는 걸 잡지 못한다. 타임라인 데이터가 존재하는 지금 시점에 실제 규칙을 검사할 수 있다.
+
+`tests/about.test.js`의 `about page never claims un-operated activities as completed meetups` 테스트 안에, 기존 두 줄 뒤에 아래를 덧붙인다.
+
+```javascript
+  // 완료(status: 'done') 항목은 실제 운영한 잠실 KBO 사진만 쓸 수 있다.
+  // 한강·K리그·찜질방은 미운영이므로 완료 항목에 등장하면 안 된다.
+  const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
+  assert.equal(doneEntries.length, 4, '완료 항목은 EN/KO 각각 2건, 총 4건이어야 함');
+  for (const entry of doneEntries) {
+    assert.match(entry, /\/assets\/photos\/kbo\//, `완료 항목에 KBO 외 사진 사용: ${entry}`);
+    assert.doesNotMatch(entry, /hanriver|kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
+  }
+```
+
+- [ ] **Step 7: 테스트를 돌린다**
 
 Run: `node --test tests/*.test.js`
 
-Expected: 전체 PASS. `about page exists with core sections`가 6개 id를 모두 찾는다.
+Expected: 전체 PASS. `about page exists with core sections`가 6개 id를 모두 찾고, 새 완료-항목 검사도 통과한다(완료 4건 모두 `/assets/photos/kbo/` 사용).
 
-- [ ] **Step 7: 커밋**
+- [ ] **Step 8: 커밋**
 
 ```bash
 git add about/index.html
