@@ -220,7 +220,7 @@
         <figure class="overflow-hidden rounded-2xl bg-panel">
           <img src="/assets/photos/kbo/run1-opening.webp" width="1100" height="825" loading="lazy"
                class="block aspect-[4/3] w-full object-cover"
-               alt="Guests and local buddies arriving at Jamsil Baseball Stadium for HanBuddy's first baseball night"
+               alt="Guests and local buddies arriving at Jamsil Baseball Stadium for HanBuddy’s first baseball night"
                data-i18n-alt="meta.originAlt" />
         </figure>
         <div>
@@ -316,7 +316,7 @@
         <div class="mt-7 flex flex-col items-start gap-4 rounded-2xl bg-panel px-7 py-6 sm:flex-row sm:items-center">
           <img src="/assets/brand/soma-logo.webp" width="262" height="120" loading="lazy" class="h-10 w-auto shrink-0" alt="AI·SW Maestro logo" data-i18n-alt="meta.somaAlt" />
           <p class="text-sm leading-6 text-muted" data-i18n="team.backed">
-            Backed by AI&middot;SW Maestro — a national tech talent program run by Korea&rsquo;s Ministry of Science and ICT. HanBuddy is our official project.
+            HanBuddy is the official project of team ZeroOne in AI&middot;SW Maestro (17th) &mdash; a national tech talent program hosted by Korea&rsquo;s Ministry of Science and ICT and managed by IITP.
           </p>
         </div>
 
@@ -361,7 +361,7 @@
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
           See you at the next meetup?
         </h2>
-        <div class="flex flex-col gap-3 sm:flex-row">
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
             Join a meetup
@@ -369,6 +369,10 @@
           <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
              class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.instagramButton">
             DM us on Instagram
+          </a>
+          <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.kakaoButton">
+            KakaoTalk open chat
           </a>
         </div>
       </div>
@@ -602,12 +606,13 @@
             { name: 'Yoohyun Kim', role: 'Designs the experiences & content' },
             { name: 'Junyoung Lee', role: 'Keeps bookings & matching smooth' },
           ],
-          backed: 'Backed by AI·SW Maestro — a national tech talent program run by Korea’s Ministry of Science and ICT. HanBuddy is our official project.',
+          backed: 'HanBuddy is the official project of team ZeroOne in AI·SW Maestro (17th) — a national tech talent program hosted by Korea’s Ministry of Science and ICT and managed by IITP.',
         },
         join: {
           title: 'See you at the next meetup?',
           formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
+          kakaoButton: 'KakaoTalk open chat',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -749,12 +754,13 @@
             { name: '김유현', role: '경험과 콘텐츠 설계' },
             { name: '이준영', role: '예약과 매칭 담당' },
           ],
-          backed: 'HanBuddy는 과학기술정보통신부 주최 국가 기술 인재 프로그램 AI·SW마에스트로의 공식 프로젝트입니다.',
+          backed: 'HanBuddy는 과학기술정보통신부 주최, 정보통신기획평가원(IITP) 주관 국가 기술 인재 프로그램 AI·SW마에스트로 17기 팀 ZeroOne의 공식 프로젝트입니다.',
         },
         join: {
           title: '다음 모임에서 만날까요?',
           formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
+          kakaoButton: 'KakaoTalk 오픈채팅',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -1029,7 +1035,7 @@
           observer.unobserve(entry.target);
         });
       }, { threshold: 0.2 });
-      ['why', 'operate', 'team', 'join'].forEach((id) => {
+      ['origin', 'how', 'timeline', 'team', 'join'].forEach((id) => {
         const section = document.getElementById(id);
         if (section) observer.observe(section);
       });
