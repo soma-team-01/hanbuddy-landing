@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, Han River picnics) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
+HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil — Han River picnics are published and bookable but have never actually run, so their photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
 
 ## STRUCTURE
 
@@ -59,7 +59,7 @@ hanbuddy-landing/
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
 | `#reviews` | section | `index.html` | Guest reviews over an autoplay crossfading photo backdrop: aggregate rating chip + 3 approved quote cards; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA band: Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
-| `/about` | page | `about/index.html` | Operator-positioning team page with meetup photo strip; own CONTENT_MAP |
+| `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
@@ -76,7 +76,7 @@ hanbuddy-landing/
 - Current published events — KBO Baseball Night: Aug 5 (Wed) & Aug 12 (Wed), ₩50,000, game ticket & stadium snacks included. Han River Picnic: Aug 1 (Sat), Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
-- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins) and 2026-07-26 Jamsil KBO, plus Han River picnic photography.
+- Completed runs usable as public proof: only 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins) and 2026-07-26 Jamsil KBO. Han River has never been operated — its photos, along with K League and jjimjilbang photos, may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 

@@ -112,8 +112,8 @@
 | 완료 | 2026.06.25 | Jamsil KBO — our first baseball night / 잠실 KBO — 첫 번째 야구 나이트 | `kbo/run1-night.webp` |
 | 완료 | 2026.07.26 | Jamsil KBO — chants and chimaek in the stands / 잠실 KBO — 관중석의 응원가와 치맥 | `kbo/kbo-0726-group.webp` |
 | 예정 | Aug 1 · 8 · 9 / 8월 1 · 8 · 9일 | Han River Picnic / 한강 피크닉 | `hanriver/hanriver-fountain.webp` |
-| 예정 | Aug 5 · 12 / 8월 5 · 12일 | KBO Baseball Night / KBO 야구 나이트 | `kbo/kbo-stadium-hero.webp` |
-| 예정 | Date coming soon / 날짜 공개 예정 | K League Football Day / K리그 축구 데이 | `kleague/kleague-night.webp` |
+| 예정 | Aug 5 · 12 / 8월 5 · 12일 | KBO Baseball Night / KBO 야구 나이트 | `kbo/run1-hero.webp` (구현에서는 `kbo-stadium-hero.webp`가 히어로 배경으로 쓰여 대신 사용) |
+| 예정 | Date coming soon / 날짜 공개 예정 | K League Football Day / K리그 축구 데이 | `kleague/kleague-worldcup-day.webp` (`kleague-night.webp`는 세로 사진이라 16/10 가로 프레임에 맞지 않아 대신 사용) |
 | 예정 | Date coming soon / 날짜 공개 예정 | Jjimjilbang Sauna Hangout / 찜질방 사우나 | `jjimjilbang/jjimjilbang-bulgama.webp` |
 
 섹션 헤더 카피 — `timeline.title`: `Where we’ve been, and where we’re going next.` / `지금까지 간 곳, 그리고 다음에 갈 곳.`, `timeline.eyebrow`: `Our runs` / `운영 기록`.
