@@ -91,7 +91,7 @@ test('about page does not duplicate the rating or guest quotes from index', () =
 });
 
 test('about hero image is not lazy-loaded (it is the LCP element)', () => {
-  const heroImg = aboutHtml.match(/<img[^>]*kbo-0726-lights\.webp[^>]*>/);
+  const heroImg = aboutHtml.match(/<img[^>]*kbo-stadium-hero\.webp[^>]*>/);
   assert.ok(heroImg, 'hero backdrop image missing');
   assert.doesNotMatch(heroImg[0], /loading="lazy"/, 'hero image must not be lazy');
   assert.match(heroImg[0], /fetchpriority="high"/);
@@ -122,6 +122,8 @@ git commit -m "test: About 리디자인 회귀 방지 검사 추가 (RED)"
 - Consumes: Task 1의 검사
 - Produces: `CONTENT_MAP.<lang>.hero` = `{ eyebrow, title, lead, primaryCta, secondaryCta }`, `CONTENT_MAP.<lang>.meta.heroAlt` 없음(배경은 장식이라 `alt=""`)
 
+**사진 선택 근거:** 히어로는 풀블리드라 뷰포트가 넓을수록 세로 사진의 손실이 커진다. DESIGN.md Section 5는 "3:4 세로 사진은 넓은 밴드에서 `object-cover`로 프레임의 약 64%를 잃으니 `object-position`을 조정하지 말고 가로 크롭을 고르라"고 규정한다. `kbo-0726-lights.webp`는 실제 1200×1600 세로라 여기에 부적합해 가로 1600×1200인 `kbo-stadium-hero.webp`를 쓴다. **`width`/`height` 속성은 반드시 파일의 실제 픽셀 크기와 일치해야 한다** — 어긋나면 Tailwind CDN이 파싱을 끝내기 전 첫 페인트에서 이미지가 찌그러져 보인다.
+
 - [ ] **Step 1: 정적 메타 태그의 weekend 표기를 교체한다**
 
 `about/index.html` 상단 `<head>`의 4줄을 바꾼다.
@@ -141,8 +143,8 @@ git commit -m "test: About 리디자인 회귀 방지 검사 추가 (RED)"
 ```html
     <!-- ① Hero — full-bleed photo backdrop -->
     <section id="top" class="relative isolate overflow-hidden">
-      <img src="/assets/photos/kbo/kbo-0726-lights.webp" width="1600" height="1200" fetchpriority="high" alt=""
-           class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%]" />
+      <img src="/assets/photos/kbo/kbo-stadium-hero.webp" width="1600" height="1200" fetchpriority="high" alt=""
+           class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_45%]" />
       <div class="absolute inset-0 -z-10 bg-ink/60" aria-hidden="true"></div>
 
       <div class="mx-auto max-w-3xl px-5 py-20 text-center sm:py-28">
@@ -250,7 +252,7 @@ git commit -m "feat(about): 히어로를 풀블리드 사진으로 교체하고 
     <section id="origin" class="border-t border-line-soft bg-canvas-soft">
       <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 lg:grid-cols-2 lg:gap-14 lg:py-24">
         <figure class="overflow-hidden rounded-2xl bg-panel">
-          <img src="/assets/photos/kbo/run1-opening.webp" width="1600" height="1200" loading="lazy"
+          <img src="/assets/photos/kbo/run1-opening.webp" width="1100" height="825" loading="lazy"
                class="block aspect-[4/3] w-full object-cover"
                alt="Guests and local buddies arriving at Jamsil Baseball Stadium for HanBuddy's first baseball night"
                data-i18n-alt="meta.originAlt" />
@@ -286,7 +288,7 @@ git commit -m "feat(about): 히어로를 풀블리드 사진으로 교체하고 
         <div class="mt-12 space-y-12 lg:mt-16 lg:space-y-20">
           <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
             <figure class="overflow-hidden rounded-2xl bg-panel">
-              <img src="/assets/photos/kbo/kbo-0726-sunset.webp" width="1600" height="1200" loading="lazy"
+              <img src="/assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
                    class="block aspect-[3/2] w-full object-cover"
                    alt="Sunset over Jamsil Baseball Stadium before a HanBuddy night game" data-i18n-alt="meta.howPlanAlt" />
             </figure>
@@ -298,7 +300,7 @@ git commit -m "feat(about): 히어로를 풀블리드 사진으로 교체하고 
 
           <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
             <figure class="overflow-hidden rounded-2xl bg-panel lg:order-last">
-              <img src="/assets/photos/kbo/run1-group.webp" width="1600" height="1200" loading="lazy"
+              <img src="/assets/photos/kbo/run1-group.webp" width="975" height="1300" loading="lazy"
                    class="block aspect-[3/2] w-full object-cover"
                    alt="HanBuddy guests and local buddies together in the stands at Jamsil" data-i18n-alt="meta.howConfirmAlt" />
             </figure>
@@ -310,7 +312,7 @@ git commit -m "feat(about): 히어로를 풀블리드 사진으로 교체하고 
 
           <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
             <figure class="overflow-hidden rounded-2xl bg-panel">
-              <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1600" height="1200" loading="lazy"
+              <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy"
                    class="block aspect-[3/2] w-full object-cover"
                    alt="Guests cheering along with the crowd at a Jamsil night game" data-i18n-alt="meta.howImproveAlt" />
             </figure>
@@ -404,7 +406,9 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
 
 **Interfaces:**
 - Consumes: Task 3의 `CONTENT_MAP` 구조, 기존 `clear(node)` 헬퍼
-- Produces: `CONTENT_MAP.<lang>.timeline` = `{ eyebrow, title, statusDone, statusUpcoming, items: [{ status, date, title, image, alt, href? }], closing }`. `renderTimeline(copy)` 함수 — `[data-timeline-items]` 컨테이너를 채운다.
+- Produces: `CONTENT_MAP.<lang>.timeline` = `{ eyebrow, title, statusDone, statusUpcoming, items: [{ status, date, title, image, alt, width, height, href? }], closing }`. `renderTimeline(copy)` 함수 — `[data-timeline-items]` 컨테이너를 채운다.
+
+**사진 선택 근거:** 타임라인 카드는 `aspect-[16/10]`으로 가로가 길다. DESIGN.md Section 5의 세로 사진 규칙에 따라 6장을 모두 가로 원본으로 고른다 — 세로였던 `kleague-night.webp`(1200×1600)는 `kleague-worldcup-day.webp`(1600×1200)로 대체하고, 예정 KBO 카드는 히어로가 가져간 `kbo-stadium-hero.webp` 대신 `run1-hero.webp`(1800×1350)를 쓴다. `width`/`height`는 **각 파일의 실제 픽셀 크기**를 항목 데이터에 담아 `renderTimeline()`이 그대로 세팅한다.
 
 - [ ] **Step 1: `#how` 뒤에 timeline 섹션 마크업을 추가한다**
 
@@ -445,6 +449,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: 'Jamsil KBO — our first baseball night',
               image: '/assets/photos/kbo/run1-night.webp',
               alt: 'Floodlights over Jamsil Baseball Stadium during HanBuddy’s first baseball night',
+              width: 1100,
+              height: 610,
             },
             {
               status: 'done',
@@ -452,6 +458,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: 'Jamsil KBO — chants and chimaek in the stands',
               image: '/assets/photos/kbo/kbo-0726-group.webp',
               alt: 'HanBuddy guests and local buddies taking a group photo in the stands at Jamsil',
+              width: 1600,
+              height: 1200,
             },
             {
               status: 'upcoming',
@@ -459,22 +467,28 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: 'Han River Picnic',
               image: '/assets/photos/hanriver/hanriver-fountain.webp',
               alt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
+              width: 1600,
+              height: 1200,
               href: '/events/hanriver/',
             },
             {
               status: 'upcoming',
               date: 'Aug 5 · 12',
               title: 'KBO Baseball Night',
-              image: '/assets/photos/kbo/kbo-stadium-hero.webp',
-              alt: 'Jamsil Baseball Stadium filling up before a KBO night game',
+              image: '/assets/photos/kbo/run1-hero.webp',
+              alt: 'Jamsil Baseball Stadium during a HanBuddy baseball night',
+              width: 1800,
+              height: 1350,
               href: '/events/kbo/',
             },
             {
               status: 'upcoming',
               date: 'Date coming soon',
               title: 'K League Football Day',
-              image: '/assets/photos/kleague/kleague-night.webp',
-              alt: 'A K League match under floodlights at Seoul World Cup Stadium',
+              image: '/assets/photos/kleague/kleague-worldcup-day.webp',
+              alt: 'A K League match day at Seoul World Cup Stadium',
+              width: 1600,
+              height: 1200,
             },
             {
               status: 'upcoming',
@@ -482,6 +496,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: 'Jjimjilbang Sauna Hangout',
               image: '/assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
               alt: 'A traditional fire-kiln sauna room at a Korean jjimjilbang',
+              width: 1600,
+              height: 1200,
             },
           ],
           closing: 'Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we’ll take you along.',
@@ -505,6 +521,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: '잠실 KBO — 첫 번째 야구 나이트',
               image: '/assets/photos/kbo/run1-night.webp',
               alt: 'HanBuddy 첫 야구 나이트, 조명이 켜진 잠실야구장',
+              width: 1100,
+              height: 610,
             },
             {
               status: 'done',
@@ -512,6 +530,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: '잠실 KBO — 관중석의 응원가와 치맥',
               image: '/assets/photos/kbo/kbo-0726-group.webp',
               alt: '잠실 관중석에서 단체 사진을 찍는 HanBuddy 게스트와 로컬 버디들',
+              width: 1600,
+              height: 1200,
             },
             {
               status: 'upcoming',
@@ -519,22 +539,28 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: '한강 피크닉',
               image: '/assets/photos/hanriver/hanriver-fountain.webp',
               alt: '노을 지는 한강, 반포대교 무지개분수',
+              width: 1600,
+              height: 1200,
               href: '/events/hanriver/',
             },
             {
               status: 'upcoming',
               date: '8월 5 · 12일',
               title: 'KBO 야구 나이트',
-              image: '/assets/photos/kbo/kbo-stadium-hero.webp',
-              alt: 'KBO 야간 경기를 앞두고 관중이 들어차는 잠실야구장',
+              image: '/assets/photos/kbo/run1-hero.webp',
+              alt: 'HanBuddy 야구 나이트가 열린 잠실야구장',
+              width: 1800,
+              height: 1350,
               href: '/events/kbo/',
             },
             {
               status: 'upcoming',
               date: '날짜 공개 예정',
               title: 'K리그 축구 데이',
-              image: '/assets/photos/kleague/kleague-night.webp',
-              alt: '조명 아래 열리는 서울월드컵경기장 K리그 경기',
+              image: '/assets/photos/kleague/kleague-worldcup-day.webp',
+              alt: '서울월드컵경기장 K리그 경기가 열리는 날',
+              width: 1600,
+              height: 1200,
             },
             {
               status: 'upcoming',
@@ -542,6 +568,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
               title: '찜질방 사우나',
               image: '/assets/photos/jjimjilbang/jjimjilbang-bulgama.webp',
               alt: '한국 찜질방의 전통 불가마',
+              width: 1600,
+              height: 1200,
             },
           ],
           closing: '야구와 피크닉은 시작일 뿐입니다 — 축제, 축구, 시장까지: 한국 사람들이 노는 곳이라면 어디든 함께 갈 거예요.',
@@ -572,8 +600,8 @@ git commit -m "feat(about): 창업 계기 섹션 신설, 운영 방식을 사진
         const img = document.createElement('img');
         img.src = item.image;
         img.alt = item.alt;
-        img.width = 1600;
-        img.height = 1000;
+        img.width = item.width;
+        img.height = item.height;
         img.loading = 'lazy';
         img.className = 'block aspect-[16/10] w-full object-cover transition duration-200 group-hover:scale-[1.03]';
         frame.appendChild(img);
