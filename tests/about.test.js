@@ -42,7 +42,9 @@ test('about page never claims un-operated activities as completed meetups', () =
 });
 
 test('about page does not duplicate the rating or guest quotes from index', () => {
-  assert.doesNotMatch(aboutHtml, /4\.7/, 'aggregate rating belongs to index #reviews only');
+  // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
+  // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
+  assert.doesNotMatch(aboutHtml, /4\.7\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
   for (const quote of [
     'this is the program you want to join',
     'Great experience to enjoy a baseball game with a local',
