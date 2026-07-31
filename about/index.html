@@ -214,41 +214,74 @@
       </div>
     </section>
 
-    <!-- ② Why we built this -->
-    <section id="why" class="border-t border-line-soft bg-canvas-soft">
-      <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
-        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="why.title">
-          Some of Korea&rsquo;s best moments are locked behind &ldquo;locals only.&rdquo;
-        </h2>
-        <p class="mt-6 text-base leading-8 text-muted sm:text-lg" data-i18n="why.body">
-          Baseball tickets sell out on Korean-only apps. The best picnic spots, the river-delivery trick, the chants everyone knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.
-        </p>
+    <!-- ② Origin — why we started -->
+    <section id="origin" class="border-t border-line-soft bg-canvas-soft">
+      <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 lg:grid-cols-2 lg:gap-14 lg:py-24">
+        <figure class="overflow-hidden rounded-2xl bg-panel">
+          <img src="/assets/photos/kbo/run1-opening.webp" width="1100" height="825" loading="lazy"
+               class="block aspect-[4/3] w-full object-cover"
+               alt="Guests and local buddies arriving at Jamsil Baseball Stadium for HanBuddy's first baseball night"
+               data-i18n-alt="meta.originAlt" />
+        </figure>
+        <div>
+          <p class="eyebrow" data-i18n="origin.eyebrow">Why we started</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="origin.title">
+            Some of Korea&rsquo;s best moments are locked behind &ldquo;locals only.&rdquo;
+          </h2>
+          <p class="mt-6 text-base leading-8 text-muted sm:text-lg" data-i18n="origin.body1">
+            It started with a ticket we watched disappear. A Jamsil night game sells out in seconds on an app that wants a Korean phone number and a Korean card &mdash; our friends from abroad never even got to the screen.
+          </p>
+          <p class="mt-4 text-base leading-8 text-muted sm:text-lg" data-i18n="origin.body2">
+            It was never just tickets. The best picnic spots, the river-delivery trick, the chants everyone in the stands already knows &mdash; none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- ③ How we run it -->
-    <section id="operate">
-      <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
-        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="operate.title">
+    <!-- ③ How we run it — zigzag photo/text blocks -->
+    <section id="how">
+      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+        <h2 class="mx-auto max-w-2xl text-center font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
           Run by us, every week.
         </h2>
-        <ul class="mt-8 divide-y divide-line-soft border-y border-line-soft">
-          <li class="py-5">
-            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.0.title">We plan each activity ourselves</p>
-            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.0.body">Built around one real Korean moment.</p>
-          </li>
-          <li class="py-5">
-            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.1.title">We confirm details with you directly</p>
-            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.1.body">A real person, not a booking engine.</p>
-          </li>
-          <li class="py-5">
-            <p class="font-display text-lg font-bold text-ink" data-i18n="operate.items.2.title">We improve every week</p>
-            <p class="mt-1 text-base leading-7 text-muted" data-i18n="operate.items.2.body">Guest feedback shapes the next run.</p>
-          </li>
-        </ul>
-        <p class="mt-8 text-lg font-semibold leading-8 text-ink sm:text-xl" data-i18n="beyond.body">
-          Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we&rsquo;ll take you along.
-        </p>
+
+        <div class="mt-12 space-y-12 lg:mt-16 lg:space-y-20">
+          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
+            <figure class="overflow-hidden rounded-2xl bg-panel">
+              <img src="/assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
+                   class="block aspect-[3/2] w-full object-cover"
+                   alt="Sunset over Jamsil Baseball Stadium before a HanBuddy night game" data-i18n-alt="meta.howPlanAlt" />
+            </figure>
+            <div>
+              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.0.title">We plan each activity ourselves</p>
+              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.0.body">Built around one real Korean moment &mdash; not a checklist of landmarks.</p>
+            </div>
+          </div>
+
+          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
+            <figure class="overflow-hidden rounded-2xl bg-panel lg:order-last">
+              <img src="/assets/photos/kbo/run1-group.webp" width="975" height="1300" loading="lazy"
+                   class="block aspect-[3/2] w-full object-cover"
+                   alt="HanBuddy guests and local buddies together in the stands at Jamsil" data-i18n-alt="meta.howConfirmAlt" />
+            </figure>
+            <div>
+              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.1.title">A real person confirms your details</p>
+              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.1.body">No booking engine. We message you before the day with the meeting spot and everything you need.</p>
+            </div>
+          </div>
+
+          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
+            <figure class="overflow-hidden rounded-2xl bg-panel">
+              <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy"
+                   class="block aspect-[3/2] w-full object-cover"
+                   alt="Guests cheering along with the crowd at a Jamsil night game" data-i18n-alt="meta.howImproveAlt" />
+            </figure>
+            <div>
+              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.2.title">We improve every week</p>
+              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.2.body">Every guest fills in a short survey afterwards, and it changes how we run the next one.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -438,6 +471,10 @@
           ogTitle: 'About HanBuddy | The team that makes “like a local” happen',
           ogDescription: 'We plan it, run it, and improve it every week — you just show up.',
           somaAlt: 'AI·SW Maestro logo',
+          originAlt: 'Guests and local buddies arriving at Jamsil Baseball Stadium for HanBuddy’s first baseball night',
+          howPlanAlt: 'Sunset over Jamsil Baseball Stadium before a HanBuddy night game',
+          howConfirmAlt: 'HanBuddy guests and local buddies together in the stands at Jamsil',
+          howImproveAlt: 'Guests cheering along with the crowd at a Jamsil night game',
         },
         nav: {
           aria: 'Main navigation',
@@ -460,20 +497,19 @@
           primaryCta: 'Join a meetup',
           secondaryCta: 'See upcoming events',
         },
-        why: {
+        origin: {
+          eyebrow: 'Why we started',
           title: 'Some of Korea’s best moments are locked behind “locals only.”',
-          body: 'Baseball tickets sell out on Korean-only apps. The best picnic spots, the river-delivery trick, the chants everyone knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.',
+          body1: 'It started with a ticket we watched disappear. A Jamsil night game sells out in seconds on an app that wants a Korean phone number and a Korean card — our friends from abroad never even got to the screen.',
+          body2: 'It was never just tickets. The best picnic spots, the river-delivery trick, the chants everyone in the stands already knows — none of it comes in English. HanBuddy unlocks that: we handle what blocks you, and share what makes it fun.',
         },
-        operate: {
+        how: {
           title: 'Run by us, every week.',
           items: [
-            { title: 'We plan each activity ourselves', body: 'Built around one real Korean moment.' },
-            { title: 'We confirm details with you directly', body: 'A real person, not a booking engine.' },
-            { title: 'We improve every week', body: 'Guest feedback shapes the next run.' },
+            { title: 'We plan each activity ourselves', body: 'Built around one real Korean moment — not a checklist of landmarks.' },
+            { title: 'A real person confirms your details', body: 'No booking engine. We message you before the day with the meeting spot and everything you need.' },
+            { title: 'We improve every week', body: 'Every guest fills in a short survey afterwards, and it changes how we run the next one.' },
           ],
-        },
-        beyond: {
-          body: 'Baseball and picnics are just the start — festivals, football, markets: anywhere Koreans have their fun, we’ll take you along.',
         },
         team: {
           title: 'Meet the team',
@@ -517,6 +553,10 @@
           ogTitle: 'HanBuddy 소개 | “like a local”을 실제로 만들어 내는 팀',
           ogDescription: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
           somaAlt: 'AI·SW마에스트로 로고',
+          originAlt: 'HanBuddy 첫 야구 나이트를 위해 잠실야구장에 도착한 게스트와 로컬 버디들',
+          howPlanAlt: 'HanBuddy 야간 경기 전, 잠실야구장에 지는 노을',
+          howConfirmAlt: '잠실 관중석에 함께 모인 HanBuddy 게스트와 로컬 버디들',
+          howImproveAlt: '잠실 야간 경기에서 관중과 함께 응원하는 게스트들',
         },
         nav: {
           aria: '주요 내비게이션',
@@ -539,20 +579,19 @@
           primaryCta: '모임 참여하기',
           secondaryCta: '예정된 이벤트 보기',
         },
-        why: {
+        origin: {
+          eyebrow: '시작한 이유',
           title: '한국의 진짜 재미는 “로컬 전용”으로 잠겨 있습니다.',
-          body: '야구 티켓은 한국 전용 앱에서 매진되고, 한강의 명당과 강변 배달 노하우, 모두가 아는 응원가는 영어로 어디에도 없습니다. HanBuddy가 그 문을 엽니다 — 막히는 부분은 저희가 처리하고, 즐기는 법은 함께 나눕니다.',
+          body1: '시작은 눈앞에서 사라진 티켓 한 장이었습니다. 잠실 야간 경기는 한국 번호와 한국 카드를 요구하는 앱에서 몇 초 만에 매진됩니다 — 외국인 친구들은 그 화면까지 가지도 못했죠.',
+          body2: '티켓만의 문제가 아니었습니다. 한강의 명당, 강변 배달 노하우, 관중석 모두가 이미 아는 응원가 — 어느 것도 영어로는 없습니다. HanBuddy가 그 문을 엽니다 — 막히는 부분은 저희가 처리하고, 즐기는 법은 함께 나눕니다.',
         },
-        operate: {
+        how: {
           title: '매주, 저희가 직접 운영합니다.',
           items: [
-            { title: '모든 활동을 직접 기획합니다', body: '한국의 진짜 순간 하나를 중심으로 설계합니다.' },
-            { title: '세부 사항을 직접 확인해 드립니다', body: '예약 시스템이 아니라, 사람이 직접요.' },
-            { title: '매주 더 나아집니다', body: '게스트 피드백이 다음 운영을 바꿉니다.' },
+            { title: '모든 활동을 직접 기획합니다', body: '랜드마크 체크리스트가 아니라, 한국의 진짜 순간 하나를 중심으로 설계합니다.' },
+            { title: '세부 사항은 사람이 직접 확인해 드립니다', body: '예약 시스템이 아닙니다. 모임 전에 만나는 곳과 필요한 것들을 직접 메시지로 보내드려요.' },
+            { title: '매주 더 나아집니다', body: '모든 게스트가 모임 후 짧은 설문을 남기고, 그 답이 다음 운영을 바꿉니다.' },
           ],
-        },
-        beyond: {
-          body: '야구와 피크닉은 시작일 뿐입니다 — 축제, 축구, 시장까지: 한국 사람들이 노는 곳이라면 어디든 함께 갈 거예요.',
         },
         team: {
           title: '팀을 소개합니다',
