@@ -10,7 +10,7 @@ const aboutHtml = existsSync(aboutPath) ? readFileSync(aboutPath, 'utf8') : '';
 
 test('about page exists with core sections', () => {
   assert.ok(aboutHtml.length > 0, 'about/index.html must exist');
-  for (const id of ['top', 'why', 'operate', 'team', 'join']) {
+  for (const id of ['top', 'origin', 'how', 'timeline', 'team', 'join']) {
     assert.match(aboutHtml, new RegExp(`<section id="${id}"`), `missing section #${id}`);
   }
 });
@@ -29,6 +29,35 @@ test('about page never exposes maintainer-only validation details', () => {
     aboutHtml,
     /F001|4\/5|30,000|under 30,000|Less than 30,000|pre-acquaintance|proof of scale|learning signal/,
   );
+});
+
+test('about page never says weekend (baseball runs on weeknights too)', () => {
+  assert.doesNotMatch(aboutHtml, /weekend/i, 'weekend framing is retired — use week');
+  assert.doesNotMatch(aboutHtml, /주말/, '주말 표현은 폐기됨 — 매주/week 계열로');
+});
+
+test('about page never claims un-operated activities as completed meetups', () => {
+  assert.doesNotMatch(aboutHtml, /Real moments from our meetups/);
+  assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
+});
+
+test('about page does not duplicate the rating or guest quotes from index', () => {
+  assert.doesNotMatch(aboutHtml, /4\.7/, 'aggregate rating belongs to index #reviews only');
+  for (const quote of [
+    'this is the program you want to join',
+    'Great experience to enjoy a baseball game with a local',
+    'It was fun to watch the game and cheer together',
+    'will definitely be going to another game with HanBuddy',
+  ]) {
+    assert.ok(!aboutHtml.includes(quote), `guest quote duplicated on about: ${quote}`);
+  }
+});
+
+test('about hero image is not lazy-loaded (it is the LCP element)', () => {
+  const heroImg = aboutHtml.match(/<img[^>]*kbo-0726-lights\.webp[^>]*>/);
+  assert.ok(heroImg, 'hero backdrop image missing');
+  assert.doesNotMatch(heroImg[0], /loading="lazy"/, 'hero image must not be lazy');
+  assert.match(heroImg[0], /fetchpriority="high"/);
 });
 
 test('about team links match the spec exactly and open safely', () => {
