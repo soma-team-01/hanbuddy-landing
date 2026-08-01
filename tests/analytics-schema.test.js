@@ -1,11 +1,82 @@
 const assert = require('node:assert/strict');
-const { existsSync } = require('node:fs');
+const { existsSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const test = require('node:test');
+const { runInNewContext } = require('node:vm');
 
 const modulePath = join(__dirname, '..', 'assets', 'analytics.js');
 const moduleExists = existsSync(modulePath);
 const analytics = moduleExists ? require(modulePath) : {};
+const analyticsSource = moduleExists ? readFileSync(modulePath, 'utf8') : '';
+
+const createBrowserHarness = () => {
+  const consentHandlers = {};
+  const storedValues = new Map();
+  const consentButtons = ['accept', 'reject'].map((action) => ({
+    dataset: { consentAction: action },
+    addEventListener(type, handler) {
+      if (type === 'click') consentHandlers[action] = handler;
+    },
+  }));
+  const banner = {
+    classList: {
+      add() {},
+      remove() {},
+    },
+    querySelector() {
+      return null;
+    },
+    setAttribute() {},
+  };
+  const document = {
+    readyState: 'complete',
+    body: { dataset: { analyticsPageType: 'home' } },
+    documentElement: { lang: 'en' },
+    head: {
+      appendChild() {},
+    },
+    addEventListener() {},
+    createElement() {
+      return {};
+    },
+    getElementById() {
+      return null;
+    },
+    getElementsByTagName() {
+      return [{ parentNode: { insertBefore() {} } }];
+    },
+    querySelector(selector) {
+      return selector === '[data-consent-banner]' ? banner : null;
+    },
+    querySelectorAll(selector) {
+      return selector === '[data-consent-action]' ? consentButtons : [];
+    },
+  };
+  const browserWindow = {
+    document,
+    location: {
+      hostname: 'www.hanbuddy.kr',
+      href: 'https://www.hanbuddy.kr/',
+    },
+    localStorage: {
+      getItem(key) {
+        return storedValues.get(key) ?? null;
+      },
+      setItem(key, value) {
+        storedValues.set(key, value);
+      },
+    },
+  };
+
+  runInNewContext(analyticsSource, { window: browserWindow });
+
+  return {
+    browserWindow,
+    chooseConsent(action) {
+      consentHandlers[action]();
+    },
+  };
+};
 
 test('ships one shared analytics module', () => {
   assert.ok(moduleExists, 'assets/analytics.js must exist');
@@ -37,7 +108,7 @@ test('builds a stable page context without empty optional values', { skip: !modu
   );
 });
 
-test('maps an application CTA to one GA event and the existing Meta high-intent event', { skip: !moduleExists }, () => {
+test('maps the Google Form application CTA to its own GA event and the existing Meta high-intent event', { skip: !moduleExists }, () => {
   const pageContext = {
     page_type: 'home',
     content_language: 'en',
@@ -51,11 +122,10 @@ test('maps an application CTA to one GA event and the existing Meta high-intent 
     }),
     {
       ga: {
-        name: 'cta_click',
+        name: 'application_form_open',
         params: {
           page_type: 'home',
           content_language: 'en',
-          cta_type: 'apply',
           destination: 'google_form',
           placement: 'top',
         },
@@ -65,7 +135,6 @@ test('maps an application CTA to one GA event and the existing Meta high-intent 
         params: {
           page_type: 'home',
           content_language: 'en',
-          cta_type: 'apply',
           destination: 'google_form',
           placement: 'top',
         },
@@ -74,7 +143,7 @@ test('maps an application CTA to one GA event and the existing Meta high-intent 
   );
 });
 
-test('keeps navigation, contact, community, and profile destinations semantically distinct', { skip: !moduleExists }, () => {
+test('uses separate GA events for contact, community, profile, and navigation actions', { skip: !moduleExists }, () => {
   const pageContext = {
     page_type: 'about',
     content_language: 'ko',
@@ -88,11 +157,10 @@ test('keeps navigation, contact, community, and profile destinations semanticall
     }),
     {
       ga: {
-        name: 'cta_click',
+        name: 'contact_click',
         params: {
           page_type: 'about',
           content_language: 'ko',
-          cta_type: 'contact',
           destination: 'instagram',
           placement: 'footer',
         },
@@ -102,7 +170,6 @@ test('keeps navigation, contact, community, and profile destinations semanticall
         params: {
           page_type: 'about',
           content_language: 'ko',
-          cta_type: 'contact',
           destination: 'instagram',
           placement: 'footer',
         },
@@ -110,13 +177,52 @@ test('keeps navigation, contact, community, and profile destinations semanticall
     },
   );
 
-  assert.equal(
+  assert.deepEqual(
+    analytics.buildCtaEvent({
+      ctaKey: 'contact',
+      placement: 'apply',
+      pageContext,
+    }),
+    {
+      ga: {
+        name: 'contact_click',
+        params: {
+          page_type: 'about',
+          content_language: 'ko',
+          destination: 'kakaotalk',
+          placement: 'apply',
+        },
+      },
+      meta: {
+        name: 'ContactClick',
+        params: {
+          page_type: 'about',
+          content_language: 'ko',
+          destination: 'kakaotalk',
+          placement: 'apply',
+        },
+      },
+    },
+  );
+
+  assert.deepEqual(
     analytics.buildCtaEvent({
       ctaKey: 'meetup',
       placement: 'footer',
       pageContext,
-    }).meta,
-    null,
+    }),
+    {
+      ga: {
+        name: 'community_click',
+        params: {
+          page_type: 'about',
+          content_language: 'ko',
+          destination: 'meetup',
+          placement: 'footer',
+        },
+      },
+      meta: null,
+    },
   );
 
   assert.deepEqual(
@@ -124,13 +230,15 @@ test('keeps navigation, contact, community, and profile destinations semanticall
       ctaKey: 'apply_section',
       placement: 'nav',
       pageContext,
-    }).ga.params,
+    }).ga,
     {
-      page_type: 'about',
-      content_language: 'ko',
-      cta_type: 'navigation',
-      destination: 'apply_section',
-      placement: 'nav',
+      name: 'navigation_click',
+      params: {
+        page_type: 'about',
+        content_language: 'ko',
+        destination: 'apply_section',
+        placement: 'nav',
+      },
     },
   );
 
@@ -139,14 +247,16 @@ test('keeps navigation, contact, community, and profile destinations semanticall
       ctaKey: 'linkedin_minhyung',
       placement: 'team',
       pageContext,
-    }).ga.params,
+    }).ga,
     {
-      page_type: 'about',
-      content_language: 'ko',
-      cta_type: 'profile',
-      destination: 'linkedin',
-      placement: 'team',
-      profile_id: 'minhyung',
+      name: 'profile_click',
+      params: {
+        page_type: 'about',
+        content_language: 'ko',
+        destination: 'linkedin',
+        placement: 'team',
+        profile_id: 'minhyung',
+      },
     },
   );
 });
@@ -174,10 +284,29 @@ test('maps an event-card click to the GA recommended content-selection schema', 
   );
 });
 
-test('blocks local preview hosts while allowing deploy hosts', { skip: !moduleExists }, () => {
-  for (const hostname of ['localhost', '127.0.0.1', '::1']) {
+test('allows analytics only after redirects reach the canonical hostname', { skip: !moduleExists }, () => {
+  for (const hostname of [
+    'localhost',
+    '127.0.0.1',
+    '::1',
+    'hanbuddy.kr',
+    'landing.hanbuddy.kr',
+    'hanbuddy-preview.vercel.app',
+  ]) {
     assert.equal(analytics.isTrackableHostname(hostname), false);
   }
-  assert.equal(analytics.isTrackableHostname('landing.hanbuddy.kr'), true);
-  assert.equal(analytics.isTrackableHostname('hanbuddy-preview.vercel.app'), true);
+  assert.equal(analytics.isTrackableHostname('www.hanbuddy.kr'), true);
+});
+
+test('toggles the Google collection opt-out across consent grant and revoke', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent } = createBrowserHarness();
+  const disableKey = 'ga-disable-G-MW7MFVL50G';
+
+  assert.equal(browserWindow[disableKey], true, 'Google collection starts disabled');
+
+  chooseConsent('accept');
+  assert.equal(browserWindow[disableKey], false, 'granting consent enables Google collection');
+
+  chooseConsent('reject');
+  assert.equal(browserWindow[disableKey], true, 'revoking consent disables Google collection again');
 });

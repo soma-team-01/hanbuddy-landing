@@ -32,12 +32,6 @@ test('configures the Meta Pixel and maps only high-intent outbound CTA events', 
   assert.match(analyticsJs, /trackCustom/);
 });
 
-test('does not load third-party analytics on local preview hosts', () => {
-  assert.match(analyticsJs, /localhost/);
-  assert.match(analyticsJs, /127\.0\.0\.1/);
-  assert.match(analyticsJs, /isTrackableHostname/);
-});
-
 test('lets visitors reopen their analytics consent settings', () => {
   assert.match(html, /data-consent-settings/);
   assert.match(html, /consent\.settings/);

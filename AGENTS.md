@@ -1,6 +1,6 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-07-30 KST
+**Updated:** 2026-08-01 KST
 
 ## OVERVIEW
 
@@ -42,7 +42,7 @@ hanbuddy-landing/
 | Replace public photos | `assets/photos/**` + referencing pages | WebP only, EXIF stripped; photo rules in DESIGN.md; add new folders/extensions to `.vercelignore` |
 | Run tests | `node --test tests/*.test.js` | Directory form `node --test tests/` fails on some Node versions — pass the glob |
 | Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
-| Deploy | merge to `main` | Vercel GitHub integration auto-deploys `main` to `landing.hanbuddy.kr`; `.vercelignore` allowlists what gets served |
+| Deploy | merge to `main` | Vercel GitHub integration auto-deploys `main` to `www.hanbuddy.kr`; `.vercelignore` allowlists what gets served |
 
 ## CODE MAP
 
@@ -137,14 +137,14 @@ tmp=$(mktemp -d) && git -C . ls-files >/dev/null && cp .vercelignore "$tmp/.giti
   git -C "$tmp" add -n . | sort
 
 # Quick content check (current facts)
-rg -n "forms.gle/B1fWgX3MjtHUHGNt5|Aug 5|Aug 12|₩50,000|₩25,000|landing.hanbuddy.kr" index.html events README.md
+rg -n "forms.gle/B1fWgX3MjtHUHGNt5|Aug 5|Aug 12|₩50,000|₩25,000|www.hanbuddy.kr" index.html events README.md
 ```
 
 ## NOTES
 
-- Production domain: `landing.hanbuddy.kr` (Vercel project `hanbuddy-landing`); merging `main` auto-deploys — no manual `vercel --prod` needed.
+- Production domain: `www.hanbuddy.kr` (Vercel project `hanbuddy-landing`); merging `main` auto-deploys — no manual `vercel --prod` needed.
 - OG/Twitter image is `assets/photos/kbo/run1-group.webp` (absolute URL on the production domain); event detail pages carry their own OG images.
-- `assets/brand/logo-borderless.png` is the fixed email-signature asset at `https://landing.hanbuddy.kr/assets/brand/logo-borderless.png` — do not move or rename it.
+- `assets/brand/logo-borderless.png` is the fixed email-signature asset at `https://www.hanbuddy.kr/assets/brand/logo-borderless.png` — do not move or rename it.
 - `.vercelignore` is the deploy guardrail: Vercel CLI uploads the working directory, not the git tree. Before it existed (2026-07-10), internal docs and raw JPGs were publicly served — keep the allowlist in sync when adding public files.
 - Tests exist but no CI workflow runs them; run the node --test command locally before pushing. For visual changes, use local preview and check desktop/mobile in the browser.
 - Team repo rules: always branch + PR (main direct push is hook-blocked), squash merge, no AI co-author trailers in commits or PR bodies.

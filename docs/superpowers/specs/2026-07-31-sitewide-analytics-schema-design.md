@@ -35,11 +35,21 @@ at event time.
 
 ## Canonical Event Schema
 
-### GA4 `cta_click`
+### GA4 semantic action events
 
-Every element with `data-cta` sends one `cta_click` event:
+Only opening the live Google Form is treated as HanBuddy's primary CTA
+micro-conversion. The shared `data-cta` hook still identifies tracked
+interactions in markup, but GA4 receives an event named for the user's actual
+intent:
 
-- `cta_type`: `apply`, `navigation`, `contact`, `community`, or `profile`
+- `application_form_open`: live Google Form application links
+- `contact_click`: Instagram and KakaoTalk links
+- `community_click`: Meetup links
+- `profile_click`: LinkedIn profile links
+- `navigation_click`: internal navigation to the application section
+
+Each action event receives:
+
 - `destination`: `google_form`, `instagram`, `kakaotalk`, `meetup`, or
   `linkedin`; the home-page anchor uses `apply_section`
 - `placement`: `nav`, `footer`, an explicit `data-analytics-placement`, the
@@ -87,8 +97,8 @@ Both event-detail pages receive:
 
 - the shared consent banner and footer cookie-settings control
 - consent-gated GA4 `page_view` and Meta `PageView`
-- `cta_click` for desktop and mobile Google Form buttons
-- `cta_click` for Instagram contact
+- `application_form_open` for desktop and mobile Google Form buttons
+- `contact_click` for Instagram contact
 - `ApplicationFormOpen` and `ContactClick` Meta custom events
 - `page_type="event_detail"` plus the page's `experience_type`
 
@@ -97,13 +107,17 @@ The two application placements are explicitly distinguished as
 
 ## Host and Consent Behavior
 
-Tracking remains disabled on `localhost`, `127.0.0.1`, and `::1`. A production
-hostname allowlist is intentionally deferred because the canonical production
-hostname must be confirmed separately; changing host policy is outside this
-approved scope.
+Tracking is enabled only on the canonical production hostname
+`www.hanbuddy.kr`. The apex `hanbuddy.kr` and `landing.hanbuddy.kr` hosts are
+permanent-redirect aliases and must not collect before navigation reaches the
+canonical host. Localhost and Vercel Preview deployments remain untracked so
+QA traffic cannot pollute the production property.
 
 Rejecting or revoking consent updates Google to denied and calls Meta consent
-revoke. No custom event is sent unless consent is stored as `granted`.
+revoke. Google's `ga-disable-G-MW7MFVL50G` flag starts enabled, is cleared
+only after consent is granted on the production hostname, and is enabled again
+when consent is revoked. No custom event is sent unless consent is stored as
+`granted`.
 
 ## Verification
 

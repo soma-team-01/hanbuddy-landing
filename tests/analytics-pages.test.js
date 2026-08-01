@@ -10,6 +10,11 @@ const detailPages = [
   { name: 'KBO', experienceType: 'kbo', html: readPage('events', 'kbo', 'index.html') },
   { name: 'Han River', experienceType: 'hanriver', html: readPage('events', 'hanriver', 'index.html') },
 ];
+const publicPages = [
+  { name: 'Home', html: homeHtml },
+  { name: 'About', html: aboutHtml },
+  ...detailPages,
+];
 
 test('home and About load the shared analytics module with canonical page context', () => {
   assert.match(homeHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
@@ -102,5 +107,31 @@ test('event detail pages expose the same explicit analytics consent controls', (
     assert.match(html, /data-consent-action="accept"/, `${name} accept control`);
     assert.match(html, /data-consent-action="reject"/, `${name} reject control`);
     assert.match(html, /data-consent-settings/, `${name} settings control`);
+  }
+});
+
+test('public metadata uses the canonical production origin', () => {
+  for (const { name, html } of publicPages) {
+    assert.doesNotMatch(
+      html,
+      /https:\/\/landing\.hanbuddy\.kr/,
+      `${name} must not reference the retired production origin`,
+    );
+  }
+
+  assert.match(
+    homeHtml,
+    /<meta property="og:image" content="https:\/\/www\.hanbuddy\.kr\/assets\//,
+  );
+  assert.match(
+    aboutHtml,
+    /<link rel="canonical" href="https:\/\/www\.hanbuddy\.kr\/about" \/>/,
+  );
+  for (const { name, html } of detailPages) {
+    assert.match(
+      html,
+      /<meta property="og:image" content="https:\/\/www\.hanbuddy\.kr\/assets\//,
+      `${name} Open Graph image origin`,
+    );
   }
 });

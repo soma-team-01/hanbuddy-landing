@@ -14,30 +14,33 @@
   });
 
   const ANALYTICS_CONSENT_KEY = 'hanbuddy.analyticsConsent';
-  const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
+  const TRACKABLE_HOSTNAMES = new Set(['www.hanbuddy.kr']);
+  const GOOGLE_COLLECTION_DISABLE_KEY = (
+    'ga-disable-' + ANALYTICS_CONFIG.googleMeasurementId
+  );
   const CTA_DEFINITIONS = Object.freeze({
     apply: Object.freeze({
-      ctaType: 'apply',
+      gaEvent: 'application_form_open',
       destination: 'google_form',
       metaEvent: 'ApplicationFormOpen',
     }),
     apply_section: Object.freeze({
-      ctaType: 'navigation',
+      gaEvent: 'navigation_click',
       destination: 'apply_section',
       metaEvent: null,
     }),
     instagram: Object.freeze({
-      ctaType: 'contact',
+      gaEvent: 'contact_click',
       destination: 'instagram',
       metaEvent: 'ContactClick',
     }),
     contact: Object.freeze({
-      ctaType: 'contact',
+      gaEvent: 'contact_click',
       destination: 'kakaotalk',
       metaEvent: 'ContactClick',
     }),
     meetup: Object.freeze({
-      ctaType: 'community',
+      gaEvent: 'community_click',
       destination: 'meetup',
       metaEvent: null,
     }),
@@ -62,7 +65,7 @@
     }
     if (ctaKey?.startsWith('linkedin_')) {
       return {
-        ctaType: 'profile',
+        gaEvent: 'profile_click',
         destination: 'linkedin',
         metaEvent: null,
         profileId: ctaKey.slice('linkedin_'.length),
@@ -81,7 +84,6 @@
 
     const params = {
       ...pageContext,
-      cta_type: definition.ctaType,
       destination: definition.destination,
       placement,
     };
@@ -89,7 +91,7 @@
 
     return {
       ga: {
-        name: 'cta_click',
+        name: definition.gaEvent,
         params,
       },
       meta: definition.metaEvent
@@ -115,7 +117,15 @@
     },
   });
 
-  const isTrackableHostname = (hostname) => !LOCAL_HOSTNAMES.has(hostname);
+  const isTrackableHostname = (hostname) => (
+    typeof hostname === 'string'
+    && TRACKABLE_HOSTNAMES.has(hostname.toLowerCase())
+  );
+
+  const setGoogleCollectionEnabled = (enabled) => {
+    if (!browserWindow) return;
+    browserWindow[GOOGLE_COLLECTION_DISABLE_KEY] = !enabled;
+  };
 
   if (!browserWindow?.document) {
     return {
@@ -127,6 +137,7 @@
   }
 
   const { document } = browserWindow;
+  setGoogleCollectionEnabled(false);
   browserWindow.dataLayer = browserWindow.dataLayer || [];
   browserWindow.gtag = browserWindow.gtag || function gtag() {
     browserWindow.dataLayer.push(arguments);
@@ -316,6 +327,7 @@
     ) {
       return;
     }
+    setGoogleCollectionEnabled(true);
     analyticsLoaded = true;
     loadGoogleAnalytics();
     loadMetaPixel();
@@ -323,6 +335,7 @@
   };
 
   const revokeAnalytics = () => {
+    setGoogleCollectionEnabled(false);
     updateGoogleConsent('denied');
     if (typeof browserWindow.fbq === 'function') {
       browserWindow.fbq('consent', 'revoke');
