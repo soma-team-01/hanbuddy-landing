@@ -9,24 +9,14 @@
   <meta property="og:title" content="About HanBuddy | The team behind your Korean weekend" />
   <meta property="og:description" content="We plan it, run it, and improve it every week — you just show up." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://landing.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
+  <meta property="og:image" content="https://www.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://landing.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
-  <link rel="canonical" href="https://landing.hanbuddy.kr/about" />
+  <meta name="twitter:image" content="https://www.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
+  <link rel="canonical" href="https://www.hanbuddy.kr/about" />
   <link rel="icon" type="image/webp" href="/assets/brand/logo-icon.webp" />
   <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
 
-  <!-- Analytics consent defaults. Google Analytics and Meta Pixel load only after opt-in. -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-    });
-  </script>
+  <script src="/assets/analytics.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -158,7 +148,7 @@
   </style>
 </head>
 
-<body class="bg-canvas font-sans text-ink antialiased">
+<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="about">
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
@@ -225,7 +215,7 @@
     </section>
 
     <!-- ② Why we built this -->
-    <section id="why" class="border-t border-line-soft bg-canvas-soft">
+    <section id="why" class="border-t border-line-soft bg-canvas-soft" data-analytics-section>
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="why.title">
           Some of Korea&rsquo;s best moments are locked behind &ldquo;locals only.&rdquo;
@@ -237,7 +227,7 @@
     </section>
 
     <!-- ③ How we run it -->
-    <section id="operate">
+    <section id="operate" data-analytics-section>
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="operate.title">
           Run by us, every week.
@@ -263,7 +253,7 @@
     </section>
 
     <!-- ④ Team + credibility -->
-    <section id="team" class="border-t border-line-soft bg-canvas-soft">
+    <section id="team" class="border-t border-line-soft bg-canvas-soft" data-analytics-section>
       <div class="mx-auto max-w-3xl px-5 py-16 lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="team.title">
           Meet the team
@@ -315,7 +305,7 @@
     </section>
 
     <!-- ⑤ CTA -->
-    <section id="join" class="bg-primary-strong text-on-primary-strong">
+    <section id="join" class="bg-primary-strong text-on-primary-strong" data-analytics-section>
       <div class="mx-auto flex max-w-3xl flex-col items-center gap-7 px-5 py-16 text-center lg:py-20">
         <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl" data-i18n="join.title">
           See you at the next meetup?
@@ -389,7 +379,7 @@
             HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
           </p>
         </div>
-        <button type="button" data-consent-settings aria-controls="analytics-consent"
+        <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false"
                 class="focusable shrink-0 self-start rounded-lg text-xs font-semibold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary sm:self-auto"
                 data-i18n="consent.settings">
           Cookie settings
@@ -431,10 +421,6 @@
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
-      analytics: {
-        googleMeasurementId: 'G-MW7MFVL50G',
-        metaPixelId: '4569887956575986',
-      },
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -605,11 +591,7 @@
     });
 
     const STORAGE_KEY = 'hanbuddy.language';
-    const ANALYTICS_CONSENT_KEY = 'hanbuddy.analyticsConsent';
     const SUPPORTED_LANGUAGES = ['en', 'ko'];
-    const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
-    let analyticsLoaded = false;
-    let sectionObserverStarted = false;
 
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
     const clear = (node) => {
@@ -708,201 +690,18 @@
       persistLanguage(lang);
     };
 
-    const safeStoredAnalyticsConsent = () => {
-      try {
-        const consent = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
-        return consent === 'granted' || consent === 'denied' ? consent : null;
-      } catch {
-        return null;
-      }
-    };
-
-    const persistAnalyticsConsent = (consent) => {
-      try {
-        window.localStorage.setItem(ANALYTICS_CONSENT_KEY, consent);
-      } catch {
-        // Tracking stays disabled when storage is unavailable.
-      }
-    };
-
-    const isTrackableHost = () => !LOCAL_HOSTNAMES.has(window.location.hostname);
-
-    const updateGoogleConsent = (consent) => {
-      if (typeof window.gtag !== 'function') return;
-      window.gtag('consent', 'update', {
-        ad_storage: consent,
-        ad_user_data: consent,
-        ad_personalization: consent,
-        analytics_storage: consent,
-      });
-    };
-
-    const loadGoogleAnalytics = () => {
-      updateGoogleConsent('granted');
-      if (document.getElementById('google-analytics-script')) return;
-
-      window.gtag('js', new Date());
-      window.gtag('config', CONFIG.analytics.googleMeasurementId);
-
-      const script = document.createElement('script');
-      script.id = 'google-analytics-script';
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.analytics.googleMeasurementId)}`;
-      document.head.appendChild(script);
-    };
-
-    const loadMetaPixel = () => {
-      if (typeof window.fbq === 'function') {
-        window.fbq('consent', 'grant');
-        window.fbq('track', 'PageView');
-        return;
-      }
-
-      !function(f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function() {
-          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = true;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = true;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-      window.fbq('init', CONFIG.analytics.metaPixelId);
-      window.fbq('track', 'PageView');
-    };
-
-    const track = (name, params = {}) => {
-      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
-      if (typeof window.gtag === 'function') window.gtag('event', name, params);
-    };
-
-    const trackMetaCustom = (name, params = {}) => {
-      if (!analyticsLoaded || safeStoredAnalyticsConsent() !== 'granted' || !isTrackableHost()) return;
-      if (typeof window.fbq === 'function') window.fbq('trackCustom', name, params);
-    };
-
-    const ctaPlacement = (el) => {
-      if (el.closest('header')) return 'nav';
-      if (el.closest('footer')) return 'footer';
-      return el.closest('section[id]')?.id ?? 'page';
-    };
-
-    const startSectionAnalytics = () => {
-      if (sectionObserverStarted || !('IntersectionObserver' in window)) return;
-      sectionObserverStarted = true;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          track('section_view', {
-            section_id: entry.target.id,
-            language: document.documentElement.lang,
-            page: 'about',
-          });
-          observer.unobserve(entry.target);
-        });
-      }, { threshold: 0.2 });
-      ['why', 'operate', 'team', 'join'].forEach((id) => {
-        const section = document.getElementById(id);
-        if (section) observer.observe(section);
-      });
-    };
-
-    const loadAnalytics = () => {
-      if (analyticsLoaded || !isTrackableHost()) return;
-      analyticsLoaded = true;
-      loadGoogleAnalytics();
-      loadMetaPixel();
-      startSectionAnalytics();
-    };
-
-    const revokeAnalytics = () => {
-      updateGoogleConsent('denied');
-      if (typeof window.fbq === 'function') window.fbq('consent', 'revoke');
-      analyticsLoaded = false;
-    };
-
-    const hideConsentBanner = () => {
-      const banner = document.querySelector('[data-consent-banner]');
-      if (!banner) return;
-      banner.classList.add('hidden');
-      banner.setAttribute('aria-hidden', 'true');
-    };
-
-    const showConsentBanner = (moveFocus = false) => {
-      const banner = document.querySelector('[data-consent-banner]');
-      if (!banner) return;
-      banner.classList.remove('hidden');
-      banner.setAttribute('aria-hidden', 'false');
-      if (moveFocus) banner.querySelector('[data-consent-action="accept"]')?.focus();
-    };
-
-    const setAnalyticsConsent = (consent) => {
-      persistAnalyticsConsent(consent);
-      if (consent === 'granted') loadAnalytics();
-      else revokeAnalytics();
-      hideConsentBanner();
-    };
-
-    const initAnalyticsConsent = () => {
-      document.querySelectorAll('[data-consent-action]').forEach((button) => {
-        button.addEventListener('click', () => {
-          setAnalyticsConsent(button.getAttribute('data-consent-action') === 'accept' ? 'granted' : 'denied');
-        });
-      });
-      document.querySelectorAll('[data-consent-settings]').forEach((button) => {
-        button.addEventListener('click', () => showConsentBanner(true));
-      });
-
-      const consent = safeStoredAnalyticsConsent();
-      if (consent === 'granted') loadAnalytics();
-      else if (consent === null) showConsentBanner();
-    };
-
-    const initAnalytics = () => {
-      document.querySelectorAll('[data-cta]').forEach((el) => {
-        el.addEventListener('click', () => {
-          const cta = el.getAttribute('data-cta');
-          const params = {
-            placement: ctaPlacement(el),
-            language: document.documentElement.lang,
-            page: 'about',
-          };
-          track(`${cta}_click`, params);
-
-          const href = el.getAttribute('href');
-          if (cta === 'apply' && href === CONFIG.apply) {
-            trackMetaCustom('ApplicationFormOpen', { ...params, destination: 'google_form' });
-          } else if (cta === 'instagram' && href === CONFIG.instagram) {
-            trackMetaCustom('ContactClick', { ...params, destination: 'instagram' });
-          } else if (cta === 'contact' && href === CONFIG.contact) {
-            trackMetaCustom('ContactClick', { ...params, destination: 'kakaotalk' });
-          }
-        });
-      });
-    };
-
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
         const lang = button.getAttribute('data-lang');
         if (!SUPPORTED_LANGUAGES.includes(lang)) return;
         const previous = document.documentElement.lang;
         applyLanguage(lang);
-        if (previous !== lang) track('language_switch', { language: lang, previous_language: previous });
+        if (previous !== lang) window.HanBuddyAnalytics?.trackLanguageSwitch?.(lang, previous);
       });
     });
 
     syncCtas();
     applyLanguage(safeStoredLanguage());
-    initAnalytics();
-    initAnalyticsConsent();
   </script>
 </body>
 </html>

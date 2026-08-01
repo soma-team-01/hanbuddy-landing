@@ -4,7 +4,7 @@ ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 사이트. **주 타
 
 포지셔닝은 **날짜 기반 이벤트**다(주말 전용 아님 — 야구는 평일에도 진행). `#events` 섹션의 Meetup 스타일 카드가 현재 공개된 일정을 보여주고, 각 카드는 `/events/`의 예약형 상세페이지로 연결된다. 완료된 운영(2026-06-25·07-26 잠실 KBO, 한강 피크닉)의 승인 사진과 게스트 후기를 홍보용 proof로 사용한다.
 
-- **프로덕션**: https://landing.hanbuddy.kr — `main` 머지 시 Vercel GitHub 연동으로 **자동 배포** (수동 배포 불필요)
+- **프로덕션**: https://www.hanbuddy.kr — `main` 머지 시 Vercel GitHub 연동으로 **자동 배포** (수동 배포 불필요)
 - **페이지**: `/` (메인) · `/about` (팀 소개) · `/events/kbo/` · `/events/hanriver/` (이벤트 상세)
 - **신청**: Google Form `https://forms.gle/B1fWgX3MjtHUHGNt5` (`index.html`의 `CONFIG.apply`). 링크가 바뀌면 hardcoded anchor·`CONFIG`·문구를 함께 교체
 - **문의**: 기본은 Instagram DM https://www.instagram.com/hanbuddy_kr/ , KakaoTalk 오픈채팅 https://open.kakao.com/o/sP3n4rFi 은 보조·한국인 버디 채널

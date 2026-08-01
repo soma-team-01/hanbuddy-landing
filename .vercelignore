@@ -2,6 +2,7 @@
 !/index.html
 !/assets
 /assets/*
+!/assets/analytics.js
 !/assets/brand
 /assets/brand/*
 !/assets/brand/*.webp
