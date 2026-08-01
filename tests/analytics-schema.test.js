@@ -149,6 +149,9 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
     clickSettings() {
       settingsHandlers.forEach((handler) => handler());
     },
+    clickDocument(target) {
+      (documentHandlers.click || []).forEach((handler) => handler({ target }));
+    },
     pressKey(key) {
       (documentHandlers.keydown || []).forEach((handler) => handler({ key }));
     },
@@ -400,6 +403,32 @@ test('toggles the Google collection opt-out across consent grant and revoke', { 
   assert.equal(browserWindow[disableKey], true, 'revoking consent disables Google collection again');
 });
 
+test('routes delegated document clicks through CTA tracking', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, clickDocument } = createBrowserHarness();
+  const applicationLink = {
+    dataset: {
+      analyticsPlacement: 'test',
+      cta: 'apply',
+    },
+    href: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
+    closest(selector) {
+      return selector === '[data-cta]' ? applicationLink : null;
+    },
+  };
+
+  chooseConsent('accept');
+  clickDocument(applicationLink);
+
+  const applicationEvents = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command, eventName]) => (
+      command === 'event' && eventName === 'application_form_open'
+    ));
+  assert.equal(applicationEvents.length, 1);
+  assert.equal(applicationEvents[0][2].destination, 'google_form');
+  assert.equal(applicationEvents[0][2].placement, 'test');
+});
+
 test('consent settings expose their expanded state and restore focus after a choice', { skip: !moduleExists }, () => {
   const {
     banner,
@@ -446,6 +475,7 @@ test('records a section view on first visible exposure', { skip: !moduleExists }
 
   chooseConsent('accept');
   revealSection(0.05);
+  revealSection(0.5);
 
   const sectionEvents = browserWindow.dataLayer
     .map((entry) => Array.from(entry))
