@@ -9,33 +9,85 @@ const moduleExists = existsSync(modulePath);
 const analytics = moduleExists ? require(modulePath) : {};
 const analyticsSource = moduleExists ? readFileSync(modulePath, 'utf8') : '';
 
-const createBrowserHarness = () => {
+const createBrowserHarness = ({ withSection = false } = {}) => {
   const consentHandlers = {};
+  const documentHandlers = {};
+  const settingsHandlers = [];
   const storedValues = new Map();
-  const consentButtons = ['accept', 'reject'].map((action) => ({
-    dataset: { consentAction: action },
+  let activeElement = null;
+  let intersectionCallback = null;
+  let intersectionOptions = null;
+  let observedSection = null;
+  let sectionUnobserved = false;
+  const focusElement = (element) => {
+    activeElement = element;
+  };
+  const consentButtons = ['accept', 'reject'].map((action) => {
+    const button = {
+      dataset: { consentAction: action },
+      addEventListener(type, handler) {
+        if (type === 'click') consentHandlers[action] = handler;
+      },
+      focus() {
+        focusElement(button);
+      },
+    };
+    return button;
+  });
+  const settingsAttributes = new Map([['aria-expanded', 'false']]);
+  const settingsButton = {
     addEventListener(type, handler) {
-      if (type === 'click') consentHandlers[action] = handler;
+      if (type === 'click') settingsHandlers.push(handler);
     },
-  }));
+    focus() {
+      focusElement(settingsButton);
+    },
+    getAttribute(name) {
+      return settingsAttributes.get(name) ?? null;
+    },
+    setAttribute(name, value) {
+      settingsAttributes.set(name, value);
+    },
+  };
+  const bannerClasses = new Set(['hidden']);
+  const bannerAttributes = new Map([['aria-hidden', 'true']]);
   const banner = {
     classList: {
-      add() {},
-      remove() {},
+      add(name) {
+        bannerClasses.add(name);
+      },
+      contains(name) {
+        return bannerClasses.has(name);
+      },
+      remove(name) {
+        bannerClasses.delete(name);
+      },
     },
-    querySelector() {
-      return null;
+    querySelector(selector) {
+      return selector === '[data-consent-action="accept"]' ? consentButtons[0] : null;
     },
-    setAttribute() {},
+    getAttribute(name) {
+      return bannerAttributes.get(name) ?? null;
+    },
+    setAttribute(name, value) {
+      bannerAttributes.set(name, value);
+    },
   };
+  const section = { id: 'events' };
   const document = {
+    get activeElement() {
+      return activeElement;
+    },
     readyState: 'complete',
     body: { dataset: { analyticsPageType: 'home' } },
     documentElement: { lang: 'en' },
     head: {
       appendChild() {},
     },
-    addEventListener() {},
+    addEventListener(type, handler) {
+      documentHandlers[type] = documentHandlers[type] || [];
+      documentHandlers[type].push(handler);
+    },
     createElement() {
       return {};
     },
@@ -49,7 +101,10 @@ const createBrowserHarness = () => {
       return selector === '[data-consent-banner]' ? banner : null;
     },
     querySelectorAll(selector) {
-      return selector === '[data-consent-action]' ? consentButtons : [];
+      if (selector === '[data-consent-action]') return consentButtons;
+      if (selector === '[data-consent-settings]') return [settingsButton];
+      if (selector === '[data-analytics-section]') return withSection ? [section] : [];
+      return [];
     },
   };
   const browserWindow = {
@@ -66,14 +121,48 @@ const createBrowserHarness = () => {
         storedValues.set(key, value);
       },
     },
+    IntersectionObserver: class IntersectionObserver {
+      constructor(callback, options) {
+        intersectionCallback = callback;
+        intersectionOptions = options;
+      }
+
+      observe(target) {
+        observedSection = target;
+      }
+
+      unobserve(target) {
+        if (target === observedSection) sectionUnobserved = true;
+      }
+    },
   };
 
   runInNewContext(analyticsSource, { window: browserWindow });
 
   return {
     browserWindow,
+    banner,
+    settingsButton,
     chooseConsent(action) {
       consentHandlers[action]();
+    },
+    clickSettings() {
+      settingsHandlers.forEach((handler) => handler());
+    },
+    pressKey(key) {
+      (documentHandlers.keydown || []).forEach((handler) => handler({ key }));
+    },
+    revealSection(intersectionRatio) {
+      if (!intersectionCallback || sectionUnobserved) return;
+      const configuredThresholds = Array.isArray(intersectionOptions?.threshold)
+        ? intersectionOptions.threshold
+        : [intersectionOptions?.threshold ?? 0];
+      if (!configuredThresholds.some((threshold) => intersectionRatio >= threshold)) return;
+      intersectionCallback([{
+        isIntersecting: intersectionRatio > 0,
+        intersectionRatio,
+        target: observedSection,
+      }]);
     },
   };
 };
@@ -309,4 +398,58 @@ test('toggles the Google collection opt-out across consent grant and revoke', { 
 
   chooseConsent('reject');
   assert.equal(browserWindow[disableKey], true, 'revoking consent disables Google collection again');
+});
+
+test('consent settings expose their expanded state and restore focus after a choice', { skip: !moduleExists }, () => {
+  const {
+    banner,
+    chooseConsent,
+    clickSettings,
+    browserWindow,
+    settingsButton,
+  } = createBrowserHarness();
+
+  chooseConsent('reject');
+  clickSettings();
+  assert.equal(settingsButton.getAttribute('aria-expanded'), 'true');
+  assert.equal(banner.getAttribute('aria-hidden'), 'false');
+
+  chooseConsent('reject');
+  assert.equal(settingsButton.getAttribute('aria-expanded'), 'false');
+  assert.equal(banner.getAttribute('aria-hidden'), 'true');
+  assert.equal(browserWindow.document.activeElement, settingsButton);
+});
+
+test('Escape dismisses reopened consent settings and restores focus', { skip: !moduleExists }, () => {
+  const {
+    banner,
+    chooseConsent,
+    clickSettings,
+    pressKey,
+    browserWindow,
+    settingsButton,
+  } = createBrowserHarness();
+
+  chooseConsent('reject');
+  clickSettings();
+  pressKey('Escape');
+
+  assert.equal(banner.classList.contains('hidden'), true);
+  assert.equal(settingsButton.getAttribute('aria-expanded'), 'false');
+  assert.equal(browserWindow.document.activeElement, settingsButton);
+});
+
+test('records a section view on first visible exposure', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, revealSection } = createBrowserHarness({
+    withSection: true,
+  });
+
+  chooseConsent('accept');
+  revealSection(0.05);
+
+  const sectionEvents = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command, eventName]) => command === 'event' && eventName === 'section_view');
+  assert.equal(sectionEvents.length, 1);
+  assert.equal(sectionEvents[0][2].section_id, 'events');
 });

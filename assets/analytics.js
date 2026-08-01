@@ -150,6 +150,7 @@
   });
 
   let analyticsLoaded = false;
+  let consentSettingsTrigger = null;
   let initialized = false;
   let sectionObserverStarted = false;
 
@@ -315,7 +316,7 @@
         });
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0 });
 
     sections.forEach((section) => observer.observe(section));
   };
@@ -348,11 +349,21 @@
     if (!banner) return;
     banner.classList.add('hidden');
     banner.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('[data-consent-settings]').forEach((button) => {
+      button.setAttribute('aria-expanded', 'false');
+    });
+    const trigger = consentSettingsTrigger;
+    consentSettingsTrigger = null;
+    trigger?.focus();
   };
 
-  const showConsentBanner = (moveFocus = false) => {
+  const showConsentBanner = (moveFocus = false, trigger = null) => {
     const banner = document.querySelector('[data-consent-banner]');
     if (!banner) return;
+    consentSettingsTrigger = trigger;
+    document.querySelectorAll('[data-consent-settings]').forEach((button) => {
+      button.setAttribute('aria-expanded', button === trigger ? 'true' : 'false');
+    });
     banner.classList.remove('hidden');
     banner.setAttribute('aria-hidden', 'false');
     if (moveFocus) {
@@ -388,7 +399,12 @@
       });
     });
     document.querySelectorAll('[data-consent-settings]').forEach((button) => {
-      button.addEventListener('click', () => showConsentBanner(true));
+      button.addEventListener('click', () => showConsentBanner(true, button));
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && consentSettingsTrigger) {
+        hideConsentBanner();
+      }
     });
     document.addEventListener('click', (event) => {
       const cta = event.target.closest?.('[data-cta]');

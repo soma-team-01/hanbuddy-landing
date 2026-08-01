@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const test = require('node:test');
+const { runInNewContext } = require('node:vm');
 
 const readPage = (...parts) => readFileSync(join(__dirname, '..', ...parts), 'utf8');
 const homeHtml = readPage('index.html');
@@ -60,13 +61,39 @@ test('on-page application navigation is distinct from a Google Form open', () =>
   assert.doesNotMatch(homeHtml, /href="#apply" data-cta="apply"/);
 });
 
+const languageSwitchStatement = (html) => {
+  const match = html.match(/if \(previous !== lang\) [^\n]+;/);
+  assert.ok(match, 'language switch tracking statement must exist');
+  return match[0];
+};
+
+test('language switching remains available when analytics is unavailable', () => {
+  for (const html of [homeHtml, aboutHtml]) {
+    assert.doesNotThrow(() => runInNewContext(
+      languageSwitchStatement(html),
+      { lang: 'ko', previous: 'en', window: {} },
+    ));
+  }
+});
+
 test('language switches call the shared analytics API with both languages', () => {
   for (const html of [homeHtml, aboutHtml]) {
-    assert.match(
-      html,
-      /HanBuddyAnalytics\?\.trackLanguageSwitch\(lang, previous\)/,
+    const calls = [];
+    runInNewContext(
+      languageSwitchStatement(html),
+      {
+        lang: 'ko',
+        previous: 'en',
+        window: {
+          HanBuddyAnalytics: {
+            trackLanguageSwitch(...args) {
+              calls.push(args);
+            },
+          },
+        },
+      },
     );
-    assert.doesNotMatch(html, /track\('language_switch'/);
+    assert.deepEqual(calls, [['ko', 'en']]);
   }
 });
 
@@ -107,6 +134,16 @@ test('event detail pages expose the same explicit analytics consent controls', (
     assert.match(html, /data-consent-action="accept"/, `${name} accept control`);
     assert.match(html, /data-consent-action="reject"/, `${name} reject control`);
     assert.match(html, /data-consent-settings/, `${name} settings control`);
+  }
+});
+
+test('all cookie-settings controls expose their dialog expansion state', () => {
+  for (const { name, html } of publicPages) {
+    assert.match(
+      html,
+      /<button[^>]*data-consent-settings[^>]*aria-expanded="false"/,
+      `${name} cookie settings expansion state`,
+    );
   }
 });
 

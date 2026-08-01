@@ -545,7 +545,7 @@
             HanBuddy is run by team ZeroOne of AI&middot;SW Maestro, a national talent program hosted by Korea&rsquo;s Ministry of Science and ICT.
           </p>
         </div>
-        <button type="button" data-consent-settings aria-controls="analytics-consent"
+        <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false"
                 class="focusable shrink-0 self-start rounded-lg text-xs font-semibold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong hover:decoration-primary sm:self-auto"
                 data-i18n="consent.settings">
           Cookie settings
@@ -1167,7 +1167,7 @@
         if (!SUPPORTED_LANGUAGES.includes(lang)) return;
         const previous = document.documentElement.lang;
         applyLanguage(lang);
-        if (previous !== lang) HanBuddyAnalytics?.trackLanguageSwitch(lang, previous);
+        if (previous !== lang) window.HanBuddyAnalytics?.trackLanguageSwitch?.(lang, previous);
       });
     });
 

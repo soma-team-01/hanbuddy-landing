@@ -77,8 +77,8 @@ An event-card click sends Google's recommended `select_content` event:
 
 ### GA4 `section_view`
 
-Every section marked `data-analytics-section` sends one event when at least 20%
-is visible:
+Every section marked `data-analytics-section` sends one event on its first
+visible exposure:
 
 - `section_id`
 - common page context
