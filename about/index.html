@@ -238,50 +238,30 @@
       </div>
     </section>
 
-    <!-- ③ How we run it — zigzag photo/text blocks -->
-    <section id="how">
-      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+    <!-- ③ How we run it -->
+    <section id="how" class="border-t border-line-soft bg-canvas-soft">
+      <div class="mx-auto max-w-5xl px-5 py-16 lg:py-24">
         <h2 class="mx-auto max-w-2xl text-center font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
           Run by us, every week.
         </h2>
 
-        <div class="mt-12 space-y-12 lg:mt-16 lg:space-y-20">
-          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
-            <figure class="overflow-hidden rounded-2xl bg-panel">
-              <img src="/assets/photos/kbo/kbo-0726-sunset.webp" width="1200" height="1600" loading="lazy"
-                   class="block aspect-[8/10] w-full object-cover"
-                   alt="Packed stands at Jamsil Baseball Stadium on a bright afternoon, fans waving towels while the game goes on" data-i18n-alt="meta.howPlanAlt" />
-            </figure>
-            <div>
-              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.0.title">We plan each activity ourselves</p>
-              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.0.body">Built around one real Korean moment &mdash; not a checklist of landmarks.</p>
-            </div>
-          </div>
-
-          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
-            <figure class="overflow-hidden rounded-2xl bg-panel lg:order-last">
-              <img src="/assets/photos/kbo/run1-group.webp" width="975" height="1300" loading="lazy"
-                   class="block aspect-[8/10] w-full object-cover"
-                   alt="HanBuddy guests and local buddies together in the stands at Jamsil" data-i18n-alt="meta.howConfirmAlt" />
-            </figure>
-            <div>
-              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.1.title">A real person confirms your details</p>
-              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.1.body">No booking engine. We message you before the day with the meeting spot and everything you need.</p>
-            </div>
-          </div>
-
-          <div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
-            <figure class="overflow-hidden rounded-2xl bg-panel">
-              <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy"
-                   class="block aspect-[8/10] w-full object-cover"
-                   alt="Three cans of beer clinked together in the stands, a Doosan Bears jersey on the seat below" data-i18n-alt="meta.howImproveAlt" />
-            </figure>
-            <div>
-              <p class="font-display text-xl font-bold text-ink sm:text-2xl" data-i18n="how.items.2.title">We improve every week</p>
-              <p class="mt-3 text-base leading-8 text-muted" data-i18n="how.items.2.body">Every guest fills in a short survey afterwards, and it changes how we run the next one.</p>
-            </div>
-          </div>
-        </div>
+        <ul class="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6">
+          <li>
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-base font-extrabold text-on-primary" aria-hidden="true">1</span>
+            <p class="mt-4 font-display text-lg font-bold leading-snug text-ink" data-i18n="how.items.0.title">We plan each activity ourselves</p>
+            <p class="mt-2 text-base leading-7 text-muted" data-i18n="how.items.0.body">Built around one real Korean moment &mdash; not a checklist of landmarks.</p>
+          </li>
+          <li>
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-base font-extrabold text-on-primary" aria-hidden="true">2</span>
+            <p class="mt-4 font-display text-lg font-bold leading-snug text-ink" data-i18n="how.items.1.title">A real person confirms your details</p>
+            <p class="mt-2 text-base leading-7 text-muted" data-i18n="how.items.1.body">No booking engine. We message you before the day with the meeting spot and everything you need.</p>
+          </li>
+          <li>
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-base font-extrabold text-on-primary" aria-hidden="true">3</span>
+            <p class="mt-4 font-display text-lg font-bold leading-snug text-ink" data-i18n="how.items.2.title">We improve every week</p>
+            <p class="mt-2 text-base leading-7 text-muted" data-i18n="how.items.2.body">Every guest fills in a short survey afterwards, and it changes how we run the next one.</p>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -494,9 +474,6 @@
           ogDescription: 'We plan it, run it, and improve it every week — you just show up.',
           somaAlt: 'AI·SW Maestro logo',
           originAlt: 'A wide view from the stands of the pre-game ceremony on the field at Jamsil Baseball Stadium under an overcast sky',
-          howPlanAlt: 'Packed stands at Jamsil Baseball Stadium on a bright afternoon, fans waving towels while the game goes on',
-          howConfirmAlt: 'HanBuddy guests and local buddies together in the stands at Jamsil',
-          howImproveAlt: 'Three cans of beer clinked together in the stands, a Doosan Bears jersey on the seat below',
         },
         nav: {
           aria: 'Main navigation',
@@ -642,9 +619,6 @@
           ogDescription: '기획도, 운영도, 개선도 매주 저희가 직접 합니다 — 당신은 오기만 하면 돼요.',
           somaAlt: 'AI·SW마에스트로 로고',
           originAlt: '흐린 하늘 아래 잠실야구장 그라운드에서 열린 경기 전 행사를 관중석에서 바라본 모습',
-          howPlanAlt: '맑은 오후 잠실야구장을 가득 채운 관중석, 응원 타월을 흔드는 관중들',
-          howConfirmAlt: '잠실 관중석에 함께 모인 HanBuddy 게스트와 로컬 버디들',
-          howImproveAlt: '관중석에서 맞부딪친 맥주 캔 세 개, 아래 좌석에 놓인 두산 베어스 유니폼',
         },
         nav: {
           aria: '주요 내비게이션',
