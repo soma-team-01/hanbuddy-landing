@@ -184,6 +184,43 @@
       background: #ffffff;
     }
 
+    .tl-cluster-label {
+      margin-bottom: 0.75rem;
+    }
+
+    .tl-stack {
+      display: flex;
+      align-items: flex-end;
+      padding-left: 0.75rem;
+    }
+
+    .tl-stack img {
+      width: 6rem;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 10px 24px rgba(38, 27, 24, 0.45);
+    }
+
+    .tl-stack img + img {
+      margin-left: -2rem;
+    }
+
+    .tl-stack img:nth-child(1) { transform: rotate(-3deg); }
+    .tl-stack img:nth-child(2) { transform: rotate(-1deg); }
+    .tl-stack img:nth-child(3) { transform: rotate(1.5deg); }
+    .tl-stack img:nth-child(4) { transform: rotate(3deg); }
+
+    .tl-cluster-list {
+      margin-top: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+
     @media (max-width: 1023px) {
       .tl-rail {
         gap: 1.5rem;
@@ -191,7 +228,7 @@
 
       /* `.tl-rail` prefix raises specificity above Tailwind's `.block{display:block}`,
          which the CDN injects after this stylesheet and would otherwise win on source order. */
-      .tl-rail .tl-item {
+      .tl-rail .tl-item:not(.tl-cluster) {
         display: grid;
         grid-template-columns: 8rem minmax(0, 1fr);
         column-gap: 1rem;
@@ -199,19 +236,19 @@
         align-items: center;
       }
 
-      .tl-item > div {
+      .tl-item:not(.tl-cluster) > div {
         grid-column: 1;
         grid-row: 1 / span 2;
       }
 
-      .tl-item > p:nth-of-type(1) {
+      .tl-item:not(.tl-cluster) > p:nth-of-type(1) {
         grid-column: 2;
         grid-row: 1;
         align-self: end;
         margin-top: 0;
       }
 
-      .tl-item > p:nth-of-type(2) {
+      .tl-item:not(.tl-cluster) > p:nth-of-type(2) {
         grid-column: 2;
         grid-row: 2;
         align-self: start;
@@ -222,7 +259,7 @@
     @media (min-width: 1024px) {
       .tl-rail {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         grid-template-rows: 1fr 3.5rem 1fr;
         gap: 0 1.25rem;
         padding-left: 0;
@@ -255,30 +292,32 @@
         transform: translateX(-50%);
       }
 
-      .tl-item:nth-child(odd) {
+      .tl-item:nth-child(1) {
+        grid-column: 1;
         grid-row: 1;
         align-self: end;
       }
 
-      .tl-item:nth-child(odd)::before {
-        bottom: -2.125rem;
-      }
-
-      .tl-item:nth-child(even) {
+      .tl-item:nth-child(2) {
+        grid-column: 2;
         grid-row: 3;
         align-self: start;
       }
 
-      .tl-item:nth-child(even)::before {
-        top: -2.125rem;
+      .tl-cluster {
+        grid-column: 3 / span 2;
+        grid-row: 1;
+        align-self: end;
       }
 
-      .tl-item:nth-child(1) { grid-column: 1; }
-      .tl-item:nth-child(2) { grid-column: 2; }
-      .tl-item:nth-child(3) { grid-column: 3; }
-      .tl-item:nth-child(4) { grid-column: 4; }
-      .tl-item:nth-child(5) { grid-column: 5; }
-      .tl-item:nth-child(6) { grid-column: 6; }
+      .tl-item:nth-child(1)::before,
+      .tl-cluster::before {
+        bottom: -2.125rem;
+      }
+
+      .tl-item:nth-child(2)::before {
+        top: -2.125rem;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -980,14 +1019,13 @@
       if (!container) return;
       clear(container);
 
-      copy.timeline.items.forEach((item) => {
-        const isDone = item.status === 'done';
-        const card = document.createElement(item.href ? 'a' : 'div');
-        card.dataset.status = item.status;
-        card.className = item.href
-          ? 'tl-item focusable focusable-on-primary-strong group block rounded-2xl'
-          : 'tl-item block rounded-2xl';
-        if (item.href) card.href = item.href;
+      const done = copy.timeline.items.filter((item) => item.status === 'done');
+      const upcoming = copy.timeline.items.filter((item) => item.status !== 'done');
+
+      done.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'tl-item rounded-2xl';
+        card.dataset.status = 'done';
 
         const frame = document.createElement('div');
         frame.className = 'relative overflow-hidden rounded-2xl bg-panel';
@@ -998,14 +1036,12 @@
         img.width = item.width;
         img.height = item.height;
         img.loading = 'lazy';
-        img.className = 'block aspect-[16/10] w-full object-cover transition duration-200 group-hover:scale-[1.03]';
+        img.className = 'block aspect-[16/10] w-full object-cover';
         frame.appendChild(img);
 
         const chip = document.createElement('span');
-        chip.className = isDone
-          ? 'absolute left-3 top-3 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold text-primary-strong'
-          : 'absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-extrabold text-on-primary';
-        chip.textContent = isDone ? copy.timeline.statusDone : copy.timeline.statusUpcoming;
+        chip.className = 'absolute left-3 top-3 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold text-primary-strong';
+        chip.textContent = copy.timeline.statusDone;
         frame.appendChild(chip);
 
         card.appendChild(frame);
@@ -1022,6 +1058,56 @@
 
         container.appendChild(card);
       });
+
+      if (!upcoming.length) return;
+
+      const cluster = document.createElement('div');
+      cluster.className = 'tl-item tl-cluster';
+      cluster.dataset.status = 'upcoming';
+
+      const label = document.createElement('p');
+      label.className = 'tl-cluster-label font-display text-base font-extrabold text-on-primary-strong';
+      label.textContent = copy.timeline.statusUpcoming;
+      cluster.appendChild(label);
+
+      const stack = document.createElement('div');
+      stack.className = 'tl-stack';
+      upcoming.forEach((item) => {
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.alt;
+        img.width = item.width;
+        img.height = item.height;
+        img.loading = 'lazy';
+        stack.appendChild(img);
+      });
+      cluster.appendChild(stack);
+
+      const list = document.createElement('ul');
+      list.className = 'tl-cluster-list';
+      upcoming.forEach((item) => {
+        const row = document.createElement('li');
+
+        const name = document.createElement(item.href ? 'a' : 'span');
+        name.textContent = item.title;
+        if (item.href) {
+          name.href = item.href;
+          name.className = 'focusable focusable-on-primary-strong rounded font-bold text-on-primary-strong underline decoration-on-primary-strong/40 underline-offset-4 transition hover:decoration-on-primary-strong';
+        } else {
+          name.className = 'font-bold text-on-primary-strong/85';
+        }
+        row.appendChild(name);
+
+        const when = document.createElement('span');
+        when.className = 'ml-2 text-on-primary-strong/60';
+        when.textContent = item.date;
+        row.appendChild(when);
+
+        list.appendChild(row);
+      });
+      cluster.appendChild(list);
+
+      container.appendChild(cluster);
     };
 
     const setLanguageButtonState = (lang) => {
