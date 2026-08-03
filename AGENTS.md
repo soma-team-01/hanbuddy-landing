@@ -59,7 +59,7 @@ hanbuddy-landing/
 | `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop): open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
-| `#apply` | section | `index.html` | Final CTA band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, brand-red scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
+| `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |

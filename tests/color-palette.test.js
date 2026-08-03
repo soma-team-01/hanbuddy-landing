@@ -86,11 +86,13 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
 
 test('maps interactive and emphasized components to the approved warm-red roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
-  // 사진 배경이 들어오면서 relative/overflow 유틸이 붙었다. 색 역할만 고정한다.
+  // #apply는 사진 배경을 받으면서 ink 밴드가 됐다. 본문은 계속 on-primary-strong(흰색)이다.
   assert.match(
     html,
-    /<section id="apply" class="[^"]*\bbg-primary-strong\b[^"]*\btext-on-primary-strong\b[^"]*"[^>]*>/,
+    /<section id="apply" class="[^"]*\bbg-ink\b[^"]*\btext-on-primary-strong\b[^"]*"[^>]*>/,
   );
+  // 붉은 계열은 CTA 버튼·칩·강조 텍스트에서 계속 쓰인다.
+  assert.match(html, /text-primary-strong/);
   assert.match(html, /bg-primary-soft/);
   assert.match(html, /text-primary(?:-strong)?/);
   assert.match(html, /classList\.toggle\('bg-primary', selected\)/);
