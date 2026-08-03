@@ -87,7 +87,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 | `space-4` | `32px` | Group spacing between related modules |
 | `space-6` | `48px` | Compact section vertical rhythm |
 | `space-8` | `64px` | Standard section vertical rhythm |
-| `space-10` | `80px` | Hero and final CTA vertical rhythm |
+| `space-10` | `80px` | Hero vertical rhythm, final CTA on mobile |
+| `space-16` | `128px` | Final CTA on desktop — the band carries the photo backdrop and needs room for it to read as a photo |
 
 ### Radius
 
@@ -101,7 +102,9 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review carousel to `max-w-5xl` — all centered.
 - The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
-- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards on a flat `panel` band (`#reviews`), a dark `ink` band over a photo backdrop (`#apply`).
+- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards (`#reviews`), a dark `ink` band over a photo backdrop (`#apply`).
+- Section background rhythm (set 2026-08-03): hero `canvas` -> `#events` `panel` -> `#how` `canvas` -> `#reviews` `panel` -> `#apply` `ink`. The two card sections share the same `panel` band on purpose; giving them different light tones made the upper page read as a stack of unrelated stripes. Two light tones alternating is the whole rhythm — do not introduce a third.
+- With the tonal shift carrying the section break, `#events` needs no `border-t`; the border only existed while it sat on a near-identical tone.
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
@@ -128,7 +131,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Event Cards and Steps
 
-- Event cards (`#events`): Meetup-style compact cards in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
+- Event cards (`#events`): Meetup-style compact cards on the `panel` band (same band as `#reviews`), in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
 - How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
 - Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
 - Event detail photo lightbox: collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.

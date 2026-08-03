@@ -56,7 +56,7 @@ hanbuddy-landing/
 | `.backdrop-slide` | CSS utility | `index.html` style block | Section-backdrop crossfade transition (opacity 1s); used by `#apply` |
 | `.review-track` / `.review-arrow` | CSS utility | `index.html` style block | Quote-card carousel: hidden scrollbar on the snap track, dimmed end-state arrows |
 | `#top` | section | `index.html` | Hero: headline, pill CTAs, rating chip linking to `#reviews`, featured guest-quote card, polaroid scatter |
-| `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop): open events link to `/events/*`, coming-soon cards show a toast |
+| `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop) on the `panel` band shared with `#reviews`: open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note. Data/cookie disclosure lives in the consent banner only |
