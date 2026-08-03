@@ -22,7 +22,7 @@ hanbuddy-landing/
 |   |-- photos/kleague/       # team-owned K League photos (coming-soon card / backdrop)
 |   |-- photos/jjimjilbang/   # CC0 jjimjilbang photos (coming-soon card; no team photos yet)
 |   `-- raw/                  # untracked originals (.gitignore); never deploy
-|-- tests/                    # node --test suites: about copy sync, analytics consent, palette/typography vs DESIGN.md
+|-- tests/                    # node --test suites: about copy sync, analytics consent, review carousel, palette/typography vs DESIGN.md
 |-- docs/superpowers/         # past design specs/plans (history, not current truth)
 |-- DESIGN.md                 # design-system SSOT (tokens, components, photo rules)
 |-- README.md                 # quick-start, deploy model, public-copy rules pointer
@@ -54,10 +54,11 @@ hanbuddy-landing/
 | `.hero-polaroid` / `.hp1–4` | CSS utilities | `index.html` style block | Hero polaroid scatter: desktop corner-pinned tilted snaps with tape + handwritten captions, mobile offset 2-col collage |
 | `.photo-card` | CSS utility | `index.html` style block | Rounded photo frame with hover zoom (event cards, detail collages) |
 | `.review-slide` | CSS utility | `index.html` style block | Reviews-backdrop crossfade transition (opacity 1s) |
+| `.review-track` / `.review-arrow` | CSS utility | `index.html` style block | Quote-card carousel: hidden scrollbar on the snap track, dimmed end-state arrows |
 | `#top` | section | `index.html` | Hero: headline, pill CTAs, rating chip linking to `#reviews`, featured guest-quote card, polaroid scatter |
 | `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop): open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
-| `#reviews` | section | `index.html` | Guest reviews over an autoplay crossfading photo backdrop: aggregate rating chip + 3 approved quote cards; rules in DESIGN.md "Guest Reviews" |
+| `#reviews` | section | `index.html` | Guest reviews over an autoplay crossfading photo backdrop: aggregate rating chip + a manual arrow carousel of 5 approved quote cards; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA band: Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
@@ -65,6 +66,7 @@ hanbuddy-landing/
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
 | `startReviewBackdrop` | JS | `index.html` script | 6s autoplay crossfade for `#reviews` backdrop; disabled under `prefers-reduced-motion` |
+| `scrollReviewsBy` / `syncReviewArrows` | JS | `index.html` script | Quote-card carousel: arrows scroll one card, end states set `disabled`; re-synced after every render, scroll, and resize |
 | Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`; Meta customs `ApplicationFormOpen`, `ContactClick` |
 | Lightbox | JS | `events/*/index.html` | Full-screen photo viewer: arrows, arrow-key/Escape, focus moved to close button on open, Tab trapped inside, focus restored to trigger on close |
 
@@ -84,6 +86,7 @@ hanbuddy-landing/
 2. 2026-07-26 survey promo field: "Great experience to enjoy a baseball game with a local" / KO "로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요"
 3. 2026-07-26 survey "What did you like" field (유현님 approved this field for publication, 2026-07-29): "It was fun to watch the game and cheer together!" / KO "함께 응원하며 경기를 보는 게 정말 재미있었어요!" — only the sentence-initial capital is normalized.
 4. KakaoTalk message from a July guest, approved in trimmed form (2026-07-28): "I had such a great evening — will definitely be going to another game with HanBuddy!"
+5. 2026-08-02 survey promo field (2026-07-26 run participant), single-sentence excerpt of a longer answer: "They did a fantastic job of explaining what was happening during the game." / KO "경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요." — the same excerpt is used in the `2026-08-03-ugc-v3` reels script.
 - Answers from the "What could be improved" survey field remain off-limits for public copy.
 - The aggregate "4.7 / 5 average guest rating" is the mean of all post-event survey satisfaction scores to date; update only by recomputing from the survey sheet, and never expose any individual score.
 

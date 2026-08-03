@@ -158,6 +158,21 @@
       transition: opacity 1000ms ease-in-out;
     }
 
+    /* 리뷰 카드 캐러셀: 화살표로 넘기는 스크롤 스냅 트랙 */
+    .review-track {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .review-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .review-arrow[disabled] {
+      opacity: 0.4;
+      cursor: default;
+    }
+
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -449,7 +464,27 @@
           </p>
         </div>
 
-        <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
+        <div class="relative mx-auto mt-12 max-w-5xl sm:px-14">
+          <!-- 모바일은 카드 1장만 보이므로 내용 높이대로, 여러 장 보이는 화면부터 높이를 맞춘다 -->
+          <div class="review-track flex items-start snap-x snap-mandatory gap-6 overflow-x-auto pb-1 sm:items-stretch"
+               role="region" tabindex="0" aria-label="Guest review cards" data-i18n-aria="reviews.trackAria"
+               data-review-cards></div>
+
+          <!-- 좁은 화면에는 좌우 여백이 없어 화살표를 아래로 내린다 -->
+          <div class="mt-8 flex items-center justify-center gap-4 sm:contents">
+            <button type="button" data-review-prev disabled
+                    class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:left-0 sm:top-1/2 sm:-translate-y-1/2"
+                    aria-label="Show previous reviews" data-i18n-aria="reviews.prevAria">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <!-- 카드 렌더 전에는 눌러도 움직일 게 없다. JS가 첫 동기화에서 활성화한다 -->
+            <button type="button" data-review-next disabled
+                    class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
+                    aria-label="Show next reviews" data-i18n-aria="reviews.nextAria">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
 
       </div>
     </section>
@@ -715,7 +750,15 @@
           title: 'Our guests say it best.',
           body: 'Every guest fills in a short survey after each meetup. Here’s what they told us.',
           rating: '4.7 / 5 average guest rating',
+          trackAria: 'Guest review cards',
+          prevAria: 'Show previous reviews',
+          nextAria: 'Show next reviews',
           cards: [
+            {
+              quote: '“They did a fantastic job of explaining what was happening during the game.”',
+              meta: '— Guest at our July baseball night · Jamsil, July 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
             {
               quote: '“It was fun to watch the game and cheer together!”',
               meta: '— Guest at our July baseball night · Jamsil, July 2026',
@@ -729,6 +772,11 @@
             {
               quote: '“I had such a great evening — will definitely be going to another game with HanBuddy!”',
               meta: '— Message from a guest after our July baseball night',
+              tag: '⚾ KBO Baseball Night',
+            },
+            {
+              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+              meta: '— Guest at our June baseball night · Jamsil, June 2026',
               tag: '⚾ KBO Baseball Night',
             },
           ],
@@ -885,7 +933,15 @@
           title: '게스트가 남긴 진짜 이야기.',
           body: '모임이 끝나면 게스트가 짧은 설문을 남깁니다. 그 답변을 그대로 옮겨왔어요.',
           rating: '4.7 / 5 게스트 평균 평점',
+          trackAria: '게스트 후기 카드',
+          prevAria: '이전 후기 보기',
+          nextAria: '다음 후기 보기',
           cards: [
+            {
+              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
+              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
+              tag: '⚾ KBO 야구 직관',
+            },
             {
               quote: '“함께 응원하며 경기를 보는 게 정말 재미있었어요!”',
               meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
@@ -899,6 +955,11 @@
             {
               quote: '“정말 즐거운 저녁이었어요 — 다음 경기도 꼭 HanBuddy와 함께할 거예요!”',
               meta: '— 7월 야구 직관 후 게스트가 보낸 메시지',
+              tag: '⚾ KBO 야구 직관',
+            },
+            {
+              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+              meta: '— 6월 야구 직관 참가 게스트 · 잠실, 2026년 6월',
               tag: '⚾ KBO 야구 직관',
             },
           ],
@@ -1084,7 +1145,7 @@
       clear(container);
       copy.reviews.cards.forEach((item) => {
         const figure = document.createElement('figure');
-        figure.className = 'flex flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:p-8';
+        figure.className = 'flex w-[85%] shrink-0 snap-start flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
 
         const blockquote = document.createElement('blockquote');
         blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
@@ -1100,6 +1161,7 @@
         figure.append(blockquote, caption);
         container.appendChild(figure);
       });
+      syncReviewArrows();
     };
 
     const renderHowItems = (copy) => {
@@ -1160,6 +1222,40 @@
         });
       }, 6000);
     };
+
+    // ===== 리뷰 카드 캐러셀: 화살표로 한 장씩 이동 =====
+    const reviewTrack = document.querySelector('[data-review-cards]');
+    const reviewPrevButton = document.querySelector('[data-review-prev]');
+    const reviewNextButton = document.querySelector('[data-review-next]');
+
+    function syncReviewArrows() {
+      if (!reviewTrack || !reviewPrevButton || !reviewNextButton) return;
+      const maxScroll = reviewTrack.scrollWidth - reviewTrack.clientWidth;
+      reviewPrevButton.disabled = maxScroll <= 1 || reviewTrack.scrollLeft <= 1;
+      reviewNextButton.disabled = maxScroll <= 1 || reviewTrack.scrollLeft >= maxScroll - 1;
+    }
+
+    const scrollReviewsBy = (direction) => {
+      if (!reviewTrack) return;
+      const card = reviewTrack.firstElementChild;
+      if (!card) return;
+      const gap = Number.parseFloat(getComputedStyle(reviewTrack).columnGap) || 0;
+      const step = card.getBoundingClientRect().width + gap;
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      reviewTrack.scrollBy({ left: step * direction, behavior });
+    };
+
+    reviewPrevButton?.addEventListener('click', () => scrollReviewsBy(-1));
+    reviewNextButton?.addEventListener('click', () => scrollReviewsBy(1));
+    reviewTrack?.addEventListener('scroll', syncReviewArrows, { passive: true });
+    // Tailwind CDN·웹폰트가 늦게 적용돼 첫 렌더 시점의 트랙 폭이 최종값과 다르다.
+    // 레이아웃이 실제로 바뀔 때마다 다시 맞춘다.
+    if (reviewTrack && 'ResizeObserver' in window) {
+      new ResizeObserver(syncReviewArrows).observe(reviewTrack);
+    } else {
+      window.addEventListener('resize', syncReviewArrows);
+    }
+    window.addEventListener('load', syncReviewArrows);
 
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
