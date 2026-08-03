@@ -88,7 +88,7 @@ test('maps interactive and emphasized components to the approved warm-red roles'
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
   assert.match(
     html,
-    /<section id="apply" class="bg-primary-strong text-on-primary-strong">/,
+    /<section id="apply" class="bg-primary-strong text-on-primary-strong"[^>]*>/,
   );
   assert.match(html, /bg-primary-soft/);
   assert.match(html, /text-primary(?:-strong)?/);

@@ -4,6 +4,7 @@ const { join } = require('node:path');
 const test = require('node:test');
 
 const indexHtml = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
+const analyticsJs = readFileSync(join(__dirname, '..', 'assets', 'analytics.js'), 'utf8');
 
 const aboutPath = join(__dirname, '..', 'about', 'index.html');
 const aboutHtml = existsSync(aboutPath) ? readFileSync(aboutPath, 'utf8') : '';
@@ -21,7 +22,8 @@ test('about page keeps analytics behind consent (same gate as index)', () => {
   assert.match(aboutHtml, /data-consent-banner/);
   assert.match(aboutHtml, /data-consent-action="accept"/);
   assert.match(aboutHtml, /data-consent-action="reject"/);
-  assert.match(aboutHtml, /hanbuddy\.analyticsConsent/);
+  assert.match(aboutHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(analyticsJs, /hanbuddy\.analyticsConsent/);
 });
 
 test('about page never exposes maintainer-only validation details', () => {
@@ -106,8 +108,7 @@ test('shared copy stays in sync between index and about', () => {
     'Continue without optional cookies',
     '분석 및 광고 허용',
     'HanBuddy by ZeroOne',
-    "googleMeasurementId: 'G-MW7MFVL50G'",
-    "metaPixelId: '4569887956575986'",
+    '<script src="/assets/analytics.js"></script>',
   ];
   for (const snippet of sharedSnippets) {
     assert.ok(indexHtml.includes(snippet), `index.html missing: ${snippet}`);
