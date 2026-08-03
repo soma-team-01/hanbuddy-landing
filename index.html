@@ -472,12 +472,13 @@
 
           <!-- 좁은 화면에는 좌우 여백이 없어 화살표를 아래로 내린다 -->
           <div class="mt-8 flex items-center justify-center gap-4 sm:contents">
-            <button type="button" data-review-prev
+            <button type="button" data-review-prev disabled
                     class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:left-0 sm:top-1/2 sm:-translate-y-1/2"
                     aria-label="Show previous reviews" data-i18n-aria="reviews.prevAria">
               <span aria-hidden="true">&larr;</span>
             </button>
-            <button type="button" data-review-next
+            <!-- 카드 렌더 전에는 눌러도 움직일 게 없다. JS가 첫 동기화에서 활성화한다 -->
+            <button type="button" data-review-next disabled
                     class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                     aria-label="Show next reviews" data-i18n-aria="reviews.nextAria">
               <span aria-hidden="true">&rarr;</span>

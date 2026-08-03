@@ -37,6 +37,10 @@ test('arrow controls stay keyboard- and screen-reader-usable', () => {
   }
   // 화살표 상태는 disabled 속성으로만 표현한다 (CSS로 흐리게 처리).
   assert.match(indexHtml, /\.review-arrow\[disabled\]/);
+  // 카드가 렌더되기 전에는 눌러도 움직일 게 없으므로 마크업에서 비활성으로 출발한다.
+  for (const arrow of arrows) {
+    assert.match(arrow, /data-review-(?:prev|next) disabled/, 'arrow must ship disabled and be enabled by the first sync');
+  }
 });
 
 test('both locales ship the same five approved review cards', () => {
