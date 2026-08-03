@@ -151,14 +151,20 @@ test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
 
 test('the two card sections share one band color, keeping the light rhythm to two tones', () => {
   // #events와 #reviews가 서로 다른 밝은 톤이면 위쪽 페이지가 무관한 줄무늬처럼 읽힌다.
-  const sectionBg = (id) => {
+  // 첫 토큰만 보면 `bg-panel bg-canvas-soft`처럼 겹쳐 쓴 경우를 놓친다. 전부 모아서 비교한다.
+  const sectionBgs = (id) => {
     const match = html.match(new RegExp(`<section id="${id}" class="([^"]*)"`));
     assert.ok(match, `missing section #${id}`);
-    return (match[1].match(/\bbg-[a-z-]+\b/) ?? [])[0];
+    return match[1].match(/\bbg-[a-z0-9/-]+\b/g) ?? [];
   };
-  assert.equal(sectionBg('events'), 'bg-panel');
-  assert.equal(sectionBg('reviews'), sectionBg('events'));
+  assert.deepEqual(sectionBgs('events'), ['bg-panel']);
+  assert.deepEqual(sectionBgs('reviews'), ['bg-panel']);
+  assert.deepEqual(sectionBgs('apply'), ['bg-ink']);
   // 톤 차이가 구분선 역할을 하므로 #events의 상단 보더는 없앴다.
   assert.doesNotMatch(html, /<section id="events" class="[^"]*\bborder-t\b/);
-  assert.match(design, /Section background rhythm/);
+  // 문서에도 리듬 전체가 값으로 적혀 있어야 한다. 제목만 맞추면 값이 바뀌어도 통과한다.
+  assert.match(
+    design,
+    /hero `canvas` -> `#events` `panel` -> `#how` `canvas` -> `#reviews` `panel` -> `#apply` `ink`/,
+  );
 });
