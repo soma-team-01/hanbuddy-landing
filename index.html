@@ -753,10 +753,11 @@
           trackAria: 'Guest review cards',
           prevAria: 'Show previous reviews',
           nextAria: 'Show next reviews',
+          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
           cards: [
             {
-              quote: '“They did a fantastic job of explaining what was happening during the game.”',
-              meta: '— Guest at our July baseball night · Jamsil, July 2026',
+              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+              meta: '— Guest at our June baseball night · Jamsil, June 2026',
               tag: '⚾ KBO Baseball Night',
             },
             {
@@ -775,8 +776,8 @@
               tag: '⚾ KBO Baseball Night',
             },
             {
-              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-              meta: '— Guest at our June baseball night · Jamsil, June 2026',
+              quote: '“They did a fantastic job of explaining what was happening during the game.”',
+              meta: '— Guest at our July baseball night · Jamsil, July 2026',
               tag: '⚾ KBO Baseball Night',
             },
           ],
@@ -936,10 +937,11 @@
           trackAria: '게스트 후기 카드',
           prevAria: '이전 후기 보기',
           nextAria: '다음 후기 보기',
+          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
           cards: [
             {
-              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
-              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
+              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+              meta: '— 6월 야구 직관 참가 게스트 · 잠실, 2026년 6월',
               tag: '⚾ KBO 야구 직관',
             },
             {
@@ -958,8 +960,8 @@
               tag: '⚾ KBO 야구 직관',
             },
             {
-              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-              meta: '— 6월 야구 직관 참가 게스트 · 잠실, 2026년 6월',
+              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
+              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
               tag: '⚾ KBO 야구 직관',
             },
           ],
@@ -1161,7 +1163,7 @@
         figure.append(blockquote, caption);
         container.appendChild(figure);
       });
-      syncReviewArrows();
+      restartReviewAlignment();
     };
 
     const renderHowItems = (copy) => {
@@ -1224,9 +1226,17 @@
     };
 
     // ===== 리뷰 카드 캐러셀: 화살표로 한 장씩 이동 =====
+    // 카드는 시간순이지만 1번 후기는 히어로가 이미 인용하고 있어, 캐러셀은 2번 카드에서 출발한다.
+    const DEFAULT_REVIEW_CARD_INDEX = 1;
     const reviewTrack = document.querySelector('[data-review-cards]');
     const reviewPrevButton = document.querySelector('[data-review-prev]');
     const reviewNextButton = document.querySelector('[data-review-next]');
+
+    const reviewCardStep = () => {
+      const [first, second] = reviewTrack?.children ?? [];
+      if (!first) return 0;
+      return second ? second.offsetLeft - first.offsetLeft : first.getBoundingClientRect().width;
+    };
 
     function syncReviewArrows() {
       if (!reviewTrack || !reviewPrevButton || !reviewNextButton) return;
@@ -1235,27 +1245,52 @@
       reviewNextButton.disabled = maxScroll <= 1 || reviewTrack.scrollLeft >= maxScroll - 1;
     }
 
+    // Tailwind CDN이 카드 폭을 적용하기 전에 계산하면 시작 위치가 어긋난다. 로딩이 끝난 뒤의
+    // 계산만 최종으로 보고, 그 전까지는 레이아웃이 바뀔 때마다 다시 잡는다.
+    let reviewAlignmentPending = false;
+
+    function alignReviewsToDefaultCard() {
+      if (!reviewTrack) return;
+      const step = reviewCardStep();
+      reviewTrack.scrollLeft = step * DEFAULT_REVIEW_CARD_INDEX;
+      syncReviewArrows();
+      if (step > 0 && document.readyState === 'complete') reviewAlignmentPending = false;
+    }
+
+    const restartReviewAlignment = () => {
+      reviewAlignmentPending = true;
+      alignReviewsToDefaultCard();
+    };
+
+    // 사용자가 직접 넘긴 뒤에는 위치를 다시 건드리지 않는다.
+    const stopReviewAlignment = () => { reviewAlignmentPending = false; };
+
     const scrollReviewsBy = (direction) => {
       if (!reviewTrack) return;
-      const card = reviewTrack.firstElementChild;
-      if (!card) return;
-      const gap = Number.parseFloat(getComputedStyle(reviewTrack).columnGap) || 0;
-      const step = card.getBoundingClientRect().width + gap;
+      const step = reviewCardStep();
+      if (!step) return;
+      stopReviewAlignment();
       const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
       reviewTrack.scrollBy({ left: step * direction, behavior });
+    };
+
+    const settleReviewLayout = () => {
+      if (reviewAlignmentPending) alignReviewsToDefaultCard();
+      else syncReviewArrows();
     };
 
     reviewPrevButton?.addEventListener('click', () => scrollReviewsBy(-1));
     reviewNextButton?.addEventListener('click', () => scrollReviewsBy(1));
     reviewTrack?.addEventListener('scroll', syncReviewArrows, { passive: true });
-    // Tailwind CDN·웹폰트가 늦게 적용돼 첫 렌더 시점의 트랙 폭이 최종값과 다르다.
-    // 레이아웃이 실제로 바뀔 때마다 다시 맞춘다.
+    ['pointerdown', 'wheel', 'keydown'].forEach((type) => {
+      reviewTrack?.addEventListener(type, stopReviewAlignment, { passive: true });
+    });
     if (reviewTrack && 'ResizeObserver' in window) {
-      new ResizeObserver(syncReviewArrows).observe(reviewTrack);
+      new ResizeObserver(settleReviewLayout).observe(reviewTrack);
     } else {
-      window.addEventListener('resize', syncReviewArrows);
+      window.addEventListener('resize', settleReviewLayout);
     }
-    window.addEventListener('load', syncReviewArrows);
+    window.addEventListener('load', settleReviewLayout);
 
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {

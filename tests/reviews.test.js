@@ -62,6 +62,24 @@ test('newly added quotes match the approved survey wording', () => {
   assert.match(ko, /경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요/);
 });
 
+test('cards run oldest to newest, and the carousel opens on the second one', () => {
+  // 1번(6월 파일럿)은 히어로가 이미 대표 인용으로 쓰고 있어 기본 노출에서 빠진다.
+  const en = reviewCardsBlock('en');
+  const order = [...en.matchAll(/quote: '“([^”]+)”'/g)].map((m) => m[1]);
+  assert.equal(order.length, 5);
+  assert.match(order[0], /^If you are looking to experience Korean baseball culture/);
+  assert.match(order[4], /^They did a fantastic job/);
+
+  assert.match(indexHtml, /const DEFAULT_REVIEW_CARD_INDEX = 1;/);
+  assert.match(indexHtml, /function alignReviewsToDefaultCard\(\)/);
+  // 렌더 직후 시작 위치를 잡아야 언어 전환 뒤에도 2번 카드에서 출발한다.
+  const renderer = indexHtml.slice(indexHtml.indexOf('const renderReviewCards'), indexHtml.indexOf('const renderHowItems'));
+  assert.match(renderer, /restartReviewAlignment\(\);/);
+  // 사용자가 직접 넘긴 뒤에는 시작 위치를 다시 강제하지 않는다.
+  assert.match(indexHtml, /const stopReviewAlignment = \(\) => \{ reviewAlignmentPending = false; \};/);
+  assert.match(indexHtml, /\['pointerdown', 'wheel', 'keydown'\]/);
+});
+
 test('review section never exposes maintainer-only validation details', () => {
   const sectionStart = indexHtml.indexOf('<section id="reviews"');
   const sectionEnd = indexHtml.indexOf('<section id="apply"');
