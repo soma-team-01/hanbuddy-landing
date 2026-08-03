@@ -1,6 +1,6 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-07-30 KST
+**Updated:** 2026-08-03 KST
 
 ## OVERVIEW
 
