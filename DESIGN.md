@@ -158,7 +158,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
 
