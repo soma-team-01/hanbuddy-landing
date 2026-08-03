@@ -64,11 +64,18 @@ test('newly added quotes match the approved survey wording', () => {
 
 test('cards run oldest to newest, and the carousel opens on the second one', () => {
   // 1번(6월 파일럿)은 히어로가 이미 대표 인용으로 쓰고 있어 기본 노출에서 빠진다.
-  const en = reviewCardsBlock('en');
-  const order = [...en.matchAll(/quote: '“([^”]+)”'/g)].map((m) => m[1]);
-  assert.equal(order.length, 5);
-  assert.match(order[0], /^If you are looking to experience Korean baseball culture/);
-  assert.match(order[4], /^They did a fantastic job/);
+  const quoteOrder = (locale) => [...reviewCardsBlock(locale).matchAll(/quote: '“([^”]+)”'/g)].map((m) => m[1]);
+
+  const en = quoteOrder('en');
+  assert.equal(en.length, 5);
+  assert.match(en[0], /^If you are looking to experience Korean baseball culture/);
+  assert.match(en[4], /^They did a fantastic job/);
+
+  // KO 순서가 EN과 어긋나면 언어를 바꿨을 때 다른 후기가 기본 노출된다.
+  const ko = quoteOrder('ko');
+  assert.equal(ko.length, 5);
+  assert.match(ko[0], /^한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면/);
+  assert.match(ko[4], /^경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요/);
 
   assert.match(indexHtml, /const DEFAULT_REVIEW_CARD_INDEX = 1;/);
   assert.match(indexHtml, /function alignReviewsToDefaultCard\(\)/);
