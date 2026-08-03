@@ -146,6 +146,106 @@
       color: rgba(255, 255, 255, 0.84);
     }
 
+    /* Timeline rail — vertical axis on small screens, horizontal axis on lg+ */
+    .tl-rail {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      padding-left: 1.75rem;
+    }
+
+    .tl-rail::before {
+      content: '';
+      position: absolute;
+      left: 0.3125rem;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .tl-item {
+      position: relative;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 0.5rem;
+      height: 0.75rem;
+      width: 0.75rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .tl-item[data-status='done']::before {
+      background: #ffffff;
+    }
+
+    @media (min-width: 1024px) {
+      .tl-rail {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-rows: 1fr 3.5rem 1fr;
+        gap: 0 1.25rem;
+        padding-left: 0;
+      }
+
+      .tl-rail::before {
+        left: 0;
+        right: 0;
+        top: 50%;
+        bottom: auto;
+        height: 2px;
+        width: auto;
+        transform: translateY(-50%);
+      }
+
+      .tl-rail::after {
+        content: '';
+        position: absolute;
+        right: -0.125rem;
+        top: 50%;
+        transform: translateY(-50%);
+        border-top: 0.4rem solid transparent;
+        border-bottom: 0.4rem solid transparent;
+        border-left: 0.6rem solid rgba(255, 255, 255, 0.28);
+      }
+
+      .tl-item::before {
+        left: 50%;
+        top: auto;
+        transform: translateX(-50%);
+      }
+
+      .tl-item:nth-child(odd) {
+        grid-row: 1;
+        align-self: end;
+      }
+
+      .tl-item:nth-child(odd)::before {
+        bottom: -2.125rem;
+      }
+
+      .tl-item:nth-child(even) {
+        grid-row: 3;
+        align-self: start;
+      }
+
+      .tl-item:nth-child(even)::before {
+        top: -2.125rem;
+      }
+
+      .tl-item:nth-child(1) { grid-column: 1; }
+      .tl-item:nth-child(2) { grid-column: 2; }
+      .tl-item:nth-child(3) { grid-column: 3; }
+      .tl-item:nth-child(4) { grid-column: 4; }
+      .tl-item:nth-child(5) { grid-column: 5; }
+      .tl-item:nth-child(6) { grid-column: 6; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -275,7 +375,7 @@
           </h2>
         </div>
 
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-timeline-items></div>
+        <div class="mt-12 tl-rail" data-timeline-items></div>
 
         <p class="mx-auto mt-12 max-w-2xl text-center text-base leading-8 text-on-primary-strong/85 sm:text-lg" data-i18n="timeline.closing">
           Baseball and picnics are just the start &mdash; festivals, football, markets: anywhere Koreans have their fun, we&rsquo;ll take you along.
@@ -848,9 +948,10 @@
       copy.timeline.items.forEach((item) => {
         const isDone = item.status === 'done';
         const card = document.createElement(item.href ? 'a' : 'div');
+        card.dataset.status = item.status;
         card.className = item.href
-          ? 'focusable focusable-on-primary-strong group block rounded-2xl'
-          : 'block rounded-2xl';
+          ? 'tl-item focusable focusable-on-primary-strong group block rounded-2xl'
+          : 'tl-item block rounded-2xl';
         if (item.href) card.href = item.href;
 
         const frame = document.createElement('div');
@@ -875,12 +976,12 @@
         card.appendChild(frame);
 
         const date = document.createElement('p');
-        date.className = 'mt-4 text-xs font-extrabold uppercase tracking-[0.18em] text-on-primary-strong/70';
+        date.className = 'mt-3 text-[0.6875rem] font-extrabold uppercase tracking-[0.14em] text-on-primary-strong/70';
         date.textContent = item.date;
         card.appendChild(date);
 
         const title = document.createElement('p');
-        title.className = 'mt-2 font-display text-lg font-bold leading-snug text-on-primary-strong';
+        title.className = 'mt-1.5 font-display text-sm font-bold leading-snug text-on-primary-strong';
         title.textContent = item.title;
         card.appendChild(title);
 
