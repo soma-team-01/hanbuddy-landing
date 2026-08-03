@@ -195,7 +195,7 @@
     }
 
     .tl-stack img {
-      width: 6rem;
+      width: 9rem;
       aspect-ratio: 16 / 10;
       object-fit: cover;
       border-radius: 0.75rem;
@@ -204,7 +204,7 @@
     }
 
     .tl-stack img + img {
-      margin-left: -2rem;
+      margin-left: -2.75rem;
     }
 
     .tl-stack img:nth-child(1) { transform: rotate(-3deg); }
@@ -259,7 +259,7 @@
     @media (min-width: 1024px) {
       .tl-rail {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         grid-template-rows: 1fr 3.5rem 1fr;
         gap: 0 1.25rem;
         padding-left: 0;
@@ -304,19 +304,34 @@
         align-self: start;
       }
 
-      .tl-cluster {
-        grid-column: 3 / span 2;
+      .tl-item:nth-child(3) {
+        grid-column: 3;
         grid-row: 1;
         align-self: end;
       }
 
+      .tl-cluster {
+        grid-column: 4 / span 2;
+        grid-row: 3;
+        align-self: start;
+      }
+
       .tl-item:nth-child(1)::before,
-      .tl-cluster::before {
+      .tl-item:nth-child(3)::before {
         bottom: -2.125rem;
       }
 
-      .tl-item:nth-child(2)::before {
+      .tl-item:nth-child(2)::before,
+      .tl-cluster::before {
         top: -2.125rem;
+      }
+
+      .tl-stack img {
+        width: 11rem;
+      }
+
+      .tl-stack img + img {
+        margin-left: -3.25rem;
       }
     }
 
@@ -709,8 +724,17 @@
               height: 1200,
             },
             {
+              status: 'done',
+              date: '2026.08.01',
+              title: 'Han River Picnic — mats, chimaek and the sunset',
+              image: '/assets/photos/hanriver/hanriver-picnic.webp',
+              alt: 'Picnic mats spread across the Han River park lawn at dusk, with a bridge in the background',
+              width: 1600,
+              height: 1200,
+            },
+            {
               status: 'upcoming',
-              date: 'Aug 1 · 8 · 9',
+              date: 'Aug 8 · 9',
               title: 'Han River Picnic',
               image: '/assets/photos/hanriver/hanriver-fountain.webp',
               alt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
@@ -850,8 +874,17 @@
               height: 1200,
             },
             {
+              status: 'done',
+              date: '2026.08.01',
+              title: '한강 피크닉 — 돗자리, 치맥 그리고 노을',
+              image: '/assets/photos/hanriver/hanriver-picnic.webp',
+              alt: '해질 무렵 한강공원 잔디밭에 펼쳐진 돗자리들과 뒤편의 다리',
+              width: 1600,
+              height: 1200,
+            },
+            {
               status: 'upcoming',
-              date: '8월 1 · 8 · 9일',
+              date: '8월 8 · 9일',
               title: '한강 피크닉',
               image: '/assets/photos/hanriver/hanriver-fountain.webp',
               alt: '노을 지는 한강, 반포대교 무지개분수',

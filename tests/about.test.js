@@ -40,13 +40,17 @@ test('about page never claims un-operated activities as completed meetups', () =
   assert.doesNotMatch(aboutHtml, /Real moments from our meetups/);
   assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
 
-  // 완료(status: 'done') 항목은 실제 운영한 잠실 KBO 사진만 쓸 수 있다.
-  // 한강·K리그·찜질방은 미운영이므로 완료 항목에 등장하면 안 된다.
+  // 완료(status: 'done')로 표기할 수 있는 회차는 실제로 운영한 것뿐이다. 날짜 화이트리스트로 고정한다.
+  // K리그·찜질방은 여전히 미운영이므로 완료 항목에 등장하면 안 된다.
   const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
-  assert.equal(doneEntries.length, 4, '완료 항목은 EN/KO 각각 2건, 총 4건이어야 함');
+  assert.equal(doneEntries.length, 6, '완료 항목은 EN/KO 각각 3건, 총 6건이어야 함');
+  const operatedDates = ['2026.06.25', '2026.07.26', '2026.08.01'];
   for (const entry of doneEntries) {
-    assert.match(entry, /\/assets\/photos\/kbo\//, `완료 항목에 KBO 외 사진 사용: ${entry}`);
-    assert.doesNotMatch(entry, /hanriver|kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
+    assert.ok(
+      operatedDates.some((date) => entry.includes(date)),
+      `승인되지 않은 완료 날짜: ${entry}`,
+    );
+    assert.doesNotMatch(entry, /kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
   }
 });
 
