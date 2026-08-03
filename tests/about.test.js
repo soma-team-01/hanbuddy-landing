@@ -11,7 +11,7 @@ const aboutHtml = existsSync(aboutPath) ? readFileSync(aboutPath, 'utf8') : '';
 
 test('about page exists with core sections', () => {
   assert.ok(aboutHtml.length > 0, 'about/index.html must exist');
-  for (const id of ['top', 'why', 'operate', 'team', 'join']) {
+  for (const id of ['top', 'origin', 'how', 'timeline', 'team', 'join']) {
     assert.match(aboutHtml, new RegExp(`<section id="${id}"`), `missing section #${id}`);
   }
 });
@@ -31,6 +31,50 @@ test('about page never exposes maintainer-only validation details', () => {
     aboutHtml,
     /F001|4\/5|30,000|under 30,000|Less than 30,000|pre-acquaintance|proof of scale|learning signal/,
   );
+});
+
+test('about page never says weekend (baseball runs on weeknights too)', () => {
+  assert.doesNotMatch(aboutHtml, /weekend/i, 'weekend framing is retired — use week');
+  assert.doesNotMatch(aboutHtml, /주말/, '주말 표현은 폐기됨 — 매주/week 계열로');
+});
+
+test('about page never claims un-operated activities as completed meetups', () => {
+  assert.doesNotMatch(aboutHtml, /Real moments from our meetups/);
+  assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
+
+  // 완료(status: 'done')로 표기할 수 있는 회차는 실제로 운영한 것뿐이다. 날짜 화이트리스트로 고정한다.
+  // K리그·찜질방은 여전히 미운영이므로 완료 항목에 등장하면 안 된다.
+  const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
+  assert.equal(doneEntries.length, 6, '완료 항목은 EN/KO 각각 3건, 총 6건이어야 함');
+  const operatedDates = ['2026.06.25', '2026.07.26', '2026.08.01'];
+  for (const entry of doneEntries) {
+    assert.ok(
+      operatedDates.some((date) => entry.includes(date)),
+      `승인되지 않은 완료 날짜: ${entry}`,
+    );
+    assert.doesNotMatch(entry, /kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
+  }
+});
+
+test('about page does not duplicate the rating or guest quotes from index', () => {
+  // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
+  // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
+  assert.doesNotMatch(aboutHtml, /4\.7\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
+  for (const quote of [
+    'this is the program you want to join',
+    'Great experience to enjoy a baseball game with a local',
+    'It was fun to watch the game and cheer together',
+    'will definitely be going to another game with HanBuddy',
+  ]) {
+    assert.ok(!aboutHtml.includes(quote), `guest quote duplicated on about: ${quote}`);
+  }
+});
+
+test('about hero image is not lazy-loaded (it is the LCP element)', () => {
+  const heroImg = aboutHtml.match(/<img[^>]*run1-hero\.webp[^>]*>/);
+  assert.ok(heroImg, 'hero backdrop image missing');
+  assert.doesNotMatch(heroImg[0], /loading="lazy"/, 'hero image must not be lazy');
+  assert.match(heroImg[0], /fetchpriority="high"/);
 });
 
 test('about team links match the spec exactly and open safely', () => {
