@@ -105,8 +105,9 @@ test('the photo backdrop lives in the final CTA, not the review section', () => 
   assert.equal((apply.match(/backdrop-slide/g) ?? []).length, 5, 'five landscape backdrop photos');
   assert.match(apply, /aria-hidden="true" data-photo-backdrop/, 'backdrop is decorative');
   assert.doesNotMatch(apply, /<img[^>]*backdrop-slide[^>]*alt="[^"]+"/, 'backdrop photos carry empty alt');
-  // 스크림은 사진 위 가독성 처리다. CTA 밴드의 브랜드 레드를 유지한다.
-  assert.match(apply, /class="absolute inset-0 bg-primary-strong\/80"/);
+  // 리뷰 섹션에 있던 배경을 그대로 옮겼다. 스크림도 같은 ink/70이다.
+  assert.match(apply, /class="absolute inset-0 bg-ink\/70"/);
+  assert.match(indexHtml, /<section id="apply" class="[^"]*\bbg-ink\b/);
 });
 
 test('the backdrop stays autoplay-only, with no manual controls', () => {

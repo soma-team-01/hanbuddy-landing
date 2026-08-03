@@ -35,7 +35,7 @@ Semantic success colors remain reserved for genuinely completed states:
 - HanBuddy red is the only interactive brand color. CTA fills and active surfaces use `primary`; branded text and focus rings use the accessible same-hue `primary-strong`.
 - Headings and long-form text remain neutral `ink`; supporting copy uses `muted`.
 - `primary-soft` is a quiet branded surface, not a second accent.
-- The final application section is the single large color field and uses `primary-strong` with `on-primary-strong` text.
+- The final application section is the single large dark field: an `ink` band carrying the photo backdrop, with `on-primary-strong` (white) text. Red stays on the CTA button, chips, and emphasized text rather than filling the band.
 - The existing logo gradient remains the only multi-color brand treatment. Do not add CSS gradients to buttons, text, panels, or section backgrounds.
 - The photo-card scrim remains allowed when needed because it is a functional image-legibility treatment rather than a decorative brand gradient.
 - Semantic success colors appear only for genuinely completed states.
@@ -101,7 +101,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review carousel to `max-w-5xl` — all centered.
 - The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
-- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards over a photo backdrop (`#reviews`), a solid `primary-strong` band (`#apply`).
+- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards on a flat `panel` band (`#reviews`), a dark `ink` band over a photo backdrop (`#apply`).
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
@@ -158,12 +158,12 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
 
 - Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `primary-strong`/80 scrim.
-- The scrim is brand red, not `ink`: this band's job is to close the page as the CTA, so the photos add texture and the red keeps the section reading as the action band. 80% is the floor — the daytime stadium photo is the brightest source, and the privacy note (white at 70%) is the first thing to lose contrast if the scrim gets lighter.
+- The scrim is `ink`/70, moved over unchanged from `#reviews`. A brand-red scrim was tried and rejected (유현님, 2026-08-03): tinting the photos red reads as a colored film laid over the section rather than as photography. Keep the neutral scrim so the photos look like photos, and let red carry the CTA button instead.
 - Portrait sources are not used here: at the band's wide ratio a 3:4 photo loses most of its frame to `object-cover`. Pick landscape crops instead of nudging `object-position`.
 - Photos are decorative (`alt=""`, wrapper `aria-hidden` + `data-photo-backdrop`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
 - Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`. The only arrows on the page belong to the review carousel and never drive this backdrop.
