@@ -99,7 +99,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Layout
 
-- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review grid to `max-w-5xl` — all centered.
+- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review carousel to `max-w-5xl` — all centered.
 - The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
 - Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards over a photo backdrop (`#reviews`), a solid `primary-strong` band (`#apply`).
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
@@ -147,7 +147,10 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 **Content layer**
 
 - Centered header: eyebrow, title, lead, and one pill chip carrying the aggregate star rating — on the dark backdrop the chip is a `canvas-soft` surface with `primary-strong` text; header copy is on-primary.
-- Below it, a three-card grid of approved survey quotes. Cards stay light (`rounded-2xl`, `canvas` surface, raised shadow, no border) so the quotes read as the foreground against the photo: display-font quote, `primary-soft` program tag chip, muted meta line.
+- Below it, a horizontal carousel of approved survey quotes (5 cards as of 2026-08-03). Cards stay light (`rounded-2xl`, `canvas` surface, raised shadow, no border) so the quotes read as the foreground against the photo: display-font quote, `primary-soft` program tag chip, muted meta line.
+- The card track is scroll-snap (`snap-x snap-mandatory`), 3 cards visible on desktop, 2 on tablet, 1 on mobile (the next card peeks at 85% width so the row reads as scrollable). The scrollbar is hidden via `.review-track`; the track itself stays focusable and scrollable by keyboard and trackpad. Cards match heights from `sm` up and size to their own content on mobile, where only one is visible.
+- Two circular arrows on a `canvas-soft` surface with `primary-strong` glyphs, matching the rating chip. From `sm` up they sit in the gutters on either side of the track (`sm:px-14` reserves the room, so they never cover a card); on phones there is no gutter, so they drop to a centered row below the track. They move exactly one card, are `disabled` (40% opacity) at each end, and carry translated `aria-label`s; the glyphs are `aria-hidden`. No autoplay, no dots — quote reading is guest-paced.
+- Keep the quote to a single sentence per card. Cards sit in one row, so a long multi-sentence quote drags the whole row's height; excerpt longer survey answers instead (excerpt rules in AGENTS.md "Approved public quotes").
 - No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking here, plus the single featured quote card.
 
@@ -156,7 +159,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `ink`/70 scrim.
 - Portrait sources are not used here: at the band's ~2:1 ratio a 3:4 photo loses ~64% of its frame to `object-cover`, versus ~15–37% for landscape ones. Pick landscape crops instead of nudging `object-position`.
 - Photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
-- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
+- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`. The arrows in this section belong to the quote-card carousel only and never drive the backdrop.
 - The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
 ### About Page and Final CTA
