@@ -86,9 +86,10 @@ test('removes the retired cream, forest, sage, and earth palette', () => {
 
 test('maps interactive and emphasized components to the approved warm-red roles', () => {
   assert.match(html, /bg-primary[^"]*hover:bg-primary-hover/);
+  // 사진 배경이 들어오면서 relative/overflow 유틸이 붙었다. 색 역할만 고정한다.
   assert.match(
     html,
-    /<section id="apply" class="bg-primary-strong text-on-primary-strong"[^>]*>/,
+    /<section id="apply" class="[^"]*\bbg-primary-strong\b[^"]*\btext-on-primary-strong\b[^"]*"[^>]*>/,
   );
   assert.match(html, /bg-primary-soft/);
   assert.match(html, /text-primary(?:-strong)?/);

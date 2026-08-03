@@ -142,30 +142,32 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Guest Reviews (`#reviews`)
 
-`#reviews` is the social-proof hub, laid out over a crossfading photo backdrop.
+`#reviews` is the social-proof hub: a quiet `panel` band that lets the quotes carry the section. The photo backdrop it used to sit on moved to the final CTA (2026-08-03) so the page has one photo-backed band, not two competing ones.
 
 **Content layer**
 
-- Centered header: eyebrow, title, lead, and one pill chip carrying the aggregate star rating — on the dark backdrop the chip is a `canvas-soft` surface with `primary-strong` text; header copy is on-primary.
-- Below it, a horizontal carousel of approved survey quotes (5 cards as of 2026-08-03), ordered oldest to newest. The carousel opens on the **second** card, not the first: the hero already features card 1 (the June pilot quote) verbatim, so leading with it again would repeat the same sentence twice on one page. Card 1 is one left-arrow away. If the hero quote ever changes, revisit this offset (`DEFAULT_REVIEW_CARD_INDEX`) along with it. Cards stay light (`rounded-2xl`, `canvas` surface, raised shadow, no border) so the quotes read as the foreground against the photo: display-font quote, `primary-soft` program tag chip, muted meta line.
+- Centered header on the light band: eyebrow in `primary-strong`, `ink` title, `muted` lead, and one `primary-soft` pill chip carrying the aggregate star rating (same chip treatment as the hero).
+- Below it, a horizontal carousel of approved survey quotes (5 cards as of 2026-08-03), ordered oldest to newest. The carousel opens on the **second** card, not the first: the hero already features card 1 (the June pilot quote) verbatim, so leading with it again would repeat the same sentence twice on one page. Card 1 is one left-arrow away. If the hero quote ever changes, revisit this offset (`DEFAULT_REVIEW_CARD_INDEX`) along with it. Cards are white (`rounded-2xl`, `canvas-soft` surface, raised shadow, no border) so they lift off the `panel` band: display-font quote, `primary-soft` program tag chip, muted meta line.
 - The card track is scroll-snap (`snap-x snap-mandatory`), 3 cards visible on desktop, 2 on tablet, 1 on mobile (the next card peeks at 85% width so the row reads as scrollable). The scrollbar is hidden via `.review-track`; the track itself stays focusable and scrollable by keyboard and trackpad. Cards match heights from `sm` up and size to their own content on mobile, where only one is visible.
-- Two circular arrows on a `canvas-soft` surface with `primary-strong` glyphs, matching the rating chip. From `sm` up they sit in the gutters on either side of the track (`sm:px-14` reserves the room, so they never cover a card); on phones there is no gutter, so they drop to a centered row below the track. They move exactly one card, are `disabled` (40% opacity) at each end, and carry translated `aria-label`s; the glyphs are `aria-hidden`. No autoplay, no dots — quote reading is guest-paced.
+- Two circular arrows on a white `canvas-soft` surface with `primary-strong` glyphs and a raised shadow, so they read as controls against the `panel` band. From `sm` up they sit in the gutters on either side of the track (`sm:px-14` reserves the room, so they never cover a card); on phones there is no gutter, so they drop to a centered row below the track. They move exactly one card, are `disabled` (40% opacity) at each end, and carry translated `aria-label`s; the glyphs are `aria-hidden`. No autoplay, no dots — quote reading is guest-paced.
 - Keep the quote to a single sentence per card. Cards sit in one row, so a long multi-sentence quote drags the whole row's height; excerpt longer survey answers instead (excerpt rules in AGENTS.md "Approved public quotes").
 - No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking here, plus the single featured quote card.
-
-**Backdrop layer**
-
-- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `ink`/70 scrim.
-- Portrait sources are not used here: at the band's ~2:1 ratio a 3:4 photo loses ~64% of its frame to `object-cover`, versus ~15–37% for landscape ones. Pick landscape crops instead of nudging `object-position`.
-- Photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
-- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`. The arrows in this section belong to the quote-card carousel only and never drive the backdrop.
-- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
+- No photos in this section. The band stays flat so `#events` (photo cards) above and `#apply` (photo backdrop) below are the only places images compete for attention.
 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
 - Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
+
+**Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
+
+- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `primary-strong`/80 scrim.
+- The scrim is brand red, not `ink`: this band's job is to close the page as the CTA, so the photos add texture and the red keeps the section reading as the action band. 80% is the floor — the daytime stadium photo is the brightest source, and the privacy note (white at 70%) is the first thing to lose contrast if the scrim gets lighter.
+- Portrait sources are not used here: at the band's wide ratio a 3:4 photo loses most of its frame to `object-cover`. Pick landscape crops instead of nudging `object-position`.
+- Photos are decorative (`alt=""`, wrapper `aria-hidden` + `data-photo-backdrop`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
+- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`. The only arrows on the page belong to the review carousel and never drive this backdrop.
+- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
 ## 6. Motion
 

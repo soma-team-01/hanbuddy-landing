@@ -153,8 +153,8 @@
       transform: scale(1.03);
     }
 
-    /* 리뷰 섹션 뒷배경: 사진 크로스페이드 */
-    .review-slide {
+    /* 섹션 뒷배경: 사진 크로스페이드 */
+    .backdrop-slide {
       transition: opacity 1000ms ease-in-out;
     }
 
@@ -433,32 +433,18 @@
       <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
     </section>
 
-    <!-- Guest reviews (crossfading photo backdrop) -->
-    <section id="reviews" class="relative overflow-hidden bg-ink" data-analytics-section>
-      <div class="absolute inset-0" aria-hidden="true">
-        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-100" />
-        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <div class="absolute inset-0 bg-ink/70"></div>
-      </div>
-
-      <div class="relative z-10 mx-auto max-w-6xl px-5 py-16 lg:py-24">
+    <!-- Guest reviews -->
+    <section id="reviews" class="bg-panel" data-analytics-section>
+      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
-          <p class="eyebrow eyebrow-on-primary" data-i18n="reviews.eyebrow">Guest reviews</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-on-primary sm:text-4xl" data-i18n="reviews.title">
+          <p class="eyebrow" data-i18n="reviews.eyebrow">Guest reviews</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
             Our guests say it best.
           </h2>
-          <p class="mt-4 text-base leading-7 text-on-primary/85" data-i18n="reviews.body">
+          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
             Every guest fills in a short survey after each meetup. Here&rsquo;s what they told us.
           </p>
-          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-canvas-soft px-5 py-2 text-sm font-bold text-primary-strong shadow-raised">
+          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
             <span aria-hidden="true" class="tracking-tight">★★★★★</span>
             <span data-i18n="reviews.rating">4.7 / 5 average guest rating</span>
           </p>
@@ -473,13 +459,13 @@
           <!-- 좁은 화면에는 좌우 여백이 없어 화살표를 아래로 내린다 -->
           <div class="mt-8 flex items-center justify-center gap-4 sm:contents">
             <button type="button" data-review-prev disabled
-                    class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:left-0 sm:top-1/2 sm:-translate-y-1/2"
+                    class="review-arrow focusable flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:left-0 sm:top-1/2 sm:-translate-y-1/2"
                     aria-label="Show previous reviews" data-i18n-aria="reviews.prevAria">
               <span aria-hidden="true">&larr;</span>
             </button>
             <!-- 카드 렌더 전에는 눌러도 움직일 게 없다. JS가 첫 동기화에서 활성화한다 -->
             <button type="button" data-review-next disabled
-                    class="review-arrow focusable focusable-on-primary-strong flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
+                    class="review-arrow focusable flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                     aria-label="Show next reviews" data-i18n-aria="reviews.nextAria">
               <span aria-hidden="true">&rarr;</span>
             </button>
@@ -489,9 +475,23 @@
       </div>
     </section>
 
-    <!-- Apply -->
-    <section id="apply" class="bg-primary-strong text-on-primary-strong" data-analytics-section>
-      <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
+    <!-- Apply (crossfading photo backdrop) -->
+    <section id="apply" class="relative overflow-hidden bg-primary-strong text-on-primary-strong" data-analytics-section>
+      <div class="absolute inset-0" aria-hidden="true" data-photo-backdrop>
+        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-100" />
+        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <div class="absolute inset-0 bg-primary-strong/80"></div>
+      </div>
+
+      <div class="relative z-10 mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
         <div>
           <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Baseball &middot; Han River &middot; more coming</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
@@ -1147,7 +1147,7 @@
       clear(container);
       copy.reviews.cards.forEach((item) => {
         const figure = document.createElement('figure');
-        figure.className = 'flex w-[85%] shrink-0 snap-start flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
+        figure.className = 'flex w-[85%] shrink-0 snap-start flex-col rounded-2xl bg-canvas-soft p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
 
         const blockquote = document.createElement('blockquote');
         blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
@@ -1209,18 +1209,18 @@
       persistLanguage(lang);
     };
 
-    // ===== 리뷰 섹션 뒷배경 자동 크로스페이드 =====
-    const reviewSlides = [...document.querySelectorAll('#reviews .review-slide')];
-    let reviewSlideIndex = 0;
+    // ===== 섹션 뒷배경 자동 크로스페이드 ([data-photo-backdrop] 안의 사진들) =====
+    const backdropSlides = [...document.querySelectorAll('[data-photo-backdrop] .backdrop-slide')];
+    let backdropSlideIndex = 0;
 
-    const startReviewBackdrop = () => {
-      if (reviewSlides.length < 2) return;
+    const startPhotoBackdrop = () => {
+      if (backdropSlides.length < 2) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       setInterval(() => {
-        reviewSlideIndex = (reviewSlideIndex + 1) % reviewSlides.length;
-        reviewSlides.forEach((slide, i) => {
-          slide.classList.toggle('opacity-100', i === reviewSlideIndex);
-          slide.classList.toggle('opacity-0', i !== reviewSlideIndex);
+        backdropSlideIndex = (backdropSlideIndex + 1) % backdropSlides.length;
+        backdropSlides.forEach((slide, i) => {
+          slide.classList.toggle('opacity-100', i === backdropSlideIndex);
+          slide.classList.toggle('opacity-0', i !== backdropSlideIndex);
         });
       }, 6000);
     };
@@ -1303,7 +1303,7 @@
     });
 
     syncCtas();
-    startReviewBackdrop();
+    startPhotoBackdrop();
     applyLanguage(safeStoredLanguage());
   </script>
 </body>

@@ -94,7 +94,27 @@ test('review section never exposes maintainer-only validation details', () => {
   assert.doesNotMatch(section, /F001|4\/5|30,000|Less than 30,000|pre-acquaintance|proof of scale|learning signal/);
 });
 
-test('review backdrop stays autoplay-only (no arrows on the photo layer)', () => {
-  assert.match(indexHtml, /startReviewBackdrop/);
-  assert.doesNotMatch(indexHtml, /review-slide[^"]*"[^>]*data-review-(?:prev|next)/);
+test('the photo backdrop lives in the final CTA, not the review section', () => {
+  const reviews = indexHtml.slice(indexHtml.indexOf('<section id="reviews"'), indexHtml.indexOf('<section id="apply"'));
+  const apply = indexHtml.slice(indexHtml.indexOf('<section id="apply"'), indexHtml.indexOf('</main>'));
+
+  assert.doesNotMatch(reviews, /backdrop-slide|data-photo-backdrop/, 'reviews is a plain light band now');
+  assert.match(reviews, /<section id="reviews" class="bg-panel"/);
+
+  assert.match(apply, /data-photo-backdrop/);
+  assert.equal((apply.match(/backdrop-slide/g) ?? []).length, 5, 'five landscape backdrop photos');
+  assert.match(apply, /aria-hidden="true" data-photo-backdrop/, 'backdrop is decorative');
+  assert.doesNotMatch(apply, /<img[^>]*backdrop-slide[^>]*alt="[^"]+"/, 'backdrop photos carry empty alt');
+  // 스크림은 사진 위 가독성 처리다. CTA 밴드의 브랜드 레드를 유지한다.
+  assert.match(apply, /class="absolute inset-0 bg-primary-strong\/80"/);
+});
+
+test('the backdrop stays autoplay-only, with no manual controls', () => {
+  assert.match(indexHtml, /const startPhotoBackdrop = \(\) => \{/);
+  assert.match(indexHtml, /startPhotoBackdrop\(\);/);
+  // 자동재생은 모션 민감 사용자에게 꺼진다.
+  const driverStart = indexHtml.indexOf('const startPhotoBackdrop');
+  const driver = indexHtml.slice(driverStart, indexHtml.indexOf('// ===== 리뷰 카드 캐러셀', driverStart));
+  assert.match(driver, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(indexHtml, /backdrop-slide[^"]*"[^>]*data-review-(?:prev|next)/);
 });

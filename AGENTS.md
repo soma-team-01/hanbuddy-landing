@@ -53,19 +53,19 @@ hanbuddy-landing/
 | `.eyebrow` | CSS utility | `index.html` style block | Uppercase tracked section label (`.eyebrow-on-primary` on dark surfaces) |
 | `.hero-polaroid` / `.hp1–4` | CSS utilities | `index.html` style block | Hero polaroid scatter: desktop corner-pinned tilted snaps with tape + handwritten captions, mobile offset 2-col collage |
 | `.photo-card` | CSS utility | `index.html` style block | Rounded photo frame with hover zoom (event cards, detail collages) |
-| `.review-slide` | CSS utility | `index.html` style block | Reviews-backdrop crossfade transition (opacity 1s) |
+| `.backdrop-slide` | CSS utility | `index.html` style block | Section-backdrop crossfade transition (opacity 1s); used by `#apply` |
 | `.review-track` / `.review-arrow` | CSS utility | `index.html` style block | Quote-card carousel: hidden scrollbar on the snap track, dimmed end-state arrows |
 | `#top` | section | `index.html` | Hero: headline, pill CTAs, rating chip linking to `#reviews`, featured guest-quote card, polaroid scatter |
 | `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop): open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
-| `#reviews` | section | `index.html` | Guest reviews over an autoplay crossfading photo backdrop: aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
-| `#apply` | section | `index.html` | Final CTA band: Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
+| `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
+| `#apply` | section | `index.html` | Final CTA band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, brand-red scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
-| `startReviewBackdrop` | JS | `index.html` script | 6s autoplay crossfade for `#reviews` backdrop; disabled under `prefers-reduced-motion` |
+| `startPhotoBackdrop` | JS | `index.html` script | 6s autoplay crossfade for the photos inside `[data-photo-backdrop]` (currently `#apply`); disabled under `prefers-reduced-motion` |
 | `scrollReviewsBy` / `syncReviewArrows` | JS | `index.html` script | Quote-card carousel: arrows scroll one card, end states set `disabled`; re-synced after every render, scroll, and resize |
 | `alignReviewsToDefaultCard` | JS | `index.html` script | Opens the carousel on card `DEFAULT_REVIEW_CARD_INDEX` (2nd — card 1 is the hero quote). Re-runs until layout settles because Tailwind CDN sizes cards late; any arrow click, wheel, pointer, or key input on the track stops it for good |
 | Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`; Meta customs `ApplicationFormOpen`, `ContactClick` |
