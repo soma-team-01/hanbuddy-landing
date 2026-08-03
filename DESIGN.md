@@ -87,7 +87,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 | `space-4` | `32px` | Group spacing between related modules |
 | `space-6` | `48px` | Compact section vertical rhythm |
 | `space-8` | `64px` | Standard section vertical rhythm |
-| `space-10` | `80px` | Hero and final CTA vertical rhythm |
+| `space-10` | `80px` | Hero vertical rhythm, final CTA on mobile |
+| `space-16` | `128px` | Final CTA on desktop — the band carries the photo backdrop and needs room for it to read as a photo |
 
 ### Radius
 
