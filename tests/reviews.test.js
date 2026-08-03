@@ -117,4 +117,8 @@ test('the backdrop stays autoplay-only, with no manual controls', () => {
   const driver = indexHtml.slice(driverStart, indexHtml.indexOf('// ===== 리뷰 카드 캐러셀', driverStart));
   assert.match(driver, /prefers-reduced-motion: reduce/);
   assert.doesNotMatch(indexHtml, /backdrop-slide[^"]*"[^>]*data-review-(?:prev|next)/);
+
+  // DESIGN.md의 자동 전환 계약: 6초마다 교체, 1초 페이드.
+  assert.match(driver, /\}, 6000\);/);
+  assert.match(indexHtml, /\.backdrop-slide \{\s*transition: opacity 1000ms ease-in-out;/);
 });
