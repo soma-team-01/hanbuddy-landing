@@ -35,7 +35,7 @@ Semantic success colors remain reserved for genuinely completed states:
 - HanBuddy red is the only interactive brand color. CTA fills and active surfaces use `primary`; branded text and focus rings use the accessible same-hue `primary-strong`.
 - Headings and long-form text remain neutral `ink`; supporting copy uses `muted`.
 - `primary-soft` is a quiet branded surface, not a second accent.
-- The final application section is the single large color field and uses `primary-strong` with `on-primary-strong` text.
+- The final application section is the single large dark field: an `ink` band carrying the photo backdrop, with `on-primary-strong` (white) text. Red stays on the CTA button, chips, and emphasized text rather than filling the band.
 - The existing logo gradient remains the only multi-color brand treatment. Do not add CSS gradients to buttons, text, panels, or section backgrounds.
 - The photo-card scrim remains allowed when needed because it is a functional image-legibility treatment rather than a decorative brand gradient.
 - Semantic success colors appear only for genuinely completed states.
@@ -87,7 +87,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 | `space-4` | `32px` | Group spacing between related modules |
 | `space-6` | `48px` | Compact section vertical rhythm |
 | `space-8` | `64px` | Standard section vertical rhythm |
-| `space-10` | `80px` | Hero and final CTA vertical rhythm |
+| `space-10` | `80px` | Hero vertical rhythm, final CTA on mobile |
+| `space-16` | `128px` | Final CTA on desktop — the band carries the photo backdrop and needs room for it to read as a photo |
 
 ### Radius
 
@@ -99,9 +100,11 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Layout
 
-- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review grid to `max-w-5xl` — all centered.
+- Max content width: `max-w-6xl` (1152px) for main sections; the hero copy block and the how-steps grid narrow to `max-w-4xl`, the review carousel to `max-w-5xl` — all centered.
 - The hero is centered copy (eyebrow, display headline, lead, pill CTA row, rating chip, featured quote card) framed by the polaroid scatter — on desktop four tilted snaps pinned to the corners behind the copy, on mobile an offset two-column collage below it. Real photography IS the first visual read.
-- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards over a photo backdrop (`#reviews`), a solid `primary-strong` band (`#apply`).
+- Vary the device per section: Meetup-style event cards (`#events`), numbered step cards (`#how`), quote cards (`#reviews`), a dark `ink` band over a photo backdrop (`#apply`).
+- Section background rhythm (set 2026-08-03): hero `canvas` -> `#events` `panel` -> `#how` `canvas` -> `#reviews` `panel` -> `#apply` `ink`. The two card sections share the same `panel` band on purpose; giving them different light tones made the upper page read as a stack of unrelated stripes. Two light tones alternating is the whole rhythm — do not introduce a third.
+- With the tonal shift carrying the section break, `#events` needs no `border-t`; the border only existed while it sat on a near-identical tone.
 - Every fixed-format UI element and card needs stable dimensions or responsive constraints so bilingual copy does not resize the layout unexpectedly.
 
 ## 5. Components
@@ -128,41 +131,47 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Event Cards and Steps
 
-- Event cards (`#events`): Meetup-style compact cards in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
+- Event cards (`#events`): Meetup-style compact cards on the `panel` band (same band as `#reviews`), in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
 - How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
 - Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
 - Event detail photo lightbox: collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.
 
 ### Completed-run Evidence
 
-- Public proof mentions only completed-operation facts, approved photos, and the approved guest quotes (the verbatim list lives in `AGENTS.md` CONVENTIONS — currently 4 quotes; nothing else may be quoted).
-- Completed runs usable as proof: 2026-06-25 and 2026-07-26 Jamsil KBO, plus Han River picnic photography.
+- Public proof mentions only completed-operation facts, approved photos, and the approved guest quotes (the verbatim list lives in `AGENTS.md` CONVENTIONS — currently 5 quotes; nothing else may be quoted).
+- Completed runs usable as proof: only the two completed Jamsil KBO runs, 2026-06-25 and 2026-07-26. Han River, K League, and jjimjilbang photos may be used only for upcoming/coming-up items or with neutral place-describing captions — never as completed-operation proof.
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
 ### Guest Reviews (`#reviews`)
 
-`#reviews` is the social-proof hub, laid out over a crossfading photo backdrop.
+`#reviews` is the social-proof hub: a quiet `panel` band that lets the quotes carry the section. The photo backdrop it used to sit on moved to the final CTA (2026-08-03) so the page has one photo-backed band, not two competing ones.
 
 **Content layer**
 
-- Centered header: eyebrow, title, lead, and one pill chip carrying the aggregate star rating — on the dark backdrop the chip is a `canvas-soft` surface with `primary-strong` text; header copy is on-primary.
-- Below it, a three-card grid of approved survey quotes. Cards stay light (`rounded-2xl`, `canvas` surface, raised shadow, no border) so the quotes read as the foreground against the photo: display-font quote, `primary-soft` program tag chip, muted meta line.
+- Centered header on the light band: eyebrow in `primary-strong`, `ink` title, `muted` lead, and one `primary-soft` pill chip carrying the aggregate star rating (same chip treatment as the hero).
+- Below it, a horizontal carousel of approved survey quotes (5 cards as of 2026-08-03), ordered oldest to newest. The carousel opens on the **second** card, not the first: the hero already features card 1 (the June pilot quote) verbatim, so leading with it again would repeat the same sentence twice on one page. Card 1 is one left-arrow away. If the hero quote ever changes, revisit this offset (`DEFAULT_REVIEW_CARD_INDEX`) along with it. Cards are white (`rounded-2xl`, `canvas-soft` surface, raised shadow, no border) so they lift off the `panel` band: display-font quote, `primary-soft` program tag chip, muted meta line.
+- The card track is scroll-snap (`snap-x snap-mandatory`), 3 cards visible on desktop, 2 on tablet, 1 on mobile (the next card peeks at 85% width so the row reads as scrollable). The scrollbar is hidden via `.review-track`; the track itself stays focusable and scrollable by keyboard and trackpad. Cards match heights from `sm` up and size to their own content on mobile, where only one is visible.
+- Two circular arrows on a white `canvas-soft` surface with `primary-strong` glyphs and a raised shadow, so they read as controls against the `panel` band. From `sm` up they sit in the gutters on either side of the track (`sm:px-14` reserves the room, so they never cover a card); on phones there is no gutter, so they drop to a centered row below the track. They move exactly one card, are `disabled` (40% opacity) at each end, and carry translated `aria-label`s; the glyphs are `aria-hidden`. No autoplay, no dots — quote reading is guest-paced.
+- Keep the quote to a single sentence per card. Cards sit in one row, so a long multi-sentence quote drags the whole row's height; excerpt longer survey answers instead (excerpt rules in AGENTS.md "Approved public quotes").
 - No per-card star rows — the aggregate chip carries the stars so a single lower-scored review is never singled out.
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking here, plus the single featured quote card.
-
-**Backdrop layer**
-
-- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `ink`/70 scrim.
-- Portrait sources are not used here: at the band's ~2:1 ratio a 3:4 photo loses ~64% of its frame to `object-cover`, versus ~15–37% for landscape ones. Pick landscape crops instead of nudging `object-position`.
-- Photos are decorative (`alt=""`, wrapper `aria-hidden`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
-- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`.
-- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
+- No photos in this section. The band stays flat so `#events` (photo cards) above and `#apply` (photo backdrop) below are the only places images compete for attention.
 
 ### About Page and Final CTA
 
-- Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section and a real-moments photo strip under the hero. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `primary-strong` band: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, the one-line buddy-recruitment note, and the privacy note (no application data is stored on-page; optional analytics cookies load only after consent).
+- Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
+
+**Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
+
+- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `primary-strong`/80 scrim.
+- The scrim is `ink`/70, moved over unchanged from `#reviews`. A brand-red scrim was tried and rejected (유현님, 2026-08-03): tinting the photos red reads as a colored film laid over the section rather than as photography. Keep the neutral scrim so the photos look like photos, and let red carry the CTA button instead.
+- Portrait sources are not used here: at the band's wide ratio a 3:4 photo loses most of its frame to `object-cover`. Pick landscape crops instead of nudging `object-position`.
+- Photos are decorative (`alt=""`, wrapper `aria-hidden` + `data-photo-backdrop`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
+- Autoplay-only: crossfade every 6s (opacity, 1s ease), no arrows, dots, or captions; disabled under `prefers-reduced-motion`. The only arrows on the page belong to the review carousel and never drive this backdrop.
+- The scrim is functional image-legibility treatment covered by the Section 2 exception, not a decorative gradient.
 
 ## 6. Motion
 

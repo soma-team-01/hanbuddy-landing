@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HanBuddy | KBO baseball, Han River picnics & more with a local buddy</title>
-  <meta name="description" content="Join a KBO baseball night, a Han River picnic, and more with a friendly Korean buddy. Weekly meetups in Seoul — apply in 2 minutes." />
+  <meta name="description" content="Join an indoor dome KBO baseball night, a Han River picnic, and more with a friendly Korean buddy. Weekly meetups in Seoul. Apply in 2 minutes." />
   <link rel="canonical" href="https://www.hanbuddy.kr/" />
 
   <meta property="og:title" content="HanBuddy | KBO baseball, Han River picnics & more with a local buddy" />
-  <meta property="og:description" content="Cheer at a Korean baseball game, picnic by the Han River, and more with a local buddy. Weekly meetups in Seoul." />
+  <meta property="og:description" content="Cheer at a Korean baseball game in an air-conditioned dome, picnic by the Han River, and more with a local buddy. Weekly meetups in Seoul." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="HanBuddy" />
   <meta property="og:image" content="https://www.hanbuddy.kr/assets/photos/kbo/run1-group.webp" />
@@ -164,9 +164,24 @@
       transform: scale(1.03);
     }
 
-    /* 리뷰 섹션 뒷배경: 사진 크로스페이드 */
-    .review-slide {
+    /* 섹션 뒷배경: 사진 크로스페이드 */
+    .backdrop-slide {
       transition: opacity 1000ms ease-in-out;
+    }
+
+    /* 리뷰 카드 캐러셀: 화살표로 넘기는 스크롤 스냅 트랙 */
+    .review-track {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .review-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .review-arrow[disabled] {
+      opacity: 0.4;
+      cursor: default;
     }
 
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
@@ -327,7 +342,7 @@
           Experience Korea like a local!
         </h1>
         <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-          Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
+          Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
         </p>
 
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -344,7 +359,7 @@
         <!-- Compact guest-rating proof linking to full reviews -->
         <a href="#reviews" class="focusable mt-8 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
           <span aria-hidden="true" class="tracking-tight">★★★★★</span>
-          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests — read their reviews</span>
+          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests · read their reviews</span>
           <span aria-hidden="true">&rarr;</span>
         </a>
 
@@ -399,7 +414,7 @@
     </section>
 
     <!-- Upcoming events -->
-    <section id="events" class="border-t border-line-soft bg-canvas-soft" data-analytics-section>
+    <section id="events" class="bg-panel" data-analytics-section>
       <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
           <p class="eyebrow" data-i18n="events.eyebrow">Upcoming events</p>
@@ -407,7 +422,7 @@
             Pick a day, meet us there.
           </h2>
           <p class="mt-4 text-base leading-7 text-muted" data-i18n="events.body">
-            Real dates you can join right now — plus a couple of experiences opening soon. Apply in 2 minutes and we&rsquo;ll confirm the details with you.
+            Real dates you can join right now, plus a couple of experiences opening soon. Apply in 2 minutes and we&rsquo;ll confirm the details with you.
           </p>
         </div>
 
@@ -429,58 +444,76 @@
       <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
     </section>
 
-    <!-- Guest reviews (crossfading photo backdrop) -->
-    <section id="reviews" class="relative overflow-hidden bg-ink" data-analytics-section>
-      <div class="absolute inset-0" aria-hidden="true">
-        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-100" />
-        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" alt=""
-             class="review-slide absolute inset-0 h-full w-full object-cover opacity-0" />
-        <div class="absolute inset-0 bg-ink/70"></div>
-      </div>
-
-      <div class="relative z-10 mx-auto max-w-6xl px-5 py-16 lg:py-24">
+    <!-- Guest reviews -->
+    <section id="reviews" class="bg-panel" data-analytics-section>
+      <div class="mx-auto max-w-6xl px-5 py-16 lg:py-24">
         <div class="mx-auto max-w-2xl text-center">
-          <p class="eyebrow eyebrow-on-primary" data-i18n="reviews.eyebrow">Guest reviews</p>
-          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-on-primary sm:text-4xl" data-i18n="reviews.title">
+          <p class="eyebrow" data-i18n="reviews.eyebrow">Guest reviews</p>
+          <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
             Our guests say it best.
           </h2>
-          <p class="mt-4 text-base leading-7 text-on-primary/85" data-i18n="reviews.body">
-            Every guest fills in a short survey after each meetup — here&rsquo;s what they told us.
+          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
+            Every guest fills in a short survey after each meetup. Here&rsquo;s what they told us.
           </p>
-          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-canvas-soft px-5 py-2 text-sm font-bold text-primary-strong shadow-raised">
+          <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
             <span aria-hidden="true" class="tracking-tight">★★★★★</span>
             <span data-i18n="reviews.rating">4.7 / 5 average guest rating</span>
           </p>
         </div>
 
-        <div class="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3" data-review-cards></div>
+        <div class="relative mx-auto mt-12 max-w-5xl sm:px-14">
+          <!-- 모바일은 카드 1장만 보이므로 내용 높이대로, 여러 장 보이는 화면부터 높이를 맞춘다 -->
+          <div class="review-track flex items-start snap-x snap-mandatory gap-6 overflow-x-auto pb-1 sm:items-stretch"
+               role="region" tabindex="0" aria-label="Guest review cards" data-i18n-aria="reviews.trackAria"
+               data-review-cards></div>
+
+          <!-- 좁은 화면에는 좌우 여백이 없어 화살표를 아래로 내린다 -->
+          <div class="mt-8 flex items-center justify-center gap-4 sm:contents">
+            <button type="button" data-review-prev disabled
+                    class="review-arrow focusable flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:left-0 sm:top-1/2 sm:-translate-y-1/2"
+                    aria-label="Show previous reviews" data-i18n-aria="reviews.prevAria">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <!-- 카드 렌더 전에는 눌러도 움직일 게 없다. JS가 첫 동기화에서 활성화한다 -->
+            <button type="button" data-review-next disabled
+                    class="review-arrow focusable flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft text-xl font-bold text-primary-strong shadow-raised transition hover:opacity-85 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
+                    aria-label="Show next reviews" data-i18n-aria="reviews.nextAria">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
 
       </div>
     </section>
 
-    <!-- Apply -->
-    <section id="apply" class="bg-primary-strong text-on-primary-strong" data-analytics-section>
-      <div class="mx-auto grid max-w-6xl gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:items-center lg:py-20">
+    <!-- Apply (crossfading photo backdrop) -->
+    <section id="apply" class="relative overflow-hidden bg-ink text-on-primary-strong" data-analytics-section>
+      <div class="absolute inset-0" aria-hidden="true" data-photo-backdrop>
+        <img src="assets/photos/hanriver/hanriver-picnic.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-100" />
+        <img src="assets/photos/kbo/run1-hero.webp" width="1800" height="1350" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <img src="assets/photos/kbo/run1-night.webp" width="1100" height="610" loading="lazy" alt=""
+             class="backdrop-slide absolute inset-0 h-full w-full object-cover opacity-0" />
+        <div class="absolute inset-0 bg-ink/70"></div>
+      </div>
+
+      <!-- 사진 배경이 보일 여백을 확보하려고 다른 섹션보다 세로를 넉넉히 준다 -->
+      <div class="relative z-10 mx-auto grid max-w-6xl gap-8 px-5 py-20 lg:grid-cols-[1fr_auto] lg:items-center lg:py-32">
         <div>
           <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Baseball &middot; Han River &middot; more coming</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
             See you at the next meetup?
           </h2>
           <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
-            Tell us which event and which day in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
+            Tell us which event and which day in the Google Form. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
-            Korean local who wants to host? Buddies are welcome too — say hi in the open chat.
-          </p>
-          <p class="mt-2 max-w-2xl text-xs leading-6 text-on-primary-strong/70" data-i18n="finalCta.privacyNote">
-            This page never stores your application answers — you apply through the Google Form and we confirm details with you directly. With your consent, Google Analytics and Meta Pixel measure visits and clicks; you can change this anytime under Cookie settings.
+            Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
@@ -607,9 +640,9 @@
         meta: {
           htmlLang: 'en',
           title: 'HanBuddy | KBO baseball, Han River picnics & more with a local buddy',
-          description: 'Join a KBO baseball night, a Han River picnic, and more with a friendly Korean buddy. Weekly meetups in Seoul — apply in 2 minutes.',
+          description: 'Join an indoor dome KBO baseball night, a Han River picnic, and more with a friendly Korean buddy. Weekly meetups in Seoul. Apply in 2 minutes.',
           ogTitle: 'HanBuddy | KBO baseball, Han River picnics & more with a local buddy',
-          ogDescription: 'Cheer at a Korean baseball game, picnic by the Han River, and more with a local buddy. Weekly meetups in Seoul.',
+          ogDescription: 'Cheer at a Korean baseball game in an air-conditioned dome, picnic by the Han River, and more with a local buddy. Weekly meetups in Seoul.',
           groupAlt: 'HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium',
           fountainAlt: 'Banpo Bridge rainbow fountain lighting up the Han River at sunset',
           nightAlt: 'Fans waving phone lights during a night game at Jamsil Baseball Stadium',
@@ -618,6 +651,7 @@
           picnicAlt: 'Friends sharing chicken and pizza on a picnic mat by the Han River',
           momentGroupAlt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium',
           momentLightsAlt: 'Jamsil Baseball Stadium field under the lights during a KBO night game',
+          domeAlt: 'The closed roof of Gocheok Sky Dome over a packed crowd and the field during a night game',
           kleagueAlt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves',
           jjimjilbangAlt: 'Warm stone kiln-sauna room with wooden pillows inside a Korean jjimjilbang',
           somaAlt: 'AI·SW Maestro logo',
@@ -639,10 +673,10 @@
         hero: {
           eyebrow: 'Seoul · Meetups every week',
           title: 'Experience Korea like a local!',
-          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River — with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
+          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
           primaryCta: 'Join a meetup',
           contactCta: 'DM us on Instagram',
-          ratingNote: '4.7 / 5 from our guests — read their reviews',
+          ratingNote: '4.7 / 5 from our guests · read their reviews',
           quoteEyebrow: 'Guest review',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
           quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
@@ -654,7 +688,7 @@
         events: {
           eyebrow: 'Upcoming events',
           title: 'Pick a day, meet us there.',
-          body: 'Real dates you can join right now — plus a couple of experiences opening soon. Apply in 2 minutes and we’ll confirm the details with you.',
+          body: 'Real dates you can join right now, plus a couple of experiences opening soon. Apply in 2 minutes and we’ll confirm the details with you.',
           note: 'We’ll confirm the meeting spot and details with you directly before the day.',
           detailAria: 'View event details',
           comingSoonBadge: 'Coming soon',
@@ -666,13 +700,13 @@
               status: 'open',
               href: '/events/kbo/',
               emoji: '⚾',
-              title: 'KBO Baseball Night',
-              date: 'Wed, Aug 5 & 12',
-              tagline: 'Night-game cheering with local buddies — chants, chicken & beer.',
-              badge: '₩50,000',
-              image: 'assets/photos/kbo/kbo-0726-lights.webp',
-              imageAlt: 'meta.momentLightsAlt',
-              imagePos: 'object-[50%_35%]',
+              title: 'Indoor Dome Baseball Night',
+              date: 'Wed, Aug 12',
+              tagline: 'Beat the heat indoors at Gocheok Sky Dome: chants, chicken & beer.',
+              badge: '₩60,000',
+              image: 'assets/photos/kbo/gocheok-dome-night.webp',
+              imageAlt: 'meta.domeAlt',
+              imagePos: 'object-[50%_22%]',
             },
             {
               id: 'hanriver',
@@ -680,7 +714,7 @@
               href: '/events/hanriver/',
               emoji: '🧺',
               title: 'Han River Picnic',
-              date: 'Aug 1, 8 & 9 (Sat & Sun)',
+              date: 'Aug 8 & 9 (Sat & Sun)',
               tagline: 'Mats, chimaek delivery, and the Banpo rainbow fountain.',
               badge: '₩25,000',
               image: 'assets/photos/hanriver/hanriver-mat.webp',
@@ -705,7 +739,7 @@
               emoji: '🧖',
               title: 'Jjimjilbang Sauna Hangout',
               date: 'Date coming soon',
-              tagline: 'Fire-kiln saunas, sikhye, and sheep-head towels — the real K-spa.',
+              tagline: 'Fire-kiln saunas, sikhye, and sheep-head towels: the real K-spa.',
               badge: 'Coming soon',
               image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
@@ -716,7 +750,7 @@
         how: {
           title: 'Joining takes 2 minutes.',
           items: [
-            { step: '1', title: 'Apply', body: 'Fill in the Google Form — pick your plan and your day.' },
+            { step: '1', title: 'Apply', body: 'Fill in the Google Form. Pick your plan and your day.' },
             { step: '2', title: 'We confirm', body: 'We message you directly with the meeting spot and details.' },
             { step: '3', title: 'Have fun', body: 'Meet your buddy and enjoy the day like a local.' },
           ],
@@ -724,9 +758,18 @@
         reviews: {
           eyebrow: 'Guest reviews',
           title: 'Our guests say it best.',
-          body: 'Every guest fills in a short survey after each meetup — here’s what they told us.',
+          body: 'Every guest fills in a short survey after each meetup. Here’s what they told us.',
           rating: '4.7 / 5 average guest rating',
+          trackAria: 'Guest review cards',
+          prevAria: 'Show previous reviews',
+          nextAria: 'Show next reviews',
+          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
           cards: [
+            {
+              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+              meta: '— Guest at our June baseball night · Jamsil, June 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
             {
               quote: '“It was fun to watch the game and cheer together!”',
               meta: '— Guest at our July baseball night · Jamsil, July 2026',
@@ -742,14 +785,18 @@
               meta: '— Message from a guest after our July baseball night',
               tag: '⚾ KBO Baseball Night',
             },
+            {
+              quote: '“They did a fantastic job of explaining what was happening during the game.”',
+              meta: '— Guest at our July baseball night · Jamsil, July 2026',
+              tag: '⚾ KBO Baseball Night',
+            },
           ],
         },
         finalCta: {
           eyebrow: 'Baseball · Han River · more coming',
           title: 'See you at the next meetup?',
-          body: 'Tell us which event and which day in the Google Form — it takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
-          buddyNote: 'Korean local who wants to host? Buddies are welcome too — say hi in the open chat.',
-          privacyNote: 'This page never stores your application answers — you apply through the Google Form and we confirm details with you directly. With your consent, Google Analytics and Meta Pixel measure visits and clicks; you can change this anytime under Cookie settings.',
+          body: 'Tell us which event and which day in the Google Form. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
+          buddyNote: 'Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.',
           formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
           kakaoButton: 'KakaoTalk open chat',
@@ -777,9 +824,9 @@
         meta: {
           htmlLang: 'ko',
           title: 'HanBuddy | 로컬 버디와 함께하는 야구 직관, 한강 피크닉 그리고 더',
-          description: '친절한 한국인 로컬 버디와 함께 KBO 야구 직관, 한강 피크닉 등 다양한 모임을 즐기세요. 매주 서울에서 진행 — 신청은 2분이면 충분합니다.',
+          description: '친절한 한국인 로컬 버디와 함께 고척돔 실내 야구 직관, 한강 피크닉 등 다양한 모임을 즐기세요. 매주 서울에서 진행됩니다. 신청은 2분이면 충분합니다.',
           ogTitle: 'HanBuddy | 로컬 버디와 함께하는 야구 직관, 한강 피크닉 그리고 더',
-          ogDescription: '로컬 버디와 함께 야구 직관, 한강 피크닉 등 다양한 모임을 즐기세요. 매주 서울에서 진행됩니다.',
+          ogDescription: '로컬 버디와 함께 시원한 실내 돔 야구 직관, 한강 피크닉 등 다양한 모임을 즐기세요. 매주 서울에서 진행됩니다.',
           groupAlt: '잠실야구장 관중석에서 함께 웃고 있는 HanBuddy 게스트와 버디들',
           fountainAlt: '노을 지는 한강, 반포대교 무지개분수',
           nightAlt: '잠실야구장 야간 경기에서 휴대폰 조명으로 응원하는 관중',
@@ -788,6 +835,7 @@
           picnicAlt: '한강 돗자리에서 치킨과 피자를 나누는 친구들',
           momentGroupAlt: '잠실야구장 관중석에서 함께 셀피를 찍는 HanBuddy 게스트와 로컬 버디들',
           momentLightsAlt: '야간 조명이 켜진 잠실야구장 그라운드',
+          domeAlt: '야간 경기 중 관중으로 가득 찬 고척 스카이돔의 돔 지붕과 그라운드',
           kleagueAlt: '울산 HD 머플러를 든 축구 팬들로 가득한 서울월드컵경기장',
           jjimjilbangAlt: '나무 목침이 놓인 찜질방의 따뜻한 돌 불가마방',
           somaAlt: 'AI·SW마에스트로 로고',
@@ -809,10 +857,10 @@
         hero: {
           eyebrow: '서울 · 매주 열리는 모임',
           title: 'Experience Korea like a local!',
-          subtitle: 'KBO 야구 직관도, 한강 피크닉도 — 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 주는 로컬 버디와 함께하세요.',
+          subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 드립니다.',
           primaryCta: '모임 참여하기',
           contactCta: 'Instagram DM으로 문의하세요',
-          ratingNote: '게스트 평점 4.7 / 5 — 후기 보러 가기',
+          ratingNote: '게스트 평점 4.7 / 5 · 후기 보러 가기',
           quoteEyebrow: '게스트 후기',
           quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
           quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
@@ -824,7 +872,7 @@
         events: {
           eyebrow: '다가오는 이벤트',
           title: '날짜를 골라 바로 신청하세요.',
-          body: '지금 바로 신청할 수 있는 실제 일정과 곧 오픈할 경험들입니다 — 2분 만에 신청하면 세부 사항을 직접 안내해 드려요.',
+          body: '지금 바로 신청할 수 있는 실제 일정과 곧 오픈할 경험들입니다. 2분 만에 신청하면 세부 사항을 직접 안내해 드려요.',
           note: '모임 전 만남 장소와 세부 사항을 직접 안내해 드립니다.',
           detailAria: '이벤트 상세 보기',
           comingSoonBadge: '오픈 예정',
@@ -836,13 +884,13 @@
               status: 'open',
               href: '/events/kbo/',
               emoji: '⚾',
-              title: 'KBO 야구 직관',
-              date: '8월 5일 · 12일 (수)',
-              tagline: '로컬 버디와 함께하는 야간 직관 — 응원가, 치킨, 맥주.',
-              badge: '₩50,000',
-              image: 'assets/photos/kbo/kbo-0726-lights.webp',
-              imageAlt: 'meta.momentLightsAlt',
-              imagePos: 'object-[50%_35%]',
+              title: '고척돔 실내 야구 직관',
+              date: '8월 12일 (수)',
+              tagline: '더위 없는 실내 고척 스카이돔: 응원가, 치킨, 맥주.',
+              badge: '₩60,000',
+              image: 'assets/photos/kbo/gocheok-dome-night.webp',
+              imageAlt: 'meta.domeAlt',
+              imagePos: 'object-[50%_22%]',
             },
             {
               id: 'hanriver',
@@ -850,7 +898,7 @@
               href: '/events/hanriver/',
               emoji: '🧺',
               title: '한강 피크닉',
-              date: '8월 1일 · 8일 · 9일 (토·일)',
+              date: '8월 8일 · 9일 (토·일)',
               tagline: '돗자리, 치맥 배달, 그리고 반포 무지개분수.',
               badge: '₩25,000',
               image: 'assets/photos/hanriver/hanriver-mat.webp',
@@ -875,7 +923,7 @@
               emoji: '🧖',
               title: '찜질방 나들이',
               date: '날짜 공개 예정',
-              tagline: '불가마, 식혜, 양머리 수건 — 진짜 K-스파 체험.',
+              tagline: '불가마, 식혜, 양머리 수건: 진짜 K-스파 체험.',
               badge: '오픈 예정',
               image: 'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
               imageAlt: 'meta.jjimjilbangAlt',
@@ -894,9 +942,18 @@
         reviews: {
           eyebrow: '게스트 후기',
           title: '게스트가 남긴 진짜 이야기.',
-          body: '모임이 끝나면 게스트가 짧은 설문을 남깁니다 — 그 답변을 그대로 옮겨왔어요.',
+          body: '모임이 끝나면 게스트가 짧은 설문을 남깁니다. 그 답변을 그대로 옮겨왔어요.',
           rating: '4.7 / 5 게스트 평균 평점',
+          trackAria: '게스트 후기 카드',
+          prevAria: '이전 후기 보기',
+          nextAria: '다음 후기 보기',
+          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
           cards: [
+            {
+              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+              meta: '— 6월 야구 직관 참가 게스트 · 잠실, 2026년 6월',
+              tag: '⚾ KBO 야구 직관',
+            },
             {
               quote: '“함께 응원하며 경기를 보는 게 정말 재미있었어요!”',
               meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
@@ -912,14 +969,18 @@
               meta: '— 7월 야구 직관 후 게스트가 보낸 메시지',
               tag: '⚾ KBO 야구 직관',
             },
+            {
+              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
+              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
+              tag: '⚾ KBO 야구 직관',
+            },
           ],
         },
         finalCta: {
           eyebrow: '야구 · 한강 · 계속 추가 중',
           title: '다음 모임에서 만날까요?',
-          body: '구글폼에서 원하는 이벤트와 날짜를 알려주세요 — 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
+          body: '구글폼에서 원하는 이벤트와 날짜를 알려주세요. 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
           buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
-          privacyNote: '이 페이지는 신청 내용을 저장하지 않습니다 — 신청은 구글폼으로 진행하고, 세부 사항은 직접 확인해 드립니다. 동의하시면 Google Analytics와 Meta Pixel이 방문·클릭 통계를 측정하며, 쿠키 설정에서 언제든 변경할 수 있습니다.',
           formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
           kakaoButton: 'KakaoTalk 오픈채팅',
@@ -1055,7 +1116,7 @@
         card.className = 'group flex flex-col overflow-hidden rounded-2xl border border-line-soft bg-canvas text-left shadow-subtle transition hover:-translate-y-0.5 hover:shadow-raised focusable';
         if (isOpen) {
           card.href = item.href;
-          card.setAttribute('aria-label', `${item.title} · ${item.date} — ${copy.events.detailAria}`);
+          card.setAttribute('aria-label', `${item.title} · ${item.date}. ${copy.events.detailAria}`);
         } else {
           card.type = 'button';
           card.addEventListener('click', () => showToast(copy.events.comingSoonToast));
@@ -1095,7 +1156,7 @@
       clear(container);
       copy.reviews.cards.forEach((item) => {
         const figure = document.createElement('figure');
-        figure.className = 'flex flex-col rounded-2xl bg-canvas p-7 shadow-raised sm:p-8';
+        figure.className = 'flex w-[85%] shrink-0 snap-start flex-col rounded-2xl bg-canvas-soft p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
 
         const blockquote = document.createElement('blockquote');
         blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
@@ -1111,6 +1172,7 @@
         figure.append(blockquote, caption);
         container.appendChild(figure);
       });
+      restartReviewAlignment();
     };
 
     const renderHowItems = (copy) => {
@@ -1156,21 +1218,88 @@
       persistLanguage(lang);
     };
 
-    // ===== 리뷰 섹션 뒷배경 자동 크로스페이드 =====
-    const reviewSlides = [...document.querySelectorAll('#reviews .review-slide')];
-    let reviewSlideIndex = 0;
+    // ===== 섹션 뒷배경 자동 크로스페이드 ([data-photo-backdrop] 안의 사진들) =====
+    const backdropSlides = [...document.querySelectorAll('[data-photo-backdrop] .backdrop-slide')];
+    let backdropSlideIndex = 0;
 
-    const startReviewBackdrop = () => {
-      if (reviewSlides.length < 2) return;
+    const startPhotoBackdrop = () => {
+      if (backdropSlides.length < 2) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       setInterval(() => {
-        reviewSlideIndex = (reviewSlideIndex + 1) % reviewSlides.length;
-        reviewSlides.forEach((slide, i) => {
-          slide.classList.toggle('opacity-100', i === reviewSlideIndex);
-          slide.classList.toggle('opacity-0', i !== reviewSlideIndex);
+        backdropSlideIndex = (backdropSlideIndex + 1) % backdropSlides.length;
+        backdropSlides.forEach((slide, i) => {
+          slide.classList.toggle('opacity-100', i === backdropSlideIndex);
+          slide.classList.toggle('opacity-0', i !== backdropSlideIndex);
         });
       }, 6000);
     };
+
+    // ===== 리뷰 카드 캐러셀: 화살표로 한 장씩 이동 =====
+    // 카드는 시간순이지만 1번 후기는 히어로가 이미 인용하고 있어, 캐러셀은 2번 카드에서 출발한다.
+    const DEFAULT_REVIEW_CARD_INDEX = 1;
+    const reviewTrack = document.querySelector('[data-review-cards]');
+    const reviewPrevButton = document.querySelector('[data-review-prev]');
+    const reviewNextButton = document.querySelector('[data-review-next]');
+
+    const reviewCardStep = () => {
+      const [first, second] = reviewTrack?.children ?? [];
+      if (!first) return 0;
+      return second ? second.offsetLeft - first.offsetLeft : first.getBoundingClientRect().width;
+    };
+
+    function syncReviewArrows() {
+      if (!reviewTrack || !reviewPrevButton || !reviewNextButton) return;
+      const maxScroll = reviewTrack.scrollWidth - reviewTrack.clientWidth;
+      reviewPrevButton.disabled = maxScroll <= 1 || reviewTrack.scrollLeft <= 1;
+      reviewNextButton.disabled = maxScroll <= 1 || reviewTrack.scrollLeft >= maxScroll - 1;
+    }
+
+    // Tailwind CDN이 카드 폭을 적용하기 전에 계산하면 시작 위치가 어긋난다. 로딩이 끝난 뒤의
+    // 계산만 최종으로 보고, 그 전까지는 레이아웃이 바뀔 때마다 다시 잡는다.
+    let reviewAlignmentPending = false;
+
+    function alignReviewsToDefaultCard() {
+      if (!reviewTrack) return;
+      const step = reviewCardStep();
+      reviewTrack.scrollLeft = step * DEFAULT_REVIEW_CARD_INDEX;
+      syncReviewArrows();
+      if (step > 0 && document.readyState === 'complete') reviewAlignmentPending = false;
+    }
+
+    const restartReviewAlignment = () => {
+      reviewAlignmentPending = true;
+      alignReviewsToDefaultCard();
+    };
+
+    // 사용자가 직접 넘긴 뒤에는 위치를 다시 건드리지 않는다.
+    const stopReviewAlignment = () => { reviewAlignmentPending = false; };
+
+    const scrollReviewsBy = (direction) => {
+      if (!reviewTrack) return;
+      const step = reviewCardStep();
+      if (!step) return;
+      stopReviewAlignment();
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+      reviewTrack.scrollBy({ left: step * direction, behavior });
+    };
+
+    const settleReviewLayout = () => {
+      if (reviewAlignmentPending) alignReviewsToDefaultCard();
+      else syncReviewArrows();
+    };
+
+    reviewPrevButton?.addEventListener('click', () => scrollReviewsBy(-1));
+    reviewNextButton?.addEventListener('click', () => scrollReviewsBy(1));
+    reviewTrack?.addEventListener('scroll', syncReviewArrows, { passive: true });
+    ['pointerdown', 'wheel', 'keydown'].forEach((type) => {
+      reviewTrack?.addEventListener(type, stopReviewAlignment, { passive: true });
+    });
+    if (reviewTrack && 'ResizeObserver' in window) {
+      new ResizeObserver(settleReviewLayout).observe(reviewTrack);
+    } else {
+      window.addEventListener('resize', settleReviewLayout);
+    }
+    window.addEventListener('load', settleReviewLayout);
 
     document.querySelectorAll('[data-lang]').forEach((button) => {
       button.addEventListener('click', () => {
@@ -1183,7 +1312,7 @@
     });
 
     syncCtas();
-    startReviewBackdrop();
+    startPhotoBackdrop();
     applyLanguage(safeStoredLanguage());
   </script>
 </body>

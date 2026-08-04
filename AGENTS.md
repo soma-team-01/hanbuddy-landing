@@ -1,10 +1,10 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-08-01 KST
+**Updated:** 2026-08-03 KST
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, Han River picnics) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
+HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, and the 2026-08-01 Han River picnic — the Aug 8 & 9 Han River picnics and K League/jjimjilbang have never actually run, so their photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
 
 ## STRUCTURE
 
@@ -22,7 +22,7 @@ hanbuddy-landing/
 |   |-- photos/kleague/       # team-owned K League photos (coming-soon card / backdrop)
 |   |-- photos/jjimjilbang/   # CC0 jjimjilbang photos (coming-soon card; no team photos yet)
 |   `-- raw/                  # untracked originals (.gitignore); never deploy
-|-- tests/                    # node --test suites: about copy sync, analytics consent, palette/typography vs DESIGN.md
+|-- tests/                    # node --test suites: about copy sync, analytics consent, review carousel, palette/typography vs DESIGN.md
 |-- docs/superpowers/         # past design specs/plans (history, not current truth)
 |-- DESIGN.md                 # design-system SSOT (tokens, components, photo rules)
 |-- README.md                 # quick-start, deploy model, public-copy rules pointer
@@ -53,18 +53,21 @@ hanbuddy-landing/
 | `.eyebrow` | CSS utility | `index.html` style block | Uppercase tracked section label (`.eyebrow-on-primary` on dark surfaces) |
 | `.hero-polaroid` / `.hp1–4` | CSS utilities | `index.html` style block | Hero polaroid scatter: desktop corner-pinned tilted snaps with tape + handwritten captions, mobile offset 2-col collage |
 | `.photo-card` | CSS utility | `index.html` style block | Rounded photo frame with hover zoom (event cards, detail collages) |
-| `.review-slide` | CSS utility | `index.html` style block | Reviews-backdrop crossfade transition (opacity 1s) |
+| `.backdrop-slide` | CSS utility | `index.html` style block | Section-backdrop crossfade transition (opacity 1s); used by `#apply` |
+| `.review-track` / `.review-arrow` | CSS utility | `index.html` style block | Quote-card carousel: hidden scrollbar on the snap track, dimmed end-state arrows |
 | `#top` | section | `index.html` | Hero: headline, pill CTAs, rating chip linking to `#reviews`, featured guest-quote card, polaroid scatter |
-| `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop): open events link to `/events/*`, coming-soon cards show a toast |
+| `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop) on the `panel` band shared with `#reviews`: open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
-| `#reviews` | section | `index.html` | Guest reviews over an autoplay crossfading photo backdrop: aggregate rating chip + 3 approved quote cards; rules in DESIGN.md "Guest Reviews" |
-| `#apply` | section | `index.html` | Final CTA band: Google Form, Instagram DM, KakaoTalk, one-line buddy note, privacy note |
-| `/about` | page | `about/index.html` | Operator-positioning team page with meetup photo strip; own CONTENT_MAP |
+| `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
+| `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note. Data/cookie disclosure lives in the consent banner only |
+| `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
 | `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
-| `startReviewBackdrop` | JS | `index.html` script | 6s autoplay crossfade for `#reviews` backdrop; disabled under `prefers-reduced-motion` |
+| `startPhotoBackdrop` | JS | `index.html` script | 6s autoplay crossfade for the photos inside `[data-photo-backdrop]` (currently `#apply`); disabled under `prefers-reduced-motion` |
+| `scrollReviewsBy` / `syncReviewArrows` | JS | `index.html` script | Quote-card carousel: arrows scroll one card, end states set `disabled`; re-synced after every render, scroll, and resize |
+| `alignReviewsToDefaultCard` | JS | `index.html` script | Opens the carousel on card `DEFAULT_REVIEW_CARD_INDEX` (2nd — card 1 is the hero quote). Re-runs until layout settles because Tailwind CDN sizes cards late; any arrow click, wheel, pointer, or key input on the track stops it for good |
 | Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`; Meta customs `ApplicationFormOpen`, `ContactClick` |
 | Lightbox | JS | `events/*/index.html` | Full-screen photo viewer: arrows, arrow-key/Escape, focus moved to close button on open, Tab trapped inside, focus restored to trigger on close |
 
@@ -73,10 +76,11 @@ hanbuddy-landing/
 ### Product facts (update only on explicit instruction)
 
 - Positioning is date-driven events, not weekend-only (2026-07-28): baseball can run on weekdays.
-- Current published events — KBO Baseball Night: Aug 5 (Wed) & Aug 12 (Wed), ₩50,000, game ticket & stadium snacks included. Han River Picnic: Aug 1 (Sat), Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
+- The Aug 1 (Han River) and Aug 5 (KBO) runs were cancelled on 2026-08-04 (heat wave + not enough signups); both dates are removed from all public surfaces and must not be reintroduced.
+- Current published events — Indoor Dome Baseball Night (Beat the Seoul Heat): Aug 12 (Wed) 5:30–9:30 PM at Gocheok Sky Dome (Kiwoom Heroes vs LG Twins), ₩60,000 since 2026-08-04, game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Han River Picnic: Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
-- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins) and 2026-07-26 Jamsil KBO, plus Han River picnic photography.
+- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8 & 9 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 
@@ -84,6 +88,7 @@ hanbuddy-landing/
 2. 2026-07-26 survey promo field: "Great experience to enjoy a baseball game with a local" / KO "로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요"
 3. 2026-07-26 survey "What did you like" field (유현님 approved this field for publication, 2026-07-29): "It was fun to watch the game and cheer together!" / KO "함께 응원하며 경기를 보는 게 정말 재미있었어요!" — only the sentence-initial capital is normalized.
 4. KakaoTalk message from a July guest, approved in trimmed form (2026-07-28): "I had such a great evening — will definitely be going to another game with HanBuddy!"
+5. 2026-08-02 survey promo field (2026-07-26 run participant), single-sentence excerpt of a longer answer: "They did a fantastic job of explaining what was happening during the game." / KO "경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요." — the same excerpt is used in the `2026-08-03-ugc-v3` reels script.
 - Answers from the "What could be improved" survey field remain off-limits for public copy.
 - The aggregate "4.7 / 5 average guest rating" is the mean of all post-event survey satisfaction scores to date; update only by recomputing from the survey sheet, and never expose any individual score.
 
@@ -111,7 +116,7 @@ hanbuddy-landing/
 - Do not deploy the whole repository folder or bypass `.vercelignore`.
 - Do not include `.git/`, `.omo/`, `.superpowers/`, `.serena/`, QA screenshots, local tokens, raw JPG/JPEG photos, or tool evidence in any public artifact.
 - Do not add participant phone numbers, payment details, secrets, private chat logs, or unapproved direct quotes to this repo.
-- Do not reintroduce retired recruitment facts as current truth: "3 spots left", "8 seats booked", "first pilot recruitment", and the July 18/19 & 25/26 "Run 2" window are history. (Note: ₩50,000 IS the current KBO price since 2026-07-28 — the retired fact was the old "50,000 KRW" pilot framing, not the number itself.)
+- Do not reintroduce retired recruitment facts as current truth: "3 spots left", "8 seats booked", "first pilot recruitment", and the July 18/19 & 25/26 "Run 2" window are history. (Note: the KBO price is ₩60,000 since 2026-08-04; ₩50,000 and the older "50,000 KRW" pilot framing are both retired.)
 - Do not expose internal weak-validation details in public copy; maintainer checks may mention them only to verify their absence.
 - Do not create package/build tooling just to make small copy changes, and do not split pages into a framework structure unless routing/reuse/builds become real requirements.
 - Do not treat `.omo/evidence/` or `docs/superpowers/` as current truth without rechecking against the live files.
