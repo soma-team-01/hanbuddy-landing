@@ -8,7 +8,7 @@
   <meta property="og:title" content="Indoor Dome Baseball Night | HanBuddy" />
   <meta property="og:description" content="Beat the Seoul heat indoors: a KBO night game at Gocheok Sky Dome with local Korean buddies, Wed Aug 12." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://www.hanbuddy.kr/assets/photos/kbo/kbo-0726-lights.webp" />
+  <meta property="og:image" content="https://www.hanbuddy.kr/assets/photos/kbo/gocheok-dome-night.webp" />
   <link rel="icon" type="image/webp" href="/assets/brand/logo-icon.webp" />
   <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
 
@@ -74,21 +74,21 @@
 
     <!-- Photo collage (click to enlarge) -->
     <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
-      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 7 in full screen">
-        <img src="/assets/photos/kbo/kbo-0726-lights.webp" width="1200" height="1600" class="h-64 w-full object-cover object-[50%_35%] transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
-             alt="Jamsil Baseball Stadium field under the lights during a KBO night game" />
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 8 in full screen">
+        <img src="/assets/photos/kbo/gocheok-dome-night.webp" width="1600" height="1200" fetchpriority="high" class="h-64 w-full object-cover object-[50%_30%] transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
+             alt="The closed roof of Gocheok Sky Dome over a packed crowd and the field during a night game" />
       </button>
-      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 7 in full screen">
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 8 in full screen">
         <img src="/assets/photos/kbo/kbo-0726-group.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover object-[60%_40%] transition group-hover:opacity-95"
              alt="HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium" />
       </button>
-      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 7 in full screen">
+      <button type="button" data-photo="3" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 4 of 8 in full screen">
         <img src="/assets/photos/kbo/kbo-0726-cheers.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_35%] transition group-hover:opacity-95"
              alt="Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium" />
-        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 7 photos</span>
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 8 photos</span>
       </button>
-      <button type="button" data-photo="1" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
-        📷 View all 7 photos
+      <button type="button" data-photo="0" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
+        📷 View all 8 photos
       </button>
     </div>
 
@@ -233,7 +233,7 @@
     <button type="button" data-lb-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-xl font-bold text-on-primary transition hover:bg-canvas-soft/30" aria-label="Close photo viewer">&times;</button>
     <button type="button" data-lb-prev class="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:left-6" aria-label="Previous photo">&lsaquo;</button>
     <figure class="flex max-h-full max-w-5xl flex-col items-center">
-      <img id="lightbox-img" src="/assets/photos/kbo/kbo-0726-lights.webp" alt="Jamsil Baseball Stadium field under the lights during a KBO night game" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
+      <img id="lightbox-img" src="/assets/photos/kbo/gocheok-dome-night.webp" alt="The closed roof of Gocheok Sky Dome over a packed crowd and the field during a night game" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
       <figcaption id="lightbox-caption" class="mt-3 max-w-xl text-center text-sm font-semibold text-on-primary/80"></figcaption>
     </figure>
     <button type="button" data-lb-next class="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:right-6" aria-label="Next photo">&rsaquo;</button>
@@ -242,6 +242,7 @@
 
   <script>
     const PHOTOS = [
+      { src: '/assets/photos/kbo/gocheok-dome-night.webp', alt: 'The closed roof of Gocheok Sky Dome over a packed crowd and the field during a night game' },
       { src: '/assets/photos/kbo/kbo-0726-lights.webp', alt: 'Jamsil Baseball Stadium field under the lights during a KBO night game' },
       { src: '/assets/photos/kbo/kbo-0726-group.webp', alt: 'HanBuddy guests and local buddies taking a selfie together in the stands at Jamsil Baseball Stadium' },
       { src: '/assets/photos/kbo/kbo-0726-cheers.webp', alt: 'Guests clinking beer cans over the outfield before a game at Jamsil Baseball Stadium' },
