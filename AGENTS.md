@@ -76,10 +76,11 @@ hanbuddy-landing/
 ### Product facts (update only on explicit instruction)
 
 - Positioning is date-driven events, not weekend-only (2026-07-28): baseball can run on weekdays.
-- Current published events — KBO Baseball Night: Aug 5 (Wed) & Aug 12 (Wed), ₩50,000, game ticket & stadium snacks included. Han River Picnic: Aug 1 (Sat), Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
+- The Aug 1 (Han River) and Aug 5 (KBO) runs were cancelled on 2026-08-04 (heat wave + not enough signups); both dates are removed from all public surfaces and must not be reintroduced.
+- Current published events — Indoor Dome Baseball Night (Beat the Seoul Heat): Aug 12 (Wed) 5:30–9:30 PM at Gocheok Sky Dome (Kiwoom Heroes vs LG Twins), ₩60,000 since 2026-08-04, game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Han River Picnic: Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
-- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic. The Aug 8 & 9 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
+- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8 & 9 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 
@@ -115,7 +116,7 @@ hanbuddy-landing/
 - Do not deploy the whole repository folder or bypass `.vercelignore`.
 - Do not include `.git/`, `.omo/`, `.superpowers/`, `.serena/`, QA screenshots, local tokens, raw JPG/JPEG photos, or tool evidence in any public artifact.
 - Do not add participant phone numbers, payment details, secrets, private chat logs, or unapproved direct quotes to this repo.
-- Do not reintroduce retired recruitment facts as current truth: "3 spots left", "8 seats booked", "first pilot recruitment", and the July 18/19 & 25/26 "Run 2" window are history. (Note: ₩50,000 IS the current KBO price since 2026-07-28 — the retired fact was the old "50,000 KRW" pilot framing, not the number itself.)
+- Do not reintroduce retired recruitment facts as current truth: "3 spots left", "8 seats booked", "first pilot recruitment", and the July 18/19 & 25/26 "Run 2" window are history. (Note: the KBO price is ₩60,000 since 2026-08-04; ₩50,000 and the older "50,000 KRW" pilot framing are both retired.)
 - Do not expose internal weak-validation details in public copy; maintainer checks may mention them only to verify their absence.
 - Do not create package/build tooling just to make small copy changes, and do not split pages into a framework structure unless routing/reuse/builds become real requirements.
 - Do not treat `.omo/evidence/` or `docs/superpowers/` as current truth without rechecking against the live files.
