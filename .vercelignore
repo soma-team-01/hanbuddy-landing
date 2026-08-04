@@ -29,6 +29,9 @@
 !/events/kbo
 /events/kbo/*
 !/events/kbo/index.html
+!/events/jamsil
+/events/jamsil/*
+!/events/jamsil/index.html
 !/events/hanriver
 /events/hanriver/*
 !/events/hanriver/index.html
