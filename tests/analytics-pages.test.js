@@ -9,6 +9,7 @@ const homeHtml = readPage('index.html');
 const aboutHtml = readPage('about', 'index.html');
 const detailPages = [
   { name: 'KBO', experienceType: 'kbo', html: readPage('events', 'kbo', 'index.html') },
+  { name: 'Jamsil', experienceType: 'jamsil', html: readPage('events', 'jamsil', 'index.html') },
   { name: 'Han River', experienceType: 'hanriver', html: readPage('events', 'hanriver', 'index.html') },
 ];
 const publicPages = [
