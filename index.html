@@ -311,6 +311,29 @@
 <body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="home">
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
+  <!-- 다음 회차 알림. 스크롤하면 헤더만 남기고 위로 흘러가며,
+       회차 시작 시각이 지나면 렌더 자체를 하지 않는다(내리는 걸 잊어도 안전). -->
+  <aside data-announcement hidden class="relative z-[60] bg-ink text-on-primary">
+    <div class="relative mx-auto max-w-6xl px-5 py-2.5 pr-12">
+      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+        <p class="text-sm font-semibold leading-6" data-i18n="announcement.text">
+          ⚾ Aug 12 (Wed) &middot; Indoor Dome KBO Baseball Night
+        </p>
+        <a data-announcement-link href="/events/kbo/"
+           data-analytics-content-id="kbo" data-analytics-content-status="open"
+           class="focusable focusable-on-primary-strong shrink-0 rounded-full bg-on-primary px-4 py-1.5 text-xs font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px">
+          <span data-i18n="announcement.cta">Join us</span>
+          <span aria-hidden="true" class="ml-0.5">&rarr;</span>
+        </a>
+      </div>
+      <button type="button" data-announcement-dismiss
+              class="focusable focusable-on-primary-strong absolute right-3 top-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-lg leading-none text-on-primary/70 transition hover:text-on-primary"
+              aria-label="Dismiss this announcement" data-i18n-aria="announcement.dismissAria">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </aside>
+
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
     <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
       <a href="#top" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink lg:text-lg" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
@@ -641,6 +664,16 @@
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
     };
 
+    // 상단 공지에서 밀어주는 회차. `endsAt`은 그 회차의 집합 시각(KST)이고,
+    // 이 시각이 지나면 공지가 렌더되지 않는다. 다음 회차로 넘길 때는 여기와
+    // CONTENT_MAP의 `announcement.text`(EN/KO)를 함께 바꾼다.
+    const ANNOUNCEMENT = {
+      id: 'kbo-2026-08-12',
+      href: '/events/kbo/',
+      endsAt: '2026-08-12T17:30:00+09:00',
+    };
+    const ANNOUNCEMENT_DISMISS_KEY = 'hanbuddy.announcementDismissed';
+
     const CONTENT_MAP = Object.freeze({
       en: {
         skipLink: 'Skip to content',
@@ -827,6 +860,11 @@
           kakaoAria: 'Ask HanBuddy in KakaoTalk open chat',
           meetupAria: 'Visit HanBuddy’s Meetup group',
           credibility: 'HanBuddy is run by team ZeroOne of AI·SW Maestro, a national talent program hosted by Korea’s Ministry of Science and ICT.',
+        },
+        announcement: {
+          text: '⚾ Aug 12 (Wed) · Indoor Dome KBO Baseball Night',
+          cta: 'Join us',
+          dismissAria: 'Dismiss this announcement',
         },
         consent: {
           title: 'Can we count your visit?',
@@ -1022,6 +1060,11 @@
           kakaoAria: 'HanBuddy KakaoTalk 오픈채팅으로 문의하기',
           meetupAria: 'HanBuddy Meetup 그룹 보기',
           credibility: 'HanBuddy는 과학기술정보통신부 주최 AI·SW마에스트로 17기 팀 ZeroOne이 운영합니다.',
+        },
+        announcement: {
+          text: '⚾ 8월 12일 (수) · 고척돔 실내 야구 직관',
+          cta: '신청하기',
+          dismissAria: '알림 닫기',
         },
         consent: {
           title: '방문 기록을 남겨도 될까요?',
@@ -1229,8 +1272,39 @@
       });
     };
 
+    // 공지는 회차 시작 시각이 지나면 스스로 사라진다. 사람이 내리는 걸 잊어도
+    // 지난 행사를 광고하지 않는다. 판정은 KST 기준(문자열에 오프셋을 박아둔다).
+    const isAnnouncementLive = (endsAt, now = new Date()) => {
+      const deadline = new Date(endsAt).getTime();
+      return Number.isFinite(deadline) && deadline > now.getTime();
+    };
+
+    const readDismissedAnnouncement = () => {
+      try {
+        return window.localStorage.getItem(ANNOUNCEMENT_DISMISS_KEY);
+      } catch {
+        return null;
+      }
+    };
+
+    const renderAnnouncement = () => {
+      const bar = document.querySelector('[data-announcement]');
+      if (!bar) return;
+
+      const dismissed = readDismissedAnnouncement() === ANNOUNCEMENT.id;
+      if (dismissed || !isAnnouncementLive(ANNOUNCEMENT.endsAt)) {
+        bar.hidden = true;
+        return;
+      }
+
+      const link = bar.querySelector('[data-announcement-link]');
+      if (link) link.href = ANNOUNCEMENT.href;
+      bar.hidden = false;
+    };
+
     const renderDynamicContent = (copy) => {
       renderNav(copy);
+      renderAnnouncement();
       renderEventCards(copy);
       renderReviewCards(copy);
       renderHowItems(copy);
@@ -1346,6 +1420,16 @@
         applyLanguage(lang);
         if (previous !== lang) window.HanBuddyAnalytics?.trackLanguageSwitch?.(lang, previous);
       });
+    });
+
+    document.querySelector('[data-announcement-dismiss]')?.addEventListener('click', () => {
+      try {
+        window.localStorage.setItem(ANNOUNCEMENT_DISMISS_KEY, ANNOUNCEMENT.id);
+      } catch {
+        // 저장이 막혀 있어도 이번 방문에서는 닫힌 상태를 유지한다.
+      }
+      const bar = document.querySelector('[data-announcement]');
+      if (bar) bar.hidden = true;
     });
 
     syncCtas();
