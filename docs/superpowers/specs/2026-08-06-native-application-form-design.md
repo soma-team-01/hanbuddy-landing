@@ -1,0 +1,305 @@
+# 랜딩 자체 신청 폼 설계 (구글폼 대체)
+
+작성일: 2026-08-06
+
+## 1. 배경
+
+지금 모든 신청 CTA는 `CONFIG.apply`(`https://forms.gle/B1fWgX3MjtHUHGNt5`)로 나간다. 이 구조에 세 가지 문제가 있다.
+
+1. **측정 단절.** GA는 `application_form_open`까지만 찍고 그 뒤는 보이지 않는다. 폼을 연 사람 중 몇 명이 제출했는지, 어디서 이탈했는지, 어느 이벤트가 실제 신청으로 이어졌는지 알 수 없다.
+2. **신뢰 손실.** 결제까지 하는 유료 프로그램인데 외부 구글폼으로 튕겨 나간다. 완료 후에도 "응답이 기록되었습니다" 한 줄이 전부다.
+3. **플랫폼 유입 단절.** 신청자 데이터가 팀 자산으로 축적되지 않는다.
+
+추가로 랜딩과 구글폼 사이에 **사실 불일치**가 있다.
+
+- 랜딩은 고척돔(8/12)과 잠실(8/15·16)을 별개 카드로 분리했으나(2026-08-04) 구글폼은 여전히 "KBO Baseball Game" 하나다. 잠실 카드를 눌러 폼에 가면 프로그램을 다시 고르고 고척 날짜까지 함께 보인다.
+- 구글폼 한강 슬롯에 `Aug 15`, `Aug 16`이 있으나 랜딩 한강 카드는 8/8·9뿐이다.
+
+## 2. 목표와 비목표
+
+**목표**
+
+- 랜딩 안에서 신청을 끝낸다.
+- 신청 깔때기 전 구간을 GA로 측정한다.
+- 신청 데이터를 팀이 소유하는 저장소에 축적한다.
+- 신청 완료 경험을 구글폼보다 확실히 낫게 만든다.
+
+**비목표 (이번 범위 밖)**
+
+- 온라인 결제. 참가비 수납은 지금처럼 확정 연락 후 수동으로 처리한다.
+- 로그인·계정. MVP 백엔드가 할 일이다.
+- 신청 내역 조회 화면. 인증이 필요해 범위를 넘는다.
+- 구글폼 즉시 폐쇄. Meetup·인스타에 뿌린 링크가 살아 있어 병행한다.
+
+## 3. 확정된 결정
+
+| 항목 | 결정 | 근거 |
+|---|---|---|
+| 저장소 | **Google Sheets** (신규 시트) | 랜딩은 임시 표면이고 안정성만 필요. 운영 흐름이 안 바뀌고, 무료 티어 일시정지 같은 함정이 없으며, 폐기 비용이 0 |
+| API 계층 | Vercel Function `api/apply.js` | same-origin이라 CORS가 사라짐. 서버측 검증·시크릿 보관 가능 |
+| 의존성 | **없음** (Node 내장 `crypto`로 서비스 계정 JWT 서명) | `AGENTS.md`의 buildless 원칙 유지 |
+| 폼 위치 | 별도 페이지 `/apply/` | URL 공유·뒤로가기·GA page_view가 깔끔. 기존 CTA는 URL만 교체 |
+| 폼 단계 | 한 화면 스크롤 | 입력 11개와 동의 1개면 충분. 남은 분량이 보여야 끝까지 간다 |
+| 이메일 수집 | 하지 않음 | 유현님 결정(2026-08-06). 확인은 완료 화면이 유일하므로 거기에 신뢰를 몰아준다 |
+| 운영 알림 | Discord 웹훅 | 팀이 이미 쓰는 채널. 무료, 즉시성 |
+| 범위 | 신청 접수까지 | 결제는 PG 심사·환불정책·사업자 요건이 붙어 별도 과제 |
+| 한강 8/15·16 | 구글폼에서 제거 | 랜딩 카드가 정본 |
+
+## 4. 아키텍처
+
+```
+이벤트 카드 / 상세페이지 CTA
+        ↓  /apply/?event=jamsil
+  apply/index.html          정적 페이지. 기존 CONTENT_MAP·analytics.js 패턴 그대로
+        ↓  fetch POST /api/apply
+  api/apply.js              Vercel Function (Node.js runtime, 의존성 0)
+        ├─ 서버측 검증 + 스팸 차단
+        ├─ ① Google Sheets append   (정본)
+        └─ ② Discord 웹훅            (사본 겸 알림)
+        ↓
+  완료 화면 + 신청번호
+```
+
+AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 시트 1장**이 전부다.
+
+### 4.1 실패 처리와 이중화
+
+신청 유실은 매출 유실이므로 두 경로를 서로의 백업으로 쓴다.
+
+| 시트 | 디스코드 | 사용자 응답 | 팀 처리 |
+|---|---|---|---|
+| 성공 | 성공 | 접수 완료 | 정상 |
+| 실패 | 성공 | **접수 완료** | 디스코드에 `⚠️ 시트 저장 실패` 경고 + 신청 전문. 수동 복구 |
+| 성공 | 실패 | 접수 완료 | 시트에 남음. 알림만 누락 |
+| 실패 | 실패 | 오류 + 대체 경로 안내 | 인스타·카톡으로 직접 연락하도록 유도 |
+
+시트가 실패해도 사용자를 돌려보내지 않는 이유는, 내용이 디스코드에 전문으로 남아 복구가 가능한 반면 여기서 오류를 띄우면 그 사람은 대부분 그냥 이탈하기 때문이다.
+
+두 경로는 순차가 아니라 병렬로 호출하고 `Promise.allSettled`로 결과를 모은다.
+
+## 5. 폼 명세
+
+### 5.1 필드
+
+구글폼 항목을 그대로 옮기되 "어떤 프로그램?" 질문만 삭제한다. 카드를 누른 시점에 정해지기 때문이다.
+
+| # | 필드 | 타입 | 필수 | 비고 |
+|---|---|---|---|---|
+| 1 | 이벤트 | select | 필수 | URL `?event=`로 프리필. 변경 가능 |
+| 2 | 날짜·시간 | radio | 필수 | 선택된 이벤트의 슬롯만. **지난 슬롯 자동 제외** |
+| 3 | 인원 | number | 필수 | 1 이상 10 이하 |
+| 4 | 이름 | text | 필수 | 1자 이상 100자 이하 |
+| 5 | 국적 | text | 필수 | |
+| 6 | 한국어 수준 | radio | 필수 | None / Basic / Intermediate / Fluent |
+| 7 | 연락 수단 | select | 필수 | WhatsApp / LINE / KakaoTalk / Instagram DM / WeChat / Other |
+| 8 | 연락처 ID | text | 필수 | |
+| 9 | 결제 희망 수단 | select | 필수 | Korean bank transfer / PayPal / Card payment link / Cash / I need help |
+| 10 | 식이·접근성 요청 | textarea | 선택 | 1000자 이하 |
+| 11 | 유입 경로 | select | 선택 | Offline promotion / Meetup / Instagram / Friend / University community / Other |
+| 12 | 개인정보 수집·이용 동의 | checkbox | 필수 | |
+
+### 5.2 이벤트 슬롯 데이터
+
+`AGENTS.md` Product facts와 현재 구글폼을 근거로 한다. 새로운 시간·장소를 지어내지 않는다.
+
+| eventId | 이벤트 | 슬롯 | 가격 |
+|---|---|---|---|
+| `kbo` | Indoor Dome Baseball Night | 2026-08-12 (Wed) 5:30 PM | ₩60,000 |
+| `jamsil` | Open-Air KBO Night at Jamsil | 2026-08-15 (Sat) 5:00 PM / 2026-08-16 (Sun) 5:00 PM | ₩60,000 |
+| `hanriver` | Han River Picnic | 2026-08-08 (Sat) 5:00 PM / 2026-08-09 (Sun) 5:00 PM | ₩25,000 |
+
+슬롯은 ISO 날짜를 함께 들고 있고, **날짜가 지난 슬롯은 렌더 시 자동으로 빠진다.** 구글폼은 수동 관리라 지난 날짜가 계속 노출됐다. 한 이벤트의 슬롯이 전부 지나면 그 이벤트는 선택지에서 사라지고, 모든 이벤트의 슬롯이 전부 지나면 폼 대신 "다음 일정 준비 중" 안내와 인스타·카톡 링크를 보여준다.
+
+만료 판정은 **KST(UTC+9) 기준 슬롯 시작 시각**으로 하며, 클라이언트 시계를 신뢰할 수 없으므로 서버도 같은 기준으로 재판정한다. 방문자의 기기 시간대와 무관하게 결과가 같아야 한다.
+
+`?event=` 값이 없거나 알 수 없는 값이면 프리필 없이 전체 선택지를 보여준다.
+
+### 5.3 검증
+
+클라이언트 검증은 우회 가능하므로 **서버에서 전 항목을 다시 검증한다.**
+
+- 필수 항목 존재, 문자열 길이 상한, 인원 범위
+- 이벤트 ID와 날짜 슬롯의 **조합 유효성** (한강 신청에 잠실 슬롯이 오면 거부)
+- 지난 슬롯 거부
+- 선택형 필드는 허용 값 집합에 속하는지 확인
+- 동의 체크 여부
+
+클라이언트는 첫 오류 필드로 포커스를 옮기고 `aria-invalid`와 오류 메시지를 연결한다.
+
+### 5.4 i18n
+
+기존 `CONTENT_MAP` EN/KO 패턴을 그대로 쓴다. 정적 폴백 DOM 텍스트와 `CONTENT_MAP`을 동기화한다. 나브·푸터·동의 배너 카피는 `index.html`과 공유되므로 `tests/about.test.js`가 하는 것과 같은 드리프트 검사를 `/apply/`에도 적용한다.
+
+## 6. 시트 스키마
+
+시트 1행은 헤더로 고정한다. 컬럼 순서는 append가 의존하므로 **임의 변경 금지**.
+
+| 컬럼 | 예시 |
+|---|---|
+| `timestamp_kst` | `2026-08-06 21:14:03` |
+| `application_id` | `HB-20260806-A3F9` |
+| `event_id` | `jamsil` |
+| `event_title` | `Open-Air KBO Night at Jamsil` |
+| `date_slot` | `2026-08-15 17:00` |
+| `guests` | `2` |
+| `name` | |
+| `nationality` | |
+| `korean_level` | `Basic` |
+| `contact_method` | `WhatsApp` |
+| `contact_id` | |
+| `payment_method` | `PayPal` |
+| `requests` | |
+| `source` | `Instagram` |
+| `language` | `en` |
+| `consent` | `TRUE` |
+| `referrer` | |
+
+`application_id`는 `HB-YYYYMMDD-XXXX` 형식으로 짧고 읽어 부를 수 있게 만든다. 날짜는 KST 기준이고, 뒤 4자리는 `crypto.randomUUID()`에서 뽑은 문자를 대문자와 숫자로 제한해 만든다(혼동하기 쉬운 `0`·`O`·`1`·`I` 제외). **서버에서 생성한다.** 클라이언트가 만들면 조작이 가능하고 중복 판정도 할 수 없다. 완료 화면에 표시하고 디스코드 알림에도 넣어 문의 시 대조할 수 있게 한다.
+
+**IP와 User-Agent는 저장하지 않는다.** 스팸 판정에만 요청 처리 중 사용하고 기록하지 않는다.
+
+## 7. API 명세
+
+`POST /api/apply`
+
+요청은 JSON. 응답도 JSON.
+
+| 상태 | 응답 | 의미 |
+|---|---|---|
+| 200 | `{ ok: true, applicationId }` | 접수됨 (시트 또는 디스코드 중 하나 이상 성공) |
+| 400 | `{ ok: false, code: 'VALIDATION', field }` | 검증 실패 |
+| 429 | `{ ok: false, code: 'RATE_LIMIT' }` | 스팸 차단 |
+| 500 | `{ ok: false, code: 'STORAGE' }` | 두 경로 모두 실패 |
+
+`POST` 외 메서드는 405. 응답 본문에 내부 오류 메시지를 노출하지 않는다.
+
+## 8. 스팸 방어
+
+공개 폼이라 최소 방어가 필요하다. 캡차는 넣지 않는다. 전환율을 깎고, 실제 스팸이 관측되기 전에는 과잉이다.
+
+- **honeypot**: 시각적으로 감춘 입력. 값이 차 있으면 200을 반환하되 저장하지 않는다(봇에게 실패를 알리지 않는다)
+- **최소 작성 시간**: 폼 렌더 시각을 hidden으로 심고 3초 미만 제출은 거부
+- **서버측 전면 재검증**: 위 5.3
+- **본문 크기 상한**: 과대 페이로드 거부
+
+폭주가 관측되면 Cloudflare Turnstile을 추가한다. 지금 넣지 않는다.
+
+## 9. 측정
+
+### 9.1 기존 모듈 확장
+
+`assets/analytics.js`의 `CTA_DEFINITIONS.apply`는 현재 `destination: 'google_form'`이고, `matchesConfiguredDestination`이 실제 href와 `ANALYTICS_CONFIG.destinations.google_form`을 대조한다. 신청 경로가 바뀌므로 다음을 수정한다.
+
+- `destinations`에 `application_page: '/apply/'` 추가
+- `CTA_DEFINITIONS.apply.destination`을 `application_page`로 변경 (GA 이벤트명 `application_form_open`과 Meta `ApplicationFormOpen`은 유지해 기존 데이터와 연속성을 지킨다)
+- `buildPageContext`의 `page_type`에 `application` 사용
+
+### 9.2 새 이벤트
+
+| 이벤트 | 시점 | 파라미터 |
+|---|---|---|
+| `application_start` | 첫 필드 입력 시 1회 | `event_id`, `content_language` |
+| `application_error` | 검증 실패 | `event_id`, `field`, `content_language` |
+| `application_submitted` | 접수 성공 | `event_id`, `date_slot`, `guests`, `source`, `content_language` |
+
+`application_submitted`는 GA4에서 키 이벤트(전환)로 지정한다. Meta는 `Lead`로 보낸다.
+
+이로써 처음 알 수 있게 되는 것: 폼 진입 대비 제출률, 이탈 필드, **고척과 잠실 중 어느 카드가 실제 신청으로 이어지는지**(현재는 둘 다 같은 폼으로 가서 구분 불가).
+
+### 9.3 동의와의 관계
+
+쿠키 동의를 거부한 방문자에게도 **신청 저장은 정상 동작해야 한다.** GA·Meta 전송만 막고 서버 저장은 막지 않는다. 폼 제출은 분석이 아니라 서비스 제공의 일부다.
+
+## 10. 개인정보
+
+랜딩이 직접 개인정보를 수집하게 되므로 고지가 필요해진다.
+
+- 폼 안에 수집 항목·목적·보유기간·동의 거부 권리와 그 경우의 불이익을 명시하고, 동의 체크박스를 필수로 둔다.
+- 확정 후 배정된 버디에게 필요한 정보가 공유된다는 사실을 함께 고지한다(현 구글폼 말미 문구와 동일한 취지).
+- 기존 카피 중 사실이 아니게 되는 것을 전부 교체한다.
+  - `events/{kbo,jamsil,hanriver}/index.html`: `This page never stores your application answers. You apply through the Google Form...`
+  - `index.html` 최종 CTA 본문의 `Tell us which event and which day in the Google Form.`
+  - 동의 배너의 `This page never sends your form answers to these tools`는 **여전히 사실이다**(GA로 폼 답변을 보내지 않는다). 유지한다.
+
+보유기간 값은 팀이 정해야 한다. 12절 미해결 항목 참조.
+
+## 11. 레포 규약 충돌과 해소
+
+이 변경은 `AGENTS.md`의 서술 세 곳을 사실과 어긋나게 만든다. **같은 PR에서 함께 갱신한다.**
+
+| 위치 | 현재 서술 | 조치 |
+|---|---|---|
+| OVERVIEW | "No app framework, package manager, build step, server code, or local data collection exists in this repo" | 서버 함수 1개와 신청 수집이 생겼음을 반영. 패키지 매니저·빌드 스텝은 **여전히 없음**을 명시 |
+| OVERVIEW | "Applications run through the live Google Form" | 랜딩 `/apply/`가 1차 경로, 구글폼은 외부 채널용으로 병행 중임을 반영 |
+| CONVENTIONS | "The page intentionally stores no personal information; applications/questions go through external channels only" | 신청 폼이 개인정보를 수집하며 시트에 저장한다는 사실과 그 취급 규칙으로 교체 |
+| ANTI-PATTERNS | "Do not create package/build tooling just to make small copy changes" | **유지한다.** 이번 변경은 의존성 0이라 이 규칙을 어기지 않는다 |
+| CONVENTIONS | "Keep this a buildless static site" | **유지한다.** `package.json`을 만들지 않는 것이 이 설계의 제약 조건이다 |
+
+`ANTI-PATTERNS`의 "Do not add ... secrets ... to this repo"는 그대로 지킨다. 서비스 계정 JSON과 웹훅 URL은 **Vercel 환경변수로만** 존재하며 레포에 들어가지 않는다. `.gitignore`에 `*.json` 형태의 서비스 계정 키 패턴을 방어적으로 추가한다.
+
+## 12. 배포
+
+### 12.1 `.vercelignore`
+
+가장 조용히 터질 위험이다. 현재 `/*`로 전부 막고 allowlist로 되살리는 구조라, 새 경로를 추가하지 않으면 **함수가 배포되지 않고 폼이 404를 받는다.** 과거 같은 이유로 새 정적 페이지가 배포되지 않은 전례가 있다.
+
+추가할 항목:
+
+```
+!/apply
+/apply/*
+!/apply/index.html
+!/api
+/api/*
+!/api/apply.js
+```
+
+`AGENTS.md`의 시뮬레이션 커맨드로 배포 대상을 검증한다. 커맨드가 `index.html about events assets`만 복사하므로 `apply`, `api`를 포함하도록 갱신한다.
+
+### 12.2 환경변수 (Vercel Production + Preview)
+
+| 이름 | 내용 |
+|---|---|
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | 서비스 계정 이메일 |
+| `GOOGLE_PRIVATE_KEY` | 서비스 계정 개인키 (개행 이스케이프 처리) |
+| `APPLICATIONS_SHEET_ID` | 신규 시트 문서 ID |
+| `APPLICATIONS_SHEET_TAB` | 탭 이름 |
+| `DISCORD_WEBHOOK_URL` | 팀 채널 웹훅 |
+
+### 12.3 수동 준비 작업
+
+1. 구글 클라우드 프로젝트에서 서비스 계정 생성, Sheets API 활성화, JSON 키 발급
+2. 신규 시트 생성 후 헤더 1행 입력, 서비스 계정 이메일에 **편집자** 권한으로 공유
+3. 디스코드 채널 웹훅 생성
+4. Vercel 환경변수 5개 등록
+5. GA4에서 `application_submitted`를 키 이벤트로 지정 (이벤트가 최소 1건 수집된 후 가능)
+
+## 13. 테스트
+
+`node --test tests/*.test.js` (디렉터리 형태는 일부 Node 버전에서 실패하므로 glob을 넘긴다).
+
+| 대상 | 내용 |
+|---|---|
+| `tests/apply-validation.test.js` | 검증 로직을 순수 함수로 분리해 단위 테스트. 필수 누락, 길이 초과, 이벤트와 슬롯 조합 불일치, 지난 슬롯, 허용 값 밖, honeypot, 최소 작성 시간 |
+| `tests/apply-slots.test.js` | 지난 슬롯 자동 제외, 전 슬롯 만료 시 폼 대체 화면, 알 수 없는 `?event=` 폴백 |
+| `tests/apply-page.test.js` | 필수 필드 라벨·`aria-required`·오류 메시지 연결, EN/KO `CONTENT_MAP`과 정적 폴백 DOM 동기화, 나브·푸터 카피 드리프트 |
+| `tests/analytics-schema.test.js` | 확장: 새 이벤트 3종의 이름·파라미터, `apply` CTA destination 변경 |
+| `tests/analytics-pages.test.js` | 확장: `/apply/` 페이지 컨텍스트 |
+
+검증 로직은 브라우저와 함수 양쪽에서 쓰도록 순수 모듈로 분리해 한 곳에서만 테스트한다.
+
+배포 후 프로덕션에서 실제 제출 1건으로 종단 확인한다. 시트 기록, 디스코드 알림, 완료 화면, GA 이벤트 수집을 각각 눈으로 본다. 테스트 행은 확인 후 시트에서 지운다.
+
+## 14. 롤백
+
+`CONFIG.apply`와 하드코딩된 앵커 8곳을 구글폼 URL로 되돌리면 즉시 원복된다. `/apply/` 페이지와 함수는 남겨둬도 무해하다. 구글폼을 병행 유지하는 이유가 여기에도 있다.
+
+## 15. 미해결 항목
+
+구현 전 또는 구현 중 확정이 필요하다.
+
+1. **한강 8/8·9 임박.** 오늘이 8/6이라 구현·리뷰·배포를 마치면 사실상 마감이다. 이번 폼의 실질적 첫 대상은 고척(8/12)과 잠실(8/15·16)이 될 가능성이 높다.
+2. **개인정보 보유기간.** 고지문에 넣을 구체적 기간을 팀이 정해야 한다.
+3. **개인정보 삭제 요청 창구.** 고지문에 연락처를 명시해야 하는데, 팀 공용 이메일은 비공개 방침이므로 인스타 DM 또는 별도 창구로 할지 결정이 필요하다.
+4. **구글폼 정리.** 한강 8/15·16 슬롯 제거는 구글폼 UI에서 수동으로 해야 한다.
+5. **`/about` 8/1 표기.** 8/1 한강 피크닉이 취소됐는데 `/about` 타임라인은 아직 완료로 표시한다(2026-08-04 유현님이 메인만 우선 수정하기로 결정). 이번 PR이 공개 카피를 건드리므로 함께 정리할지 판단이 필요하다.
