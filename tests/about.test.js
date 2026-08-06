@@ -103,16 +103,26 @@ test('shared copy stays in sync between index and about', () => {
     "{ href: '/about', label: '소개' }",
     "aboutLink: 'About HanBuddy'",
     "aboutLink: 'HanBuddy 소개'",
-    'Help us improve HanBuddy',
-    'HanBuddy 개선에 동의해 주세요',
-    'Continue without optional cookies',
-    '분석 및 광고 허용',
     'HanBuddy by ZeroOne',
     '<script src="/assets/analytics.js"></script>',
   ];
   for (const snippet of sharedSnippets) {
     assert.ok(indexHtml.includes(snippet), `index.html missing: ${snippet}`);
     assert.ok(aboutHtml.includes(snippet), `about/index.html missing: ${snippet}`);
+  }
+});
+
+test('consent banner copy stays identical between index and about', () => {
+  // 문구를 여기에 적어두면 카피를 고칠 때마다 테스트도 따라 고쳐야 하고,
+  // 목록에 없는 항목은 두 파일이 어긋나도 통과한다. 블록째 비교한다.
+  const consentBlocks = (html) => html.match(/^ {8}consent: \{[\s\S]*?^ {8}\},$/gm) || [];
+  const fromIndex = consentBlocks(indexHtml);
+  const fromAbout = consentBlocks(aboutHtml);
+
+  assert.equal(fromIndex.length, 2, 'index.html must carry EN and KO consent copy');
+  assert.deepEqual(fromAbout, fromIndex, 'consent copy drifted between index and about');
+  for (const key of ['title', 'body', 'note', 'reject', 'accept', 'settings']) {
+    assert.ok(fromIndex.every((block) => block.includes(`${key}:`)), `consent copy missing ${key}`);
   }
 });
 

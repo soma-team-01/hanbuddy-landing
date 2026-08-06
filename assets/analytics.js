@@ -371,6 +371,37 @@
     }
   };
 
+  // 페이지를 보기도 전에 배너가 뜨면 방문자는 내용을 읽지 않고 치우려 한다.
+  // 잠깐 둘러본 뒤에 물어보면 같은 문구라도 답을 더 받는다. 표시 전에는
+  // 어떤 추적도 시작하지 않으므로 지연 자체는 동의 요건과 무관하다.
+  const CONSENT_BANNER_DELAY_MS = 4000;
+  const CONSENT_BANNER_SCROLL_PX = 120;
+
+  const deferConsentBanner = () => {
+    const canDelay = typeof browserWindow.setTimeout === 'function';
+    const canWatchScroll = typeof browserWindow.addEventListener === 'function';
+    if (!canDelay && !canWatchScroll) {
+      showConsentBanner();
+      return;
+    }
+
+    let settled = false;
+    let timer = null;
+    const onScroll = () => {
+      if ((browserWindow.scrollY || 0) >= CONSENT_BANNER_SCROLL_PX) reveal();
+    };
+    const reveal = () => {
+      if (settled) return;
+      settled = true;
+      if (timer !== null) browserWindow.clearTimeout?.(timer);
+      browserWindow.removeEventListener?.('scroll', onScroll);
+      showConsentBanner();
+    };
+
+    if (canWatchScroll) browserWindow.addEventListener('scroll', onScroll, { passive: true });
+    if (canDelay) timer = browserWindow.setTimeout(reveal, CONSENT_BANNER_DELAY_MS);
+  };
+
   const setAnalyticsConsent = (consent) => {
     persistAnalyticsConsent(consent);
     if (consent === 'granted') loadAnalytics();
@@ -418,7 +449,7 @@
 
     const consent = safeStoredAnalyticsConsent();
     if (consent === 'granted') loadAnalytics();
-    else if (consent === null) showConsentBanner();
+    else if (consent === null) deferConsentBanner();
   };
 
   if (document.readyState === 'loading') {
