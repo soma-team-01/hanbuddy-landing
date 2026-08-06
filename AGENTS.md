@@ -94,8 +94,10 @@ An activity has exactly one canonical name, used verbatim on the landing site, M
 
 - The two baseball activities share the `Baseball Night` stem; only the indoor/open-air qualifier and the venue differ. Keep that stem when adding a venue.
 - `Indoor Dome` is the summer hook (heat wave positioning) and stays in the name while that framing holds.
-- Meetup titles may extend the canonical name with a campaign subtitle after a colon (`Indoor Dome Baseball Night: Beat the Seoul Heat`). Nothing else may rename an activity.
-- `KBO` stays in review-card category tags and body copy, not in activity names. `Han River Tour` is retired; the activity is a picnic.
+- Two extensions may wrap a canonical name. Nothing else may rename an activity.
+  - **Campaign subtitle**, Meetup titles only, after a colon: `Indoor Dome Baseball Night: Beat the Seoul Heat`.
+  - **`with a Local Buddy` suffix**, only where the brand context is missing: Meetup titles, the application form, and ad creative. Landing cards, detail headings, and the response sheet use the bare canonical name, because the page already says who you go with and repeating it on five cards costs contrast without adding information. Write `with a Local Buddy` or `with Local Buddies`, never the article-less `with Local Buddy`.
+- `KBO` stays in review-card category tags, meta descriptions, and body copy, not in activity names. Guests who do not already follow Korean baseball search for `baseball`, not `KBO`, so the title budget goes to the plain word. `Han River Tour` is retired; the activity is a picnic.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 
