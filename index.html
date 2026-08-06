@@ -243,7 +243,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: 10px;
-      max-width: 430px;
+      max-width: 468px;
       margin: 52px auto 0;
       padding: 0 14px 78px;
     }
@@ -253,11 +253,11 @@
     .hp3 { transform: rotate(3deg) translateY(-6px); margin-top: 18px; }
     .hp4 { transform: rotate(-3.5deg) translateY(14px); margin-top: 18px; }
 
-    .hero-polaroids .hp-frame { height: 158px; }
+    .hero-polaroids .hp-frame { height: 176px; }
 
     /* 데스크톱(≥1024px): 히어로 네 모서리에 흩어진 배경 폴라로이드 */
-    @media (min-width: 1024px) {
-      #top { min-height: 780px; }
+    @media (min-width: 1280px) {
+      #top { min-height: 860px; }
 
       .hero-polaroids {
         display: contents;
@@ -269,26 +269,28 @@
         margin: 0;
       }
 
-      .hero-polaroids .hp-frame { width: 176px; height: 176px; }
-      .hero-polaroid .hp-cap { font-size: 16px; }
+      .hero-polaroids .hp-frame {
+        width: clamp(120px, calc((100vw - 900px) / 2 - 28px), 380px);
+        height: clamp(120px, calc((100vw - 900px) / 2 - 28px), 380px);
+      }
+      .hero-polaroid .hp-cap { font-size: 17px; }
 
       .hp1 { top: 72px; left: 1%; transform: rotate(-7deg); }
       .hp2 { top: 100px; right: 1%; transform: rotate(6deg); }
-      .hp3 { top: auto; bottom: 52px; left: 3%; transform: rotate(4deg); }
-      .hp4 { top: auto; bottom: 40px; right: 3%; transform: rotate(-5deg); }
+      .hp3 { top: auto; bottom: 52px; left: 1.5%; transform: rotate(4deg); }
+      .hp4 { top: auto; bottom: 40px; right: 1.5%; transform: rotate(-5deg); }
     }
 
     /* 넓은 화면(≥1440px): 사진을 키우고 살짝 안쪽으로 */
     @media (min-width: 1440px) {
       .hero-polaroid { padding: 9px 9px 38px; }
-      .hero-polaroids .hp-frame { width: 232px; height: 232px; }
-      .hero-polaroid .hp-cap { font-size: 21px; }
-      .hero-polaroid .hp-tape { width: 78px; height: 24px; }
+      .hero-polaroid .hp-cap { font-size: 23px; }
+      .hero-polaroid .hp-tape { width: 88px; height: 26px; }
 
-      .hp1 { left: 2.5%; }
-      .hp2 { right: 3%; }
-      .hp3 { left: 6%; }
-      .hp4 { right: 6%; }
+      .hp1 { left: 1%; }
+      .hp2 { right: 1%; }
+      .hp3 { left: 1.5%; }
+      .hp4 { right: 1.5%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
