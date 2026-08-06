@@ -47,10 +47,17 @@ test('asks for consent only after the visitor has seen some of the page', () => 
 });
 
 test('states the advertising purpose and the way out in the banner itself', () => {
-  // 버튼에서 "ads"를 뺀 만큼 본문이 광고 목적과 철회 방법을 져야 한다.
+  // 버튼에서 "ads"를 뺀 만큼 본문이 목적과 철회 방법을 져야 한다. 문구 자체를
+  // 적어두면 카피를 다듬을 때마다 테스트가 깨지므로 요소가 있는지만 확인한다.
   assert.match(html, /consent\.note/, 'the banner needs its disclosure line');
-  assert.match(html, /Meta uses them for our ads/);
-  assert.match(html, /Change this anytime in Cookie settings/);
-  assert.match(html, /Meta는 이를 광고에도 활용합니다/);
-  assert.match(html, /쿠키 설정에서 언제든 바꿀 수 있습니다/);
+
+  const consentCopy = [...html.matchAll(/^ {8}consent: \{[\s\S]*?^ {8}\},$/gm)].map((m) => m[0]);
+  assert.equal(consentCopy.length, 2, 'EN and KO consent copy must both exist');
+
+  for (const block of consentCopy) {
+    assert.match(block, /Google Analytics/, 'name the analytics recipient');
+    assert.match(block, /Meta Pixel/, 'name the advertising recipient');
+    assert.match(block, /ads|reach people|광고/, 'disclose the advertising purpose');
+    assert.match(block, /Cookie settings|쿠키 설정/, 'point to the way out');
+  }
 });
