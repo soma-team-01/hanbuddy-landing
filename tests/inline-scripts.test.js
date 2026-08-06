@@ -1,0 +1,36 @@
+const assert = require('node:assert/strict');
+const { readdirSync, readFileSync } = require('node:fs');
+const { join } = require('node:path');
+const test = require('node:test');
+
+const root = join(__dirname, '..');
+
+const eventPages = readdirSync(join(root, 'events'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => `events/${entry.name}/index.html`)
+  .sort();
+
+const publicPages = ['index.html', 'about/index.html', ...eventPages];
+
+// 여는 태그에 속성이 없는 블록만 고른다. `src=`가 붙은 로더와
+// `type="application/ld+json"` 구조화 데이터는 JS 파서로 볼 대상이 아니다.
+const inlineScripts = (html) => [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+
+test('every inline script parses as JavaScript', () => {
+  // 이 사이트는 카피와 렌더러가 한 파일 안 인라인 스크립트에 함께 산다.
+  // 그래서 카피에 이스케이프하지 않은 작은따옴표 하나만 들어가도 스크립트가
+  // 통째로 죽고, 이벤트 카드와 리뷰가 화면에서 사라진다(2026-08-06 실제 발생:
+  // "We're a student team"의 아포스트로피가 CONTENT_MAP 문자열을 끊었다).
+  // 문자열 매칭 테스트로는 이런 사고를 잡을 수 없어 파싱으로 확인한다.
+  for (const page of publicPages) {
+    const scripts = inlineScripts(readFileSync(join(root, page), 'utf8'));
+    assert.ok(scripts.length > 0, `${page} should carry at least one inline script`);
+    scripts.forEach((code, index) => {
+      assert.doesNotThrow(
+        // 파싱만 하고 실행하지 않는다.
+        () => new Function(code), // eslint-disable-line no-new-func
+        `${page} inline script #${index} has a syntax error`,
+      );
+    });
+  }
+});
