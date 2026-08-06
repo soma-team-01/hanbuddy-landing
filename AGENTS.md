@@ -77,10 +77,25 @@ hanbuddy-landing/
 
 - Positioning is date-driven events, not weekend-only (2026-07-28): baseball can run on weekdays.
 - The Aug 1 (Han River) and Aug 5 (KBO) runs were cancelled on 2026-08-04 (heat wave + not enough signups); both dates are removed from all public surfaces and must not be reintroduced.
-- Current published events — Indoor Dome Baseball Night (Beat the Seoul Heat): Aug 12 (Wed) 5:30–9:30 PM at Gocheok Sky Dome (Kiwoom Heroes vs LG Twins), ₩60,000 since 2026-08-04, game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Open-Air KBO Night at Jamsil (`/events/jamsil/`): Aug 15 (Sat) & Aug 16 (Sun), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
+- Current published events — Indoor Dome Baseball Night (Beat the Seoul Heat): Aug 12 (Wed) 5:30–9:30 PM at Gocheok Sky Dome (Kiwoom Heroes vs LG Twins), ₩60,000 since 2026-08-04, game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Open-Air Baseball Night at Jamsil (`/events/jamsil/`): Aug 15 (Sat) & Aug 16 (Sun), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
 - Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8 & 9 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
+
+### Activity names (canonical across every channel)
+
+An activity has exactly one canonical name, used verbatim on the landing site, Meetup, the application form, the response sheet, and ad creative. Before 2026-08-06 the same activity carried three different names across channels, which made the two baseball activities read as unrelated products.
+
+| Activity | Canonical EN | Canonical KO |
+|---|---|---|
+| Gocheok, indoor | `Indoor Dome Baseball Night` | `고척돔 실내 야구 직관` |
+| Jamsil, open-air | `Open-Air Baseball Night at Jamsil` | `잠실 야외 야구 직관` |
+| Han River | `Han River Picnic` | `한강 피크닉` |
+
+- The two baseball activities share the `Baseball Night` stem; only the indoor/open-air qualifier and the venue differ. Keep that stem when adding a venue.
+- `Indoor Dome` is the summer hook (heat wave positioning) and stays in the name while that framing holds.
+- Meetup titles may extend the canonical name with a campaign subtitle after a colon (`Indoor Dome Baseball Night: Beat the Seoul Heat`). Nothing else may rename an activity.
+- `KBO` stays in review-card category tags and body copy, not in activity names. `Han River Tour` is retired; the activity is a picnic.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 
