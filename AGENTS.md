@@ -13,7 +13,8 @@ hanbuddy-landing/
 |-- index.html                # main landing page: content, inline Tailwind config, CSS, i18n + analytics + backdrop script
 |-- about/index.html          # /about — operator-positioning team page (self-contained copy of nav/footer/consent)
 |-- events/
-|   |-- kbo/index.html        # /events/kbo — booking-style detail page (collage, sticky booking card, lightbox)
+|   |-- kbo/index.html        # /events/kbo — Gocheok dome detail page (collage, sticky booking card, lightbox)
+|   |-- jamsil/index.html     # /events/jamsil — same template for the open-air Jamsil night
 |   `-- hanriver/index.html   # /events/hanriver — same template for the Han River picnic
 |-- assets/
 |   |-- brand/                # logos, favicon, apple-touch icon, soma logo (webp + png)
@@ -61,7 +62,7 @@ hanbuddy-landing/
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note. Data/cookie disclosure lives in the consent banner only |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
-| `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
+| `/events/kbo/`, `/events/jamsil/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
@@ -84,7 +85,7 @@ hanbuddy-landing/
 
 ### Activity names (canonical across every channel)
 
-An activity has exactly one canonical name, used verbatim on the landing site, Meetup, the application form, the response sheet, and ad creative. Before 2026-08-06 the same activity carried three different names across channels, which made the two baseball activities read as unrelated products.
+An activity has exactly one canonical name. Landing cards, event detail titles, and the response sheet use it bare; Meetup, the application form, and ad creative may wrap it with one of the two extensions below, but nothing may replace it. Before 2026-08-06 the same activity carried three different names across channels, which made the two baseball activities read as unrelated products.
 
 | Activity | Canonical EN | Canonical KO |
 |---|---|---|
@@ -95,9 +96,10 @@ An activity has exactly one canonical name, used verbatim on the landing site, M
 - The two baseball activities share the `KBO Baseball Night` stem; only the indoor/open-air qualifier and the venue differ. Keep that stem when adding a venue. `KBO baseball` reads naturally in English the way `MLB baseball` does, and it captures both search terms: guests who already follow Korean baseball search `KBO`, everyone else searches `baseball`.
 - `Indoor Dome` is the summer hook (heat wave positioning) and stays in the name while that framing holds.
 - Two extensions may wrap a canonical name. Nothing else may rename an activity.
-  - **Campaign subtitle**, Meetup titles only, after a colon: `Indoor Dome KBO Baseball Night: Beat the Seoul Heat`.
+  - **Campaign subtitle**, after a colon, on Meetup titles and on that event's own detail `h1`: `Indoor Dome KBO Baseball Night: Beat the Seoul Heat`. A detail page belongs to one event, so the campaign framing reads naturally there. Landing cards carry no subtitle, because five cards of framing compete instead of inform.
   - **`with a Local Buddy` suffix**, only where the brand context is missing: Meetup titles, the application form, and ad creative. Landing cards, detail headings, and the response sheet use the bare canonical name, because the page already says who you go with and repeating it on five cards costs contrast without adding information. Write `with a Local Buddy` or `with Local Buddies`, never the article-less `with Local Buddy`.
 - Meetup titles carry a subtitle or the suffix, never both: the card truncates after two lines, so adding both cuts off whichever comes last. `Indoor Dome KBO Baseball Night: Beat the Seoul Heat` keeps its subtitle; the Jamsil title has no subtitle and takes the suffix.
+- The `/about` timeline is exempt: its entries are narrative records of what happened on a date (`Jamsil KBO: our first baseball night`), not activity labels, so they keep their own wording.
 - `Han River Tour` is retired; the activity is a picnic.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
