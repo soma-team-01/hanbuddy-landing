@@ -238,7 +238,7 @@
       z-index: 20;
     }
 
-    /* 모바일·태블릿(<1024px): 콘텐츠 아래, 어긋나게 겹친 콜라주 */
+    /* 모바일·태블릿(<1280px): 콘텐츠 아래, 어긋나게 겹친 콜라주 */
     .hero-polaroids {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -255,7 +255,9 @@
 
     .hero-polaroids .hp-frame { height: 176px; }
 
-    /* 데스크톱(≥1024px): 히어로 네 모서리에 흩어진 배경 폴라로이드 */
+    /* 데스크톱(≥1280px): 히어로 네 모서리에 흩어진 배경 폴라로이드.
+       1280px 아래는 본문(max-w-4xl) 양옆에 사진이 들어갈 자리가 없어
+       위의 콜라주 레이아웃을 그대로 쓴다. */
     @media (min-width: 1280px) {
       #top { min-height: 860px; }
 
@@ -281,7 +283,8 @@
       .hp4 { top: auto; bottom: 40px; right: 1.5%; transform: rotate(-5deg); }
     }
 
-    /* 넓은 화면(≥1440px): 사진을 키우고 살짝 안쪽으로 */
+    /* 넓은 화면(≥1440px): 테두리와 장식을 키우고 좌우로 더 벌린다.
+       사진 크기 자체는 위 clamp가 여백을 보고 이어서 계산한다. */
     @media (min-width: 1440px) {
       .hero-polaroid { padding: 9px 9px 38px; }
       .hero-polaroid .hp-cap { font-size: 23px; }
