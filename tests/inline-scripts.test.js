@@ -16,6 +16,22 @@ const publicPages = ['index.html', 'about/index.html', ...eventPages];
 // `type="application/ld+json"` 구조화 데이터는 JS 파서로 볼 대상이 아니다.
 const inlineScripts = (html) => [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
 
+test('the consent banner never covers the mobile apply bar', () => {
+  // 이벤트 상세페이지는 모바일 하단에 신청 CTA 바를 고정해 둔다. 동의 배너가
+  // 더 높은 z-index로 같은 자리에 뜨면 신청 버튼을 통째로 가린다. 데스크톱에서는
+  // CTA 바가 사라지므로(lg:hidden) 배너도 원래 자리로 돌아와야 한다.
+  for (const page of eventPages) {
+    const html = readFileSync(join(root, page), 'utf8');
+    const bar = html.match(/<div class="fixed inset-x-0 bottom-0[^"]*"/);
+    assert.ok(bar, `${page} should keep its sticky mobile apply bar`);
+
+    const banner = html.match(/data-consent-banner[\s\S]*?class="([^"]+)"/);
+    assert.ok(banner, `${page} should carry the consent banner`);
+    assert.match(banner[1], /\bbottom-24\b/, `${page} banner would cover the apply bar`);
+    assert.match(banner[1], /\blg:bottom-4\b/, `${page} banner should drop back on desktop`);
+  }
+});
+
 test('every inline script parses as JavaScript', () => {
   // 이 사이트는 카피와 렌더러가 한 파일 안 인라인 스크립트에 함께 산다.
   // 그래서 카피에 이스케이프하지 않은 작은따옴표 하나만 들어가도 스크립트가
