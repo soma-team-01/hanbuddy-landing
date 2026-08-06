@@ -382,7 +382,7 @@ vercel dev                   # 정적 파일과 함수를 함께 서빙
 
 ## 14. 롤백
 
-`CONFIG.apply`와 하드코딩된 앵커 8곳을 구글폼 URL로 되돌리면 즉시 원복된다. `/apply/` 페이지와 함수는 남겨둬도 무해하다. 구글폼을 병행 유지하는 이유가 여기에도 있다.
+`CONFIG.apply`와 하드코딩된 앵커를 구글폼 URL로 되돌리면 즉시 원복된다. 2026-08-06 기준 **6개 파일 15곳**이다(`index.html` 3, `about/index.html` 4, `events/{kbo,jamsil,kleague,hanriver}/index.html` 각 2). 페이지가 늘면 이 수도 늘어나므로 전환 작업 시 `rg -c "forms.gle"`로 다시 센다. `/apply/` 페이지와 함수는 남겨둬도 무해하다. 구글폼을 병행 유지하는 이유가 여기에도 있다.
 
 ## 15. 미해결 항목
 
