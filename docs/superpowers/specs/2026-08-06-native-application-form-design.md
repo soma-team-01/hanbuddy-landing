@@ -115,8 +115,8 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
 
 | eventId | 이벤트 | 슬롯 | 가격 |
 |---|---|---|---|
-| `kbo` | Indoor Dome KBO Baseball Night | 08-12 (Wed) 5:30 / 08-21 (Fri) 5:30 / 08-22 (Sat) 5:00 | ₩60,000 |
-| `jamsil` | Open-Air KBO Baseball Night at Jamsil | 08-15 (Sat) 5:00 / 08-16 (Sun) 5:00 / 08-21 (Fri) 5:30 / 08-22 (Sat) 5:00 | ₩60,000 |
+| `kbo-gocheok` | Indoor Dome KBO Baseball Night | 08-12 (Wed) 5:30 / 08-21 (Fri) 5:30 / 08-22 (Sat) 5:00 | ₩60,000 |
+| `kbo-jamsil` | Open-Air KBO Baseball Night at Jamsil | 08-15 (Sat) 5:00 / 08-16 (Sun) 5:00 / 08-21 (Fri) 5:30 / 08-22 (Sat) 5:00 | ₩60,000 |
 | `kleague` | K League Football Night | 08-15 (Sat) 6:30 | ₩60,000 |
 | `hanriver` | Han River Picnic | 08-08 (Sat) / 08-09 (Sun) / 08-15 (Sat) / 08-16 (Sun) 5:00 | ₩25,000 |
 
@@ -173,7 +173,7 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
 |---|---|
 | `timestamp_kst` | `2026-08-06 21:14:03` |
 | `application_id` | `HB-20260806-A3F9` |
-| `event_id` | `jamsil` |
+| `event_id` | `kbo-jamsil` |
 | `event_title` | `Open-Air KBO Baseball Night at Jamsil` |
 | `date_slot` | `2026-08-15 17:00` |
 | `guests` | `2` |
