@@ -1279,6 +1279,22 @@
       return Number.isFinite(deadline) && deadline > now.getTime();
     };
 
+    // 탭을 열어둔 채 집합 시각이 지나면 공지가 그대로 남는다. 만료 순간에
+    // 한 번 다시 판정하도록 예약한다. setTimeout은 지연이 32비트를 넘으면
+    // 곧바로 실행되므로, 그보다 먼 회차는 예약하지 않는다(그 전에 페이지를 떠난다).
+    const MAX_TIMEOUT_MS = 2 ** 31 - 1;
+    let announcementRetireTimer = null;
+
+    const scheduleAnnouncementRetire = () => {
+      if (announcementRetireTimer !== null) return;
+      const delay = new Date(ANNOUNCEMENT.endsAt).getTime() - Date.now();
+      if (!Number.isFinite(delay) || delay <= 0 || delay > MAX_TIMEOUT_MS) return;
+      announcementRetireTimer = window.setTimeout(() => {
+        announcementRetireTimer = null;
+        renderAnnouncement();
+      }, delay);
+    };
+
     const readDismissedAnnouncement = () => {
       try {
         return window.localStorage.getItem(ANNOUNCEMENT_DISMISS_KEY);
@@ -1300,6 +1316,7 @@
       const link = bar.querySelector('[data-announcement-link]');
       if (link) link.href = ANNOUNCEMENT.href;
       bar.hidden = false;
+      scheduleAnnouncementRetire();
     };
 
     const renderDynamicContent = (copy) => {

@@ -52,6 +52,19 @@ test('the announcement retires itself instead of waiting to be taken down', () =
   assert.ok(Number.isFinite(new Date(announcement.endsAt).getTime()), 'endsAt must parse');
 });
 
+test('an open tab retires the announcement when the deadline passes', () => {
+  // 초기 렌더와 언어 전환 때만 판정하면, 탭을 열어둔 방문자에게는 만료 후에도
+  // 공지가 남는다. 만료 순간에 다시 판정하도록 예약한다.
+  assert.match(html, /scheduleAnnouncementRetire/, 'expiry must be scheduled, not only checked on render');
+  assert.match(html, /window\.setTimeout\(/, 'the retire pass needs a timer');
+  assert.match(html, /announcementRetireTimer !== null\) return/, 'the timer must not be armed twice');
+
+  // setTimeout은 지연이 32비트를 넘으면 즉시 실행된다. 먼 회차를 예약하면
+  // 공지가 뜨자마자 사라진다.
+  assert.match(html, /MAX_TIMEOUT_MS = 2 \*\* 31 - 1/);
+  assert.match(html, /delay > MAX_TIMEOUT_MS\) return/, 'far-off runs must not be scheduled');
+});
+
 test('the promoted run has not already happened', () => {
   // 런타임에는 만료된 공지가 저절로 숨겨지지만, 설정이 남아 있으면 다음 사람이
   // 지난 회차를 홍보 중이라고 착각한다. 지나면 여기서 알려 정리를 유도한다.
