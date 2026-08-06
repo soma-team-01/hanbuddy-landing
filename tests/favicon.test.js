@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { mkdtempSync, readFileSync, rmSync, writeFileSync } = require('node:fs');
+const { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } = require('node:fs');
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
 const { spawnSync } = require('node:child_process');
@@ -7,12 +7,15 @@ const test = require('node:test');
 const { inflateSync } = require('node:zlib');
 
 const root = join(__dirname, '..');
-const publicPages = [
-  'index.html',
-  'about/index.html',
-  'events/kbo/index.html',
-  'events/hanriver/index.html',
-];
+
+// 이벤트 상세페이지는 계속 늘어난다. 목록을 손으로 적으면 새 페이지가
+// 옛 파비콘을 달고도 조용히 통과하므로, 디렉터리를 훑어 대상을 만든다.
+const eventPages = readdirSync(join(root, 'events'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => `events/${entry.name}/index.html`)
+  .sort();
+
+const publicPages = ['index.html', 'about/index.html', ...eventPages];
 
 function paethPredictor(left, above, upperLeft) {
   const estimate = left + above - upperLeft;

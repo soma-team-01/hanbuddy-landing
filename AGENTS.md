@@ -4,7 +4,7 @@
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, and the 2026-08-01 Han River picnic — the Aug 8 & 9 Han River picnics and K League/jjimjilbang have never actually run, so their photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
+HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, and the 2026-08-01 Han River picnic — the Aug 8, 9, 15 & 16 Han River picnics and K League/jjimjilbang have never actually run, so their photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
 
 ## STRUCTURE
 
@@ -13,7 +13,9 @@ hanbuddy-landing/
 |-- index.html                # main landing page: content, inline Tailwind config, CSS, i18n + analytics + backdrop script
 |-- about/index.html          # /about — operator-positioning team page (self-contained copy of nav/footer/consent)
 |-- events/
-|   |-- kbo/index.html        # /events/kbo — booking-style detail page (collage, sticky booking card, lightbox)
+|   |-- kbo/index.html        # /events/kbo — Gocheok dome detail page (collage, sticky booking card, lightbox)
+|   |-- jamsil/index.html     # /events/jamsil — same template for the open-air Jamsil night
+|   |-- kleague/index.html    # /events/kleague — same template, two-photo collage
 |   `-- hanriver/index.html   # /events/hanriver — same template for the Han River picnic
 |-- assets/
 |   |-- brand/                # logos, favicon, apple-touch icon, soma logo (webp + png)
@@ -61,7 +63,7 @@ hanbuddy-landing/
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note. Data/cookie disclosure lives in the consent banner only |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
-| `/events/kbo/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
+| `/events/kbo/`, `/events/jamsil/`, `/events/kleague/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
@@ -77,10 +79,32 @@ hanbuddy-landing/
 
 - Positioning is date-driven events, not weekend-only (2026-07-28): baseball can run on weekdays.
 - The Aug 1 (Han River) and Aug 5 (KBO) runs were cancelled on 2026-08-04 (heat wave + not enough signups); both dates are removed from all public surfaces and must not be reintroduced.
-- Current published events — Indoor Dome Baseball Night (Beat the Seoul Heat): Aug 12 (Wed) 5:30–9:30 PM at Gocheok Sky Dome (Kiwoom Heroes vs LG Twins), ₩60,000 since 2026-08-04, game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Open-Air KBO Night at Jamsil (`/events/jamsil/`): Aug 15 (Sat) & Aug 16 (Sun), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat) & Aug 9 (Sun), ₩25,000, picnic food included. K League Football Day and Jjimjilbang Sauna Hangout are "coming soon" (no date/price; clicking shows a toast).
+- Current published events — Indoor Dome KBO Baseball Night (Beat the Seoul Heat): Aug 12 (Wed), Aug 21 (Fri) & Aug 22 (Sat) at Gocheok Sky Dome, ₩60,000 since 2026-08-04 (the Aug 12 game is Kiwoom Heroes vs LG Twins, 5:30–9:30 PM; Aug 21 & 22 were added on 2026-08-06 and their opponents are not published), game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Open-Air KBO Baseball Night at Jamsil (`/events/jamsil/`): Aug 15 (Sat), Aug 16 (Sun), Aug 21 (Fri) & Aug 22 (Sat), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat), Aug 9 (Sun), Aug 15 (Sat) & Aug 16 (Sun), ₩25,000, picnic food included — Aug 15 & 16 were published on 2026-08-06 to match the slots already offered in the Google Form, so the picnic and the Jamsil baseball night share those two dates. K League Football Night (`/events/kleague/`): Aug 15 (Sat) at Seoul World Cup Stadium, meet 6:30 PM, ₩60,000, match ticket & stadium food included — published on 2026-08-06; the opponent and kickoff time are not published. Jjimjilbang Sauna Hangout stays "coming soon" (no date/price; clicking shows a toast).
+- Baseball meeting time follows one rule: **5:30 PM on weekdays, 5:00 PM on weekends**. Other sports keep their own kickoff-driven time (K League on Aug 15 meets at 6:30 PM). In every case this is when the group gathers, not when play starts, so public copy says "meet at" rather than a bare time.
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
 - The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
-- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8 & 9 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
+- Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8, 9, 15 & 16 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
+
+### Activity names (canonical across every channel)
+
+An activity has exactly one canonical name. Landing cards, event detail titles, and the response sheet use it bare; Meetup, the application form, and ad creative may wrap it with one of the two extensions below, but nothing may replace it. Before 2026-08-06 the same activity carried three different names across channels, which made the two baseball activities read as unrelated products.
+
+| Activity | Canonical EN | Canonical KO |
+|---|---|---|
+| Gocheok, indoor | `Indoor Dome KBO Baseball Night` | `고척돔 실내 야구 직관` |
+| Jamsil, open-air | `Open-Air KBO Baseball Night at Jamsil` | `잠실 야외 야구 직관` |
+| Han River | `Han River Picnic` | `한강 피크닉` |
+| Seoul World Cup Stadium | `K League Football Night` | `K리그 축구 직관` |
+
+- The two baseball activities share the `KBO Baseball Night` stem; only the indoor/open-air qualifier and the venue differ. Keep that stem when adding a venue. `KBO baseball` reads naturally in English the way `MLB baseball` does, and it captures both search terms: guests who already follow Korean baseball search `KBO`, everyone else searches `baseball`.
+- `K League Football Night` carries no venue because there is only one football ground; add one only if a second appears. It was `K League Football Day` while the card sat in "coming soon", renamed on 2026-08-06 when the 6:30 PM meeting time made "Day" wrong.
+- `Indoor Dome` is the summer hook (heat wave positioning) and stays in the name while that framing holds.
+- Two extensions may wrap a canonical name. Nothing else may rename an activity.
+  - **Campaign subtitle**, after a colon, on Meetup titles and on that event's own detail `h1`: `Indoor Dome KBO Baseball Night: Beat the Seoul Heat`. A detail page belongs to one event, so the campaign framing reads naturally there. Landing cards carry no subtitle, because five cards of framing compete instead of inform.
+  - **`with a Local Buddy` suffix**, only where the brand context is missing: Meetup titles, the application form, and ad creative. Landing cards, detail headings, and the response sheet use the bare canonical name, because the page already says who you go with and repeating it on five cards costs contrast without adding information. Write `with a Local Buddy` or `with Local Buddies`, never the article-less `with Local Buddy`.
+- Meetup titles carry a subtitle or the suffix, never both: the card truncates after two lines, so adding both cuts off whichever comes last. `Indoor Dome KBO Baseball Night: Beat the Seoul Heat` keeps its subtitle; the Jamsil title has no subtitle and takes the suffix.
+- The `/about` timeline is exempt: its entries are narrative records of what happened on a date (`Jamsil KBO: our first baseball night`), not activity labels, so they keep their own wording.
+- `Han River Tour` is retired; the activity is a picnic.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 
@@ -148,7 +172,7 @@ rg -n "forms.gle/B1fWgX3MjtHUHGNt5|Aug 5|Aug 12|₩50,000|₩25,000|www.hanbuddy
 ## NOTES
 
 - Production domain: `www.hanbuddy.kr` (Vercel project `hanbuddy-landing`); merging `main` auto-deploys — no manual `vercel --prod` needed.
-- OG/Twitter image is `assets/photos/kbo/run1-group.webp` (absolute URL on the production domain); event detail pages carry their own OG images.
+- OG/Twitter image for `index.html` and `/about` is `assets/photos/kbo/kbo-0726-group.webp` (absolute URL on the production domain); event detail pages carry their own OG images. Share images must be landscape: the previous `run1-group.webp` was 975×1300 portrait and cropped badly under `summary_large_image`.
 - `assets/brand/logo-borderless.png` is the fixed email-signature asset at `https://www.hanbuddy.kr/assets/brand/logo-borderless.png` — do not move or rename it.
 - `.vercelignore` is the deploy guardrail: Vercel CLI uploads the working directory, not the git tree. Before it existed (2026-07-10), internal docs and raw JPGs were publicly served — keep the allowlist in sync when adding public files.
 - Tests exist but no CI workflow runs them; run the node --test command locally before pushing. For visual changes, use local preview and check desktop/mobile in the browser.
