@@ -37,7 +37,7 @@
 |---|---|---|
 | 저장소 | **Google Sheets** (신규 시트) | 랜딩은 임시 표면이고 안정성만 필요. 운영 흐름이 안 바뀌고, 무료 티어 일시정지 같은 함정이 없으며, 폐기 비용이 0 |
 | API 계층 | Vercel Function `api/apply.js` | same-origin이라 CORS가 사라짐. 서버측 검증·시크릿 보관 가능 |
-| 의존성 | **없음** (Node 내장 `crypto`로 서비스 계정 JWT 서명) | `AGENTS.md`의 buildless 원칙 유지 |
+| 의존성 | **없음** (Node 내장 `crypto`로 서비스 계정 JWT 서명) | 라이브러리가 대신하는 일이 JWT 서명과 토큰 캐싱뿐이라 lock 파일·콜드스타트·취약점 관리를 감수할 실익이 없다. 규약이 금지해서가 아니다(11.2 참조) |
 | 폼 위치 | 별도 페이지 `/apply/` | URL 공유·뒤로가기·GA page_view가 깔끔. 기존 CTA는 URL만 교체 |
 | 폼 단계 | 한 화면 스크롤 | 입력 11개와 동의 1개면 충분. 남은 분량이 보여야 끝까지 간다 |
 | 이메일 수집 | 하지 않음 | 유현님 결정(2026-08-06). 확인은 완료 화면이 유일하므로 거기에 신뢰를 몰아준다 |
@@ -221,21 +221,68 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
   - `index.html` 최종 CTA 본문의 `Tell us which event and which day in the Google Form.`
   - 동의 배너의 `This page never sends your form answers to these tools`는 **여전히 사실이다**(GA로 폼 답변을 보내지 않는다). 유지한다.
 
-보유기간 값은 팀이 정해야 한다. 12절 미해결 항목 참조.
+보유기간 값은 팀이 정해야 한다. 15절 미해결 항목 참조.
 
-## 11. 레포 규약 충돌과 해소
+## 11. 레포 규약 개정
 
-이 변경은 `AGENTS.md`의 서술 세 곳을 사실과 어긋나게 만든다. **같은 PR에서 함께 갱신한다.**
+이 레포의 규약은 "순수 정적 사이트"라는 당시 현실을 적어둔 것이다. 서버 기능이 들어가면 **규약이 현실을 따라와야 하며, 규약에 맞추려고 설계를 비틀지 않는다**(유현님 지적, 2026-08-06). 문서 갱신은 이번 구현과 같은 PR에서 한다.
 
-| 위치 | 현재 서술 | 조치 |
+### 11.1 사실과 어긋나게 되는 서술
+
+`AGENTS.md` OVERVIEW의 다음 문장은 서로 다른 네 주장을 하나로 묶고 있다.
+
+> No app framework, package manager, build step, server code, or local data collection exists in this repo
+
+이 중 **두 개만 거짓이 된다.** 통째로 지우거나 통째로 지키는 대신 분리해 각각 사실대로 적는다.
+
+| 주장 | 이번 변경 후 |
+|---|---|
+| 앱 프레임워크 없음 | 여전히 사실 |
+| 패키지 매니저 없음 | 여전히 사실 |
+| 빌드 스텝 없음 | 여전히 사실 |
+| 서버 코드 없음 | **거짓** (`api/apply.js`) |
+| 로컬 데이터 수집 없음 | **거짓** (신청 폼) |
+
+| 문서 | 위치 | 조치 |
 |---|---|---|
-| OVERVIEW | "No app framework, package manager, build step, server code, or local data collection exists in this repo" | 서버 함수 1개와 신청 수집이 생겼음을 반영. 패키지 매니저·빌드 스텝은 **여전히 없음**을 명시 |
-| OVERVIEW | "Applications run through the live Google Form" | 랜딩 `/apply/`가 1차 경로, 구글폼은 외부 채널용으로 병행 중임을 반영 |
-| CONVENTIONS | "The page intentionally stores no personal information; applications/questions go through external channels only" | 신청 폼이 개인정보를 수집하며 시트에 저장한다는 사실과 그 취급 규칙으로 교체 |
-| ANTI-PATTERNS | "Do not create package/build tooling just to make small copy changes" | **유지한다.** 이번 변경은 의존성 0이라 이 규칙을 어기지 않는다 |
-| CONVENTIONS | "Keep this a buildless static site" | **유지한다.** `package.json`을 만들지 않는 것이 이 설계의 제약 조건이다 |
+| `AGENTS.md` | OVERVIEW | 위 표대로 분리 서술. "Applications run through the live Google Form"은 `/apply/`가 1차 경로이고 구글폼은 외부 채널용으로 병행 중임으로 교체 |
+| `AGENTS.md` | STRUCTURE | `api/`, `apply/` 추가. **`events/jamsil`이 누락돼 있으므로 함께 채운다** |
+| `AGENTS.md` | CONVENTIONS | "The page intentionally stores no personal information; applications/questions go through external channels only" → 수집·저장·보관 규칙으로 교체 |
+| `AGENTS.md` | COMMANDS | 로컬 프리뷰를 `vercel dev`로 교체, `.vercelignore` 시뮬레이션에 `apply`·`api` 추가 |
+| `README.md` | 3·11·19행 | "빌드 없는 정적 HTML" 서술과 로컬 실행 커맨드 갱신 |
+| `DESIGN.md` | 5절 Components | **폼 컴포넌트 규격이 통째로 없다.** 입력·라디오·셀렉트·오류 상태·완료 화면 추가 |
+| `.gitignore` | | `.env*` 추가 |
 
-`ANTI-PATTERNS`의 "Do not add ... secrets ... to this repo"는 그대로 지킨다. 서비스 계정 JSON과 웹훅 URL은 **Vercel 환경변수로만** 존재하며 레포에 들어가지 않는다. `.gitignore`에 `*.json` 형태의 서비스 계정 키 패턴을 방어적으로 추가한다.
+### 11.2 문구를 바꿔 유지하는 규칙
+
+`Keep this a buildless static site`와 `Do not create package/build tooling just to make small copy changes`는 **폐기하지 않고 조건을 명시해 유지한다.** 지금 의존성이 0인 것은 규약이 금지해서가 아니라 실익이 없어서다. `google-auth-library`가 대신하는 일은 JWT 서명과 토큰 캐싱뿐인데, 대가로 lock 파일·콜드스타트·취약점 관리가 따라온다. 이 계산은 규약과 무관하다.
+
+개정 문구:
+
+> 도구 도입에는 기능적 사유가 필요하다. 카피·스타일·페이지 추가는 계속 빌드 없이 한다. 표준 라이브러리로 쓸 수 없는 연동이 생기면 도입하되, 사유를 문서에 남긴다.
+
+이러면 나중에 결제 연동처럼 직접 구현하면 안 되는 것이 들어올 때 규약이 발목을 잡지 않는다.
+
+### 11.3 서버 코드가 생기면서 새로 필요한 규칙
+
+정적 사이트일 때는 존재할 수 없던 위험이다. `AGENTS.md` ANTI-PATTERNS와 CONVENTIONS에 추가한다.
+
+1. ⚠️ **서버 로그에 개인정보를 남기지 않는다.** `console.log(body)` 한 줄이면 신청자 이름과 연락처가 Vercel 함수 로그에 평문으로 쌓인다. 디버깅 중 가장 넣기 쉬운 코드이며, "레포에 개인정보를 넣지 말라"는 기존 규칙은 이 경로를 막지 못한다. 로그에는 `application_id`와 오류 코드만 남긴다.
+2. **API 응답에 내부 오류 메시지를 노출하지 않는다.** 정해진 오류 코드만 반환한다(7절).
+3. **시크릿은 Vercel 환경변수로만 존재한다.** 서비스 계정 키와 웹훅 URL은 레포에 들어가지 않는다. `vercel env pull`이 만드는 `.env.local`에 키가 평문으로 담기므로 `.gitignore`에 `.env*`를 추가한다.
+4. **서버 파일을 추가하면 같은 변경에서 `.vercelignore` allowlist를 갱신한다.** 기존의 자산 폴더 규칙과 같은 취지다.
+5. **수집 항목을 늘리면 같은 변경에서 개인정보 고지문을 갱신한다.**
+
+### 11.4 로컬 개발 방법 변경
+
+`python3 -m http.server 8080`으로는 `/api/apply`가 동작하지 않는다. COMMANDS를 다음으로 교체한다.
+
+```bash
+vercel env pull .env.local   # 최초 1회 (.gitignore 대상)
+vercel dev                   # 정적 파일과 함수를 함께 서빙
+```
+
+정적 페이지만 볼 때는 기존 `python3 -m http.server`도 여전히 유효하므로 두 방법을 함께 적되 용도를 구분한다.
 
 ## 12. 배포
 
@@ -285,8 +332,20 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
 | `tests/apply-page.test.js` | 필수 필드 라벨·`aria-required`·오류 메시지 연결, EN/KO `CONTENT_MAP`과 정적 폴백 DOM 동기화, 나브·푸터 카피 드리프트 |
 | `tests/analytics-schema.test.js` | 확장: 새 이벤트 3종의 이름·파라미터, `apply` CTA destination 변경 |
 | `tests/analytics-pages.test.js` | 확장: `/apply/` 페이지 컨텍스트 |
+| `tests/apply-privacy.test.js` | **11.3의 규칙을 강제한다.** 아래 참조 |
+| `tests/deploy-allowlist.test.js` | `.vercelignore`에 `/apply/index.html`과 `/api/apply.js`가 포함되는지. 배포 누락은 반복된 사고 유형이라 수동 시뮬레이션에만 맡기지 않는다 |
 
 검증 로직은 브라우저와 함수 양쪽에서 쓰도록 순수 모듈로 분리해 한 곳에서만 테스트한다.
+
+### 13.1 개인정보 로깅 방지
+
+"로그에 개인정보를 남기지 않는다"는 문서에만 적으면 지켜지지 않는다. 구조로 막는다.
+
+- 서버 코드는 `console.*`를 직접 호출하지 않고 로깅 헬퍼 하나만 쓴다.
+- 헬퍼는 **허용 키(`application_id`, `code`, `stage`)만 통과시키고 나머지는 버린다.** 신청자 필드를 실수로 넘겨도 출력되지 않는다.
+- `tests/apply-privacy.test.js`가 두 가지를 검사한다. 헬퍼가 허용 키 밖의 값을 실제로 버리는지(단위 테스트), 그리고 `api/apply.js` 소스에 raw `console.` 호출이 없는지(정적 검사).
+
+같은 테스트에서 오류 응답 본문에 내부 메시지가 섞이지 않는지도 확인한다.
 
 배포 후 프로덕션에서 실제 제출 1건으로 종단 확인한다. 시트 기록, 디스코드 알림, 완료 화면, GA 이벤트 수집을 각각 눈으로 본다. 테스트 행은 확인 후 시트에서 지운다.
 
