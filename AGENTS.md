@@ -169,7 +169,7 @@ rg -n "forms.gle/B1fWgX3MjtHUHGNt5|Aug 5|Aug 12|₩50,000|₩25,000|www.hanbuddy
 ## NOTES
 
 - Production domain: `www.hanbuddy.kr` (Vercel project `hanbuddy-landing`); merging `main` auto-deploys — no manual `vercel --prod` needed.
-- OG/Twitter image is `assets/photos/kbo/run1-group.webp` (absolute URL on the production domain); event detail pages carry their own OG images.
+- OG/Twitter image for `index.html` and `/about` is `assets/photos/kbo/kbo-0726-group.webp` (absolute URL on the production domain); event detail pages carry their own OG images. Share images must be landscape: the previous `run1-group.webp` was 975×1300 portrait and cropped badly under `summary_large_image`.
 - `assets/brand/logo-borderless.png` is the fixed email-signature asset at `https://www.hanbuddy.kr/assets/brand/logo-borderless.png` — do not move or rename it.
 - `.vercelignore` is the deploy guardrail: Vercel CLI uploads the working directory, not the git tree. Before it existed (2026-07-10), internal docs and raw JPGs were publicly served — keep the allowlist in sync when adding public files.
 - Tests exist but no CI workflow runs them; run the node --test command locally before pushing. For visual changes, use local preview and check desktop/mobile in the browser.
