@@ -76,7 +76,7 @@ test('the promoted run has not already happened', () => {
 });
 
 test('the announcement points at a published event page', () => {
-  assert.match(announcement.href, /^\/events\/[a-z]+\/$/);
+  assert.match(announcement.href, /^\/events\/[a-z0-9-]+\/$/);
   const slug = announcement.href.split('/')[2];
   assert.match(html, new RegExp(`href: '/events/${slug}/'`), 'the target must be an open event card');
 });

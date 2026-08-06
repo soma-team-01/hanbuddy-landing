@@ -287,7 +287,7 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
 | 문서 | 위치 | 조치 |
 |---|---|---|
 | `AGENTS.md` | OVERVIEW | 위 표대로 분리 서술. "Applications run through the live Google Form"은 `/apply/`가 1차 경로이고 구글폼은 외부 채널용으로 병행 중임으로 교체 |
-| `AGENTS.md` | STRUCTURE | `api/`, `apply/` 추가. **`events/jamsil`이 누락돼 있으므로 함께 채운다** |
+| `AGENTS.md` | STRUCTURE | `api/`, `apply/` 추가 |
 | `AGENTS.md` | CONVENTIONS | "The page intentionally stores no personal information; applications/questions go through external channels only" → 수집·저장·보관 규칙으로 교체 |
 | `AGENTS.md` | Activity names | `with a Local Buddy` 접미사 허용 대상에 적힌 "the application form"은 외부 구글폼을 가리키던 서술이다. 랜딩 자체 폼은 브랜드 맥락이 있으므로 canonical name을 그대로 쓴다고 정정 |
 | `AGENTS.md` | COMMANDS | 로컬 프리뷰를 `vercel dev`로 교체, `.vercelignore` 시뮬레이션에 `apply`·`api` 추가 |
