@@ -107,6 +107,11 @@ AWS를 쓰지 않는다. 만들 인프라는 **구글 서비스 계정 1개와 �
 | 9 | 결제 희망 수단 | select | 필수 | Korean bank transfer / PayPal / Card payment link / Cash / I need help |
 | 10 | 식이·접근성 요청 | textarea | 선택 | 1000자 이하 |
 | 11 | 유입 경로 | select | 선택 | Offline promotion / Meetup / Instagram / Friend / University community / Other |
+| 11-1 | 유입 경로 직접 입력 | text | `Other` 선택 시 필수 | 100자 이하. `Other`를 고르면 나타난다 |
+
+`Other`만 남으면 "그 밖의 어딘가"라는 정보뿐이라 유입 채널을 넓힐 때 쓸 수 없다. 구글폼도 기타에 자유 입력을 붙여 두었으므로 같은 수준을 유지한다. **`Other`를 고른 경우에만 입력을 요구한다.** 유입 경로 자체는 선택 항목이라 아예 비워두는 것은 그대로 허용한다.
+
+저장은 **`source` 한 칸에 `Other: Reddit` 형태로 합친다.** 컬럼을 늘리면 이미 배포된 시트 헤더를 다시 손봐야 하고, 유입 경로를 볼 때 두 칸을 오가야 한다. 분석할 때는 `Other: ` 접두사로 걸러낸다.
 | 12 | 개인정보 수집·이용 동의 | checkbox | 필수 | |
 
 ### 5.2 이벤트 슬롯 데이터

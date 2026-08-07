@@ -10,6 +10,23 @@
 
 **스펙 정본:** `docs/superpowers/specs/2026-08-06-native-application-form-design.md`
 
+## 새 세션에서 시작하기
+
+```bash
+cd ~/projects/hanbuddy-landing
+git switch feat/native-application-form   # 이미 존재. main 위에 최신
+node --test tests/*.test.js               # 기준선 확인: 전부 PASS
+```
+
+읽는 순서는 이 계획서 → 스펙 정본 → `AGENTS.md`다. 스펙과 계획이 어긋나면 **스펙이 정본**이고, 계획을 고친 뒤 진행한다.
+
+**이미 끝난 준비물** (다시 하지 않는다):
+
+- Google Sheets API 활성화, 서비스 계정, JSON 키 발급
+- Vercel 환경변수 5개 등록
+
+**남은 준비물**은 문서 맨 아래 "배포 전 수동 확인"에 있다. 코드는 준비물 없이도 작성·단위 테스트가 되지만, 프로덕션 종단 확인은 그것들이 끝나야 한다.
+
 ## Global Constraints
 
 - **npm 의존성 0.** `package.json`을 만들지 않는다. 서비스 계정 JWT는 Node 내장 `crypto`로 직접 서명한다.
@@ -335,6 +352,25 @@ test('choice fields only accept values the form offers', () => {
   assert.equal(validateApplication({ ...valid(), source: '' }, AUG10).ok, true);
 });
 
+test('choosing Other on the source requires typing what it was', () => {
+  // Other만 남으면 "그 밖의 어딘가"라는 정보뿐이라 유입 채널을 넓힐 때 쓸 수 없다.
+  const blank = validateApplication({ ...valid(), source: 'Other', sourceOther: '  ' }, AUG10);
+  assert.equal(blank.ok, false);
+  assert.equal(blank.field, 'sourceOther');
+
+  const tooLong = validateApplication({ ...valid(), source: 'Other', sourceOther: 'x'.repeat(101) }, AUG10);
+  assert.equal(tooLong.field, 'sourceOther');
+
+  // 저장은 컬럼을 늘리지 않고 source 한 칸에 합친다.
+  const filled = validateApplication({ ...valid(), source: 'Other', sourceOther: 'Reddit' }, AUG10);
+  assert.equal(filled.ok, true);
+  assert.equal(filled.value.source, 'Other: Reddit');
+
+  // Other가 아니면 적어 넣어도 무시한다.
+  const ignored = validateApplication({ ...valid(), source: 'Instagram', sourceOther: 'Reddit' }, AUG10);
+  assert.equal(ignored.value.source, 'Instagram');
+});
+
 test('a slot from another event is rejected', () => {
   const result = validateApplication({ ...valid(), eventId: 'hanriver' }, AUG10);
   assert.equal(result.ok, false);
@@ -385,7 +421,8 @@ Expected: FAIL — `Cannot find module '../assets/apply-validation.js'`
     source: ['Offline promotion', 'Meetup', 'Instagram', 'Friend', 'University community', 'Other'],
   });
 
-  const MAX_LENGTH = { name: 100, nationality: 100, contactId: 200, requests: 1000 };
+  const MAX_LENGTH = { name: 100, nationality: 100, contactId: 200, requests: 1000, sourceOther: 100 };
+  const SOURCE_OTHER = 'Other';
 
   const fail = (field) => ({ ok: false, field });
   const text = (value) => (typeof value === 'string' ? value.trim() : '');
@@ -415,6 +452,14 @@ Expected: FAIL — `Cannot find module '../assets/apply-validation.js'`
     const source = text(payload.source);
     if (source && !FIELD_OPTIONS.source.includes(source)) return fail('source');
 
+    // Other를 고르면 무엇이었는지 적어야 한다. 컬럼을 늘리지 않고 한 칸에 합쳐 둔다.
+    let storedSource = source;
+    if (source === SOURCE_OTHER) {
+      const detail = text(payload.sourceOther);
+      if (!detail || detail.length > MAX_LENGTH.sourceOther) return fail('sourceOther');
+      storedSource = `${SOURCE_OTHER}: ${detail}`;
+    }
+
     const requests = text(payload.requests);
     if (requests.length > MAX_LENGTH.requests) return fail('requests');
 
@@ -436,7 +481,7 @@ Expected: FAIL — `Cannot find module '../assets/apply-validation.js'`
         contactId: text(payload.contactId),
         paymentMethod: text(payload.paymentMethod),
         requests,
-        source,
+        source: storedSource,
         language,
       },
     };
@@ -503,6 +548,14 @@ test('every required field is present, labelled and marked required', () => {
     assert.match(html, new RegExp(`<label[^>]*for="${id}"`), `missing label for ${id}`);
     assert.match(html, new RegExp(`id="${id}"[^>]*required`), `${id} must be required`);
   }
+});
+
+test('choosing Other on the source reveals a text input', () => {
+  assert.match(html, /name="sourceOther"/);
+  assert.match(html, /data-source-other/);
+  // 감춰진 상태로 시작해야 한다.
+  assert.match(html, /class="hidden" data-source-other/);
+  assert.match(html, /form\.elements\.source\.addEventListener/);
 });
 
 test('the honeypot is hidden from people but present for bots', () => {
@@ -642,6 +695,13 @@ Expected: FAIL — `ENOENT: no such file or directory ... apply/index.html`
         <label for="field-source" class="block text-sm font-bold text-ink" data-i18n="apply.fields.source">How did you hear about us?</label>
         <select id="field-source" name="source"
                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+        <!-- Other를 고른 사람에게만 보인다. 감춰져 있을 때는 폼 데이터에서도 빠진다. -->
+        <div class="hidden" data-source-other>
+          <label for="field-sourceOther" class="sr-only" data-i18n="apply.fields.sourceOther">Where did you hear about us?</label>
+          <input type="text" id="field-sourceOther" name="sourceOther" maxlength="100"
+                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"
+                 data-i18n-placeholder="apply.fields.sourceOtherPlaceholder" placeholder="e.g. Reddit, a poster at my school" />
+        </div>
       </div>
 
       <div class="rounded-2xl bg-panel p-5">
@@ -708,6 +768,8 @@ apply: {
     paymentMethod: 'Preferred payment method',
     requests: 'Anything we should prepare for?',
     source: 'How did you hear about us?',
+    sourceOther: 'Where did you hear about us?',
+    sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
   },
   privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
   consentLabel: 'I agree to the collection and use of my information above.',
@@ -749,6 +811,8 @@ apply: {
     paymentMethod: '희망 결제 수단',
     requests: '미리 준비할 것이 있을까요?',
     source: '어떻게 알고 오셨나요?',
+    sourceOther: '어디에서 알게 되셨나요?',
+    sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
   },
   privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
   consentLabel: '위 개인정보 수집·이용에 동의합니다.',
@@ -872,6 +936,17 @@ form.addEventListener('input', () => {
 
 form.elements.eventId.addEventListener('change', () => renderSlots(currentLanguage()));
 
+// Other를 골랐을 때만 직접 입력을 보여주고, 되돌리면 값도 비운다.
+const sourceOtherBox = document.querySelector('[data-source-other]');
+const syncSourceOther = () => {
+  const isOther = form.elements.source.value === 'Other';
+  sourceOtherBox.classList.toggle('hidden', !isOther);
+  form.elements.sourceOther.required = isOther;
+  if (!isOther) form.elements.sourceOther.value = '';
+  if (isOther) form.elements.sourceOther.focus();
+};
+form.elements.source.addEventListener('change', syncSourceOther);
+
 form.addEventListener('submit', async (submitEvent) => {
   submitEvent.preventDefault();
   const copy = currentCopy();
@@ -890,6 +965,7 @@ form.addEventListener('submit', async (submitEvent) => {
     paymentMethod: form.elements.paymentMethod.value,
     requests: form.elements.requests.value,
     source: form.elements.source.value,
+    sourceOther: form.elements.sourceOther.value,
     website: form.elements.website.value,
     consent: form.elements.consent.checked,
     language: document.documentElement.lang || 'en',
