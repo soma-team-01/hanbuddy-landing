@@ -27,6 +27,9 @@
 !/about
 /about/*
 !/about/index.html
+!/apply
+/apply/*
+!/apply/index.html
 !/events
 /events/*
 !/events/kbo-gocheok

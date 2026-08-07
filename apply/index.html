@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply | HanBuddy</title>
+  <meta name="description" content="Apply to join a HanBuddy meetup in Seoul. Takes about 2 minutes." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
+
+  <script src="/assets/analytics.js"></script>
+  <script src="/assets/event-slots.js"></script>
+  <script src="/assets/apply-validation.js"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#fffaf7',
+            'canvas-soft': '#ffffff',
+            primary: '#d13f32',
+            'primary-hover': '#b9342b',
+            'primary-strong': '#8f2f28',
+            'primary-soft': '#fff0ec',
+            ink: '#261b18',
+            muted: '#675b56',
+            'line-strong': '#d6c5bf',
+            'line-soft': '#eee2dd',
+            panel: '#f8f3f0',
+            'panel-raised': '#fcf8f6',
+            'on-primary': '#ffffff',
+            'on-primary-strong': '#ffffff',
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Noto Sans KR', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            subtle: '0 1px 2px rgba(38, 27, 24, 0.05)',
+            raised: '0 8px 24px rgba(38, 27, 24, 0.08)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      color-scheme: light;
+      --color-canvas: #fffaf7;
+      --color-primary: #d13f32;
+      --color-primary-strong: #8f2f28;
+      --color-on-primary: #ffffff;
+      --color-on-primary-strong: #ffffff;
+    }
+
+    body {
+      text-rendering: optimizeLegibility;
+    }
+
+    h1,
+    h2 {
+      text-wrap: balance;
+    }
+
+    :lang(ko) body,
+    :lang(ko) h1,
+    :lang(ko) h2,
+    :lang(ko) p {
+      word-break: keep-all;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 80;
+      border-radius: 0.75rem;
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: 0.75rem 1rem;
+      font-weight: 800;
+      transition: top 180ms ease;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: 3px solid var(--color-primary-strong);
+      outline-offset: 4px;
+    }
+
+    .focusable:focus-visible {
+      outline: 3px solid var(--color-primary-strong);
+      outline-offset: 4px;
+    }
+
+    /* 선택된 항목은 색만이 아니라 테두리 굵기로도 구분된다. */
+    .choice:has(input:checked) {
+      border-color: var(--color-primary);
+      background: #fff0ec;
+      color: var(--color-primary-strong);
+    }
+
+    .choice:focus-within {
+      outline: 3px solid var(--color-primary-strong);
+      outline-offset: 2px;
+    }
+
+    [aria-invalid='true'] {
+      border-color: var(--color-primary);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 1ms !important;
+        animation-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="application">
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
+    <nav class="mx-auto flex min-h-16 max-w-2xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="nav.aria">
+      <a href="/" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink" aria-label="HanBuddy home" data-i18n-aria="nav.homeAria">
+        <img src="/assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
+        <span class="hidden min-[380px]:inline">HanBuddy</span>
+      </a>
+
+      <div class="flex shrink-0 items-center gap-3">
+        <a href="/#events" class="focusable rounded-full text-sm font-semibold text-muted transition hover:text-primary-strong" data-i18n="nav.back">&larr; All events</a>
+        <div class="flex rounded-full border border-line-soft bg-panel-raised p-1" role="group" aria-label="Select language" data-i18n-aria="languageToggle.aria">
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="mx-auto max-w-2xl px-5 pb-20 pt-10">
+    <div data-apply-form>
+      <h1 class="font-display text-3xl font-extrabold tracking-tight" data-i18n="apply.title">Join a meetup</h1>
+      <p class="mt-3 text-base leading-7 text-muted" data-i18n="apply.subtitle">
+        Takes about 2 minutes. We&rsquo;ll be in touch within 24 hours to confirm your spot.
+      </p>
+
+      <form novalidate class="mt-8 space-y-6" data-apply>
+        <!-- 봇만 채운다. 화면에서 감추고 포커스도 받지 않는다. -->
+        <div class="hidden" aria-hidden="true">
+          <label for="field-website">Website</label>
+          <input type="text" id="field-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div>
+          <label for="field-eventId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.event">Which meetup?</label>
+          <select id="field-eventId" name="eventId" required
+                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+        </div>
+
+        <fieldset>
+          <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.slot">Which day?</legend>
+          <div class="mt-2 space-y-2" data-slot-options></div>
+        </fieldset>
+
+        <div>
+          <label for="field-guests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.guests">How many people, including you?</label>
+          <input type="number" id="field-guests" name="guests" min="1" max="10" value="1" required inputmode="numeric"
+                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+        </div>
+
+        <div>
+          <label for="field-name" class="block text-sm font-bold text-ink" data-i18n="apply.fields.name">Full name</label>
+          <input type="text" id="field-name" name="name" maxlength="100" required autocomplete="name"
+                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+        </div>
+
+        <div>
+          <label for="field-nationality" class="block text-sm font-bold text-ink" data-i18n="apply.fields.nationality">Nationality</label>
+          <input type="text" id="field-nationality" name="nationality" maxlength="100" required
+                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+        </div>
+
+        <fieldset>
+          <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.koreanLevel">Korean level</legend>
+          <div class="mt-2 flex flex-wrap gap-2" data-options="koreanLevel"></div>
+        </fieldset>
+
+        <div>
+          <label for="field-contactMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactMethod">How should we reach you?</label>
+          <select id="field-contactMethod" name="contactMethod" required
+                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+        </div>
+
+        <div>
+          <label for="field-contactId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactId">Your ID or number there</label>
+          <input type="text" id="field-contactId" name="contactId" maxlength="200" required
+                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+        </div>
+
+        <div>
+          <label for="field-paymentMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.paymentMethod">Preferred payment method</label>
+          <select id="field-paymentMethod" name="paymentMethod" required
+                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+        </div>
+
+        <div>
+          <label for="field-requests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.requests">Anything we should prepare for?</label>
+          <textarea id="field-requests" name="requests" rows="3" maxlength="1000"
+                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
+        </div>
+
+        <div>
+          <label for="field-source" class="block text-sm font-bold text-ink" data-i18n="apply.fields.source">How did you hear about us?</label>
+          <select id="field-source" name="source"
+                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+          <!-- Other를 고른 사람에게만 보인다. 감춰져 있을 때는 값도 비운다. -->
+          <div class="hidden" data-source-other>
+            <label for="field-sourceOther" class="sr-only" data-i18n="apply.fields.sourceOther">Where did you hear about us?</label>
+            <input type="text" id="field-sourceOther" name="sourceOther" maxlength="100"
+                   class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"
+                   data-i18n-placeholder="apply.fields.sourceOtherPlaceholder" placeholder="e.g. Reddit, a poster at my school" />
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-panel p-5">
+          <p class="text-xs leading-6 text-muted" data-i18n="apply.privacy"></p>
+          <label class="mt-3 flex items-start gap-3 text-sm font-semibold text-ink">
+            <input type="checkbox" id="field-consent" name="consent" required class="focusable mt-1 h-5 w-5" />
+            <span data-i18n="apply.consentLabel">I agree to the collection and use of my information above.</span>
+          </label>
+        </div>
+
+        <p class="hidden rounded-xl bg-primary-soft px-4 py-3 text-sm font-semibold text-primary-strong"
+           role="alert" data-form-error></p>
+
+        <button type="submit" data-submit
+                class="focusable w-full rounded-full bg-primary px-7 py-4 text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px"
+                data-i18n="apply.submit">Send application</button>
+      </form>
+    </div>
+
+    <!--
+      라디오는 값만 스크립트가 채우고 필드 자체는 마크업이 선언한다.
+      이름과 required가 HTML에 남아 있어야 폼 계약을 소스에서 읽을 수 있다.
+    -->
+    <template data-slot-template>
+      <label class="choice flex cursor-pointer items-center gap-3 rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base">
+        <input type="radio" name="slotIso" required class="h-5 w-5" />
+        <span data-choice-label></span>
+      </label>
+    </template>
+
+    <template data-choice-template="koreanLevel">
+      <label class="choice flex cursor-pointer items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm font-semibold">
+        <input type="radio" name="koreanLevel" required />
+        <span data-choice-label></span>
+      </label>
+    </template>
+
+    <div class="hidden" data-apply-done>
+      <p class="text-4xl" aria-hidden="true">🎉</p>
+      <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight" data-i18n="apply.done.title">Application received</h1>
+      <p class="mt-3 text-base leading-7 text-muted" data-i18n="apply.done.body">
+        We&rsquo;ll be in touch within 24 hours to confirm your spot, the meeting point and payment.
+      </p>
+      <p class="mt-6 rounded-2xl bg-panel px-5 py-4 text-sm font-semibold text-ink">
+        <span data-i18n="apply.done.idLabel">Your application number</span>
+        <span class="ml-2 font-display text-base font-extrabold tracking-tight" data-application-id></span>
+      </p>
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+        <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.instagram">DM us on Instagram</a>
+        <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.kakao">KakaoTalk open chat</a>
+      </div>
+    </div>
+
+    <div class="hidden" data-apply-closed>
+      <h1 class="font-display text-3xl font-extrabold tracking-tight" data-i18n="apply.closed.title">Next dates are on the way</h1>
+      <p class="mt-3 text-base leading-7 text-muted" data-i18n="apply.closed.body">
+        Follow us on Instagram and we&rsquo;ll post the next meetup there first.
+      </p>
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+        <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.instagram">DM us on Instagram</a>
+        <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.kakao">KakaoTalk open chat</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-line-soft bg-canvas">
+    <div class="mx-auto max-w-2xl px-5 py-10">
+      <div class="flex flex-col gap-4 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
+          <img src="/assets/brand/logo-borderless.webp" width="24" height="24" alt="" class="h-6 w-6" />
+          <span data-i18n="footer.brand">HanBuddy by ZeroOne</span>
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="/about" class="focusable rounded text-sm font-semibold text-muted transition hover:text-primary-strong" data-i18n="footer.aboutLink">About HanBuddy</a>
+          <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false"
+                  class="focusable rounded-lg text-sm font-semibold text-ink underline decoration-primary/40 underline-offset-4 hover:text-primary-strong"
+                  data-i18n="consent.settings">
+            Cookie settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <section id="analytics-consent" data-consent-banner role="dialog" aria-labelledby="analytics-consent-title"
+           aria-describedby="analytics-consent-description" aria-hidden="true"
+           class="fixed inset-x-4 bottom-4 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-raised sm:left-auto sm:max-w-xl sm:p-6">
+    <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div>
+        <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink" data-i18n="consent.title">
+          Can we count your visit?
+        </p>
+        <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted" data-i18n="consent.body">
+          Just page views and clicks, nothing you type. Used to improve HanBuddy and reach people like you.
+        </p>
+        <p class="mt-2 text-xs leading-5 text-muted" data-i18n="consent.note">
+          Google Analytics and Meta Pixel. Change anytime in Cookie settings.
+        </p>
+      </div>
+      <div class="flex flex-col-reverse gap-2 sm:min-w-52">
+        <button type="button" data-consent-action="reject"
+                class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft"
+                data-i18n="consent.reject">
+          No thanks
+        </button>
+        <button type="button" data-consent-action="accept"
+                class="focusable rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover"
+                data-i18n="consent.accept">
+          Sure
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const CONFIG = {
+      contact: 'https://open.kakao.com/o/sP3n4rFi',
+      instagram: 'https://www.instagram.com/hanbuddy_kr/',
+    };
+
+    const CONTENT_MAP = Object.freeze({
+      en: {
+        skipLink: 'Skip to content',
+        languageToggle: { aria: 'Select language' },
+        meta: {
+          htmlLang: 'en',
+          title: 'Apply | HanBuddy',
+          description: 'Apply to join a HanBuddy meetup in Seoul. Takes about 2 minutes.',
+        },
+        nav: {
+          aria: 'Main navigation',
+          homeAria: 'HanBuddy home',
+          back: '← All events',
+        },
+        apply: {
+          title: 'Join a meetup',
+          subtitle: 'Takes about 2 minutes. We’ll be in touch within 24 hours to confirm your spot.',
+          fields: {
+            event: 'Which meetup?',
+            slot: 'Which day?',
+            guests: 'How many people, including you?',
+            name: 'Full name',
+            nationality: 'Nationality',
+            koreanLevel: 'Korean level',
+            contactMethod: 'How should we reach you?',
+            contactId: 'Your ID or number there',
+            paymentMethod: 'Preferred payment method',
+            requests: 'Anything we should prepare for?',
+            source: 'How did you hear about us?',
+            sourceOther: 'Where did you hear about us?',
+            sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
+          },
+          privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
+          consentLabel: 'I agree to the collection and use of my information above.',
+          submit: 'Send application',
+          sending: 'Sending…',
+          errors: {
+            generic: 'Something went wrong on our side. Please DM us on Instagram and we’ll sort it out.',
+            field: 'Please check this field.',
+          },
+          done: {
+            title: 'Application received',
+            body: 'We’ll be in touch within 24 hours to confirm your spot, the meeting point and payment.',
+            idLabel: 'Your application number',
+            instagram: 'DM us on Instagram',
+            kakao: 'KakaoTalk open chat',
+          },
+          closed: {
+            title: 'Next dates are on the way',
+            body: 'Follow us on Instagram and we’ll post the next meetup there first.',
+          },
+        },
+        footer: {
+          brand: 'HanBuddy by ZeroOne',
+          aboutLink: 'About HanBuddy',
+        },
+        consent: {
+          title: 'Can we count your visit?',
+          body: 'Just page views and clicks, nothing you type. Used to improve HanBuddy and reach people like you.',
+          note: 'Google Analytics and Meta Pixel. Change anytime in Cookie settings.',
+          reject: 'No thanks',
+          accept: 'Sure',
+          settings: 'Cookie settings',
+        },
+      },
+      ko: {
+        skipLink: '본문으로 이동',
+        languageToggle: { aria: '언어 선택' },
+        meta: {
+          htmlLang: 'ko',
+          title: '모임 신청 | HanBuddy',
+          description: '서울에서 열리는 HanBuddy 모임을 신청하세요. 2분이면 됩니다.',
+        },
+        nav: {
+          aria: '주요 내비게이션',
+          homeAria: 'HanBuddy 홈',
+          back: '← 전체 이벤트',
+        },
+        apply: {
+          title: '모임 신청',
+          subtitle: '2분이면 됩니다. 24시간 안에 연락드려 자리를 확정해 드립니다.',
+          fields: {
+            event: '어떤 모임인가요?',
+            slot: '어느 날짜인가요?',
+            guests: '본인 포함 몇 분인가요?',
+            name: '이름',
+            nationality: '국적',
+            koreanLevel: '한국어 수준',
+            contactMethod: '어떻게 연락드릴까요?',
+            contactId: '해당 채널의 아이디나 번호',
+            paymentMethod: '희망 결제 수단',
+            requests: '미리 준비할 것이 있을까요?',
+            source: '어떻게 알고 오셨나요?',
+            sourceOther: '어디에서 알게 되셨나요?',
+            sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
+          },
+          privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
+          consentLabel: '위 개인정보 수집·이용에 동의합니다.',
+          submit: '신청 보내기',
+          sending: '보내는 중…',
+          errors: {
+            generic: '저희 쪽에서 문제가 생겼습니다. 인스타그램 DM 주시면 바로 처리해 드릴게요.',
+            field: '이 항목을 확인해 주세요.',
+          },
+          done: {
+            title: '신청이 접수되었습니다',
+            body: '24시간 안에 연락드려 자리를 확정해 드립니다. 집결 장소와 결제도 그때 안내해 드려요.',
+            idLabel: '신청 번호',
+            instagram: '인스타그램 DM 보내기',
+            kakao: '카카오톡 오픈채팅',
+          },
+          closed: {
+            title: '다음 일정을 준비하고 있어요',
+            body: '인스타그램을 팔로우하시면 다음 모임을 가장 먼저 알려드립니다.',
+          },
+        },
+        footer: {
+          brand: 'HanBuddy by ZeroOne',
+          aboutLink: 'HanBuddy 소개',
+        },
+        consent: {
+          title: '방문 기록을 남겨도 될까요?',
+          body: '입력하신 내용은 빼고 페이지 조회와 클릭만 봅니다. HanBuddy 개선과 광고 도달에 사용합니다.',
+          note: 'Google Analytics와 Meta Pixel이 측정합니다. 쿠키 설정에서 언제든 바꿀 수 있습니다.',
+          reject: '괜찮아요',
+          accept: '좋아요',
+          settings: '쿠키 설정',
+        },
+      },
+    });
+
+    const STORAGE_KEY = 'hanbuddy.language';
+    const SUPPORTED_LANGUAGES = ['en', 'ko'];
+
+    const SLOTS = window.HanBuddyEventSlots;
+    const VALIDATION = window.HanBuddyApplyValidation;
+
+    const form = document.querySelector('[data-apply]');
+    const errorBox = document.querySelector('[data-form-error]');
+    const prefilledEvent = new URLSearchParams(location.search).get('event');
+    let startedTracked = false;
+
+    const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
+    const clear = (node) => {
+      while (node.firstChild) node.removeChild(node.firstChild);
+    };
+
+    const safeStoredLanguage = () => {
+      try {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        return SUPPORTED_LANGUAGES.includes(stored) ? stored : 'en';
+      } catch {
+        return 'en';
+      }
+    };
+
+    const persistLanguage = (lang) => {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, lang);
+      } catch {
+        // Language switching still works when storage is unavailable.
+      }
+    };
+
+    const currentLanguage = () => (SUPPORTED_LANGUAGES.includes(document.documentElement.lang)
+      ? document.documentElement.lang
+      : 'en');
+    const currentCopy = () => CONTENT_MAP[currentLanguage()];
+
+    const track = (name, params) => window.HanBuddyAnalytics?.trackEvent?.(name, params);
+
+    const syncCtas = () => {
+      document.querySelectorAll('[data-cta]').forEach((el) => {
+        const url = CONFIG[el.getAttribute('data-cta')];
+        if (!url) return;
+        el.setAttribute('href', url);
+        el.setAttribute('target', '_blank');
+        el.setAttribute('rel', 'noopener');
+      });
+    };
+
+    const syncStaticText = (copy) => {
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const text = getByPath(copy, el.getAttribute('data-i18n'));
+        if (typeof text === 'string') el.textContent = text;
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+        const text = getByPath(copy, el.getAttribute('data-i18n-aria'));
+        if (typeof text === 'string') el.setAttribute('aria-label', text);
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const text = getByPath(copy, el.getAttribute('data-i18n-placeholder'));
+        if (typeof text === 'string') el.setAttribute('placeholder', text);
+      });
+    };
+
+    const syncMeta = (copy) => {
+      document.documentElement.lang = copy.meta.htmlLang;
+      document.title = copy.meta.title;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', copy.meta.description);
+    };
+
+    const renderSlots = (language) => {
+      const container = document.querySelector('[data-slot-options]');
+      const template = document.querySelector('[data-slot-template]');
+      clear(container);
+      const event = SLOTS.openEvents().find((e) => e.id === form.elements.eventId.value);
+      if (!event) return;
+      event.slots.forEach((slot, index) => {
+        const row = template.content.cloneNode(true);
+        const input = row.querySelector('input');
+        input.value = slot.iso;
+        if (index === 0) input.checked = true;
+        row.querySelector('[data-choice-label]').textContent = slot.label[language];
+        container.appendChild(row);
+      });
+    };
+
+    const renderEvents = (language) => {
+      const open = SLOTS.openEvents();
+      if (open.length === 0) {
+        document.querySelector('[data-apply-form]').classList.add('hidden');
+        document.querySelector('[data-apply-closed]').classList.remove('hidden');
+        return;
+      }
+      const select = form.elements.eventId;
+      const chosen = select.value;
+      clear(select);
+      open.forEach((event) => {
+        const option = document.createElement('option');
+        option.value = event.id;
+        option.textContent = `${event.title[language]} · ₩${event.price.toLocaleString()}`;
+        select.appendChild(option);
+      });
+      // 언어를 바꿔도 고르던 회차는 그대로 둔다.
+      const keep = open.some((e) => e.id === chosen) ? chosen : prefilledEvent;
+      if (keep && open.some((e) => e.id === keep)) select.value = keep;
+      renderSlots(language);
+    };
+
+    // 선택지 값은 시트에 그대로 저장되므로 언어와 무관하게 영문 그대로 쓴다.
+    const renderChoices = () => {
+      const container = document.querySelector('[data-options="koreanLevel"]');
+      const template = document.querySelector('[data-choice-template="koreanLevel"]');
+      const chosen = form.elements.koreanLevel ? form.elements.koreanLevel.value : '';
+      clear(container);
+      VALIDATION.FIELD_OPTIONS.koreanLevel.forEach((value, index) => {
+        const row = template.content.cloneNode(true);
+        const input = row.querySelector('input');
+        input.value = value;
+        if (value === chosen || (!chosen && index === 0)) input.checked = true;
+        row.querySelector('[data-choice-label]').textContent = value;
+        container.appendChild(row);
+      });
+
+      for (const field of ['contactMethod', 'paymentMethod', 'source']) {
+        const select = form.elements[field];
+        const previous = select.value;
+        clear(select);
+        // 유입 경로는 선택 항목이라 빈 값으로 시작한다.
+        if (field === 'source') select.appendChild(new Option('', ''));
+        VALIDATION.FIELD_OPTIONS[field].forEach((value) => select.appendChild(new Option(value, value)));
+        if (previous) select.value = previous;
+      }
+    };
+
+    const showFieldError = (field, copy) => {
+      const input = form.elements[field];
+      errorBox.textContent = copy.apply.errors.field;
+      errorBox.classList.remove('hidden');
+      if (input) {
+        const target = input.length ? input[0] : input;
+        target.setAttribute('aria-invalid', 'true');
+        target.focus();
+      }
+      track('application_error', {
+        event_id: form.elements.eventId.value,
+        field,
+        content_language: currentLanguage(),
+      });
+    };
+
+    form.addEventListener('input', () => {
+      if (startedTracked) return;
+      startedTracked = true;
+      track('application_start', {
+        event_id: form.elements.eventId.value,
+        prefilled: Boolean(prefilledEvent),
+        content_language: currentLanguage(),
+      });
+    });
+
+    form.elements.eventId.addEventListener('change', () => renderSlots(currentLanguage()));
+
+    // Other를 골랐을 때만 직접 입력을 보여주고, 되돌리면 값도 비운다.
+    const sourceOtherBox = document.querySelector('[data-source-other]');
+    const syncSourceOther = () => {
+      const isOther = form.elements.source.value === 'Other';
+      sourceOtherBox.classList.toggle('hidden', !isOther);
+      form.elements.sourceOther.required = isOther;
+      if (!isOther) form.elements.sourceOther.value = '';
+      if (isOther) form.elements.sourceOther.focus();
+    };
+    form.elements.source.addEventListener('change', syncSourceOther);
+
+    form.addEventListener('submit', async (submitEvent) => {
+      submitEvent.preventDefault();
+      const copy = currentCopy();
+      errorBox.classList.add('hidden');
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+      const payload = {
+        eventId: form.elements.eventId.value,
+        slotIso: form.querySelector('input[name="slotIso"]:checked')?.value || '',
+        guests: form.elements.guests.value,
+        name: form.elements.name.value,
+        nationality: form.elements.nationality.value,
+        koreanLevel: form.querySelector('input[name="koreanLevel"]:checked')?.value || '',
+        contactMethod: form.elements.contactMethod.value,
+        contactId: form.elements.contactId.value,
+        paymentMethod: form.elements.paymentMethod.value,
+        requests: form.elements.requests.value,
+        source: form.elements.source.value,
+        sourceOther: form.elements.sourceOther.value,
+        website: form.elements.website.value,
+        consent: form.elements.consent.checked,
+        language: currentLanguage(),
+        referrer: document.referrer || '',
+      };
+
+      const local = VALIDATION.validateApplication(payload);
+      if (!local.ok) return showFieldError(local.field, copy);
+
+      const button = form.querySelector('[data-submit]');
+      button.disabled = true;
+      button.textContent = copy.apply.sending;
+
+      try {
+        const response = await fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!result.ok) {
+          if (result.code === 'VALIDATION' && result.field) return showFieldError(result.field, copy);
+          throw new Error('storage');
+        }
+        document.querySelector('[data-application-id]').textContent = result.applicationId;
+        document.querySelector('[data-apply-form]').classList.add('hidden');
+        document.querySelector('[data-apply-done]').classList.remove('hidden');
+        window.scrollTo({ top: 0 });
+        track('application_submitted', {
+          event_id: payload.eventId,
+          date_slot: payload.slotIso,
+          guests: Number(payload.guests),
+          source: payload.source,
+          prefilled: Boolean(prefilledEvent),
+          content_language: currentLanguage(),
+        });
+      } catch {
+        errorBox.textContent = copy.apply.errors.generic;
+        errorBox.classList.remove('hidden');
+      } finally {
+        button.disabled = false;
+        button.textContent = copy.apply.submit;
+      }
+    });
+
+    const setLanguageButtonState = (lang) => {
+      document.querySelectorAll('[data-lang]').forEach((button) => {
+        const selected = button.getAttribute('data-lang') === lang;
+        button.setAttribute('aria-pressed', String(selected));
+        button.classList.toggle('bg-primary', selected);
+        button.classList.toggle('text-on-primary', selected);
+        button.classList.toggle('text-muted', !selected);
+      });
+    };
+
+    const applyLanguage = (lang) => {
+      const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
+      syncMeta(copy);
+      syncStaticText(copy);
+      renderChoices();
+      renderEvents(lang);
+      syncSourceOther();
+      setLanguageButtonState(lang);
+      persistLanguage(lang);
+    };
+
+    document.querySelectorAll('[data-lang]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const lang = button.getAttribute('data-lang');
+        if (!SUPPORTED_LANGUAGES.includes(lang)) return;
+        const previous = document.documentElement.lang;
+        applyLanguage(lang);
+        if (previous !== lang) window.HanBuddyAnalytics?.trackLanguageSwitch?.(lang, previous);
+      });
+    });
+
+    syncCtas();
+    applyLanguage(safeStoredLanguage());
+  </script>
+</body>
+</html>
