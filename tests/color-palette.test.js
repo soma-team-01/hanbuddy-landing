@@ -115,7 +115,28 @@ test('keeps the logo as the only decorative gradient source', () => {
     existsSync(join(__dirname, '..', 'assets', 'brand', 'logo-borderless.webp')),
     'referenced logo asset assets/brand/logo-borderless.webp must exist on disk',
   );
-  assert.doesNotMatch(html, /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i);
+  // DESIGN.md 2절은 사진 가독성 처리를 장식 그라디언트와 구분해 허용한다.
+  // 히어로 겹침 레이어의 페이드가 그 예외에 해당하는 유일한 사용처다.
+  // 이 블록만 들어내고, 나머지 어디에도 그라디언트가 없어야 한다.
+  const heroFade = html.match(/\.hero-lead::after\s*\{[^}]*\}/);
+  assert.ok(heroFade, '.hero-lead::after 페이드 블록이 있어야 한다');
+  assert.match(
+    heroFade[0],
+    /linear-gradient\s*\(/i,
+    '히어로 페이드는 linear-gradient로 구현되어 있어야 한다',
+  );
+  assert.match(
+    design,
+    /`\.hero-lead::after`/,
+    'DESIGN.md가 히어로 페이드를 승인된 예외로 문서화해야 한다',
+  );
+
+  const htmlWithoutApprovedFade = html.replace(heroFade[0], '');
+  assert.doesNotMatch(
+    htmlWithoutApprovedFade,
+    /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i,
+    '승인된 히어로 페이드 외에는 그라디언트를 쓰지 않는다',
+  );
 });
 
 test('keeps DESIGN.md synchronized with the approved runtime palette', () => {
