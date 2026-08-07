@@ -108,3 +108,39 @@ test('a hung storage call cannot hold the applicant hostage', async () => {
   assert.equal(response.body.ok, true);
   assert.match(response.body.applicationId, /^HB-\d{8}-/);
 });
+
+test('the whole sheet path shares one deadline, not one per hop', async () => {
+  // OAuth가 마감 직전에 성공한 뒤 append가 멈추는 경우가 진짜 위험한 모양이다.
+  // 홉마다 새 마감을 만들면 최악의 대기가 홉 수만큼 곱해지고, 나중에 홉이
+  // 하나 늘면 상한이 조용히 따라 늘어난다.
+  const previousFetch = globalThis.fetch;
+  const keepAlive = setInterval(() => {}, 20);
+  const signals = [];
+  globalThis.fetch = (url, init) => {
+    const target = String(url);
+    if (target.includes('discord')) return Promise.resolve({ ok: true });
+    signals.push({ hop: target.includes('oauth2') ? 'token' : 'append', signal: init.signal });
+    if (target.includes('oauth2')) {
+      // 마감 직전에 간신히 성공한다.
+      return new Promise((resolve) => setTimeout(() => resolve({
+        ok: true, json: async () => ({ access_token: 'late-but-valid' }),
+      }), 30));
+    }
+    return new Promise((_, reject) => {
+      init.signal.addEventListener('abort', () => reject(init.signal.reason));
+    });
+  };
+
+  const response = { status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
+  try {
+    await handler({ method: 'POST', body: application() }, response);
+  } finally {
+    clearInterval(keepAlive);
+    globalThis.fetch = previousFetch;
+  }
+
+  assert.deepEqual(signals.map((entry) => entry.hop), ['token', 'append'], 'both sheet hops must run');
+  assert.equal(signals[0].signal, signals[1].signal, 'both hops must carry the same deadline signal');
+  // 시트는 마감에 걸렸지만 디스코드가 받았으므로 접수다.
+  assert.equal(response.code, 200);
+});

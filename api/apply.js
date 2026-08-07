@@ -62,12 +62,13 @@ const base64url = (input) => Buffer.from(input).toString('base64url');
 // 상한이 없으면 시트가 응답하지 않을 때 Promise.allSettled가 끝나지 않는다.
 // 디스코드가 이미 성공했더라도 신청자는 함수가 강제 종료될 때까지 기다리다
 // 오류 화면을 보게 되는데, 접수는 된 상태라 가장 나쁜 조합이다.
-const fetchWithTimeout = (url, init = {}) => fetch(url, {
-  ...init,
-  signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-});
+//
+// 마감은 홉마다가 아니라 저장 경로마다 하나씩 만든다. 시트 경로는 토큰 발급과
+// append 두 번을 순서대로 타므로, 호출마다 새로 걸면 최악의 대기가 홉 수만큼
+// 곱해지고 나중에 홉이 하나 늘면 상한이 조용히 따라 늘어난다.
+const deadline = () => AbortSignal.timeout(REQUEST_TIMEOUT_MS);
 
-const accessToken = async () => {
+const accessToken = async (signal) => {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
   const now = Math.floor(Date.now() / 1000);
@@ -83,8 +84,9 @@ const accessToken = async () => {
     .update(`${header}.${claim}`)
     .sign(key, 'base64url');
 
-  const response = await fetchWithTimeout('https://oauth2.googleapis.com/token', {
+  const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
+    signal,
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -96,22 +98,23 @@ const accessToken = async () => {
   return body.access_token;
 };
 
-const appendRow = async (row) => {
-  const token = await accessToken();
+const appendRow = async (row, signal) => {
+  const token = await accessToken(signal);
   const sheetId = process.env.APPLICATIONS_SHEET_ID;
   const tab = process.env.APPLICATIONS_SHEET_TAB || 'applications';
   const range = encodeURIComponent(`${tab}!A:Q`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append`
     + '?valueInputOption=RAW&insertDataOption=INSERT_ROWS';
-  const response = await fetchWithTimeout(url, {
+  const response = await fetch(url, {
     method: 'POST',
+    signal,
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify({ values: [row] }),
   });
   if (!response.ok) throw new Error('sheet');
 };
 
-const notifyDiscord = async ({ applicationId, value, sheetFailed }) => {
+const notifyDiscord = async ({ applicationId, value, sheetFailed, signal }) => {
   const webhook = process.env.DISCORD_WEBHOOK_URL;
   if (!webhook) throw new Error('webhook');
   const lines = [
@@ -124,8 +127,9 @@ const notifyDiscord = async ({ applicationId, value, sheetFailed }) => {
     value.source ? `유입: ${value.source}` : null,
     value.requests ? `요청: ${value.requests}` : null,
   ].filter(Boolean);
-  const response = await fetchWithTimeout(webhook, {
+  const response = await fetch(webhook, {
     method: 'POST',
+    signal,
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ content: lines.join('\n') }),
   });
@@ -161,8 +165,8 @@ const handler = async (request, response) => {
   const row = buildRow({ applicationId, timestampKst, value: checked.value, referrer });
 
   const [sheet, discord] = await Promise.allSettled([
-    appendRow(row),
-    notifyDiscord({ applicationId, value: checked.value, sheetFailed: false }),
+    appendRow(row, deadline()),
+    notifyDiscord({ applicationId, value: checked.value, sheetFailed: false, signal: deadline() }),
   ]);
 
   const sheetFailed = sheet.status === 'rejected';
@@ -178,7 +182,9 @@ const handler = async (request, response) => {
     // 디스코드에 내용이 남아 수동 복구가 되므로 접수로 처리한다. 여기서
     // 오류를 띄우면 그 사람은 대부분 그냥 이탈한다.
     emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-    await notifyDiscord({ applicationId, value: checked.value, sheetFailed: true }).catch(() => {});
+    await notifyDiscord({
+      applicationId, value: checked.value, sheetFailed: true, signal: deadline(),
+    }).catch(() => {});
   }
   if (discordFailed) emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
 
