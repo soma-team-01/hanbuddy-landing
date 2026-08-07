@@ -211,27 +211,28 @@
 
   <section id="analytics-consent" data-consent-banner role="dialog" aria-labelledby="analytics-consent-title"
            aria-describedby="analytics-consent-description" aria-hidden="true"
-           class="fixed inset-x-4 bottom-24 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-raised sm:left-auto sm:max-w-xl sm:p-6 lg:bottom-4">
-    <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+           class="fixed inset-x-4 bottom-24 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-4 shadow-raised sm:left-auto sm:max-w-xl sm:p-6 lg:bottom-4">
+    <div class="grid gap-3.5 sm:grid-cols-[1fr_auto] sm:items-end sm:gap-5">
       <div>
-        <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink">
+        <p id="analytics-consent-title" class="font-display text-base font-extrabold tracking-tight text-ink sm:text-lg">
           Your privacy choices
         </p>
-        <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted">
+        <p id="analytics-consent-description" class="mt-1.5 text-[13px] leading-5 text-muted sm:mt-2 sm:text-sm sm:leading-6">
           On public pages, we count one limited cookie-free visit using the page path and UTM campaign tags. If you accept, Google Analytics also measures clicks and Meta Pixel helps us understand ad reach. We never include form answers or link UTM tags to an application.
         </p>
-        <p class="mt-2 text-xs leading-5 text-muted">
+        <p class="mt-1.5 text-[11.5px] leading-[1.45] text-muted sm:mt-2 sm:text-xs sm:leading-5">
           Optional analytics can be changed anytime in Cookie settings.
           <a href="/privacy/" class="focusable rounded font-semibold underline">Privacy</a>.
         </p>
       </div>
-      <div class="flex flex-col-reverse gap-2 sm:min-w-52">
+      <!-- 모바일은 가로 한 줄(거절 왼쪽·수락 오른쪽), sm 이상은 기존 세로 스택 그대로. -->
+      <div class="flex flex-row gap-2 sm:flex-col-reverse sm:min-w-52">
         <button type="button" data-consent-action="reject"
-                class="rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft">
+                class="flex-1 rounded-full border border-line-strong px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft sm:flex-none sm:px-5">
           No thanks
         </button>
         <button type="button" data-consent-action="accept"
-                class="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover">
+                class="flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover sm:flex-none sm:px-5">
           Sure
         </button>
       </div>

@@ -117,11 +117,19 @@ test('keeps the logo as the only decorative gradient source', () => {
   );
   // DESIGN.md 2절은 사진 가독성 처리를 장식 그라디언트와 구분해 허용한다.
   // 히어로 겹침 레이어의 페이드가 그 예외에 해당하는 유일한 사용처다.
-  // 이 블록만 들어내고, 나머지 어디에도 그라디언트가 없어야 한다.
-  const heroFade = html.match(/\.hero-lead::after\s*\{[^}]*\}/);
-  assert.ok(heroFade, '.hero-lead::after 페이드 블록이 있어야 한다');
+  //
+  // 첫 일치만 들어내고 나머지를 검사하면, 같은 선택자가 두 번 선언될 때
+  // 두 번째 블록이 남아 "그라디언트를 쓰지 않는다"가 엉뚱하게 실패한다.
+  // 그래서 블록을 전부 모으고, 전체 개수와 승인 블록 안 개수를 맞춰본다.
+  // 본문은 `[^{}]*`로 잡아 중첩 중괄호를 넘어 삼키지 않게 한다.
+  const fadeBlocks = [...html.matchAll(/\.hero-lead::after\s*\{[^{}]*\}/g)].map((m) => m[0]);
+  assert.equal(
+    fadeBlocks.length,
+    1,
+    '히어로 페이드는 한 곳에서만 선언한다(현재 ' + fadeBlocks.length + '곳)',
+  );
   assert.match(
-    heroFade[0],
+    fadeBlocks[0],
     /linear-gradient\s*\(/i,
     '히어로 페이드는 linear-gradient로 구현되어 있어야 한다',
   );
@@ -131,11 +139,17 @@ test('keeps the logo as the only decorative gradient source', () => {
     'DESIGN.md가 히어로 페이드를 승인된 예외로 문서화해야 한다',
   );
 
-  const htmlWithoutApprovedFade = html.replace(heroFade[0], '');
-  assert.doesNotMatch(
-    htmlWithoutApprovedFade,
-    /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i,
-    '승인된 히어로 페이드 외에는 그라디언트를 쓰지 않는다',
+  const gradientPattern = /(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/gi;
+  const totalGradients = (html.match(gradientPattern) || []).length;
+  const approvedGradients = fadeBlocks.reduce(
+    (count, block) => count + (block.match(gradientPattern) || []).length,
+    0,
+  );
+  assert.equal(
+    totalGradients,
+    approvedGradients,
+    '승인된 히어로 페이드 외에는 그라디언트를 쓰지 않는다'
+      + ' (전체 ' + totalGradients + '개 중 승인 ' + approvedGradients + '개)',
   );
 });
 
