@@ -37,7 +37,7 @@ const buildApplicationId = (now = Date.now()) => {
   return `HB-${ymd}-${suffix}`;
 };
 
-const buildRow = ({ applicationId, timestampKst, value, referrer }) => [
+const buildRow = ({ applicationId, timestampKst, value }) => [
   timestampKst,
   applicationId,
   value.eventId,
@@ -54,7 +54,7 @@ const buildRow = ({ applicationId, timestampKst, value, referrer }) => [
   value.source,
   value.language,
   'TRUE',
-  referrer,
+  '',
 ];
 
 const base64url = (input) => Buffer.from(input).toString('base64url');
@@ -163,8 +163,7 @@ const handler = async (request, response) => {
 
   const applicationId = buildApplicationId();
   const timestampKst = kstParts(Date.now()).slice(0, 19).replace('T', ' ');
-  const referrer = typeof payload.referrer === 'string' ? payload.referrer.slice(0, 300) : '';
-  const row = buildRow({ applicationId, timestampKst, value: checked.value, referrer });
+  const row = buildRow({ applicationId, timestampKst, value: checked.value });
 
   const [sheet, discord] = await Promise.allSettled([
     appendRow(row, deadline()),

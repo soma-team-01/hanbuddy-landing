@@ -75,6 +75,19 @@ test('the three funnel events carry the language, as the analytics spec requires
   }
 });
 
+test('application payload never collects browser attribution data', () => {
+  const payload = html.match(/const payload = \{[\s\S]*?^      \};/m)?.[0] || '';
+  assert.ok(payload, 'application payload block must be readable');
+  assert.doesNotMatch(payload, /document\.referrer|location\.search|\butm_|\breferrer\s*:/i);
+  assert.match(payload, /source: form\.elements\.source\.value/);
+  assert.match(payload, /sourceOther: form\.elements\.sourceOther\.value/);
+
+  const submitted = html.match(/track\('application_submitted',[\s\S]*?^        \}\);/m)?.[0] || '';
+  assert.ok(submitted, 'application_submitted event must be readable');
+  assert.match(submitted, /source: payload\.source/);
+  assert.doesNotMatch(submitted, /sourceOther/);
+});
+
 test('the invalid state is visible, not just announced', () => {
   // Tailwind CDN이 이 페이지의 style 블록보다 뒤에 주입되므로 같은 명시도로 쓰면
   // .border-line-strong이 이겨서 잘못된 항목이 정상 항목과 똑같이 보인다.

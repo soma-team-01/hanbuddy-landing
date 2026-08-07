@@ -724,7 +724,6 @@
         website: form.elements.website.value,
         consent: form.elements.consent.checked,
         language: currentLanguage(),
-        referrer: document.referrer || '',
       };
 
       const local = VALIDATION.validateApplication(payload);
