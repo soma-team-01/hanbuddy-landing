@@ -74,3 +74,22 @@ test('the three funnel events carry the language, as the analytics spec requires
     assert.match(call[0], /content_language:/, `${name} must report content_language`);
   }
 });
+
+test('the invalid state is visible, not just announced', () => {
+  // Tailwind CDN이 이 페이지의 style 블록보다 뒤에 주입되므로 같은 명시도로 쓰면
+  // .border-line-strong이 이겨서 잘못된 항목이 정상 항목과 똑같이 보인다.
+  assert.match(html, /input\[aria-invalid='true'\]/);
+  assert.match(html, /aria-describedby', 'form-error'/);
+  assert.match(html, /id="form-error"/);
+  // 메시지를 지목된 항목 옆으로 옮기지 않으면 포커스가 이동한 순간 화면 밖으로 나간다.
+  assert.match(html, /appendChild\(errorBox\)/);
+  assert.match(html, /scrollIntoView\(\{ block: 'center' \}\)/);
+});
+
+test('the price survives a narrow screen', () => {
+  // 좁은 화면에서 select 안 글자가 잘리면 선택한 회차의 가격이 통째로 사라진다.
+  assert.match(html, /data-event-price/);
+  for (const locale of [/pricePerPerson: \(amount\) => `₩\$\{amount\} per person`/, /pricePerPerson: \(amount\) => `1인 ₩\$\{amount\}`/]) {
+    assert.match(html, locale, 'both locales must state the per-person price');
+  }
+});

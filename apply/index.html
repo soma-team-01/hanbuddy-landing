@@ -112,8 +112,16 @@
       outline-offset: 2px;
     }
 
-    [aria-invalid='true'] {
+    /*
+      Tailwind CDN은 이 블록보다 뒤에 스타일시트를 주입한다. 같은 명시도로 쓰면
+      .border-line-strong이 이겨서 잘못된 항목이 정상 항목과 똑같이 보인다.
+      요소 이름을 붙여 명시도를 올린다.
+    */
+    input[aria-invalid='true'],
+    select[aria-invalid='true'],
+    textarea[aria-invalid='true'] {
       border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(209, 63, 50, 0.18);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -165,6 +173,8 @@
           <label for="field-eventId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.event">Which meetup?</label>
           <select id="field-eventId" name="eventId" required
                   class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+          <!-- 좁은 화면에서는 select 안 글자가 잘려 가격이 사라진다. 따로 적어 둔다. -->
+          <p class="mt-2 text-sm font-semibold text-muted" data-event-price></p>
         </div>
 
         <fieldset>
@@ -240,7 +250,7 @@
           </label>
         </div>
 
-        <p class="hidden rounded-xl bg-primary-soft px-4 py-3 text-sm font-semibold text-primary-strong"
+        <p id="form-error" class="mt-3 hidden rounded-xl bg-primary-soft px-4 py-3 text-sm font-semibold text-primary-strong"
            role="alert" data-form-error></p>
 
         <button type="submit" data-submit
@@ -390,6 +400,7 @@
             sourceOther: 'Where did you hear about us?',
             sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
           },
+          pricePerPerson: (amount) => `₩${amount} per person`,
           privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
           consentLabel: 'I agree to the collection and use of my information above.',
           submit: 'Send application',
@@ -454,6 +465,7 @@
             sourceOther: '어디에서 알게 되셨나요?',
             sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
           },
+          pricePerPerson: (amount) => `1인 ₩${amount}`,
           privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
           consentLabel: '위 개인정보 수집·이용에 동의합니다.',
           submit: '신청 보내기',
@@ -563,8 +575,12 @@
     const renderSlots = (language) => {
       const container = document.querySelector('[data-slot-options]');
       const template = document.querySelector('[data-slot-template]');
+      const priceLine = document.querySelector('[data-event-price]');
       clear(container);
       const event = SLOTS.openEvents().find((e) => e.id === form.elements.eventId.value);
+      priceLine.textContent = event
+        ? CONTENT_MAP[language].apply.pricePerPerson(event.price.toLocaleString())
+        : '';
       if (!event) return;
       event.slots.forEach((slot, index) => {
         const row = template.content.cloneNode(true);
@@ -624,14 +640,35 @@
       }
     };
 
+    // 오류 메시지의 제자리는 제출 버튼 바로 위다. appendChild로 되돌리면 버튼
+    // 아래로 밀려나므로 기준점을 잡아 그 앞에 끼워 넣는다.
+    const submitButton = form.querySelector('[data-submit]');
+    const restoreErrorBox = () => submitButton.parentElement.insertBefore(errorBox, submitButton);
+
+    const clearErrors = () => {
+      errorBox.classList.add('hidden');
+      form.querySelectorAll('[aria-invalid]').forEach((el) => {
+        el.removeAttribute('aria-invalid');
+        el.removeAttribute('aria-describedby');
+      });
+    };
+
     const showFieldError = (field, copy) => {
       const input = form.elements[field];
+      const target = input && input.length ? input[0] : input;
       errorBox.textContent = copy.apply.errors.field;
       errorBox.classList.remove('hidden');
-      if (input) {
-        const target = input.length ? input[0] : input;
+      if (target) {
         target.setAttribute('aria-invalid', 'true');
-        target.focus();
+        target.setAttribute('aria-describedby', 'form-error');
+        // 메시지를 지목된 항목 옆으로 옮긴다. 폼 맨 아래에 두면 포커스가 위로
+        // 올라간 순간 메시지가 화면 밖으로 나가 보이는 피드백이 하나도 남지 않는다.
+        (target.closest('fieldset') || target.closest('div'))?.appendChild(errorBox) ?? restoreErrorBox();
+        // 스크롤은 직접 잡는다. 브라우저 기본 스크롤은 sticky 헤더 밑에 항목을 숨긴다.
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ block: 'center' });
+      } else {
+        restoreErrorBox();
       }
       track('application_error', {
         event_id: form.elements.eventId.value,
@@ -666,8 +703,7 @@
     form.addEventListener('submit', async (submitEvent) => {
       submitEvent.preventDefault();
       const copy = currentCopy();
-      errorBox.classList.add('hidden');
-      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      clearErrors();
 
       const payload = {
         eventId: form.elements.eventId.value,
@@ -719,6 +755,8 @@
           content_language: currentLanguage(),
         });
       } catch {
+        // 항목 문제가 아니므로 제출 버튼 옆으로 되돌린다. 방금 누른 자리가 눈이 있는 곳이다.
+        restoreErrorBox();
         errorBox.textContent = copy.apply.errors.generic;
         errorBox.classList.remove('hidden');
       } finally {
