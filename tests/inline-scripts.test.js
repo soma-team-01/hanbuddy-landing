@@ -10,7 +10,7 @@ const eventPages = readdirSync(join(root, 'events'), { withFileTypes: true })
   .map((entry) => `events/${entry.name}/index.html`)
   .sort();
 
-const publicPages = ['index.html', 'about/index.html', 'apply/index.html', ...eventPages];
+const publicPages = ['index.html', 'about/index.html', 'apply/index.html', 'privacy/index.html', ...eventPages];
 
 // 여는 태그에 속성이 없는 블록만 고른다. `src=`가 붙은 로더와
 // `type="application/ld+json"` 구조화 데이터는 JS 파서로 볼 대상이 아니다.

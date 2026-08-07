@@ -53,12 +53,23 @@ test('privacy notice states purpose, retention and the request channel', () => {
   assert.match(html, /buddy/i, 'must disclose sharing with the assigned buddy');
 });
 
-test('nav and footer copy stay in sync with index', () => {
+test('nav and shared footer identity stay in sync with index', () => {
   for (const snippet of ['HanBuddy by ZeroOne', '<script src="/assets/analytics.js"></script>']) {
     assert.ok(html.includes(snippet), `apply page missing: ${snippet}`);
   }
+});
+
+test('application consent copy states its stricter pre-consent policy', () => {
   const consentBlocks = (source) => source.match(/^ {8}consent: \{[\s\S]*?^ {8}\},$/gm) || [];
-  assert.deepEqual(consentBlocks(html), consentBlocks(indexHtml), 'consent copy drifted');
+  const applyConsent = consentBlocks(html);
+  assert.equal(applyConsent.length, 2, 'EN and KO application consent copy must exist');
+  assert.notDeepEqual(applyConsent, consentBlocks(indexHtml), 'application copy must describe basic mode');
+  for (const block of applyConsent) {
+    assert.match(block, /before you accept|허용하기 전/);
+    assert.match(block, /Google|Meta/);
+    assert.match(block, /answers|입력값/);
+    assert.match(block, /UTM/);
+  }
 });
 
 test('the page declares its analytics context', () => {

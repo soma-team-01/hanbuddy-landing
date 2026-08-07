@@ -21,6 +21,7 @@ const MUST_DEPLOY = [
   'favicon.ico',
   'about/index.html',
   'apply/index.html',
+  'privacy/index.html',
   'api/apply.js',
   'assets/analytics.js',
   'assets/event-slots.js',

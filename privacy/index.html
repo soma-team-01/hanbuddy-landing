@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy & analytics | HanBuddy</title>
+  <meta name="description" content="How HanBuddy handles limited campaign measurement, optional analytics, and meetup application data." />
+  <link rel="canonical" href="https://www.hanbuddy.kr/privacy/" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
+
+  <script src="/assets/analytics.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#fffaf7',
+            'canvas-soft': '#ffffff',
+            primary: '#d13f32',
+            'primary-hover': '#b9342b',
+            'primary-strong': '#8f2f28',
+            'primary-soft': '#fff0ec',
+            ink: '#261b18',
+            muted: '#675b56',
+            'line-strong': '#d6c5bf',
+            'line-soft': '#eee2dd',
+            panel: '#f8f3f0',
+            'panel-raised': '#fcf8f6',
+            'on-primary': '#ffffff',
+            'on-primary-strong': '#ffffff',
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'Noto Sans KR', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Noto Sans KR', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            subtle: '0 1px 2px rgba(38, 27, 24, 0.05)',
+            raised: '0 8px 24px rgba(38, 27, 24, 0.08)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --color-primary: #d13f32;
+      --color-primary-strong: #8f2f28;
+      --color-on-primary: #ffffff;
+    }
+
+    body { text-rendering: optimizeLegibility; }
+    :lang(ko) body, :lang(ko) h1, :lang(ko) h2, :lang(ko) p, :lang(ko) li { word-break: keep-all; }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 80;
+      border-radius: 0.75rem;
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: 0.75rem 1rem;
+      font-weight: 800;
+      transition: top 180ms ease;
+    }
+    .skip-link:focus { top: 1rem; outline: 3px solid var(--color-primary-strong); outline-offset: 4px; }
+    .focusable:focus-visible { outline: 3px solid var(--color-primary-strong); outline-offset: 4px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="privacy" data-analytics-consent-mode="advanced">
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
+    <nav class="mx-auto flex min-h-16 max-w-4xl items-center justify-between gap-3 px-5 py-3" aria-label="Main navigation" data-i18n-aria="navAria">
+      <a href="/" class="focusable flex shrink-0 items-center gap-2.5 rounded-full font-display text-base font-extrabold tracking-tight text-ink" aria-label="HanBuddy home" data-i18n-aria="homeAria">
+        <img src="/assets/brand/logo-borderless.webp" width="36" height="36" alt="" class="h-9 w-9" />
+        <span>HanBuddy</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="/about" class="focusable hidden rounded-full text-sm font-semibold text-muted transition hover:text-primary-strong sm:inline" data-i18n="aboutLink">About</a>
+        <div class="flex rounded-full border border-line-soft bg-panel-raised p-1" role="group" aria-label="Select language" data-i18n-aria="languageAria">
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="mx-auto max-w-4xl px-5 py-14 sm:py-20">
+    <article data-language-content="en">
+      <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-primary-strong">Privacy &amp; analytics</p>
+      <h1 class="mt-4 max-w-3xl font-display text-4xl font-extrabold tracking-tight sm:text-5xl">What HanBuddy measures — and what stays separate</h1>
+      <p class="mt-6 max-w-3xl text-lg leading-8 text-muted">
+        We use limited campaign measurement to understand which public pages bring guests to HanBuddy. Optional behavioral analytics requires your choice, and meetup application data follows a separate service-delivery process.
+      </p>
+
+      <div class="mt-12 space-y-6">
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">1. Limited measurement on public pages</h2>
+          <p class="mt-4 leading-7 text-muted">
+            On the home, About, event, and this privacy page, Google Analytics receives one limited cookieless page view even when optional analytics is not accepted. It contains the site origin, page path, referrer origin, and only these campaign parameters:
+          </p>
+          <p class="mt-4 break-words rounded-xl bg-panel px-4 py-3 font-mono text-sm leading-6 text-ink">utm_source · utm_medium · utm_campaign · utm_id · utm_content · utm_term</p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 leading-7 text-muted">
+            <li>Other query parameters and URL fragments are removed.</li>
+            <li>Each value is capped at 100 characters; email- or phone-looking values are dropped.</li>
+            <li>UTM values are not saved in cookies, local storage, our server, Google Sheet, or Discord.</li>
+            <li>We do not link this campaign page view to an application.</li>
+          </ul>
+          <p class="mt-4 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm leading-6 text-primary-strong">
+            Campaign links must never put names, email addresses, phone numbers, or other personal data in UTM values.
+          </p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">2. Optional analytics after you accept</h2>
+          <p class="mt-4 leading-7 text-muted">
+            If you accept, Google Analytics can measure clicks, section views, language changes, and application progress. Meta Pixel can measure page views and selected high-intent actions to help us understand ad reach. Google Signals and ad-personalization signals stay disabled in our tag configuration.
+          </p>
+          <p class="mt-4 leading-7 text-muted">
+            Providers: <a class="focusable rounded font-semibold text-primary-strong underline" href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a> and <a class="focusable rounded font-semibold text-primary-strong underline" href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">Meta Privacy Policy</a>.
+          </p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">3. Meetup applications are separate</h2>
+          <p class="mt-4 leading-7 text-muted">
+            Before you accept optional analytics, the `/apply/` page sends no Google or Meta measurement. When you submit the form, the answers needed to run the meetup are sent to a team-managed Google Sheet and a private Discord notification. This is application processing, not analytics.
+          </p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 leading-7 text-muted">
+            <li>The application does not send or store browser referrer or UTM values.</li>
+            <li>Your self-reported “How did you hear about us?” answer stays with the application and is not an automatic campaign identifier.</li>
+            <li>Application data is kept for 6 months after the meetup, then removed from both the Sheet and Discord.</li>
+            <li>An assigned buddy receives only the information needed for the meetup day.</li>
+          </ul>
+          <p class="mt-4 leading-7 text-muted">To request access or deletion, email <a class="focusable rounded font-semibold text-primary-strong underline" href="mailto:zeroone.soma@gmail.com">zeroone.soma@gmail.com</a>.</p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">4. Your choices</h2>
+          <p class="mt-4 leading-7 text-muted">
+            You can accept, reject, or change optional analytics anytime through Cookie settings. Global Privacy Control (GPC) or Do Not Track (DNT) suppresses the limited cookieless page view unless you have explicitly granted analytics.
+          </p>
+          <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false" class="focusable mt-5 rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft">Cookie settings</button>
+        </section>
+      </div>
+      <p class="mt-8 text-sm text-muted">Last updated: August 7, 2026</p>
+    </article>
+
+    <article data-language-content="ko" class="hidden">
+      <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-primary-strong">개인정보·분석 안내</p>
+      <h1 class="mt-4 max-w-3xl font-display text-4xl font-extrabold tracking-tight sm:text-5xl">HanBuddy가 측정하는 정보와 분리해서 처리하는 정보</h1>
+      <p class="mt-6 max-w-3xl text-lg leading-8 text-muted">
+        어떤 공개 페이지가 게스트를 HanBuddy로 안내하는지 파악하기 위해 제한된 캠페인 측정을 사용합니다. 행동 분석은 선택 동의 후에만 진행하며, 모임 신청 정보는 서비스 제공을 위한 별도 절차로 처리합니다.
+      </p>
+
+      <div class="mt-12 space-y-6">
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">1. 공개 페이지의 제한된 측정</h2>
+          <p class="mt-4 leading-7 text-muted">홈, 소개, 이벤트, 이 안내 페이지에서는 선택 분석을 허용하지 않아도 Google Analytics에 쿠키 없는 페이지뷰 1회를 보냅니다. 사이트 출처와 페이지 경로, 유입 페이지의 출처, 아래 캠페인 파라미터만 포함합니다.</p>
+          <p class="mt-4 break-words rounded-xl bg-panel px-4 py-3 font-mono text-sm leading-6 text-ink">utm_source · utm_medium · utm_campaign · utm_id · utm_content · utm_term</p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 leading-7 text-muted">
+            <li>그 밖의 쿼리 파라미터와 URL fragment는 제거합니다.</li>
+            <li>각 값은 100자로 제한하고 이메일·전화번호처럼 보이는 값은 제외합니다.</li>
+            <li>UTM 값은 쿠키, 로컬 저장소, 서버, Google Sheet, Discord에 저장하지 않습니다.</li>
+            <li>이 캠페인 페이지뷰를 신청서와 연결하지 않습니다.</li>
+          </ul>
+          <p class="mt-4 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm leading-6 text-primary-strong">캠페인 링크의 UTM 값에 이름, 이메일, 전화번호 등 개인정보를 넣으면 안 됩니다.</p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">2. 허용 후 사용하는 선택 분석</h2>
+          <p class="mt-4 leading-7 text-muted">허용하면 Google Analytics로 클릭, 섹션 조회, 언어 변경, 신청 진행을 측정할 수 있습니다. Meta Pixel은 페이지 조회와 일부 주요 행동을 측정해 광고 도달을 파악하는 데 사용합니다. Google Signals와 광고 개인화 신호는 태그 설정에서 계속 비활성화합니다.</p>
+          <p class="mt-4 leading-7 text-muted">제공자: <a class="focusable rounded font-semibold text-primary-strong underline" href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 개인정보처리방침</a>, <a class="focusable rounded font-semibold text-primary-strong underline" href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">Meta 개인정보처리방침</a>.</p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">3. 모임 신청 정보는 별도로 처리합니다</h2>
+          <p class="mt-4 leading-7 text-muted">선택 분석을 허용하기 전에는 `/apply/` 페이지에서 Google 또는 Meta 측정을 보내지 않습니다. 폼을 제출하면 모임 운영에 필요한 답변을 팀이 관리하는 Google Sheet와 비공개 Discord 알림으로 보냅니다. 이는 분석이 아니라 신청 처리입니다.</p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 leading-7 text-muted">
+            <li>신청서는 브라우저 referrer 또는 UTM 값을 전송하거나 저장하지 않습니다.</li>
+            <li>직접 답하는 “어떻게 알고 오셨나요?” 항목은 신청 정보로만 보관하며 자동 캠페인 식별자가 아닙니다.</li>
+            <li>신청 정보는 행사 종료 후 6개월 동안 보관한 뒤 Sheet와 Discord 양쪽에서 삭제합니다.</li>
+            <li>배정된 버디에게는 당일 운영에 필요한 정보만 공유합니다.</li>
+          </ul>
+          <p class="mt-4 leading-7 text-muted">열람·삭제 요청은 <a class="focusable rounded font-semibold text-primary-strong underline" href="mailto:zeroone.soma@gmail.com">zeroone.soma@gmail.com</a>으로 보내주세요.</p>
+        </section>
+
+        <section class="rounded-2xl border border-line-soft bg-canvas-soft p-6 shadow-subtle sm:p-8">
+          <h2 class="font-display text-2xl font-extrabold">4. 선택 변경</h2>
+          <p class="mt-4 leading-7 text-muted">쿠키 설정에서 선택 분석을 허용·거부하거나 언제든 변경할 수 있습니다. 명시적으로 분석을 허용한 경우가 아니라면 Global Privacy Control(GPC) 또는 Do Not Track(DNT) 신호가 있을 때 제한된 쿠키 없는 페이지뷰도 보내지 않습니다.</p>
+          <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false" class="focusable mt-5 rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft">쿠키 설정</button>
+        </section>
+      </div>
+      <p class="mt-8 text-sm text-muted">최종 업데이트: 2026년 8월 7일</p>
+    </article>
+  </main>
+
+  <footer class="border-t border-line-soft bg-canvas-soft">
+    <div class="mx-auto flex max-w-4xl flex-col gap-4 px-5 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+      <p class="flex items-center gap-2 font-display font-bold tracking-tight text-ink">
+        <img src="/assets/brand/logo-borderless.webp" width="24" height="24" alt="" class="h-6 w-6" />
+        <span>HanBuddy by ZeroOne</span>
+      </p>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/" class="focusable rounded font-semibold transition hover:text-primary-strong" data-i18n="homeLink">Home</a>
+        <a href="/privacy/" class="focusable rounded font-semibold transition hover:text-primary-strong" data-i18n="privacyLink">Privacy</a>
+        <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false" class="focusable rounded font-semibold underline decoration-primary/40 underline-offset-4 transition hover:text-primary-strong" data-i18n="consent.settings">Cookie settings</button>
+      </div>
+    </div>
+  </footer>
+
+  <section id="analytics-consent" data-consent-banner role="dialog" aria-labelledby="analytics-consent-title" aria-describedby="analytics-consent-description" aria-hidden="true" class="fixed inset-x-4 bottom-4 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-raised sm:left-auto sm:max-w-xl sm:p-6">
+    <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div>
+        <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink" data-i18n="consent.title">Your privacy choices</p>
+        <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted" data-i18n="consent.body">On public pages, we count one limited cookie-free visit using the page path and UTM campaign tags. If you accept, Google Analytics also measures clicks and Meta Pixel helps us understand ad reach. We never include form answers or link UTM tags to an application.</p>
+        <p class="mt-2 text-xs leading-5 text-muted" data-i18n="consent.note">Optional analytics can be changed anytime in Cookie settings. See Privacy.</p>
+      </div>
+      <div class="flex flex-col-reverse gap-2 sm:min-w-52">
+        <button type="button" data-consent-action="reject" class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft" data-i18n="consent.reject">No thanks</button>
+        <button type="button" data-consent-action="accept" class="focusable rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover" data-i18n="consent.accept">Sure</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const CONTENT_MAP = Object.freeze({
+      en: {
+        skipLink: 'Skip to content', navAria: 'Main navigation', homeAria: 'HanBuddy home', languageAria: 'Select language',
+        aboutLink: 'About', homeLink: 'Home', privacyLink: 'Privacy',
+        consent: {
+          title: 'Your privacy choices',
+          body: 'On public pages, we count one limited cookie-free visit using the page path and UTM campaign tags. If you accept, Google Analytics also measures clicks and Meta Pixel helps us understand ad reach. We never include form answers or link UTM tags to an application.',
+          note: 'Optional analytics can be changed anytime in Cookie settings. See Privacy.',
+          reject: 'No thanks', accept: 'Sure', settings: 'Cookie settings',
+        },
+      },
+      ko: {
+        skipLink: '본문으로 이동', navAria: '주요 내비게이션', homeAria: 'HanBuddy 홈', languageAria: '언어 선택',
+        aboutLink: '소개', homeLink: '홈', privacyLink: '개인정보·분석 안내',
+        consent: {
+          title: '개인정보 선택',
+          body: '공개 페이지에서는 쿠키 없이 페이지 경로와 UTM 캠페인 태그로 제한된 방문 수를 집계합니다. 허용하면 Google Analytics의 클릭 측정과 Meta Pixel의 광고 도달 분석도 사용합니다. 폼 입력값은 측정하거나 UTM과 신청서를 연결하지 않습니다.',
+          note: '선택 분석은 쿠키 설정에서 언제든 바꿀 수 있습니다. 개인정보·분석 안내를 확인하세요.',
+          reject: '괜찮아요', accept: '좋아요', settings: '쿠키 설정',
+        },
+      },
+    });
+    const STORAGE_KEY = 'hanbuddy.language';
+    const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
+    const safeStoredLanguage = () => {
+      try {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        return stored === 'ko' ? 'ko' : 'en';
+      } catch {
+        return 'en';
+      }
+    };
+    const applyLanguage = (lang) => {
+      const copy = CONTENT_MAP[lang] || CONTENT_MAP.en;
+      const previous = document.documentElement.lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-language-content]').forEach((node) => node.classList.toggle('hidden', node.dataset.languageContent !== lang));
+      document.querySelectorAll('[data-i18n]').forEach((node) => {
+        const value = getByPath(copy, node.dataset.i18n);
+        if (typeof value === 'string') node.textContent = value;
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach((node) => {
+        const value = getByPath(copy, node.dataset.i18nAria);
+        if (typeof value === 'string') node.setAttribute('aria-label', value);
+      });
+      document.querySelectorAll('[data-lang]').forEach((button) => {
+        const selected = button.dataset.lang === lang;
+        button.setAttribute('aria-pressed', String(selected));
+        button.classList.toggle('bg-primary', selected);
+        button.classList.toggle('text-on-primary', selected);
+        button.classList.toggle('text-muted', !selected);
+      });
+      document.title = lang === 'ko' ? '개인정보·분석 안내 | HanBuddy' : 'Privacy & analytics | HanBuddy';
+      if (previous !== lang) window.HanBuddyAnalytics?.trackLanguageSwitch?.(lang, previous);
+    };
+    document.querySelectorAll('[data-lang]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const lang = button.dataset.lang;
+        try { window.localStorage.setItem(STORAGE_KEY, lang); } catch {}
+        applyLanguage(lang);
+      });
+    });
+    applyLanguage(safeStoredLanguage());
+  </script>
+</body>
+</html>
