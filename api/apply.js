@@ -6,6 +6,10 @@ const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const ID_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const SHEET_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 const MAX_BODY_BYTES = 16 * 1024;
+// 시트 경로는 토큰 발급과 append 두 번을 순서대로 타므로, 상한은 그 합이 함수
+// 실행 한도 안에 들어오게 잡는다. 디스코드 재시도까지 더해도 여유가 남는다.
+// 환경변수는 테스트가 기다리지 않게 하려는 것이다. 배포에서는 설정하지 않는다.
+const REQUEST_TIMEOUT_MS = Number(process.env.APPLY_REQUEST_TIMEOUT_MS) || 3000;
 
 const ALLOWED_LOG_KEYS = ['application_id', 'code', 'stage'];
 
@@ -55,6 +59,14 @@ const buildRow = ({ applicationId, timestampKst, value, referrer }) => [
 
 const base64url = (input) => Buffer.from(input).toString('base64url');
 
+// 상한이 없으면 시트가 응답하지 않을 때 Promise.allSettled가 끝나지 않는다.
+// 디스코드가 이미 성공했더라도 신청자는 함수가 강제 종료될 때까지 기다리다
+// 오류 화면을 보게 되는데, 접수는 된 상태라 가장 나쁜 조합이다.
+const fetchWithTimeout = (url, init = {}) => fetch(url, {
+  ...init,
+  signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+});
+
 const accessToken = async () => {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -71,7 +83,7 @@ const accessToken = async () => {
     .update(`${header}.${claim}`)
     .sign(key, 'base64url');
 
-  const response = await fetch('https://oauth2.googleapis.com/token', {
+  const response = await fetchWithTimeout('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -91,7 +103,7 @@ const appendRow = async (row) => {
   const range = encodeURIComponent(`${tab}!A:Q`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append`
     + '?valueInputOption=RAW&insertDataOption=INSERT_ROWS';
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify({ values: [row] }),
@@ -112,7 +124,7 @@ const notifyDiscord = async ({ applicationId, value, sheetFailed }) => {
     value.source ? `유입: ${value.source}` : null,
     value.requests ? `요청: ${value.requests}` : null,
   ].filter(Boolean);
-  const response = await fetch(webhook, {
+  const response = await fetchWithTimeout(webhook, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ content: lines.join('\n') }),

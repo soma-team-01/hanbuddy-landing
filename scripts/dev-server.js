@@ -86,6 +86,12 @@ const serveStatic = async (pathname, response) => {
     response.writeHead(403).end('forbidden');
     return;
   }
+  // 점으로 시작하는 것은 공개 대상이 아니다. vercel env pull을 한 적이 있으면
+  // .env.local에 서비스 계정 키가 평문으로 들어 있다.
+  if (wanted.split('/').some((segment) => segment.startsWith('.'))) {
+    response.writeHead(403).end('forbidden');
+    return;
+  }
   try {
     const data = await readFile(file);
     response.writeHead(200, { 'content-type': CONTENT_TYPES[extname(file)] || 'application/octet-stream' });
@@ -133,7 +139,9 @@ const server = http.createServer(async (request, response) => {
   await serveStatic(decodeURIComponent(url.pathname), response);
 });
 
-server.listen(PORT, () => {
+// 호스트를 생략하면 Node가 와일드카드(::)에 붙어 같은 망의 다른 기기가 레포
+// 파일을 읽을 수 있다. 개발용이므로 loopback에만 붙인다.
+server.listen(PORT, '127.0.0.1', () => {
   process.stdout.write([
     '',
     `  http://127.0.0.1:${PORT}/apply/`,

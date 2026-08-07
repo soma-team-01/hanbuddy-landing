@@ -279,7 +279,7 @@
 
     <div class="hidden" data-apply-done>
       <p class="text-4xl" aria-hidden="true">🎉</p>
-      <h1 class="mt-3 font-display text-3xl font-extrabold tracking-tight" data-i18n="apply.done.title">Application received</h1>
+      <h1 tabindex="-1" class="focusable mt-3 font-display text-3xl font-extrabold tracking-tight" data-i18n="apply.done.title">Application received</h1>
       <p class="mt-3 text-base leading-7 text-muted" data-i18n="apply.done.body">
         We&rsquo;ll be in touch within 24 hours to confirm your spot, the meeting point and payment.
       </p>
@@ -691,14 +691,17 @@
 
     // Other를 골랐을 때만 직접 입력을 보여주고, 되돌리면 값도 비운다.
     const sourceOtherBox = document.querySelector('[data-source-other]');
-    const syncSourceOther = () => {
+    // 포커스 이동은 방금 Other를 고른 사람에게만 의미가 있다. 언어 전환에서도
+    // 이 함수를 부르는데, 거기서 포커스를 옮기면 EN/KO 버튼을 누른 키보드
+    // 사용자가 갑자기 입력란으로 끌려가 위치를 잃는다.
+    const syncSourceOther = ({ focusWhenRevealed = false } = {}) => {
       const isOther = form.elements.source.value === 'Other';
       sourceOtherBox.classList.toggle('hidden', !isOther);
       form.elements.sourceOther.required = isOther;
       if (!isOther) form.elements.sourceOther.value = '';
-      if (isOther) form.elements.sourceOther.focus();
+      if (isOther && focusWhenRevealed) form.elements.sourceOther.focus();
     };
-    form.elements.source.addEventListener('change', syncSourceOther);
+    form.elements.source.addEventListener('change', () => syncSourceOther({ focusWhenRevealed: true }));
 
     form.addEventListener('submit', async (submitEvent) => {
       submitEvent.preventDefault();
@@ -744,7 +747,11 @@
         }
         document.querySelector('[data-application-id]').textContent = result.applicationId;
         document.querySelector('[data-apply-form]').classList.add('hidden');
-        document.querySelector('[data-apply-done]').classList.remove('hidden');
+        const done = document.querySelector('[data-apply-done]');
+        done.classList.remove('hidden');
+        // 폼을 감추면 포커스가 사라진 제출 버튼에서 body로 떨어진다. 화면
+        // 리더 사용자는 접수됐다는 사실도 신청번호도 듣지 못한다.
+        done.querySelector('h1').focus({ preventScroll: true });
         window.scrollTo({ top: 0 });
         track('application_submitted', {
           event_id: payload.eventId,
