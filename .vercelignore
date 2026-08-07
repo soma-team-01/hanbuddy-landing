@@ -5,6 +5,7 @@
 /assets/*
 !/assets/analytics.js
 !/assets/event-slots.js
+!/assets/apply-validation.js
 !/assets/brand
 /assets/brand/*
 !/assets/brand/*.webp
