@@ -14,7 +14,6 @@ const createBrowserHarness = ({
   consentMode = 'basic',
   pageType = 'home',
   href = 'https://www.hanbuddy.kr/',
-  hostname = 'www.hanbuddy.kr',
   referrer = '',
   storedConsent = null,
   globalPrivacyControl = false,
@@ -133,18 +132,19 @@ const createBrowserHarness = ({
     },
   });
   if (storedConsent) storedValues.set('hanbuddy.analyticsConsent', storedConsent);
+  const parsedLocation = (() => {
+    try {
+      return new URL(href);
+    } catch {
+      return null;
+    }
+  })();
   const browserWindow = {
     document,
     location: {
-      hostname,
+      hostname: parsedLocation?.hostname ?? '',
       href,
-      pathname: (() => {
-        try {
-          return new URL(href).pathname;
-        } catch {
-          return '/';
-        }
-      })(),
+      pathname: parsedLocation?.pathname ?? '/',
     },
     navigator: { globalPrivacyControl, doNotTrack },
     doNotTrack,
@@ -520,6 +520,24 @@ test('advanced mode sends one sanitized cookieless page view before consent', { 
   assert.equal(eventsAfterReject.filter(([, name]) => name === 'application_start').length, 0);
 });
 
+test('stored denial still sends one sanitized cookieless marketing page view', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'advanced',
+    storedConsent: 'denied',
+    href: 'https://www.hanbuddy.kr/events/kleague/?utm_source=instagram&secret=drop-me',
+  });
+  const calls = harness.browserWindow.dataLayer.map((entry) => Array.from(entry));
+  const pageViews = calls.filter(([command, name]) => command === 'event' && name === 'page_view');
+
+  assert.equal(harness.appendedScripts.length, 1, 'advanced mode keeps Google cookieless measurement');
+  assert.equal(harness.insertedScripts.length, 0, 'Meta stays blocked after denial');
+  assert.equal(pageViews.length, 1);
+  assert.equal(
+    pageViews[0][2].page_location,
+    'https://www.hanbuddy.kr/events/kleague/?utm_source=instagram',
+  );
+});
+
 test('basic application mode is silent before consent and sends one page view after grant', { skip: !moduleExists }, () => {
   const harness = createBrowserHarness({
     consentMode: 'basic',
@@ -542,6 +560,7 @@ test('basic application mode is silent before consent and sends one page view af
   const grant = calls.find(([command, action, values]) => (
     command === 'consent' && action === 'update' && values.analytics_storage === 'granted'
   ));
+  assert.ok(grant, 'consent update with granted analytics_storage must be sent');
   assert.deepEqual({ ...grant[2] }, {
     ad_storage: 'granted',
     ad_user_data: 'granted',
@@ -563,11 +582,12 @@ test('application leads use the Meta standard Lead event only while consent is g
   const metaCalls = [];
   harness.browserWindow.fbq = (...args) => metaCalls.push(args);
 
-  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  assert.equal(typeof harness.browserWindow.HanBuddyAnalytics.trackLead, 'function');
+  harness.browserWindow.HanBuddyAnalytics.trackLead();
   assert.equal(metaCalls.length, 0, 'Lead must stay blocked before consent');
 
   harness.chooseConsent('accept');
-  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  harness.browserWindow.HanBuddyAnalytics.trackLead();
   const leads = metaCalls.filter(([command, name]) => command === 'track' && name === 'Lead');
   assert.equal(leads.length, 1);
   assert.deepEqual({ ...leads[0][2] }, { content_category: 'application' });
@@ -577,7 +597,7 @@ test('application leads use the Meta standard Lead event only while consent is g
   );
 
   harness.chooseConsent('reject');
-  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  harness.browserWindow.HanBuddyAnalytics.trackLead();
   assert.equal(
     metaCalls.filter(([command, name]) => command === 'track' && name === 'Lead').length,
     1,
@@ -616,18 +636,19 @@ test('a stored grant loads analytics on the application page', { skip: !moduleEx
 });
 
 test('privacy signals and non-production hosts suppress cookieless measurement', { skip: !moduleExists }, () => {
-  for (const options of [
-    { globalPrivacyControl: true },
-    { doNotTrack: '1' },
-    { hostname: 'preview.hanbuddy.vercel.app' },
+  for (const [label, options] of [
+    ['Global Privacy Control', { globalPrivacyControl: true }],
+    ['Do Not Track', { doNotTrack: '1' }],
+    ['non-production host', { href: 'https://preview.hanbuddy.vercel.app/' }],
   ]) {
     const harness = createBrowserHarness({ consentMode: 'advanced', ...options });
-    assert.equal(harness.appendedScripts.length, 0);
+    assert.equal(harness.appendedScripts.length, 0, `Google must stay unloaded for ${label}`);
     assert.equal(
       harness.browserWindow.dataLayer
         .map((entry) => Array.from(entry))
         .filter(([command]) => command === 'event').length,
       0,
+      `no events may be sent for ${label}`,
     );
   }
 });

@@ -1,12 +1,12 @@
 const assert = require('node:assert/strict');
-const { existsSync, readFileSync } = require('node:fs');
+const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const test = require('node:test');
 
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 const analyticsJs = readFileSync(join(__dirname, '..', 'assets', 'analytics.js'), 'utf8');
 const privacyPath = join(__dirname, '..', 'privacy', 'index.html');
-const privacyHtml = existsSync(privacyPath) ? readFileSync(privacyPath, 'utf8') : '';
+const privacyHtml = readFileSync(privacyPath, 'utf8');
 
 test('keeps vendor scripts out of the initial HTML', () => {
   assert.doesNotMatch(
@@ -80,6 +80,36 @@ test('publishes a bilingual privacy notice for analytics and applications', () =
   assert.match(privacyHtml, /not link|연결하지/);
   assert.match(privacyHtml, /GPC|Global Privacy Control/);
   assert.match(privacyHtml, /Do Not Track|DNT/);
+  assert.doesNotMatch(
+    privacyHtml,
+    /capped at 100 characters|100자로 제한|email- or phone-looking|이메일·전화번호처럼 보이는/,
+    'public copy must describe the privacy rule without exposing filter implementation details',
+  );
+  assert.match(privacyHtml, /appear to contain personal information|개인정보가 포함된 것으로 보이는/);
+});
+
+test('every consent banner links to the privacy notice before a choice', () => {
+  const pages = [
+    'index.html',
+    'about/index.html',
+    'apply/index.html',
+    'privacy/index.html',
+    'events/kbo-gocheok/index.html',
+    'events/kbo-jamsil/index.html',
+    'events/kleague/index.html',
+    'events/hanriver/index.html',
+  ];
+
+  for (const page of pages) {
+    const source = readFileSync(join(__dirname, '..', page), 'utf8');
+    const banner = source.match(/<section[^>]*id="analytics-consent"[\s\S]*?<\/section>/)?.[0] || '';
+    assert.ok(banner, `${page} must include the analytics consent banner`);
+    assert.match(
+      banner,
+      /<a[^>]*href="\/privacy\/"/,
+      `${page} must link Privacy directly from the consent banner`,
+    );
+  }
 });
 
 test('every public footer links to the privacy notice', () => {
@@ -96,7 +126,7 @@ test('every public footer links to the privacy notice', () => {
     const source = readFileSync(join(__dirname, '..', page), 'utf8');
     assert.match(source, /href="\/privacy\/"/, `${page} must link the privacy notice`);
   }
-  if (privacyHtml) assert.match(privacyHtml, /href="\/privacy\/"/);
+  assert.match(privacyHtml, /href="\/privacy\/"/);
 });
 
 test('apply CTAs point at the landing form, not the Google Form', () => {

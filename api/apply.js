@@ -54,6 +54,7 @@ const buildRow = ({ applicationId, timestampKst, value }) => [
   value.source,
   value.language,
   'TRUE',
+  // 기존 referrer 열을 비워 둬 고정된 A:Q 시트 순서를 보존한다.
   '',
 ];
 
