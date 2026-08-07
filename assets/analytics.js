@@ -24,6 +24,7 @@
     'utm_term',
   ]);
   const MAX_UTM_VALUE_LENGTH = 100;
+  const META_STANDARD_EVENTS = new Set(['Contact']);
   const GOOGLE_COLLECTION_DISABLE_KEY = (
     'ga-disable-' + ANALYTICS_CONFIG.googleMeasurementId
   );
@@ -43,12 +44,12 @@
     instagram: Object.freeze({
       gaEvent: 'contact_click',
       destination: 'instagram',
-      metaEvent: 'ContactClick',
+      metaEvent: 'Contact',
     }),
     contact: Object.freeze({
       gaEvent: 'contact_click',
       destination: 'kakaotalk',
-      metaEvent: 'ContactClick',
+      metaEvent: 'Contact',
     }),
     meetup: Object.freeze({
       gaEvent: 'community_click',
@@ -332,6 +333,15 @@
     browserWindow.fbq('trackCustom', name, params);
   };
 
+  const trackMetaStandard = (name, params = {}) => {
+    if (!canTrack() || typeof browserWindow.fbq !== 'function') return;
+    browserWindow.fbq('track', name, params);
+  };
+
+  const trackLead = () => {
+    trackMetaStandard('Lead', { content_category: 'application' });
+  };
+
   const ctaPlacement = (element) => {
     if (element.dataset.analyticsPlacement) return element.dataset.analyticsPlacement;
     if (element.closest('header')) return 'nav';
@@ -372,7 +382,10 @@
       event.meta
       && matchesConfiguredDestination(element, event.meta.params.destination)
     ) {
-      trackMetaCustom(event.meta.name, event.meta.params);
+      const sendMeta = META_STANDARD_EVENTS.has(event.meta.name)
+        ? trackMetaStandard
+        : trackMetaCustom;
+      sendMeta(event.meta.name, event.meta.params);
     }
   };
 
@@ -597,6 +610,7 @@
     buildLimitedPageView,
     hasGlobalPrivacySignal,
     isTrackableHostname,
+    trackLead,
     trackLanguageSwitch,
     // 신청 폼이 자기 깔때기 이벤트를 직접 보낸다. 동의 게이트는 trackGa 안에 있다.
     trackEvent: trackGa,

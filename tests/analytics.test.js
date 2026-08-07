@@ -30,8 +30,9 @@ test('configures the Meta Pixel and maps only high-intent outbound CTA events', 
   assert.match(analyticsJs, /4569887956575986/);
   assert.match(analyticsJs, /connect\.facebook\.net\/en_US\/fbevents\.js/);
   assert.match(analyticsJs, /ApplicationFormOpen/);
-  assert.match(analyticsJs, /ContactClick/);
+  assert.match(analyticsJs, /metaEvent: 'Contact'/);
   assert.match(analyticsJs, /trackCustom/);
+  assert.match(analyticsJs, /trackMetaStandard/);
 });
 
 test('lets visitors reopen their analytics consent settings', () => {

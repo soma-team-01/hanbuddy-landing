@@ -99,7 +99,7 @@ Google 스크립트가 로드되지 않거나 전송에 실패해도 페이지 �
 - 고정된 17개 Google Sheets 열 순서는 바꾸지 않고, 기존 `referrer` 위치에는 빈 문자열을 기록한다.
 - 신청 payload와 Sheets 행에 자동 수집 UTM을 추가하지 않는다.
 - 신청 폼의 `source`는 사용자가 직접 선택·입력하고 신청 개인정보 처리에 동의한 답변이므로 유지한다.
-- 분석 동의 후 전송되는 `application_submitted`에는 현재처럼 범주형 `source`만 허용하고 자유 입력인 `sourceOther`는 보내지 않는다.
+- 분석 동의 후 전송되는 `generate_lead`에는 범주형 `source`만 허용하고 자유 입력인 `sourceOther`는 보내지 않는다.
 
 테스트는 브라우저 payload에 `document.referrer`가 없고 API가 외부 `referrer` 입력을 무시하며 Sheets의 해당 열을 빈 값으로 유지하는지 보장해야 한다.
 

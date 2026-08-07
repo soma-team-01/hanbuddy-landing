@@ -298,7 +298,7 @@ test('uses separate GA events for contact, community, profile, and navigation ac
         },
       },
       meta: {
-        name: 'ContactClick',
+        name: 'Contact',
         params: {
           page_type: 'about',
           content_language: 'ko',
@@ -326,7 +326,7 @@ test('uses separate GA events for contact, community, profile, and navigation ac
         },
       },
       meta: {
-        name: 'ContactClick',
+        name: 'Contact',
         params: {
           page_type: 'about',
           content_language: 'ko',
@@ -554,6 +554,37 @@ test('basic application mode is silent before consent and sends one page view af
   assert.match(harness.insertedScripts[0].src, /connect\.facebook\.net\/en_US\/fbevents\.js/);
 });
 
+test('application leads use the Meta standard Lead event only while consent is granted', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'basic',
+    pageType: 'application',
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-gocheok',
+  });
+  const metaCalls = [];
+  harness.browserWindow.fbq = (...args) => metaCalls.push(args);
+
+  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  assert.equal(metaCalls.length, 0, 'Lead must stay blocked before consent');
+
+  harness.chooseConsent('accept');
+  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  const leads = metaCalls.filter(([command, name]) => command === 'track' && name === 'Lead');
+  assert.equal(leads.length, 1);
+  assert.deepEqual({ ...leads[0][2] }, { content_category: 'application' });
+  assert.equal(
+    metaCalls.some(([command, name]) => command === 'trackCustom' && name === 'Lead'),
+    false,
+  );
+
+  harness.chooseConsent('reject');
+  harness.browserWindow.HanBuddyAnalytics.trackLead?.();
+  assert.equal(
+    metaCalls.filter(([command, name]) => command === 'track' && name === 'Lead').length,
+    1,
+    'Lead must stay blocked after consent is revoked',
+  );
+});
+
 test('granting advanced consent enables behavior without duplicating its page view', { skip: !moduleExists }, () => {
   const harness = createBrowserHarness({ consentMode: 'advanced' });
 
@@ -656,6 +687,32 @@ test('routes delegated document clicks through CTA tracking', { skip: !moduleExi
   assert.equal(applicationEvents.length, 1);
   assert.equal(applicationEvents[0][2].destination, 'application_page');
   assert.equal(applicationEvents[0][2].placement, 'test');
+});
+
+test('contact CTAs use the Meta standard Contact event after consent', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, clickDocument } = createBrowserHarness();
+  const metaCalls = [];
+  browserWindow.fbq = (...args) => metaCalls.push(args);
+  const instagramLink = {
+    dataset: { analyticsPlacement: 'footer', cta: 'instagram' },
+    href: 'https://www.instagram.com/hanbuddy_kr/',
+    closest(selector) {
+      return selector === '[data-cta]' ? instagramLink : null;
+    },
+  };
+
+  chooseConsent('accept');
+  clickDocument(instagramLink);
+
+  const standardContacts = metaCalls.filter(([command, name]) => (
+    command === 'track' && name === 'Contact'
+  ));
+  assert.equal(standardContacts.length, 1);
+  assert.equal(
+    metaCalls.some(([command, name]) => command === 'trackCustom' && name === 'Contact'),
+    false,
+  );
+  assert.equal(standardContacts[0][2].destination, 'instagram');
 });
 
 test('consent settings expose their expanded state and restore focus after a choice', { skip: !moduleExists }, () => {

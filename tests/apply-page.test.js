@@ -79,11 +79,17 @@ test('the page declares its analytics context', () => {
 test('the three funnel events carry the language, as the analytics spec requires', () => {
   // trackGa는 파라미터를 자동으로 채우지 않는다. 여기서 빠뜨리면 스펙 9.2가
   // 요구하는 content_language 없이 이벤트가 쌓인다.
-  for (const name of ['application_start', 'application_error', 'application_submitted']) {
+  for (const name of ['application_start', 'application_error', 'generate_lead']) {
     const call = html.match(new RegExp(`track\\('${name}',[\\s\\S]*?\\}\\);`));
     assert.ok(call, `missing track call: ${name}`);
     assert.match(call[0], /content_language:/, `${name} must report content_language`);
   }
+});
+
+test('a successful application sends the recommended GA lead and the Meta standard Lead', () => {
+  assert.match(html, /track\('generate_lead',[\s\S]*?content_language:/);
+  assert.match(html, /HanBuddyAnalytics\?\.trackLead\?\.\(\)/);
+  assert.doesNotMatch(html, /track\('application_submitted'/);
 });
 
 test('application payload never collects browser attribution data', () => {
@@ -93,8 +99,8 @@ test('application payload never collects browser attribution data', () => {
   assert.match(payload, /source: form\.elements\.source\.value/);
   assert.match(payload, /sourceOther: form\.elements\.sourceOther\.value/);
 
-  const submitted = html.match(/track\('application_submitted',[\s\S]*?^        \}\);/m)?.[0] || '';
-  assert.ok(submitted, 'application_submitted event must be readable');
+  const submitted = html.match(/track\('generate_lead',[\s\S]*?^        \}\);/m)?.[0] || '';
+  assert.ok(submitted, 'generate_lead event must be readable');
   assert.match(submitted, /source: payload\.source/);
   assert.doesNotMatch(submitted, /sourceOther/);
 });

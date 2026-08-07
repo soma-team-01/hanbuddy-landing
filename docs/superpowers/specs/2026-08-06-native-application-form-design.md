@@ -256,11 +256,11 @@ We’ll be in touch within 24 hours to confirm your spot.
 |---|---|---|
 | `application_start` | 첫 필드 입력 시 1회 | `event_id`, `prefilled`, `content_language` |
 | `application_error` | 검증 실패 | `event_id`, `field`, `content_language` |
-| `application_submitted` | 접수 성공 | `event_id`, `date_slot`, `guests`, `source`, `prefilled`, `content_language` |
+| `generate_lead` | 접수 성공 | `event_id`, `date_slot`, `guests`, `source`, `prefilled`, `content_language` |
 
 `prefilled`는 URL에 `?event=`가 있었는지다(5.1의 두 진입 경로). 이게 없으면 **이벤트 카드를 눌러 들어온 신청과 히어로 CTA로 들어와 폼에서 고른 신청을 구분할 수 없다.** `event_id`만으로는 무엇을 신청했는지는 알아도 무엇이 그 신청을 만들었는지는 모른다.
 
-`application_submitted`는 GA4에서 키 이벤트(전환)로 지정한다. Meta는 `Lead`로 보낸다.
+`generate_lead`는 GA4에서 키 이벤트(전환)로 지정한다. Meta는 표준 이벤트 `Lead`로 보낸다.
 
 이로써 처음 알 수 있게 되는 것: 폼 진입 대비 제출률, 이탈 필드, 회차별 신청 분포(고척과 잠실이 지금은 같은 폼으로 가서 구분 불가), 그리고 **이벤트 카드와 히어로 CTA 중 어느 쪽이 신청을 만드는지**.
 
@@ -390,7 +390,7 @@ vercel dev                   # 정적 파일과 함수를 함께 서빙
 2. 신규 시트 생성 후 헤더 1행 입력, 서비스 계정 이메일에 **편집자** 권한으로 공유
 3. 디스코드 채널 웹훅 생성
 4. Vercel 환경변수 5개 등록
-5. GA4에서 `application_submitted`를 키 이벤트로 지정 (이벤트가 최소 1건 수집된 후 가능)
+5. GA4에서 `generate_lead`를 키 이벤트로 지정
 
 ## 13. 테스트
 

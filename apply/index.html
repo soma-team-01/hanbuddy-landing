@@ -755,7 +755,7 @@
         // 리더 사용자는 접수됐다는 사실도 신청번호도 듣지 못한다.
         done.querySelector('h1').focus({ preventScroll: true });
         window.scrollTo({ top: 0 });
-        track('application_submitted', {
+        track('generate_lead', {
           event_id: payload.eventId,
           date_slot: payload.slotIso,
           guests: Number(payload.guests),
@@ -763,6 +763,7 @@
           prefilled: Boolean(prefilledEvent),
           content_language: currentLanguage(),
         });
+        window.HanBuddyAnalytics?.trackLead?.();
       } catch {
         // 항목 문제가 아니므로 제출 버튼 옆으로 되돌린다. 방금 누른 자리가 눈이 있는 곳이다.
         restoreErrorBox();

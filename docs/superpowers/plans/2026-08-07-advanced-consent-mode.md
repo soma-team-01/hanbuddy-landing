@@ -185,7 +185,7 @@ git commit -m "feat: 고급 동의 모드 최소수집 적용"
 
 - [ ] **Step 1: Add failing browser-payload regression test**
 
-In `tests/apply-page.test.js`, assert the payload-building block contains no `document.referrer`, `location.search`, `utm_`, or `referrer:` property, while the user-entered `source` and `sourceOther` remain. Assert the `application_submitted` analytics call can contain the categorical `source` but never `sourceOther`.
+In `tests/apply-page.test.js`, assert the payload-building block contains no `document.referrer`, `location.search`, `utm_`, or `referrer:` property, while the user-entered `source` and `sourceOther` remain. Assert the `generate_lead` analytics call can contain the categorical `source` but never `sourceOther`.
 
 - [ ] **Step 2: Add failing server-row regression tests**
 
