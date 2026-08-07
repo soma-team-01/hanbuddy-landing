@@ -15,7 +15,7 @@ const eventPages = readdirSync(join(root, 'events'), { withFileTypes: true })
   .map((entry) => `events/${entry.name}/index.html`)
   .sort();
 
-const publicPages = ['index.html', 'about/index.html', ...eventPages];
+const publicPages = ['index.html', 'about/index.html', 'privacy/index.html', ...eventPages];
 
 function paethPredictor(left, above, upperLeft) {
   const estimate = left + above - upperLeft;

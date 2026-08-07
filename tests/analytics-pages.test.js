@@ -8,6 +8,7 @@ const readPage = (...parts) => readFileSync(join(__dirname, '..', ...parts), 'ut
 const homeHtml = readPage('index.html');
 const aboutHtml = readPage('about', 'index.html');
 const applyHtml = readPage('apply', 'index.html');
+const privacyHtml = readPage('privacy', 'index.html');
 
 // 상세페이지 목록과 각 페이지의 experience type을 손으로 적으면, 새 이벤트
 // 페이지가 검사에서 통째로 빠지고 id 체계가 어긋나도 통과한다(실제로
@@ -25,14 +26,20 @@ const publicPages = [
   { name: 'Home', html: homeHtml },
   { name: 'About', html: aboutHtml },
   { name: 'Apply', html: applyHtml },
+  { name: 'Privacy', html: privacyHtml },
   ...detailPages,
 ];
 
+test('privacy page loads shared analytics with the advanced marketing policy', () => {
+  assert.match(privacyHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(privacyHtml, /<body[^>]*data-analytics-page-type="privacy"[^>]*data-analytics-consent-mode="advanced"/);
+});
+
 test('home and About load the shared analytics module with canonical page context', () => {
   assert.match(homeHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(homeHtml, /<body[^>]*data-analytics-page-type="home"/);
+  assert.match(homeHtml, /<body[^>]*data-analytics-page-type="home"[^>]*data-analytics-consent-mode="advanced"/);
   assert.match(aboutHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(aboutHtml, /<body[^>]*data-analytics-page-type="about"/);
+  assert.match(aboutHtml, /<body[^>]*data-analytics-page-type="about"[^>]*data-analytics-consent-mode="advanced"/);
 });
 
 test('home and About no longer embed vendor loader implementations', () => {
@@ -75,7 +82,7 @@ test('scrolling to the apply section is distinct from opening the form', () => {
 
 test('the apply page loads shared analytics with its own page context', () => {
   assert.match(applyHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"/);
+  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"[^>]*data-analytics-consent-mode="basic"/);
   assert.doesNotMatch(applyHtml, /googleMeasurementId|metaPixelId/);
   assert.doesNotMatch(applyHtml, /googletagmanager\.com\/gtag\/js/);
 });
@@ -128,7 +135,7 @@ test('event detail pages load shared analytics with canonical page and experienc
     assert.match(html, /<script src="\/assets\/analytics\.js"><\/script>/, `${name} analytics module`);
 
     const context = html.match(
-      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"/,
+      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"[^>]*data-analytics-consent-mode="advanced"/,
     );
     assert.ok(context, `${name} detail context`);
 

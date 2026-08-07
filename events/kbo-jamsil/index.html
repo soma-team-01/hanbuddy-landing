@@ -52,7 +52,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
 </head>
 
-<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="event_detail" data-analytics-experience-type="kbo-jamsil">
+<body class="bg-canvas font-sans text-ink antialiased" data-analytics-page-type="event_detail" data-analytics-experience-type="kbo-jamsil" data-analytics-consent-mode="advanced">
   <a href="#main" class="sr-only rounded-xl bg-primary px-4 py-3 font-extrabold text-on-primary focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:outline focus:outline-[3px] focus:outline-offset-2 focus:outline-primary-strong">Skip to content</a>
   <header class="sticky top-0 z-50 border-b border-line-soft bg-canvas-soft/95 backdrop-blur">
     <nav class="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-5 py-3">
@@ -200,6 +200,7 @@
       </p>
       <div class="flex items-center gap-4">
         <a href="/" class="rounded font-semibold transition hover:text-primary-strong">hanbuddy.kr</a>
+        <a href="/privacy/" class="rounded font-semibold underline decoration-primary/40 underline-offset-4 transition hover:text-primary-strong">Privacy</a>
         <button type="button" data-consent-settings aria-controls="analytics-consent" aria-expanded="false"
                 class="rounded font-semibold underline decoration-primary/40 underline-offset-4 transition hover:text-primary-strong">
           Cookie settings
@@ -214,13 +215,14 @@
     <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
       <div>
         <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink">
-          Can we count your visit?
+          Your privacy choices
         </p>
         <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted">
-          Just page views and clicks, nothing you type. Used to improve HanBuddy and reach people like you.
+          On public pages, we count one limited cookie-free visit using the page path and UTM campaign tags. If you accept, Google Analytics also measures clicks and Meta Pixel helps us understand ad reach. We never include form answers or link UTM tags to an application.
         </p>
         <p class="mt-2 text-xs leading-5 text-muted">
-          Google Analytics and Meta Pixel. Change anytime in Cookie settings.
+          Optional analytics can be changed anytime in Cookie settings.
+          <a href="/privacy/" class="focusable rounded font-semibold underline">Privacy</a>.
         </p>
       </div>
       <div class="flex flex-col-reverse gap-2 sm:min-w-52">

@@ -53,12 +53,23 @@ test('privacy notice states purpose, retention and the request channel', () => {
   assert.match(html, /buddy/i, 'must disclose sharing with the assigned buddy');
 });
 
-test('nav and footer copy stay in sync with index', () => {
+test('nav and shared footer identity stay in sync with index', () => {
   for (const snippet of ['HanBuddy by ZeroOne', '<script src="/assets/analytics.js"></script>']) {
     assert.ok(html.includes(snippet), `apply page missing: ${snippet}`);
   }
+});
+
+test('application consent copy states its stricter pre-consent policy', () => {
   const consentBlocks = (source) => source.match(/^ {8}consent: \{[\s\S]*?^ {8}\},$/gm) || [];
-  assert.deepEqual(consentBlocks(html), consentBlocks(indexHtml), 'consent copy drifted');
+  const applyConsent = consentBlocks(html);
+  assert.equal(applyConsent.length, 2, 'EN and KO application consent copy must exist');
+  assert.notDeepEqual(applyConsent, consentBlocks(indexHtml), 'application copy must describe basic mode');
+  for (const block of applyConsent) {
+    assert.match(block, /before you accept|허용하기 전/);
+    assert.match(block, /Google|Meta/);
+    assert.match(block, /answers|입력값/);
+    assert.match(block, /UTM/);
+  }
 });
 
 test('the page declares its analytics context', () => {
@@ -68,11 +79,30 @@ test('the page declares its analytics context', () => {
 test('the three funnel events carry the language, as the analytics spec requires', () => {
   // trackGa는 파라미터를 자동으로 채우지 않는다. 여기서 빠뜨리면 스펙 9.2가
   // 요구하는 content_language 없이 이벤트가 쌓인다.
-  for (const name of ['application_start', 'application_error', 'application_submitted']) {
+  for (const name of ['application_start', 'application_error', 'generate_lead']) {
     const call = html.match(new RegExp(`track\\('${name}',[\\s\\S]*?\\}\\);`));
     assert.ok(call, `missing track call: ${name}`);
     assert.match(call[0], /content_language:/, `${name} must report content_language`);
   }
+});
+
+test('a successful application sends the recommended GA lead and the Meta standard Lead', () => {
+  assert.match(html, /track\('generate_lead',[\s\S]*?content_language:/);
+  assert.match(html, /HanBuddyAnalytics\?\.trackLead\?\.\(\)/);
+  assert.doesNotMatch(html, /track\('application_submitted'/);
+});
+
+test('application payload never collects browser attribution data', () => {
+  const payload = html.match(/const payload = \{[\s\S]*?^      \};/m)?.[0] || '';
+  assert.ok(payload, 'application payload block must be readable');
+  assert.doesNotMatch(payload, /document\.referrer|location\.search|\butm_|\breferrer\s*:/i);
+  assert.match(payload, /source: form\.elements\.source\.value/);
+  assert.match(payload, /sourceOther: form\.elements\.sourceOther\.value/);
+
+  const submitted = html.match(/track\('generate_lead',[\s\S]*?^        \}\);/m)?.[0] || '';
+  assert.ok(submitted, 'generate_lead event must be readable');
+  assert.match(submitted, /source: payload\.source/);
+  assert.doesNotMatch(submitted, /sourceOther/);
 });
 
 test('the invalid state is visible, not just announced', () => {

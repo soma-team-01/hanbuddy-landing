@@ -30,6 +30,9 @@
 !/apply
 /apply/*
 !/apply/index.html
+!/privacy
+/privacy/*
+!/privacy/index.html
 !/events
 /events/*
 !/events/kbo-gocheok

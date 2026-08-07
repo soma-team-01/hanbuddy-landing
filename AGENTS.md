@@ -13,6 +13,7 @@ hanbuddy-landing/
 |-- index.html                # main landing page: content, inline Tailwind config, CSS, i18n + analytics + backdrop script
 |-- about/index.html          # /about — operator-positioning team page (self-contained copy of nav/footer/consent)
 |-- apply/index.html          # /apply — the application form itself (own CONTENT_MAP; renders slots, posts to /api/apply)
+|-- privacy/index.html        # /privacy — bilingual limited-measurement, optional-analytics, and application-data notice
 |-- api/apply.js              # the only server code: validates, appends to the Sheet, notifies Discord
 |-- events/
 |   |-- kbo-gocheok/index.html  # /events/kbo-gocheok — Gocheok dome detail page (collage, sticky booking card, lightbox)
@@ -70,6 +71,7 @@ hanbuddy-landing/
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): `/apply/`, Instagram DM, KakaoTalk, one-line buddy note. Cookie disclosure lives in the consent banner; the personal-data notice lives in the form |
 | `/apply/` | page | `apply/index.html` | The application form: renders open events and their remaining slots from `EVENT_SLOTS`, validates with the shared module, posts to `/api/apply`, and switches to the done screen in place. `?event=<id>` prefills but stays changeable |
+| `/privacy/` | page | `privacy/index.html` | Bilingual public notice separating limited cookieless campaign measurement, opt-in Google/Meta behavior analytics, and application-data processing |
 | `EVENT_SLOTS` | module | `assets/event-slots.js` | Single source for event dates, prices, and EN/KO slot labels. Expiry is judged in KST so the browser and the function agree regardless of the reader's timezone |
 | `validateApplication` | module | `assets/apply-validation.js` | The one validator. The browser runs it for instant feedback and the function runs it again, because browser checks are bypassable |
 | `POST /api/apply` | function | `api/apply.js` | Revalidates, then calls the Sheet and Discord in parallel; one success is enough to accept. Each storage path carries **one** deadline for the whole path, not one per hop, so adding a hop cannot quietly raise the ceiling. Signs the service-account JWT with Node's built-in `crypto` (no npm) |
@@ -81,7 +83,7 @@ hanbuddy-landing/
 | `startPhotoBackdrop` | JS | `index.html` script | 6s autoplay crossfade for the photos inside `[data-photo-backdrop]` (currently `#apply`); disabled under `prefers-reduced-motion` |
 | `scrollReviewsBy` / `syncReviewArrows` | JS | `index.html` script | Quote-card carousel: arrows scroll one card, end states set `disabled`; re-synced after every render, scroll, and resize |
 | `alignReviewsToDefaultCard` | JS | `index.html` script | Opens the carousel on card `DEFAULT_REVIEW_CARD_INDEX` (2nd — card 1 is the hero quote). Re-runs until layout settles because Tailwind CDN sizes cards late; any arrow click, wheel, pointer, or key input on the track stops it for good |
-| Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`, plus the `/apply/` funnel (`application_start`, `application_error`, `application_submitted`); Meta customs `ApplicationFormOpen`, `ContactClick`. Refusing cookies blocks analytics only — the application itself still saves, because submitting a form is service delivery, not measurement |
+| Consent + analytics | JS | `assets/analytics.js` + public pages | Marketing pages use Google advanced consent mode: before or after refusal, Google receives one sanitized cookieless `page_view`, while behavior events and Meta stay opt-in only. `/apply/` uses basic mode and blocks Google and Meta until opt-in. CTA keys map to GA4 events as `apply` → `application_form_open`, `contact`/`instagram` → `contact_click`, and `meetup` → `community_click`; other GA4 events include `event_card_click`, `language_switch`, `section_view`, plus the `/apply/` funnel (`application_start`, `application_error`, `generate_lead`). Meta uses the custom event `ApplicationFormOpen` and the standard events `Contact` and `Lead`. Application saving is service delivery and remains independent of analytics consent |
 | Lightbox | JS | `events/*/index.html` | Full-screen photo viewer: arrows, arrow-key/Escape, focus moved to close button on open, Tab trapped inside, focus restored to trigger on close |
 
 ## CONVENTIONS

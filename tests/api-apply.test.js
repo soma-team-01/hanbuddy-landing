@@ -51,15 +51,48 @@ test('the row matches the sheet header order exactly', () => {
       source: 'Instagram',
       language: 'en',
     },
-    referrer: 'https://www.hanbuddy.kr/',
   });
   assert.deepEqual(row, [
     '2026-08-06 21:14:03', 'HB-20260806-ABCDEF', 'kbo-jamsil',
     'Open-Air KBO Baseball Night at Jamsil', '2026-08-15 17:00', 2,
     'Julie', 'France', 'Basic', 'WhatsApp', '+82 10 0000 0000', 'PayPal',
-    '', 'Instagram', 'en', 'TRUE', 'https://www.hanbuddy.kr/',
+    '', 'Instagram', 'en', 'TRUE', '',
   ]);
   assert.equal(row.length, 17);
+});
+
+test('the API ignores a client-supplied referrer when appending the sheet row', async () => {
+  const previousFetch = globalThis.fetch;
+  let sheetBody = null;
+  globalThis.fetch = (url, init) => {
+    const target = String(url);
+    if (target.includes('oauth2')) {
+      return Promise.resolve({ ok: true, json: async () => ({ access_token: 'stub' }) });
+    }
+    if (target.includes('sheets.googleapis.com')) {
+      sheetBody = JSON.parse(init.body);
+      return Promise.resolve({ ok: true });
+    }
+    return Promise.resolve({ ok: true });
+  };
+
+  const response = { status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
+  try {
+    await handler({
+      method: 'POST',
+      body: {
+        ...application(),
+        referrer: 'https://www.hanbuddy.kr/?utm_source=private&utm_campaign=julie@example.com',
+      },
+    }, response);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+
+  assert.equal(response.code, 200);
+  assert.ok(sheetBody, 'the Sheet append request must be captured');
+  assert.equal(sheetBody.values[0].length, 17);
+  assert.equal(sheetBody.values[0][16], '');
 });
 
 test('logging drops everything except the allowed keys', () => {
