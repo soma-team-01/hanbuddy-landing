@@ -111,7 +111,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Navigation
 
-- Structure: compact top bar with the HanBuddy logo mark and wordmark, section anchors (About is a real `/about` link), language control, and a clear recruitment CTA (any `data-cta="apply"` anchor is rewritten to the live Google Form via `CONFIG`).
+- Structure: compact top bar with the HanBuddy logo mark and wordmark, section anchors (About is a real `/about` link), language control, and a clear recruitment CTA (any `data-cta="apply"` anchor is rewritten via `CONFIG`, now to the site's own `/apply/` form).
 - Surface: `canvas-soft` with `line-soft`; avoid floating glass or heavy shadow.
 - States: active/hover text shifts to `primary-strong`; focus uses a visible `primary-strong` outline.
 
@@ -120,7 +120,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - All buttons are pills (`rounded-full`), matching the MVP app.
 - Primary CTA: warm-red `primary` fill, white `on-primary` text, `primary-hover` hover, and no glow.
 - Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
-- All external CTA anchors keep `target="_blank"` and `rel="noopener"`.
+- External CTA anchors keep `target="_blank"` and `rel="noopener"`. Internal ones (`#anchor`, `/apply/`) stay in the same tab:
+  a new tab for a page of our own strands the visitor with a back button that does nothing.
 
 ### Photography Components (signature)
 
@@ -158,10 +159,37 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - The hero keeps only a compact star chip (`hero.ratingNote`) linking here, plus the single featured quote card.
 - No photos in this section. The band stays flat so `#events` (photo cards) above and `#apply` (photo backdrop) below are the only places images compete for attention.
 
+### Application Form (`/apply/`)
+
+The form is the only screen where the visitor does work instead of reading, so it drops the landing page's
+photography and lets the fields carry the page. One column, `max-w-2xl`, no photos, no backdrop.
+
+- **Fields**: `rounded-xl`, `line-strong` border, `canvas-soft` fill, `px-4 py-3` and `text-base`. Never go below
+  16px on inputs: iOS zooms the whole page when a smaller field takes focus, and the visitor loses their place.
+- **Labels** sit above the field in `text-sm font-bold text-ink` and are always real `<label for>` elements.
+  Placeholders are examples, never the label — they vanish the moment someone types.
+- **Choice chips** (`.choice`, radios): pill or rounded rows with the input inside the label so the whole area is
+  clickable. The selected state changes border colour and fill together, not colour alone, and `:focus-within`
+  draws the shared focus ring on the wrapper because the native radio itself is nearly invisible against `canvas-soft`.
+- **Selects** match the text fields exactly; options are rendered from `FIELD_OPTIONS` so the form can never offer
+  a value the validator rejects.
+- **Conditional fields** (the source "Other" input) start `hidden`, become required only while visible, and clear
+  their value when hidden again. A hidden field that still holds a value submits data the visitor cannot see.
+- **Error state**: one alert line above the submit button (`primary-soft` fill, `primary-strong` text, `role="alert"`),
+  plus `aria-invalid` and focus moved to the first bad field. Errors say what to fix on that field, never a raw code.
+- **Submit** is a full-width primary pill. While sending it is disabled and reads "Sending…", so a slow network
+  cannot produce two applications from one person.
+- **Done screen** replaces the form in place rather than routing to a new URL: a refresh should return an empty form,
+  and a shared link must never expose someone else's application number. It carries the number, the 24-hour promise,
+  and the Instagram/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
+  messenger, because the visitor just chose their own channel and any name we print is wrong for everyone else.
+- **Closed state**: when every slot has passed, the form is replaced by a short "next dates are on the way" note
+  with the same two channel links. An empty form the visitor cannot complete is worse than an honest message.
+
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: live Google Form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
 - The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)

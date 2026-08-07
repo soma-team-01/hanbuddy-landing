@@ -7,7 +7,7 @@
     googleMeasurementId: 'G-MW7MFVL50G',
     metaPixelId: '4569887956575986',
     destinations: Object.freeze({
-      google_form: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
+      application_page: '/apply/',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       kakaotalk: 'https://open.kakao.com/o/sP3n4rFi',
     }),
@@ -19,9 +19,11 @@
     'ga-disable-' + ANALYTICS_CONFIG.googleMeasurementId
   );
   const CTA_DEFINITIONS = Object.freeze({
+    // 신청 경로가 랜딩 안으로 들어왔지만 이벤트 이름은 유지한다. 기존 데이터와의
+    // 연속성이 끊기면 전환 추이를 이전과 비교할 수 없다.
     apply: Object.freeze({
       gaEvent: 'application_form_open',
-      destination: 'google_form',
+      destination: 'application_page',
       metaEvent: 'ApplicationFormOpen',
     }),
     apply_section: Object.freeze({
@@ -262,7 +264,16 @@
     const expected = ANALYTICS_CONFIG.destinations[destination];
     if (!expected) return false;
     try {
-      return new URL(element.href, browserWindow.location.href).href === new URL(expected).href;
+      const base = browserWindow.location.href;
+      const actualUrl = new URL(element.href, base);
+      const expectedUrl = new URL(expected, base);
+      // 사이트 안 목적지는 경로로 대조한다. 상세페이지가 ?event=로 회차를
+      // 프리필하므로 쿼리까지 맞추라고 하면 그 링크들이 전부 어긋난다.
+      if (expected.startsWith('/')) {
+        return actualUrl.origin === expectedUrl.origin
+          && actualUrl.pathname === expectedUrl.pathname;
+      }
+      return actualUrl.href === expectedUrl.href;
     } catch {
       return false;
     }
@@ -464,5 +475,7 @@
     buildSelectContentEvent,
     isTrackableHostname,
     trackLanguageSwitch,
+    // 신청 폼이 자기 깔때기 이벤트를 직접 보낸다. 동의 게이트는 trackGa 안에 있다.
+    trackEvent: trackGa,
   };
 });

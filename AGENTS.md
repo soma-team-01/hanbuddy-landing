@@ -1,10 +1,10 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-08-03 KST
+**Updated:** 2026-08-07 KST
 
 ## OVERVIEW
 
-HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from completed runs (2026-06-25 and 2026-07-26 KBO at Jamsil, and the 2026-08-01 Han River picnic — the Aug 8, 9, 15 & 16 Han River picnics and K League/jjimjilbang have never actually run, so their photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof) and the approved guest quotes listed in CONVENTIONS. Applications run through the live Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`). No app framework, package manager, build step, server code, or local data collection exists in this repo; tests run on plain `node --test`.
+HanBuddy by ZeroOne static landing site. The site is a public recruitment/promotion surface whose primary audience is international guests; the whole narrative speaks to the guest, and Korean/local buddy recruitment appears only as a one-line note in the final CTA section (pointing to the KakaoTalk open chat). Positioning is date-driven events (not weekend-only): the `#events` section lists Meetup-style cards for currently published dates, each linking to a booking-style detail page under `/events/`. Public proof uses approved photos from the two runs that actually happened (2026-06-25 and 2026-07-26 KBO at Jamsil). The 2026-08-01 Han River picnic was cancelled, and the Aug 8, 9, 15 & 16 picnics, K League and jjimjilbang have never run, so those photos may only illustrate upcoming items or carry neutral place-describing captions, never completed-operation proof and the approved guest quotes listed in CONVENTIONS. Applications run through the site's own form at `/apply/` (since 2026-08-07); the Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`) stays alive only for links already handed out on Meetup and Instagram, and nothing on the landing site points at it any more. No app framework, package manager, or build step exists in this repo, and tests run on plain `node --test`. **Server code and personal-data collection do exist now**: one Vercel Function (`api/apply.js`) receives applications and appends them to a team-owned Google Sheet. There are still no npm dependencies.
 
 ## STRUCTURE
 
@@ -12,19 +12,24 @@ HanBuddy by ZeroOne static landing site. The site is a public recruitment/promot
 hanbuddy-landing/
 |-- index.html                # main landing page: content, inline Tailwind config, CSS, i18n + analytics + backdrop script
 |-- about/index.html          # /about — operator-positioning team page (self-contained copy of nav/footer/consent)
+|-- apply/index.html          # /apply — the application form itself (own CONTENT_MAP; renders slots, posts to /api/apply)
+|-- api/apply.js              # the only server code: validates, appends to the Sheet, notifies Discord
 |-- events/
-|   |-- kbo/index.html        # /events/kbo — Gocheok dome detail page (collage, sticky booking card, lightbox)
-|   |-- jamsil/index.html     # /events/jamsil — same template for the open-air Jamsil night
+|   |-- kbo-gocheok/index.html  # /events/kbo-gocheok — Gocheok dome detail page (collage, sticky booking card, lightbox)
+|   |-- kbo-jamsil/index.html   # /events/kbo-jamsil — same template for the open-air Jamsil night
 |   |-- kleague/index.html    # /events/kleague — same template, two-photo collage
 |   `-- hanriver/index.html   # /events/hanriver — same template for the Han River picnic
 |-- assets/
+|   |-- event-slots.js        # EVENT_SLOTS single source: dates, prices, KST expiry (browser + function)
+|   |-- apply-validation.js   # form validation shared by the browser and the function
 |   |-- brand/                # logos, favicon, apple-touch icon, soma logo (webp + png)
 |   |-- photos/kbo/           # run1-* (2026-06-25) and kbo-0726-* (2026-07-26) public WebP derivatives
 |   |-- photos/hanriver/      # hanriver-* public WebP derivatives
 |   |-- photos/kleague/       # team-owned K League photos (coming-soon card / backdrop)
 |   |-- photos/jjimjilbang/   # CC0 jjimjilbang photos (coming-soon card; no team photos yet)
 |   `-- raw/                  # untracked originals (.gitignore); never deploy
-|-- tests/                    # node --test suites: about copy sync, analytics consent, review carousel, palette/typography vs DESIGN.md
+|-- scripts/dev-server.js     # local dev server (never deployed): real function, stubbed storage, no secrets
+|-- tests/                    # node --test suites: about/apply copy sync, slot-vs-card drift, form validation, API privacy, deploy allowlist, analytics consent, review carousel, palette/typography vs DESIGN.md
 |-- docs/superpowers/         # past design specs/plans (history, not current truth)
 |-- DESIGN.md                 # design-system SSOT (tokens, components, photo rules)
 |-- README.md                 # quick-start, deploy model, public-copy rules pointer
@@ -39,11 +44,13 @@ hanbuddy-landing/
 | Edit about-page copy | `about/index.html` | Self-contained `CONTENT_MAP`; nav/footer/consent copy shared with `index.html` is drift-checked by `tests/about.test.js` — change both files together |
 | Edit event detail pages | `events/*/index.html` | Static EN pages; dates/prices must match `#events` cards and CONVENTIONS |
 | Update design direction | `DESIGN.md`, then implementations | DESIGN.md first, then keep inline Tailwind tokens aligned (palette/typography are test-enforced) |
-| Change application/contact CTA | `index.html` `CONFIG` + hardcoded anchors | Google Form is primary; Instagram DM is the default inquiry channel, KakaoTalk secondary |
-| Update event dates/prices | `CONTENT_MAP.events.cards` (EN+KO), `events/*/index.html`, CONVENTIONS below | Only on explicit instruction; never invent details |
+| Change application/contact CTA | `index.html` `CONFIG` + hardcoded anchors | `/apply/` is the only application path on the site; detail pages prefill with `/apply/?event=<id>`. Instagram DM is the default inquiry channel, KakaoTalk secondary |
+| Edit the application form | `apply/index.html` + `assets/apply-validation.js` | Validation is shared with the function — change it once, in the module. Adding a collected field means updating the privacy notice and the sheet header in the same change |
+| Update event dates/prices | `assets/event-slots.js` first, then `CONTENT_MAP.events.cards` (EN+KO), `events/*/index.html`, CONVENTIONS below | `EVENT_SLOTS` is the single source; `tests/event-slots.test.js` fails if a card's dates drift from it. Only on explicit instruction; never invent details |
+| Close a sold-out date | `assets/event-slots.js` | Capacity is managed by hand (2026-08-06 decision): drop the slot and it disappears from the form |
 | Replace public photos | `assets/photos/**` + referencing pages | WebP only, EXIF stripped; photo rules in DESIGN.md; add new folders/extensions to `.vercelignore` |
 | Run tests | `node --test tests/*.test.js` | Directory form `node --test tests/` fails on some Node versions — pass the glob |
-| Local preview | `python3 -m http.server 8080` | Open `http://localhost:8080` |
+| Local preview | `node scripts/dev-server.js` (or `python3 -m http.server 8080` for static-only) | The dev server runs the real function with storage stubbed, so the form submits without any secrets. Real Sheet/Discord/GA verification happens on the PR Preview deployment, never locally |
 | Deploy | merge to `main` | Vercel GitHub integration auto-deploys `main` to `www.hanbuddy.kr`; `.vercelignore` allowlists what gets served |
 
 ## CODE MAP
@@ -61,16 +68,20 @@ hanbuddy-landing/
 | `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop) on the `panel` band shared with `#reviews`: open events link to `/events/*`, coming-soon cards show a toast |
 | `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
-| `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): Google Form, Instagram DM, KakaoTalk, one-line buddy note. Data/cookie disclosure lives in the consent banner only |
+| `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): `/apply/`, Instagram DM, KakaoTalk, one-line buddy note. Cookie disclosure lives in the consent banner; the personal-data notice lives in the form |
+| `/apply/` | page | `apply/index.html` | The application form: renders open events and their remaining slots from `EVENT_SLOTS`, validates with the shared module, posts to `/api/apply`, and switches to the done screen in place. `?event=<id>` prefills but stays changeable |
+| `EVENT_SLOTS` | module | `assets/event-slots.js` | Single source for event dates, prices, and EN/KO slot labels. Expiry is judged in KST so the browser and the function agree regardless of the reader's timezone |
+| `validateApplication` | module | `assets/apply-validation.js` | The one validator. The browser runs it for instant feedback and the function runs it again, because browser checks are bypassable |
+| `POST /api/apply` | function | `api/apply.js` | Revalidates, then calls the Sheet and Discord in parallel; one success is enough to accept. Each storage path carries **one** deadline for the whole path, not one per hop, so adding a hop cannot quietly raise the ceiling. Signs the service-account JWT with Node's built-in `crypto` (no npm) |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
-| `/events/kbo/`, `/events/jamsil/`, `/events/kleague/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
+| `/events/kbo-gocheok/`, `/events/kbo-jamsil/`, `/events/kleague/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
 | `startPhotoBackdrop` | JS | `index.html` script | 6s autoplay crossfade for the photos inside `[data-photo-backdrop]` (currently `#apply`); disabled under `prefers-reduced-motion` |
 | `scrollReviewsBy` / `syncReviewArrows` | JS | `index.html` script | Quote-card carousel: arrows scroll one card, end states set `disabled`; re-synced after every render, scroll, and resize |
 | `alignReviewsToDefaultCard` | JS | `index.html` script | Opens the carousel on card `DEFAULT_REVIEW_CARD_INDEX` (2nd — card 1 is the hero quote). Re-runs until layout settles because Tailwind CDN sizes cards late; any arrow click, wheel, pointer, or key input on the track stops it for good |
-| Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`; Meta customs `ApplicationFormOpen`, `ContactClick` |
+| Consent + analytics | JS | `index.html` script | GA4 (`G-MW7MFVL50G`) + Meta Pixel load only after opt-in; events: `apply/contact/instagram/meetup_click`, `event_card_click`, `language_switch`, `section_view`, plus the `/apply/` funnel (`application_start`, `application_error`, `application_submitted`); Meta customs `ApplicationFormOpen`, `ContactClick`. Refusing cookies blocks analytics only — the application itself still saves, because submitting a form is service delivery, not measurement |
 | Lightbox | JS | `events/*/index.html` | Full-screen photo viewer: arrows, arrow-key/Escape, focus moved to close button on open, Tab trapped inside, focus restored to trigger on close |
 
 ## CONVENTIONS
@@ -79,10 +90,13 @@ hanbuddy-landing/
 
 - Positioning is date-driven events, not weekend-only (2026-07-28): baseball can run on weekdays.
 - The Aug 1 (Han River) and Aug 5 (KBO) runs were cancelled on 2026-08-04 (heat wave + not enough signups); both dates are removed from all public surfaces and must not be reintroduced.
-- Current published events — Indoor Dome KBO Baseball Night (Beat the Seoul Heat): Aug 12 (Wed), Aug 21 (Fri) & Aug 22 (Sat) at Gocheok Sky Dome, ₩60,000 since 2026-08-04 (the Aug 12 game is Kiwoom Heroes vs LG Twins, 5:30–9:30 PM; Aug 21 & 22 were added on 2026-08-06 and their opponents are not published), game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — the Google Form stays the single application path). Open-Air KBO Baseball Night at Jamsil (`/events/jamsil/`): Aug 15 (Sat), Aug 16 (Sun), Aug 21 (Fri) & Aug 22 (Sat), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat), Aug 9 (Sun), Aug 15 (Sat) & Aug 16 (Sun), ₩25,000, picnic food included — Aug 15 & 16 were published on 2026-08-06 to match the slots already offered in the Google Form, so the picnic and the Jamsil baseball night share those two dates. K League Football Night (`/events/kleague/`): Aug 15 (Sat) at Seoul World Cup Stadium, meet 6:30 PM, ₩60,000, match ticket & stadium food included — published on 2026-08-06; the opponent and kickoff time are not published. Jjimjilbang Sauna Hangout stays "coming soon" (no date/price; clicking shows a toast).
+- Current published events — Indoor Dome KBO Baseball Night (Beat the Seoul Heat): Aug 12 (Wed), Aug 21 (Fri) & Aug 22 (Sat) at Gocheok Sky Dome, ₩60,000 since 2026-08-04 (the Aug 12 game is Kiwoom Heroes vs LG Twins, 5:30–9:30 PM; Aug 21 & 22 were added on 2026-08-06 and their opponents are not published), game ticket & stadium food included, run with a professional local guide who reached out to the team. The published Meetup listing is `https://www.meetup.com/discover-korea-with-local-buddies/events/315972054/` (not linked from the landing site by 유현님's decision — `/apply/` is the single application path from the site). Open-Air KBO Baseball Night at Jamsil (`/events/kbo-jamsil/`): Aug 15 (Sat), Aug 16 (Sun), Aug 21 (Fri) & Aug 22 (Sat), ₩60,000, game ticket & stadium food included — split from the dome event on 2026-08-04 so indoor and open-air read as separate activities. Han River Picnic: Aug 8 (Sat), Aug 9 (Sun), Aug 15 (Sat) & Aug 16 (Sun), ₩25,000, picnic food included — Aug 15 & 16 were published on 2026-08-06 to match the slots already offered in the application form, so the picnic and the Jamsil baseball night share those two dates. K League Football Night (`/events/kleague/`): Aug 15 (Sat) at Seoul World Cup Stadium, meet 6:30 PM, ₩60,000, match ticket & stadium food included — published on 2026-08-06; the opponent and kickoff time are not published. Jjimjilbang Sauna Hangout stays "coming soon" (no date/price; clicking shows a toast).
 - Baseball meeting time follows one rule: **5:30 PM on weekdays, 5:00 PM on weekends**. Other sports keep their own kickoff-driven time (K League on Aug 15 meets at 6:30 PM). In every case this is when the group gathers, not when play starts, so public copy says "meet at" rather than a bare time.
 - Do not invent venue, capacity, exact time, payment method, cancellation/refund terms, or guarantees beyond these facts.
-- The Google Form application link is live: `https://forms.gle/B1fWgX3MjtHUHGNt5` (`CONFIG.apply`). Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
+- Applications go through `/apply/` (`CONFIG.apply`), the site's own form, since 2026-08-07. The Google Form (`https://forms.gle/B1fWgX3MjtHUHGNt5`) is kept alive only because its link is already out on Meetup and Instagram; no landing surface links to it. Instagram DM (`@hanbuddy_kr`) is the default guest inquiry channel; KakaoTalk open chat is secondary and the local-buddy channel.
+- **We answer an application within 24 hours** and confirm the spot in that reply (2026-08-06 decision). The done screen promises this number, so every channel must use the same one. If the team cannot hold it, change the copy before missing the promise.
+- Applications are stored in a team-owned Google Sheet, kept for **6 months after the event**, then deleted by hand (2026-08-06 decision). The sheet's column order is fixed and `api/apply.js` appends positionally — never reorder it.
+- ⚠️ The purge covers **two places, not one**. Every application is also posted in full to the Discord channel, so deleting only the sheet rows leaves a complete copy of names and contact IDs in Discord history forever. The retention notice in the form promises deletion, so both have to be cleared.
 - Completed runs usable as public proof: 2026-06-25 Jamsil KBO (Samsung Lions vs LG Twins), 2026-07-26 Jamsil KBO, and 2026-08-01 Han River picnic (⚠️ the Aug 1 picnic was reported cancelled on 2026-08-04, which contradicts this line — 유현님 chose on 2026-08-04 to change only the main page for now, so the `/about` timeline still shows it as completed. Resolve before the next public-copy change). The Aug 8, 9, 15 & 16 Han River picnics have not run yet, and K League and jjimjilbang have never been operated — their photos may be used only for upcoming/coming-up items or with neutral place-describing captions, never as completed-operation proof.
 
 ### Activity names (canonical across every channel)
@@ -101,8 +115,11 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 - `Indoor Dome` is the summer hook (heat wave positioning) and stays in the name while that framing holds.
 - Two extensions may wrap a canonical name. Nothing else may rename an activity.
   - **Campaign subtitle**, after a colon, on Meetup titles and on that event's own detail `h1`: `Indoor Dome KBO Baseball Night: Beat the Seoul Heat`. A detail page belongs to one event, so the campaign framing reads naturally there. Landing cards carry no subtitle, because five cards of framing compete instead of inform.
-  - **`with a Local Buddy` suffix**, only where the brand context is missing: Meetup titles, the application form, and ad creative. Landing cards, detail headings, and the response sheet use the bare canonical name, because the page already says who you go with and repeating it on five cards costs contrast without adding information. Write `with a Local Buddy` or `with Local Buddies`, never the article-less `with Local Buddy`.
+  - **`with a Local Buddy` suffix**, only where the brand context is missing: Meetup titles, the external Google Form, and ad creative. That entry meant the Google Form, which people reach without ever seeing the site; the landing form at `/apply/` has the brand context already, so it uses the bare canonical name. Landing cards, detail headings, and the response sheet also use the bare name, because the page already says who you go with and repeating it on five cards costs contrast without adding information. Write `with a Local Buddy` or `with Local Buddies`, never the article-less `with Local Buddy`.
 - Meetup titles carry a subtitle or the suffix, never both: the card truncates after two lines, so adding both cuts off whichever comes last. `Indoor Dome KBO Baseball Night: Beat the Seoul Heat` keeps its subtitle; the Jamsil title has no subtitle and takes the suffix.
+- **Event ids** (`CONTENT_MAP.events.cards[].id`, GA `item_id` / `experience_type`, the application sheet's `event_id`) follow one rule: when two runs share a sport but differ by venue, the id is `sport-venue`. So `kbo-gocheok` and `kbo-jamsil`, while `hanriver`, `kleague`, and `jjimjilbang` stay bare until a second venue appears. Until 2026-08-06 the ids were `kbo` (Gocheok only) and `jamsil`, which read as if Jamsil were not a KBO game.
+- An event detail page's `data-analytics-experience-type` must equal its card id, or the same run is counted under two names in GA and in the sheet. `tests/analytics-pages.test.js` enforces this.
+- Event **URLs** follow the same ids: `/events/kbo-gocheok/`, `/events/kbo-jamsil/`. Renamed on 2026-08-06 once 유현님 confirmed only the root domain had been shared externally (ads, Meetup, and Instagram all point at `hanbuddy.kr`). No redirects were left behind, so never publish a detail URL without checking this list first.
 - The `/about` timeline is exempt: its entries are narrative records of what happened on a date (`Jamsil KBO: our first baseball night`), not activity labels, so they keep their own wording.
 - `Han River Tour` is retired; the activity is a picnic.
 
@@ -126,10 +143,10 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 
 ### Copy & structure
 
-- Keep this a buildless static site; production surface is the allowlisted HTML + WebP photos, plus the brand PNGs in `assets/brand/` (apple-touch icon and the fixed email-signature logo).
+- Keep this buildless. Production is the allowlisted HTML + WebP photos, the brand PNGs in `assets/brand/`, and one dependency-free function. Adding tooling needs a functional reason, not a preference: copy, styles, and new pages keep shipping without a build. If an integration genuinely cannot be done with the standard library, take the dependency and write down why. Today there are none because `google-auth-library` would only have signed a JWT and cached a token, which is not worth a lock file and cold-start cost.
 - Body copy defaults to English for international guests; the KO toggle serves local buddies and stakeholders. Keep `CONTENT_MAP` EN/KO and static fallback DOM text in sync (including `#events` grid classes and dynamic renderers).
 - Korean/local buddy recruitment stays a one-line note in `#apply`; do not re-expand it into its own section.
-- The page intentionally stores no personal information; applications/questions go through external channels only.
+- The site collects personal information through `/apply/` and stores it in the team's Google Sheet. What it collects, why, how long it is kept (6 months after the event), and the deletion contact (`zeroone.soma@gmail.com`) are all stated in the form, behind a required consent checkbox. Collecting a new field means updating that notice and the sheet header in the same change. Nothing personal is ever committed to this repo.
 - CTA URLs appear both as hardcoded anchors and in `CONFIG`; keep both aligned so the page works before JS enhancement.
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public copy, metadata, alt text, README public summary, or deploy artifacts.
 - The June 25 Run 1 Notion guide is historical and intentionally absent from public surfaces; do not restore it without an explicitly approved current replacement.
@@ -143,13 +160,23 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 - Do not reintroduce retired recruitment facts as current truth: "3 spots left", "8 seats booked", "first pilot recruitment", and the July 18/19 & 25/26 "Run 2" window are history. (Note: the KBO price is ₩60,000 since 2026-08-04; ₩50,000 and the older "50,000 KRW" pilot framing are both retired.)
 - Do not expose internal weak-validation details in public copy; maintainer checks may mention them only to verify their absence.
 - Do not create package/build tooling just to make small copy changes, and do not split pages into a framework structure unless routing/reuse/builds become real requirements.
+- ⚠️ Do not log applicant data on the server. One `console.log(body)` puts names and contact IDs in the Vercel function log in plain text, and "no personal data in the repo" does not cover that path. `api/apply.js` never calls `console.*` directly: it uses the logging helper, which passes only `application_id`, `code`, and `stage`. `tests/api-apply.test.js` enforces both halves.
+- Do not return internal error text from the API. Only the defined codes (`VALIDATION`, `STORAGE`, `METHOD`) go back to the browser.
+- Do not put secrets in the repo. The service-account key and the Discord webhook live in Vercel environment variables only, and `.env*` is gitignored because `vercel env pull` writes the key in plain text.
+- Do not pull the production service-account key onto a laptop. `scripts/dev-server.js` covers local form work without any credential, and the PR Preview deployment covers real Sheet/Discord verification. If local testing against a real sheet ever becomes necessary, make a separate service account and a separate test sheet rather than reusing production.
+- Do not add a server or asset file without extending the `.vercelignore` allowlist in the same change; `tests/deploy-allowlist.test.js` fails if you forget. The same test also fails in the other direction, if a folder-wide un-ignore (`!/scripts`) would push internal files onto the public site.
 - Do not treat `.omo/evidence/` or `docs/superpowers/` as current truth without rechecking against the live files.
 
 ## COMMANDS
 
 ```bash
-# Local preview
+# Local preview with the form working end to end (no secrets needed)
 cd ~/projects/hanbuddy-landing
+node scripts/dev-server.js            # http://127.0.0.1:8099/apply/
+QA_SCENARIO=sheet-fail node scripts/dev-server.js   # or both-fail, to see the failure branches
+# ⚠️ storage is stubbed: a "received" screen here does NOT prove the Sheet works.
+
+# Static-only preview (fastest, but every form submit fails — /api/ does not run)
 python3 -m http.server 8080
 
 # Tests (pass the glob — `node --test tests/` fails on some Node versions)
@@ -162,11 +189,14 @@ gh pr merge <N> --squash --delete-branch   # merging main auto-deploys via Verce
 
 # Verify what would deploy (simulate the .vercelignore allowlist)
 tmp=$(mktemp -d) && git -C . ls-files >/dev/null && cp .vercelignore "$tmp/.gitignore" && \
-  git -C "$tmp" init -q && cp -R index.html about events assets "$tmp/" 2>/dev/null && \
+  git -C "$tmp" init -q && cp -R index.html favicon.ico about apply api events assets "$tmp/" 2>/dev/null && \
   git -C "$tmp" add -n . | sort
 
 # Quick content check (current facts)
-rg -n "forms.gle/B1fWgX3MjtHUHGNt5|Aug 5|Aug 12|₩50,000|₩25,000|www.hanbuddy.kr" index.html events README.md
+rg -n "Aug 5|Aug 12|₩50,000|₩25,000|www.hanbuddy.kr" index.html events README.md
+
+# The landing site must never point at the Google Form again — this should print nothing
+rg -n "forms.gle" index.html about apply events
 ```
 
 ## NOTES

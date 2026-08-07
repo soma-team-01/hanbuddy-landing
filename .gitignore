@@ -10,3 +10,6 @@ assets/**/*.JPG
 assets/**/*.JPEG
 .vercel
 .DS_Store
+
+# vercel env pull이 만드는 .env.local에 서비스 계정 키가 평문으로 담긴다.
+.env*

@@ -360,7 +360,7 @@
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="en" aria-pressed="true">EN</button>
           <button type="button" class="focusable rounded-full px-3 py-1.5 text-xs font-extrabold transition" data-lang="ko" aria-pressed="false">KO</button>
         </div>
-        <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+        <a href="/apply/" data-cta="apply"
            class="focusable rounded-full bg-primary px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px sm:px-5">
           <span class="sm:hidden" data-i18n="nav.primaryCtaShort">Join</span>
           <span class="hidden sm:inline" data-i18n="nav.primaryCta">Join a meetup</span>
@@ -386,7 +386,7 @@
         </p>
 
         <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+          <a href="/apply/" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="hero.primaryCta">
             Join a meetup
           </a>
@@ -526,7 +526,7 @@
           See you at the next meetup?
         </h2>
         <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+          <a href="/apply/" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
             Join a meetup
           </a>
@@ -639,7 +639,7 @@
 
   <script>
     const CONFIG = {
-      apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
+      apply: '/apply/',
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
@@ -734,7 +734,7 @@
               alt: 'A wide view of Jamsil Baseball Stadium from the stands before a KBO game',
               width: 1600,
               height: 1200,
-              href: '/events/kbo/',
+              href: '/events/kbo-gocheok/',
             },
             {
               status: 'upcoming',
@@ -885,7 +885,7 @@
               alt: '경기 전 관중석에서 바라본 잠실야구장 전경',
               width: 1600,
               height: 1200,
-              href: '/events/kbo/',
+              href: '/events/kbo-gocheok/',
             },
             {
               status: 'upcoming',
@@ -981,7 +981,8 @@
         const url = CONFIG[key];
         if (!url) return;
         el.setAttribute('href', url);
-        if (url.startsWith('#')) {
+        // 사이트 안 링크(앵커·/apply/)는 같은 탭에서 연다. 외부 채널만 새 탭으로 보낸다.
+        if (url.startsWith('#') || url.startsWith('/')) {
           el.removeAttribute('target');
           el.removeAttribute('rel');
           return;

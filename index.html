@@ -319,8 +319,8 @@
         <p class="text-sm font-semibold leading-6" data-i18n="announcement.text">
           ⚾ Aug 12 (Wed) &middot; Indoor Dome KBO Baseball Night
         </p>
-        <a data-announcement-link href="/events/kbo/"
-           data-analytics-content-id="kbo" data-analytics-content-status="open"
+        <a data-announcement-link href="/events/kbo-gocheok/"
+           data-analytics-content-id="kbo-gocheok" data-analytics-content-status="open"
            class="focusable focusable-on-primary-strong shrink-0 rounded-full bg-on-primary px-4 py-1.5 text-xs font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px">
           <span data-i18n="announcement.cta">Join us</span>
           <span aria-hidden="true" class="ml-0.5">&rarr;</span>
@@ -374,7 +374,7 @@
         </p>
 
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+          <a href="/apply/" data-cta="apply"
              class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
             Join a meetup
           </a>
@@ -538,14 +538,14 @@
             See you at the next meetup?
           </h2>
           <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
-            Tell us which event and which day in the Google Form. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
+            Pick your event and day, and we’ll take it from there. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
             Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <a href="https://forms.gle/B1fWgX3MjtHUHGNt5" target="_blank" rel="noopener" data-cta="apply"
+          <a href="/apply/" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
             Join a meetup
           </a>
@@ -658,7 +658,7 @@
 
   <script>
     const CONFIG = {
-      apply: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
+      apply: '/apply/',
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
@@ -669,7 +669,7 @@
     // CONTENT_MAP의 `announcement.text`(EN/KO)를 함께 바꾼다.
     const ANNOUNCEMENT = {
       id: 'kbo-2026-08-12',
-      href: '/events/kbo/',
+      href: '/events/kbo-gocheok/',
       endsAt: '2026-08-12T17:30:00+09:00',
     };
     const ANNOUNCEMENT_DISMISS_KEY = 'hanbuddy.announcementDismissed';
@@ -735,9 +735,9 @@
           comingSoonToast: 'Almost ready! Follow @hanbuddy_kr on Instagram to hear first 🙌',
           cards: [
             {
-              id: 'kbo',
+              id: 'kbo-gocheok',
               status: 'open',
-              href: '/events/kbo/',
+              href: '/events/kbo-gocheok/',
               emoji: '⚾',
               title: 'Indoor Dome KBO Baseball Night',
               date: 'Aug 12, 21 & 22',
@@ -748,9 +748,9 @@
               imagePos: 'object-[50%_22%]',
             },
             {
-              id: 'jamsil',
+              id: 'kbo-jamsil',
               status: 'open',
-              href: '/events/jamsil/',
+              href: '/events/kbo-jamsil/',
               emoji: '⚾',
               title: 'Open-Air KBO Baseball Night at Jamsil',
               date: 'Aug 15, 16, 21 & 22',
@@ -801,7 +801,7 @@
         how: {
           title: 'Joining takes 2 minutes.',
           items: [
-            { step: '1', title: 'Apply', body: 'Fill in the Google Form. Pick your plan and your day.' },
+            { step: '1', title: 'Apply', body: 'Pick your plan and your day on the application form.' },
             { step: '2', title: 'We confirm', body: 'We message you directly with the meeting spot and details.' },
             { step: '3', title: 'Have fun', body: 'Meet your buddy and enjoy the day like a local.' },
           ],
@@ -846,7 +846,7 @@
         finalCta: {
           eyebrow: 'Baseball · Han River · more coming',
           title: 'See you at the next meetup?',
-          body: 'Tell us which event and which day in the Google Form. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
+          body: 'Pick your event and day, and we’ll take it from there. It takes about 2 minutes. Questions? DM us on Instagram, or use KakaoTalk if you prefer.',
           buddyNote: 'Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.',
           formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
@@ -935,9 +935,9 @@
           comingSoonToast: '준비 중이에요! 오픈 소식은 인스타그램 @hanbuddy_kr에서 가장 먼저 알려드릴게요 🙌',
           cards: [
             {
-              id: 'kbo',
+              id: 'kbo-gocheok',
               status: 'open',
-              href: '/events/kbo/',
+              href: '/events/kbo-gocheok/',
               emoji: '⚾',
               title: '고척돔 실내 야구 직관',
               date: '8월 12·21·22일',
@@ -948,9 +948,9 @@
               imagePos: 'object-[50%_22%]',
             },
             {
-              id: 'jamsil',
+              id: 'kbo-jamsil',
               status: 'open',
-              href: '/events/jamsil/',
+              href: '/events/kbo-jamsil/',
               emoji: '⚾',
               title: '잠실 야외 야구 직관',
               date: '8월 15·16·21·22일',
@@ -1001,7 +1001,7 @@
         how: {
           title: '신청은 2분이면 충분합니다.',
           items: [
-            { step: '1', title: '신청', body: '구글폼에서 원하는 플랜과 날짜를 선택하세요.' },
+            { step: '1', title: '신청', body: '신청 폼에서 원하는 플랜과 날짜를 선택하세요.' },
             { step: '2', title: '확인', body: '만남 장소와 세부 사항을 직접 메시지로 안내해 드립니다.' },
             { step: '3', title: '즐기기', body: '버디를 만나 로컬처럼 하루를 즐기세요.' },
           ],
@@ -1046,7 +1046,7 @@
         finalCta: {
           eyebrow: '야구 · 한강 · 계속 추가 중',
           title: '다음 모임에서 만날까요?',
-          body: '구글폼에서 원하는 이벤트와 날짜를 알려주세요. 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
+          body: '원하는 이벤트와 날짜만 골라 주세요. 2분이면 충분합니다. 궁금한 점은 Instagram DM으로 문의하거나, 원하시면 KakaoTalk 오픈채팅을 이용해 주세요.',
           buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
           formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
@@ -1115,7 +1115,8 @@
         const url = CONFIG[key];
         if (!url) return;
         el.setAttribute('href', url);
-        if (url.startsWith('#')) {
+        // 사이트 안 링크(앵커·/apply/)는 같은 탭에서 연다. 외부 채널만 새 탭으로 보낸다.
+        if (url.startsWith('#') || url.startsWith('/')) {
           el.removeAttribute('target');
           el.removeAttribute('rel');
           return;

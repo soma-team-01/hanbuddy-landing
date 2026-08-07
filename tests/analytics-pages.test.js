@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { readFileSync } = require('node:fs');
+const { readdirSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const test = require('node:test');
 const { runInNewContext } = require('node:vm');
@@ -7,14 +7,24 @@ const { runInNewContext } = require('node:vm');
 const readPage = (...parts) => readFileSync(join(__dirname, '..', ...parts), 'utf8');
 const homeHtml = readPage('index.html');
 const aboutHtml = readPage('about', 'index.html');
-const detailPages = [
-  { name: 'KBO', experienceType: 'kbo', html: readPage('events', 'kbo', 'index.html') },
-  { name: 'Jamsil', experienceType: 'jamsil', html: readPage('events', 'jamsil', 'index.html') },
-  { name: 'Han River', experienceType: 'hanriver', html: readPage('events', 'hanriver', 'index.html') },
-];
+const applyHtml = readPage('apply', 'index.html');
+
+// 상세페이지 목록과 각 페이지의 experience type을 손으로 적으면, 새 이벤트
+// 페이지가 검사에서 통째로 빠지고 id 체계가 어긋나도 통과한다(실제로
+// events/kleague가 빠져 있었다). 디렉터리를 훑고 값은 카드 데이터와 대조한다.
+const detailPages = readdirSync(join(__dirname, '..', 'events'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort()
+  .map((name) => ({ name, html: readPage('events', name, 'index.html') }));
+
+const eventCardIds = new Set(
+  [...homeHtml.matchAll(/\bid: '([a-z0-9-]+)',\s*\n\s*status: '(?:open|soon)'/g)].map((m) => m[1]),
+);
 const publicPages = [
   { name: 'Home', html: homeHtml },
   { name: 'About', html: aboutHtml },
+  { name: 'Apply', html: applyHtml },
   ...detailPages,
 ];
 
@@ -57,9 +67,22 @@ test('event cards expose canonical content-selection metadata', () => {
   assert.doesNotMatch(homeHtml, /track\('event_card_click'/);
 });
 
-test('on-page application navigation is distinct from a Google Form open', () => {
+test('scrolling to the apply section is distinct from opening the form', () => {
+  // 같은 CTA 키를 쓰면 섹션까지 스크롤한 사람과 폼을 연 사람이 한 숫자로 뭉친다.
   assert.match(homeHtml, /href="#apply" data-cta="apply_section"/);
   assert.doesNotMatch(homeHtml, /href="#apply" data-cta="apply"/);
+});
+
+test('the apply page loads shared analytics with its own page context', () => {
+  assert.match(applyHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"/);
+  assert.doesNotMatch(applyHtml, /googleMeasurementId|metaPixelId/);
+  assert.doesNotMatch(applyHtml, /googletagmanager\.com\/gtag\/js/);
+});
+
+test('the apply page never links back to itself as a CTA', () => {
+  // 폼 위에서 다시 폼으로 보내는 버튼은 application_form_open을 자기 자신에게 찍는다.
+  assert.doesNotMatch(applyHtml, /data-cta="apply"/);
 });
 
 const languageSwitchStatement = (html) => {
@@ -99,12 +122,21 @@ test('language switches call the shared analytics API with both languages', () =
 });
 
 test('event detail pages load shared analytics with canonical page and experience context', () => {
-  for (const { name, experienceType, html } of detailPages) {
+  assert.ok(eventCardIds.size >= 3, 'event card ids must be readable from the home page');
+
+  for (const { name, html } of detailPages) {
     assert.match(html, /<script src="\/assets\/analytics\.js"><\/script>/, `${name} analytics module`);
-    assert.match(
-      html,
-      new RegExp(`<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="${experienceType}"`),
-      `${name} detail context`,
+
+    const context = html.match(
+      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"/,
+    );
+    assert.ok(context, `${name} detail context`);
+
+    // 상세페이지의 experience type과 카드 id가 갈리면 GA와 시트에서 같은 회차가
+    // 두 이름으로 집계된다.
+    assert.ok(
+      eventCardIds.has(context[1]),
+      `${name} experience type "${context[1]}" must match an event card id (${[...eventCardIds].join(', ')})`,
     );
   }
 });

@@ -22,7 +22,7 @@ test('the announcement bar is wired to copy, a target, and a dismiss control', (
   assert.match(html, /data-i18n-aria="announcement\.dismissAria"/, 'the dismiss control needs a translated label');
 
   // 이벤트 카드와 같은 스키마로 클릭을 센다.
-  assert.match(html, /data-announcement-link[\s\S]{0,200}data-analytics-content-id="kbo"/);
+  assert.match(html, /data-announcement-link[\s\S]{0,200}data-analytics-content-id="kbo-gocheok"/);
 
   // CTA가 문장에 섞여 있으면 클릭 대상으로 읽히지 않는다. 버튼 모양을 고정한다.
   const link = html.match(/<a data-announcement-link[\s\S]*?<\/a>/)[0];
@@ -76,7 +76,7 @@ test('the promoted run has not already happened', () => {
 });
 
 test('the announcement points at a published event page', () => {
-  assert.match(announcement.href, /^\/events\/[a-z]+\/$/);
+  assert.match(announcement.href, /^\/events\/[a-z0-9-]+\/$/);
   const slug = announcement.href.split('/')[2];
   assert.match(html, new RegExp(`href: '/events/${slug}/'`), 'the target must be an open event card');
 });
