@@ -44,3 +44,6 @@
 !/events/kleague
 /events/kleague/*
 !/events/kleague/index.html
+!/api
+/api/*
+!/api/apply.js
