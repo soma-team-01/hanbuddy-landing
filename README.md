@@ -17,14 +17,17 @@ ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 사이트. **주 타
 ```bash
 cd ~/projects/hanbuddy-landing
 
-# 신청 폼까지 확인하려면 (함수가 함께 떠야 한다)
-vercel env pull .env.local   # 최초 1회. 서비스 계정 키가 담기므로 gitignore 대상
-vercel dev
+# 신청 폼을 제출까지 돌려볼 때 (시크릿 필요 없음)
+node scripts/dev-server.js                          # http://127.0.0.1:8099/apply/
+QA_SCENARIO=sheet-fail node scripts/dev-server.js   # 또는 both-fail — 저장 실패 분기 확인
+# ⚠️ 저장은 스텁이다. 접수 완료 화면이 떠도 시트 연동이 동작한다는 뜻은 아니다.
 
-# 정적 페이지만 볼 때 (더 빠르지만 /api/가 돌지 않아 제출은 전부 실패한다)
+# 정적 페이지만 볼 때 (가장 빠르지만 /api/가 돌지 않아 제출은 전부 실패한다)
 python3 -m http.server 8080
 # http://localhost:8080 접속
 ```
+
+시트 기록·디스코드 알림·GA 수집 같은 실물 확인은 **PR Preview 배포**에서 한다. 프로덕션 서비스 계정 키를 노트북에 내려받지 않는다.
 
 ## 테스트
 

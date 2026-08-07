@@ -28,6 +28,7 @@ hanbuddy-landing/
 |   |-- photos/kleague/       # team-owned K League photos (coming-soon card / backdrop)
 |   |-- photos/jjimjilbang/   # CC0 jjimjilbang photos (coming-soon card; no team photos yet)
 |   `-- raw/                  # untracked originals (.gitignore); never deploy
+|-- scripts/dev-server.js     # local dev server (never deployed): real function, stubbed storage, no secrets
 |-- tests/                    # node --test suites: about/apply copy sync, slot-vs-card drift, form validation, API privacy, deploy allowlist, analytics consent, review carousel, palette/typography vs DESIGN.md
 |-- docs/superpowers/         # past design specs/plans (history, not current truth)
 |-- DESIGN.md                 # design-system SSOT (tokens, components, photo rules)
@@ -49,7 +50,7 @@ hanbuddy-landing/
 | Close a sold-out date | `assets/event-slots.js` | Capacity is managed by hand (2026-08-06 decision): drop the slot and it disappears from the form |
 | Replace public photos | `assets/photos/**` + referencing pages | WebP only, EXIF stripped; photo rules in DESIGN.md; add new folders/extensions to `.vercelignore` |
 | Run tests | `node --test tests/*.test.js` | Directory form `node --test tests/` fails on some Node versions — pass the glob |
-| Local preview | `vercel dev` (or `python3 -m http.server 8080` for static-only) | `/api/apply` only runs under `vercel dev`; the Python server serves the form but every submit fails |
+| Local preview | `node scripts/dev-server.js` (or `python3 -m http.server 8080` for static-only) | The dev server runs the real function with storage stubbed, so the form submits without any secrets. Real Sheet/Discord/GA verification happens on the PR Preview deployment, never locally |
 | Deploy | merge to `main` | Vercel GitHub integration auto-deploys `main` to `www.hanbuddy.kr`; `.vercelignore` allowlists what gets served |
 
 ## CODE MAP
@@ -161,18 +162,20 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 - ⚠️ Do not log applicant data on the server. One `console.log(body)` puts names and contact IDs in the Vercel function log in plain text, and "no personal data in the repo" does not cover that path. `api/apply.js` never calls `console.*` directly: it uses the logging helper, which passes only `application_id`, `code`, and `stage`. `tests/api-apply.test.js` enforces both halves.
 - Do not return internal error text from the API. Only the defined codes (`VALIDATION`, `STORAGE`, `METHOD`) go back to the browser.
 - Do not put secrets in the repo. The service-account key and the Discord webhook live in Vercel environment variables only, and `.env*` is gitignored because `vercel env pull` writes the key in plain text.
-- Do not add a server or asset file without extending the `.vercelignore` allowlist in the same change; `tests/deploy-allowlist.test.js` fails if you forget.
+- Do not pull the production service-account key onto a laptop. `scripts/dev-server.js` covers local form work without any credential, and the PR Preview deployment covers real Sheet/Discord verification. If local testing against a real sheet ever becomes necessary, make a separate service account and a separate test sheet rather than reusing production.
+- Do not add a server or asset file without extending the `.vercelignore` allowlist in the same change; `tests/deploy-allowlist.test.js` fails if you forget. The same test also fails in the other direction, if a folder-wide un-ignore (`!/scripts`) would push internal files onto the public site.
 - Do not treat `.omo/evidence/` or `docs/superpowers/` as current truth without rechecking against the live files.
 
 ## COMMANDS
 
 ```bash
-# Local preview with the function (needed for anything touching /apply/)
+# Local preview with the form working end to end (no secrets needed)
 cd ~/projects/hanbuddy-landing
-vercel env pull .env.local   # first time only; gitignored, holds the service-account key
-vercel dev
+node scripts/dev-server.js            # http://127.0.0.1:8099/apply/
+QA_SCENARIO=sheet-fail node scripts/dev-server.js   # or both-fail, to see the failure branches
+# ⚠️ storage is stubbed: a "received" screen here does NOT prove the Sheet works.
 
-# Static-only preview (faster, but every form submit fails — /api/ does not run)
+# Static-only preview (fastest, but every form submit fails — /api/ does not run)
 python3 -m http.server 8080
 
 # Tests (pass the glob — `node --test tests/` fails on some Node versions)
