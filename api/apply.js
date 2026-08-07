@@ -131,7 +131,9 @@ const notifyDiscord = async ({ applicationId, value, sheetFailed, signal }) => {
     method: 'POST',
     signal,
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ content: lines.join('\n') }),
+    // 신청자가 적은 글이 그대로 실리므로 멘션을 꺼둔다. 요청사항 칸에
+    // @everyone 한 줄이면 팀 전원에게 알림이 간다.
+    body: JSON.stringify({ content: lines.join('\n'), allowed_mentions: { parse: [] } }),
   });
   if (!response.ok) throw new Error('webhook');
 };

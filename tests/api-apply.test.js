@@ -144,3 +144,31 @@ test('the whole sheet path shares one deadline, not one per hop', async () => {
   // 시트는 마감에 걸렸지만 디스코드가 받았으므로 접수다.
   assert.equal(response.code, 200);
 });
+
+test('applicant text cannot ping the whole Discord server', async () => {
+  // 요청사항은 자유 입력이고 그대로 알림에 실린다. 멘션을 끄지 않으면
+  // "@everyone" 한 줄로 팀 전원을 호출할 수 있다.
+  const previousFetch = globalThis.fetch;
+  let webhookBody = null;
+  globalThis.fetch = (url, init) => {
+    if (String(url).includes('discord')) {
+      webhookBody = JSON.parse(init.body);
+      return Promise.resolve({ ok: true });
+    }
+    if (String(url).includes('oauth2')) {
+      return Promise.resolve({ ok: true, json: async () => ({ access_token: 'stub' }) });
+    }
+    return Promise.resolve({ ok: true });
+  };
+
+  const response = { status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } };
+  try {
+    await handler({ method: 'POST', body: { ...application(), requests: '@everyone please read' } }, response);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+
+  assert.equal(response.code, 200);
+  assert.ok(webhookBody.content.includes('@everyone'), 'the text still reaches the team, it just cannot ping');
+  assert.deepEqual(webhookBody.allowed_mentions, { parse: [] });
+});
