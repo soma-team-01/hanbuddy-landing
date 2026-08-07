@@ -238,13 +238,149 @@
       z-index: 20;
     }
 
-    /* 모바일·태블릿(<1280px): 콘텐츠 아래, 어긋나게 겹친 콜라주 */
+    /* 기본은 데스크톱 배치. .hero-lead는 상자를 만들지 않고 하위 두 장을
+       #top의 직계처럼 흘려보내서, 아래 ≥1280px 블록의 네 모서리 배치가
+       hp1~hp4에 그대로 적용되게 한다. */
+    .hero-lead {
+      display: contents;
+    }
+
+    /* 모바일·태블릿(<1280px): 야구 두 장은 히어로 위 배경 레이어,
+       한강 두 장은 콘텐츠 아래 콜라주.
+
+       겹침 규칙은 전부 이 max-width 블록 안에 둔다. 바깥에 두면
+       .hero-lead .hp1(0,2,0)이 데스크톱의 .hp1(0,1,0)을 이겨서
+       큰 화면에서도 사진이 화면 밖으로 잘려 나간다.
+
+       .hero-lead는 절대 배치라 문서 흐름에서 빠진다. 그래서 .hero-copy의
+       padding-top이 사진이 차지할 높이를 대신 확보하고, 제목이 그 위를 덮는다.
+       폴라로이드는 회전 때문에 컨테이너 아래로 삐져나오므로 컨테이너 높이를
+       사진보다 넉넉히 잡고 ::after 그라디언트로 아랫부분을 캔버스에 녹인다.
+       그러지 않으면 눈썹과 제목이 사진에 얹혀 읽히지 않는다. */
+    @media (max-width: 1279px) {
+      .hero-lead {
+        display: block;
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 400px;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .hero-lead .hero-polaroid {
+        position: absolute;
+        margin: 0;
+        padding: 8px 8px 10px;
+      }
+
+      /* 사진이 화면 밖으로 잘려서 손글씨 캡션이 반쯤 걸린다. 겹침 배치에서는 숨긴다. */
+      .hero-lead .hp-cap { display: none; }
+
+      .hero-lead .hp-frame {
+        display: block;
+        width: 182px;
+        height: 190px;
+      }
+
+      .hero-lead .hp1 { left: -26px; top: 2px; transform: rotate(-8deg); }
+      .hero-lead .hp2 { right: -26px; top: 52px; transform: rotate(7deg); }
+
+      .hero-lead::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 244px;
+        background: linear-gradient(180deg,
+          rgba(255, 250, 247, 0) 0%,
+          rgba(255, 250, 247, 0.93) 46%,
+          var(--color-canvas) 72%);
+      }
+
+      /* 보이는 순서만 바꾼다: 제목 → 눈썹 → 버튼 → 본문 → 평점 → 후기.
+         DOM 순서(눈썹 → 제목 → 본문 → 버튼)는 그대로라 읽어주는 순서와
+         탭 순서는 원래대로 유지된다.
+
+         Tailwind CDN은 런타임에 스타일을 주입해서 특정도가 같으면 유틸리티가 이긴다.
+         mt-*·pt-* 를 확실히 덮으려고 #top을 붙였다. */
+      #top .hero-copy {
+        display: flex;
+        flex-direction: column;
+        padding-top: 186px;
+      }
+
+      #top .hero-copy > .hero-title { order: 1; margin-top: 0; }
+      #top .hero-copy > .hero-eyebrow { order: 2; margin-top: 14px; }
+      #top .hero-copy > .hero-cta-band { order: 3; margin-top: 26px; }
+      #top .hero-copy > .hero-rating { order: 4; align-self: center; }
+      #top .hero-copy > .hero-quote { order: 5; }
+
+      /* 버튼 묶음: 한강 두 장이 배경 레이어로 깔리고 버튼이 그 사이에 선다.
+         본문은 사진 아래에서 시작하도록 위 여백을 크게 줘서, 얇은 글씨가
+         사진 위를 지나지 않게 한다(겹침은 12px, 첫 줄이 스치는 정도). */
+      #top .hero-cta-band {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #top .hero-cta-band > .hero-actions {
+        order: 1;
+        margin-top: 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      #top .hero-cta-band > .hero-subtitle {
+        order: 2;
+        margin: 62px auto 0;
+        max-width: 320px;
+        font-size: 15.5px;
+        line-height: 1.62;
+        position: relative;
+        z-index: 2;
+      }
+
+      #top .hero-cta-band > .hero-polaroids {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+        pointer-events: none;
+      }
+
+      #top .hero-cta-band .hero-polaroid {
+        position: absolute;
+        margin: 0;
+        padding: 7px 7px 9px;
+      }
+
+      /* 사진이 화면 밖으로 잘리는 배치라 손글씨 캡션이 반쯤 걸린다. */
+      #top .hero-cta-band .hp-cap { display: none; }
+
+      #top .hero-cta-band .hp-frame {
+        display: block;
+        width: 156px;
+        height: 164px;
+      }
+
+      /* 살짝 흐리게. 사진이 배경 레이어라는 걸 알려주되 죽이지는 않는 정도다. */
+      #top .hero-cta-band .hero-polaroid img { opacity: 0.82; }
+
+      #top .hero-cta-band .hp3 { left: -62px; top: -14px; transform: rotate(8deg); }
+      #top .hero-cta-band .hp4 { right: -62px; top: 4px; transform: rotate(-7deg); }
+    }
+
     .hero-polaroids {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: 10px;
       max-width: 468px;
-      margin: 52px auto 0;
+      margin: 40px auto 0;
       padding: 0 14px 78px;
     }
 
@@ -261,17 +397,35 @@
     @media (min-width: 1280px) {
       #top { min-height: 860px; }
 
-      .hero-polaroids {
+      .hero-polaroids,
+      .hero-cta-band {
         display: contents;
+      }
+
+      /* .hero-copy가 Tailwind의 relative를 달고 있으면 절대 배치 폴라로이드의
+         기준 상자가 #top이 아니라 .hero-copy가 되어 사진이 히어로 모서리가 아닌
+         본문 한가운데로 온다. 데스크톱에서는 기준을 #top으로 돌려놓는다.
+         대신 사라진 z-10을 아래에서 항목별로 다시 얹는다. */
+      #top .hero-copy { position: static; }
+
+      #top .hero-copy .hero-title,
+      #top .hero-copy .hero-eyebrow,
+      #top .hero-copy .hero-subtitle,
+      #top .hero-copy .hero-actions,
+      #top .hero-copy .hero-rating,
+      #top .hero-copy .hero-quote {
+        position: relative;
+        z-index: 1;
       }
 
       .hero-polaroid {
         position: absolute;
-        z-index: 1;
+        z-index: 0;
         margin: 0;
       }
 
-      .hero-polaroids .hp-frame {
+      .hero-polaroids .hp-frame,
+      .hero-lead .hp-frame {
         width: clamp(120px, calc((100vw - 900px) / 2 - 28px), 380px);
         height: clamp(120px, calc((100vw - 900px) / 2 - 28px), 380px);
       }
@@ -314,14 +468,18 @@
   <!-- 다음 회차 알림. 스크롤하면 헤더만 남기고 위로 흘러가며,
        회차 시작 시각이 지나면 렌더 자체를 하지 않는다(내리는 걸 잊어도 안전). -->
   <aside data-announcement hidden class="relative z-[60] bg-ink text-on-primary">
-    <div class="relative mx-auto max-w-6xl px-5 py-2.5 pr-12">
-      <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-        <p class="text-sm font-semibold leading-6" data-i18n="announcement.text">
+    <!-- 좌우 패딩은 대칭을 유지한다. 닫기 버튼 자리를 오른쪽에만 주면
+         가운데 정렬이 바 중심에서 그만큼 밀린다(모바일에서 14px 어긋났었다).
+         문구와 버튼은 형제로 두고 인라인으로 흘린다. 버튼을 문구 <p> 안에 넣으면
+         언어 전환이 textContent를 덮어쓰면서 버튼이 통째로 지워진다. -->
+    <div class="relative mx-auto max-w-6xl px-11 py-2 sm:px-12 sm:py-2.5">
+      <div class="text-center [text-wrap:balance]">
+        <p class="inline text-[13px] font-semibold leading-[1.55] sm:text-sm sm:leading-6" data-i18n="announcement.text">
           ⚾ Aug 12 (Wed) &middot; Indoor Dome KBO Baseball Night
         </p>
         <a data-announcement-link href="/events/kbo-gocheok/"
            data-analytics-content-id="kbo-gocheok" data-analytics-content-status="open"
-           class="focusable focusable-on-primary-strong shrink-0 rounded-full bg-on-primary px-4 py-1.5 text-xs font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px">
+           class="focusable focusable-on-primary-strong ml-1.5 inline-block whitespace-nowrap rounded-full bg-on-primary px-2.5 py-0.5 align-middle text-[11px] font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px sm:px-4 sm:py-1.5 sm:text-xs">
           <span data-i18n="announcement.cta">Join us</span>
           <span aria-hidden="true" class="ml-0.5">&rarr;</span>
         </a>
@@ -362,50 +520,9 @@
   <main id="main">
     <!-- Hero -->
     <section id="top" class="relative overflow-hidden">
-      <div class="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
-        <p class="eyebrow" data-i18n="hero.eyebrow">
-          Seoul &middot; Meetups every week
-        </p>
-        <h1 class="mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl" data-i18n="hero.title">
-          Experience Korea like a local!
-        </h1>
-        <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-          Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
-        </p>
-
-        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="/apply/" data-cta="apply"
-             class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
-            Join a meetup
-          </a>
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
-             class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
-            <span data-i18n="hero.contactCta">DM us on Instagram</span> <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        <!-- Compact guest-rating proof linking to full reviews -->
-        <a href="#reviews" class="focusable mt-8 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
-          <span aria-hidden="true" class="tracking-tight">★★★★★</span>
-          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests · read their reviews</span>
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-
-        <!-- Featured guest quote -->
-        <figure class="relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
-          <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
-          <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
-          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
-            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
-          </blockquote>
-          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
-            — Guest at our first baseball night, Jamsil Stadium
-          </figcaption>
-        </figure>
-      </div>
-
-      <!-- 사진첩에 붙여놓은 듯한 폴라로이드: 데스크톱은 네 모서리 배경, 모바일은 콘텐츠 아래 콜라주 -->
-      <div class="hero-polaroids">
+      <!-- 모바일에서는 이 두 장이 히어로 위쪽 배경 레이어가 되고 제목이 그 위를 덮는다.
+           DOM 순서는 읽기 순서 그대로 두고, 보이는 순서만 .hero-copy의 order로 바꾼다. -->
+      <div class="hero-lead">
         <figure class="hero-polaroid hp1">
           <span class="hp-tape" aria-hidden="true"></span>
           <span class="hp-frame">
@@ -417,28 +534,80 @@
         <figure class="hero-polaroid hp2">
           <span class="hp-tape" aria-hidden="true"></span>
           <span class="hp-frame">
-            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" loading="lazy" class="object-[50%_30%]"
+            <img src="assets/photos/kbo/run1-group.webp" width="975" height="1300" class="object-[50%_30%]"
                  alt="HanBuddy guests and buddies smiling together in the stands at Jamsil Baseball Stadium" data-i18n-alt="meta.groupAlt" />
           </span>
           <figcaption class="hp-cap" data-i18n="hero.photoCap2">first baseball night ⚾</figcaption>
         </figure>
-        <figure class="hero-polaroid hp3">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200" loading="lazy"
-                 alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap3">Banpo rainbow 🌈</figcaption>
-        </figure>
-        <figure class="hero-polaroid hp4">
-          <span class="hp-tape" aria-hidden="true"></span>
-          <span class="hp-frame">
-            <img src="assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" loading="lazy" class="object-[50%_55%]"
-                 alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" data-i18n-alt="meta.foodAlt" />
-          </span>
-          <figcaption class="hp-cap" data-i18n="hero.photoCap4">chimaek by the river 🍗</figcaption>
+      </div>
+
+      <div class="hero-copy relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
+        <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">
+          Seoul &middot; Meetups every week
+        </p>
+        <h1 class="hero-title mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl" data-i18n="hero.title">
+          Experience Korea like a local!
+        </h1>
+        <!-- 모바일에서 한강 두 장이 이 묶음의 배경 레이어가 되어 버튼 양옆에 선다.
+             본문 뒤가 아니라 버튼 높이에 두는 이유는 겹치는 상대가 달라서다.
+             본문은 얇은 muted 글씨라 사진 위에서 못 버티지만, 꽉 찬 CTA 버튼과
+             굵은 인스타 링크는 버틴다. 덕분에 사진을 흐리게 죽이지 않아도 된다. -->
+        <div class="hero-cta-band">
+          <div class="hero-polaroids">
+            <figure class="hero-polaroid hp3">
+              <span class="hp-tape" aria-hidden="true"></span>
+              <span class="hp-frame">
+                <img src="assets/photos/hanriver/hanriver-fountain.webp" width="1600" height="1200"
+                     alt="Banpo Bridge rainbow fountain lighting up the Han River at sunset" data-i18n-alt="meta.fountainAlt" />
+              </span>
+              <figcaption class="hp-cap" data-i18n="hero.photoCap3">Banpo rainbow 🌈</figcaption>
+            </figure>
+            <figure class="hero-polaroid hp4">
+              <span class="hp-tape" aria-hidden="true"></span>
+              <span class="hp-frame">
+                <img src="assets/photos/hanriver/hanriver-food.webp" width="1200" height="1600" class="object-[50%_55%]"
+                     alt="Korean fried chicken, ramyeon, and drinks on a picnic table by the Han River" data-i18n-alt="meta.foodAlt" />
+              </span>
+              <figcaption class="hp-cap" data-i18n="hero.photoCap4">chimaek by the river 🍗</figcaption>
+            </figure>
+          </div>
+
+          <p class="hero-subtitle mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
+            Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
+          </p>
+
+          <div class="hero-actions mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="/apply/" data-cta="apply"
+               class="focusable rounded-full bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
+              Join a meetup
+            </a>
+            <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+               class="focusable rounded-full px-4 py-3.5 text-center text-base font-bold text-primary-strong transition hover:opacity-80">
+              <span data-i18n="hero.contactCta">DM us on Instagram</span> <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Compact guest-rating proof linking to full reviews -->
+        <a href="#reviews" class="hero-rating focusable mt-8 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
+          <span aria-hidden="true" class="tracking-tight">★★★★★</span>
+          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests · read their reviews</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+
+        <!-- Featured guest quote -->
+        <figure class="hero-quote relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
+          <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
+          <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
+          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
+            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
+          </blockquote>
+          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
+            — Guest at our first baseball night, Jamsil Stadium
+          </figcaption>
         </figure>
       </div>
+
     </section>
 
     <!-- Upcoming events -->
@@ -631,28 +800,31 @@
 
   <section id="analytics-consent" data-consent-banner role="dialog" aria-labelledby="analytics-consent-title"
            aria-describedby="analytics-consent-description" aria-hidden="true"
-           class="fixed inset-x-4 bottom-4 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-raised sm:left-auto sm:max-w-xl sm:p-6">
-    <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
+           class="fixed inset-x-4 bottom-4 z-[70] hidden rounded-2xl border border-line-soft bg-canvas-soft p-4 shadow-raised sm:left-auto sm:max-w-xl sm:p-6">
+    <!-- 모바일에서는 배너 높이가 곧 히어로가 못 쓰는 공간이다(308px일 때 첫 화면의 37%).
+         문구는 그대로 두고 여백·글자 크기·버튼 배치만 조여 197px로 낮췄다. -->
+    <div class="grid gap-3.5 sm:grid-cols-[1fr_auto] sm:items-end sm:gap-5">
       <div>
-        <p id="analytics-consent-title" class="font-display text-lg font-extrabold tracking-tight text-ink" data-i18n="consent.title">
+        <p id="analytics-consent-title" class="font-display text-base font-extrabold tracking-tight text-ink sm:text-lg" data-i18n="consent.title">
           Your privacy choices
         </p>
-        <p id="analytics-consent-description" class="mt-2 text-sm leading-6 text-muted" data-i18n="consent.body">
+        <p id="analytics-consent-description" class="mt-1.5 text-[13px] leading-5 text-muted sm:mt-2 sm:text-sm sm:leading-6" data-i18n="consent.body">
           On public pages, we count one limited cookie-free visit using the page path and UTM campaign tags. If you accept, Google Analytics also measures clicks and Meta Pixel helps us understand ad reach. We never include form answers or link UTM tags to an application.
         </p>
-        <p class="mt-2 text-xs leading-5 text-muted">
+        <p class="mt-1.5 text-[11.5px] leading-[1.45] text-muted sm:mt-2 sm:text-xs sm:leading-5">
           <span data-i18n="consent.note">Optional analytics can be changed anytime in Cookie settings.</span>
           <a href="/privacy/" class="focusable rounded font-semibold underline" data-i18n="footer.privacyLink">Privacy</a>.
         </p>
       </div>
-      <div class="flex flex-col-reverse gap-2 sm:min-w-52">
+      <!-- 모바일은 가로 한 줄(거절 왼쪽·수락 오른쪽), sm 이상은 기존 세로 스택 그대로. -->
+      <div class="flex flex-row gap-2 sm:flex-col-reverse sm:min-w-52">
         <button type="button" data-consent-action="reject"
-                class="focusable rounded-full border border-line-strong px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft"
+                class="focusable min-h-11 flex-1 rounded-full border border-line-strong px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-primary-soft sm:flex-none sm:px-5"
                 data-i18n="consent.reject">
           No thanks
         </button>
         <button type="button" data-consent-action="accept"
-                class="focusable rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover"
+                class="focusable min-h-11 flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-on-primary transition hover:bg-primary-hover sm:flex-none sm:px-5"
                 data-i18n="consent.accept">
           Sure
         </button>
