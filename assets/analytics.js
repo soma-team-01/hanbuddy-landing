@@ -15,6 +15,15 @@
 
   const ANALYTICS_CONSENT_KEY = 'hanbuddy.analyticsConsent';
   const TRACKABLE_HOSTNAMES = new Set(['www.hanbuddy.kr']);
+  const LIMITED_UTM_KEYS = Object.freeze([
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_id',
+    'utm_content',
+    'utm_term',
+  ]);
+  const MAX_UTM_VALUE_LENGTH = 100;
   const GOOGLE_COLLECTION_DISABLE_KEY = (
     'ga-disable-' + ANALYTICS_CONFIG.googleMeasurementId
   );
@@ -124,6 +133,52 @@
     && TRACKABLE_HOSTNAMES.has(hostname.toLowerCase())
   );
 
+  const resemblesPersonalData = (value) => {
+    if (/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(value)) return true;
+    const phoneCandidates = value.match(/\+?\d[\d\s().-]{5,}\d/g) || [];
+    return phoneCandidates.some((candidate) => (
+      (candidate.match(/\d/g) || []).length >= 7
+    ));
+  };
+
+  const referrerOrigin = (referrer) => {
+    if (!referrer) return '';
+    try {
+      const parsed = new URL(referrer);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+        ? parsed.origin
+        : '';
+    } catch {
+      return '';
+    }
+  };
+
+  const buildLimitedPageView = ({ href = '', referrer = '' } = {}) => {
+    try {
+      const current = new URL(href);
+      const clean = new URL(current.origin + current.pathname);
+      LIMITED_UTM_KEYS.forEach((key) => {
+        const values = current.searchParams.getAll(key);
+        if (values.length !== 1) return;
+        const value = values[0].trim().slice(0, MAX_UTM_VALUE_LENGTH);
+        if (!value || resemblesPersonalData(value)) return;
+        clean.searchParams.set(key, value);
+      });
+      return {
+        page_location: clean.href,
+        page_referrer: referrerOrigin(referrer),
+      };
+    } catch {
+      return {};
+    }
+  };
+
+  const hasGlobalPrivacySignal = (windowLike) => (
+    windowLike?.navigator?.globalPrivacyControl === true
+    || windowLike?.navigator?.doNotTrack === '1'
+    || windowLike?.doNotTrack === '1'
+  );
+
   const setGoogleCollectionEnabled = (enabled) => {
     if (!browserWindow) return;
     browserWindow[GOOGLE_COLLECTION_DISABLE_KEY] = !enabled;
@@ -134,6 +189,8 @@
       buildPageContext,
       buildCtaEvent,
       buildSelectContentEvent,
+      buildLimitedPageView,
+      hasGlobalPrivacySignal,
       isTrackableHostname,
     };
   }
@@ -150,8 +207,11 @@
     ad_personalization: 'denied',
     analytics_storage: 'denied',
   });
+  browserWindow.gtag('set', 'ads_data_redaction', true);
 
-  let analyticsLoaded = false;
+  let googleTagLoaded = false;
+  let fullAnalyticsEnabled = false;
+  let pageViewSent = false;
   let consentSettingsTrigger = null;
   let initialized = false;
   let sectionObserverStarted = false;
@@ -179,8 +239,15 @@
     experienceType: document.body?.dataset.analyticsExperienceType || '',
   });
 
+  const currentConsentMode = () => (
+    document.body?.dataset.analyticsConsentMode === 'advanced'
+    && browserWindow.location.pathname !== '/apply/'
+      ? 'advanced'
+      : 'basic'
+  );
+
   const canTrack = () => (
-    analyticsLoaded
+    fullAnalyticsEnabled
     && safeStoredAnalyticsConsent() === 'granted'
     && isTrackableHostname(browserWindow.location.hostname)
   );
@@ -194,25 +261,37 @@
     });
   };
 
-  const loadGoogleAnalytics = () => {
-    updateGoogleConsent('granted');
-    if (document.getElementById('google-analytics-script')) {
-      browserWindow.gtag('event', 'page_view', currentPageContext());
-      return;
-    }
+  const loadGoogleTag = () => {
+    if (googleTagLoaded) return;
+    googleTagLoaded = true;
 
     browserWindow.gtag('js', new Date());
     browserWindow.gtag(
       'config',
       ANALYTICS_CONFIG.googleMeasurementId,
-      currentPageContext(),
+      {
+        ...currentPageContext(),
+        send_page_view: false,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      },
     );
 
+    if (document.getElementById('google-analytics-script')) return;
     const script = document.createElement('script');
     script.id = 'google-analytics-script';
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ANALYTICS_CONFIG.googleMeasurementId)}`;
     document.head.appendChild(script);
+  };
+
+  const sendPageView = (params = {}) => {
+    if (pageViewSent) return;
+    pageViewSent = true;
+    browserWindow.gtag('event', 'page_view', {
+      ...currentPageContext(),
+      ...params,
+    });
   };
 
   const installMetaPixel = () => {
@@ -334,25 +413,64 @@
 
   const loadAnalytics = () => {
     if (
-      analyticsLoaded
+      fullAnalyticsEnabled
       || !isTrackableHostname(browserWindow.location.hostname)
     ) {
       return;
     }
+    updateGoogleConsent('granted');
     setGoogleCollectionEnabled(true);
-    analyticsLoaded = true;
-    loadGoogleAnalytics();
+    fullAnalyticsEnabled = true;
+    loadGoogleTag();
+    sendPageView();
     loadMetaPixel();
     startSectionAnalytics();
   };
 
+  const loadLimitedAnalytics = () => {
+    if (
+      currentConsentMode() !== 'advanced'
+      || !isTrackableHostname(browserWindow.location.hostname)
+      || hasGlobalPrivacySignal(browserWindow)
+    ) {
+      return;
+    }
+    const limited = buildLimitedPageView({
+      href: browserWindow.location.href,
+      referrer: document.referrer,
+    });
+    if (!limited.page_location) return;
+    setGoogleCollectionEnabled(true);
+    loadGoogleTag();
+    sendPageView(limited);
+  };
+
+  const clearAnalyticsCookies = () => {
+    const names = document.cookie
+      .split(';')
+      .map((part) => part.trim().split('=')[0])
+      .filter((name) => (
+        name === '_ga'
+        || name.startsWith('_ga_')
+        || name === '_fbp'
+        || name === '_fbc'
+      ));
+    const domains = ['', `; Domain=${browserWindow.location.hostname}`, '; Domain=.hanbuddy.kr'];
+    names.forEach((name) => {
+      domains.forEach((domain) => {
+        document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax${domain}`;
+      });
+    });
+  };
+
   const revokeAnalytics = () => {
-    setGoogleCollectionEnabled(false);
     updateGoogleConsent('denied');
     if (typeof browserWindow.fbq === 'function') {
       browserWindow.fbq('consent', 'revoke');
     }
-    analyticsLoaded = false;
+    fullAnalyticsEnabled = false;
+    setGoogleCollectionEnabled(false);
+    clearAnalyticsCookies();
   };
 
   const hideConsentBanner = () => {
@@ -460,7 +578,10 @@
 
     const consent = safeStoredAnalyticsConsent();
     if (consent === 'granted') loadAnalytics();
-    else if (consent === null) deferConsentBanner();
+    else {
+      loadLimitedAnalytics();
+      if (consent === null) deferConsentBanner();
+    }
   };
 
   if (document.readyState === 'loading') {
@@ -473,6 +594,8 @@
     buildPageContext,
     buildCtaEvent,
     buildSelectContentEvent,
+    buildLimitedPageView,
+    hasGlobalPrivacySignal,
     isTrackableHostname,
     trackLanguageSwitch,
     // 신청 폼이 자기 깔때기 이벤트를 직접 보낸다. 동의 게이트는 trackGa 안에 있다.

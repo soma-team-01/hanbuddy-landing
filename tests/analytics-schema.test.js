@@ -9,7 +9,18 @@ const moduleExists = existsSync(modulePath);
 const analytics = moduleExists ? require(modulePath) : {};
 const analyticsSource = moduleExists ? readFileSync(modulePath, 'utf8') : '';
 
-const createBrowserHarness = ({ withSection = false } = {}) => {
+const createBrowserHarness = ({
+  withSection = false,
+  consentMode = 'basic',
+  pageType = 'home',
+  href = 'https://www.hanbuddy.kr/',
+  hostname = 'www.hanbuddy.kr',
+  referrer = '',
+  storedConsent = null,
+  globalPrivacyControl = false,
+  doNotTrack = null,
+  cookies = '',
+} = {}) => {
   const consentHandlers = {};
   const documentHandlers = {};
   const settingsHandlers = [];
@@ -19,6 +30,9 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
   let intersectionOptions = null;
   let observedSection = null;
   let sectionUnobserved = false;
+  const appendedScripts = [];
+  const insertedScripts = [];
+  const cookieAssignments = [];
   const focusElement = (element) => {
     activeElement = element;
   };
@@ -79,10 +93,13 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
       return activeElement;
     },
     readyState: 'complete',
-    body: { dataset: { analyticsPageType: 'home' } },
+    body: { dataset: { analyticsPageType: pageType, analyticsConsentMode: consentMode } },
     documentElement: { lang: 'en' },
+    referrer,
     head: {
-      appendChild() {},
+      appendChild(script) {
+        appendedScripts.push(script);
+      },
     },
     addEventListener(type, handler) {
       documentHandlers[type] = documentHandlers[type] || [];
@@ -95,7 +112,7 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
       return null;
     },
     getElementsByTagName() {
-      return [{ parentNode: { insertBefore() {} } }];
+      return [{ parentNode: { insertBefore(script) { insertedScripts.push(script); } } }];
     },
     querySelector(selector) {
       return selector === '[data-consent-banner]' ? banner : null;
@@ -107,12 +124,30 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
       return [];
     },
   };
+  Object.defineProperty(document, 'cookie', {
+    get() {
+      return cookies;
+    },
+    set(value) {
+      cookieAssignments.push(value);
+    },
+  });
+  if (storedConsent) storedValues.set('hanbuddy.analyticsConsent', storedConsent);
   const browserWindow = {
     document,
     location: {
-      hostname: 'www.hanbuddy.kr',
-      href: 'https://www.hanbuddy.kr/',
+      hostname,
+      href,
+      pathname: (() => {
+        try {
+          return new URL(href).pathname;
+        } catch {
+          return '/';
+        }
+      })(),
     },
+    navigator: { globalPrivacyControl, doNotTrack },
+    doNotTrack,
     localStorage: {
       getItem(key) {
         return storedValues.get(key) ?? null;
@@ -145,6 +180,9 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
     browserWindow,
     banner,
     settingsButton,
+    appendedScripts,
+    insertedScripts,
+    cookieAssignments,
     chooseConsent(action) {
       consentHandlers[action]();
     },
@@ -390,6 +428,195 @@ test('allows analytics only after redirects reach the canonical hostname', { ski
     assert.equal(analytics.isTrackableHostname(hostname), false);
   }
   assert.equal(analytics.isTrackableHostname('www.hanbuddy.kr'), true);
+});
+
+test('builds a limited page view from the path and allowlisted UTM values', { skip: !moduleExists }, () => {
+  assert.deepEqual(
+    analytics.buildLimitedPageView({
+      href: 'https://www.hanbuddy.kr/events/kbo-gocheok/?utm_source=instagram&utm_campaign=summer%20night&event=kbo-gocheok#tickets',
+      referrer: 'https://www.instagram.com/hanbuddy_kr/?secret=1',
+    }),
+    {
+      page_location: 'https://www.hanbuddy.kr/events/kbo-gocheok/?utm_source=instagram&utm_campaign=summer+night',
+      page_referrer: 'https://www.instagram.com',
+    },
+  );
+});
+
+test('drops duplicate, personal, and overlong UTM data from limited page views', { skip: !moduleExists }, () => {
+  const longCampaign = 'x'.repeat(120);
+  const result = analytics.buildLimitedPageView({
+    href: `https://www.hanbuddy.kr/?utm_source=first&utm_source=second&utm_medium=julie%40example.com&utm_campaign=${longCampaign}&utm_id=%2B82%2010-1234-5678&utm_content=night&utm_term=baseball&private=yes#form`,
+    referrer: 'mailto:hello@example.com',
+  });
+
+  assert.deepEqual(result, {
+    page_location: `https://www.hanbuddy.kr/?utm_campaign=${'x'.repeat(100)}&utm_content=night&utm_term=baseball`,
+    page_referrer: '',
+  });
+});
+
+test('invalid page URLs fail closed without blocking analytics initialization', { skip: !moduleExists }, () => {
+  assert.deepEqual(
+    analytics.buildLimitedPageView({ href: 'not a URL', referrer: 'https://example.com/path?q=1' }),
+    {},
+  );
+});
+
+test('drops personal data even when a UTM value wraps it in campaign text', { skip: !moduleExists }, () => {
+  assert.deepEqual(
+    analytics.buildLimitedPageView({
+      href: 'https://www.hanbuddy.kr/?utm_campaign=reach%20julie%40example.com%20now&utm_content=call%20%2B82%2010-1234-5678&utm_source=instagram',
+    }),
+    {
+      page_location: 'https://www.hanbuddy.kr/?utm_source=instagram',
+      page_referrer: '',
+    },
+  );
+});
+
+test('advanced mode sends one sanitized cookieless page view before consent', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'advanced',
+    href: 'https://www.hanbuddy.kr/?utm_source=instagram&email=julie%40example.com#apply',
+    referrer: 'https://www.instagram.com/hanbuddy_kr/?secret=1',
+  });
+  const calls = harness.browserWindow.dataLayer.map((entry) => Array.from(entry));
+  const defaultIndex = calls.findIndex(([command, action]) => command === 'consent' && action === 'default');
+  const configIndex = calls.findIndex(([command]) => command === 'config');
+  const config = calls[configIndex]?.[2];
+  const pageViews = calls.filter(([command, name]) => command === 'event' && name === 'page_view');
+
+  assert.ok(defaultIndex >= 0 && defaultIndex < configIndex, 'denied defaults must precede measurement');
+  assert.deepEqual({ ...calls[defaultIndex][2] }, {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+  });
+  assert.ok(calls.some(([command, value, enabled]) => (
+    command === 'set' && value === 'ads_data_redaction' && enabled === true
+  )));
+  assert.equal(config.send_page_view, false);
+  assert.equal(config.allow_google_signals, false);
+  assert.equal(config.allow_ad_personalization_signals, false);
+  assert.equal(
+    calls.some(([command, name]) => command === 'set' && name === 'url_passthrough'),
+    false,
+  );
+  assert.equal(harness.appendedScripts.length, 1);
+  assert.match(harness.appendedScripts[0].src, /googletagmanager\.com\/gtag\/js/);
+  assert.equal(harness.insertedScripts.length, 0, 'Meta stays unloaded before consent');
+  assert.equal(pageViews.length, 1);
+  assert.equal(pageViews[0][2].page_location, 'https://www.hanbuddy.kr/?utm_source=instagram');
+  assert.equal(pageViews[0][2].page_referrer, 'https://www.instagram.com');
+
+  harness.browserWindow.HanBuddyAnalytics.trackEvent('application_start', { source: 'test' });
+  harness.chooseConsent('reject');
+  const eventsAfterReject = harness.browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(eventsAfterReject.filter(([, name]) => name === 'page_view').length, 1);
+  assert.equal(eventsAfterReject.filter(([, name]) => name === 'application_start').length, 0);
+});
+
+test('basic application mode is silent before consent and sends one page view after grant', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'basic',
+    pageType: 'application',
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-gocheok&utm_source=instagram',
+  });
+
+  assert.equal(harness.appendedScripts.length, 0);
+  assert.equal(harness.insertedScripts.length, 0);
+  assert.equal(
+    harness.browserWindow.dataLayer
+      .map((entry) => Array.from(entry))
+      .filter(([command]) => command === 'event').length,
+    0,
+  );
+
+  harness.chooseConsent('accept');
+  const calls = harness.browserWindow.dataLayer.map((entry) => Array.from(entry));
+  const pageViews = calls.filter(([command, name]) => command === 'event' && name === 'page_view');
+  const grant = calls.find(([command, action, values]) => (
+    command === 'consent' && action === 'update' && values.analytics_storage === 'granted'
+  ));
+  assert.deepEqual({ ...grant[2] }, {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    analytics_storage: 'granted',
+  });
+  assert.equal(pageViews.length, 1);
+  assert.equal(harness.appendedScripts.length, 1);
+  assert.equal(harness.insertedScripts.length, 1);
+  assert.match(harness.insertedScripts[0].src, /connect\.facebook\.net\/en_US\/fbevents\.js/);
+});
+
+test('granting advanced consent enables behavior without duplicating its page view', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({ consentMode: 'advanced' });
+
+  harness.chooseConsent('accept');
+  harness.browserWindow.HanBuddyAnalytics.trackEvent('language_switch', { content_language: 'ko' });
+
+  const events = harness.browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(events.filter(([, name]) => name === 'page_view').length, 1);
+  assert.equal(events.filter(([, name]) => name === 'language_switch').length, 1);
+  assert.equal(harness.insertedScripts.length, 1);
+});
+
+test('a stored grant loads analytics on the application page', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'basic',
+    pageType: 'application',
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-gocheok',
+    storedConsent: 'granted',
+  });
+  const pageViews = harness.browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command, name]) => command === 'event' && name === 'page_view');
+
+  assert.equal(harness.appendedScripts.length, 1);
+  assert.equal(harness.insertedScripts.length, 1);
+  assert.equal(pageViews.length, 1);
+});
+
+test('privacy signals and non-production hosts suppress cookieless measurement', { skip: !moduleExists }, () => {
+  for (const options of [
+    { globalPrivacyControl: true },
+    { doNotTrack: '1' },
+    { hostname: 'preview.hanbuddy.vercel.app' },
+  ]) {
+    const harness = createBrowserHarness({ consentMode: 'advanced', ...options });
+    assert.equal(harness.appendedScripts.length, 0);
+    assert.equal(
+      harness.browserWindow.dataLayer
+        .map((entry) => Array.from(entry))
+        .filter(([command]) => command === 'event').length,
+      0,
+    );
+  }
+});
+
+test('malformed marketing URLs do not block consent controls', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({ consentMode: 'advanced', href: 'not a URL' });
+  assert.doesNotThrow(() => harness.chooseConsent('reject'));
+});
+
+test('revoking consent expires accessible Google and Meta cookies', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'advanced',
+    storedConsent: 'granted',
+    cookies: '_ga=one; _ga_MW7MFVL50G=two; _fbp=three; _fbc=four; session=five',
+  });
+
+  harness.chooseConsent('reject');
+  const clearedNames = new Set(harness.cookieAssignments.map((assignment) => assignment.split('=')[0]));
+  assert.deepEqual(clearedNames, new Set(['_ga', '_ga_MW7MFVL50G', '_fbp', '_fbc']));
+  assert.ok(harness.cookieAssignments.every((assignment) => /Max-Age=0/.test(assignment)));
 });
 
 test('toggles the Google collection opt-out across consent grant and revoke', { skip: !moduleExists }, () => {

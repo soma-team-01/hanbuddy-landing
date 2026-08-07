@@ -30,9 +30,9 @@ const publicPages = [
 
 test('home and About load the shared analytics module with canonical page context', () => {
   assert.match(homeHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(homeHtml, /<body[^>]*data-analytics-page-type="home"/);
+  assert.match(homeHtml, /<body[^>]*data-analytics-page-type="home"[^>]*data-analytics-consent-mode="advanced"/);
   assert.match(aboutHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(aboutHtml, /<body[^>]*data-analytics-page-type="about"/);
+  assert.match(aboutHtml, /<body[^>]*data-analytics-page-type="about"[^>]*data-analytics-consent-mode="advanced"/);
 });
 
 test('home and About no longer embed vendor loader implementations', () => {
@@ -75,7 +75,7 @@ test('scrolling to the apply section is distinct from opening the form', () => {
 
 test('the apply page loads shared analytics with its own page context', () => {
   assert.match(applyHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
-  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"/);
+  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"[^>]*data-analytics-consent-mode="basic"/);
   assert.doesNotMatch(applyHtml, /googleMeasurementId|metaPixelId/);
   assert.doesNotMatch(applyHtml, /googletagmanager\.com\/gtag\/js/);
 });
@@ -128,7 +128,7 @@ test('event detail pages load shared analytics with canonical page and experienc
     assert.match(html, /<script src="\/assets\/analytics\.js"><\/script>/, `${name} analytics module`);
 
     const context = html.match(
-      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"/,
+      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"[^>]*data-analytics-consent-mode="advanced"/,
     );
     assert.ok(context, `${name} detail context`);
 
