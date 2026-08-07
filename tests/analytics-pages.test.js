@@ -7,6 +7,7 @@ const { runInNewContext } = require('node:vm');
 const readPage = (...parts) => readFileSync(join(__dirname, '..', ...parts), 'utf8');
 const homeHtml = readPage('index.html');
 const aboutHtml = readPage('about', 'index.html');
+const applyHtml = readPage('apply', 'index.html');
 
 // 상세페이지 목록과 각 페이지의 experience type을 손으로 적으면, 새 이벤트
 // 페이지가 검사에서 통째로 빠지고 id 체계가 어긋나도 통과한다(실제로
@@ -23,6 +24,7 @@ const eventCardIds = new Set(
 const publicPages = [
   { name: 'Home', html: homeHtml },
   { name: 'About', html: aboutHtml },
+  { name: 'Apply', html: applyHtml },
   ...detailPages,
 ];
 
@@ -65,9 +67,22 @@ test('event cards expose canonical content-selection metadata', () => {
   assert.doesNotMatch(homeHtml, /track\('event_card_click'/);
 });
 
-test('on-page application navigation is distinct from a Google Form open', () => {
+test('scrolling to the apply section is distinct from opening the form', () => {
+  // 같은 CTA 키를 쓰면 섹션까지 스크롤한 사람과 폼을 연 사람이 한 숫자로 뭉친다.
   assert.match(homeHtml, /href="#apply" data-cta="apply_section"/);
   assert.doesNotMatch(homeHtml, /href="#apply" data-cta="apply"/);
+});
+
+test('the apply page loads shared analytics with its own page context', () => {
+  assert.match(applyHtml, /<script src="\/assets\/analytics\.js"><\/script>/);
+  assert.match(applyHtml, /<body[^>]*data-analytics-page-type="application"/);
+  assert.doesNotMatch(applyHtml, /googleMeasurementId|metaPixelId/);
+  assert.doesNotMatch(applyHtml, /googletagmanager\.com\/gtag\/js/);
+});
+
+test('the apply page never links back to itself as a CTA', () => {
+  // 폼 위에서 다시 폼으로 보내는 버튼은 application_form_open을 자기 자신에게 찍는다.
+  assert.doesNotMatch(applyHtml, /data-cta="apply"/);
 });
 
 const languageSwitchStatement = (html) => {

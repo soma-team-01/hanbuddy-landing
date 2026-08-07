@@ -137,7 +137,9 @@ const createBrowserHarness = ({ withSection = false } = {}) => {
     },
   };
 
-  runInNewContext(analyticsSource, { window: browserWindow });
+  // vm 컨텍스트에는 URL 전역이 없다. 넣지 않으면 목적지 대조가 통째로
+  // catch로 빠져 Meta 전환이 한 번도 발화하지 않는데, GA는 그대로라 조용하다.
+  runInNewContext(analyticsSource, { window: browserWindow, URL });
 
   return {
     browserWindow,
@@ -200,7 +202,7 @@ test('builds a stable page context without empty optional values', { skip: !modu
   );
 });
 
-test('maps the Google Form application CTA to its own GA event and the existing Meta high-intent event', { skip: !moduleExists }, () => {
+test('maps the application CTA to its own GA event and the existing Meta high-intent event', { skip: !moduleExists }, () => {
   const pageContext = {
     page_type: 'home',
     content_language: 'en',
@@ -218,7 +220,7 @@ test('maps the Google Form application CTA to its own GA event and the existing 
         params: {
           page_type: 'home',
           content_language: 'en',
-          destination: 'google_form',
+          destination: 'application_page',
           placement: 'top',
         },
       },
@@ -227,7 +229,7 @@ test('maps the Google Form application CTA to its own GA event and the existing 
         params: {
           page_type: 'home',
           content_language: 'en',
-          destination: 'google_form',
+          destination: 'application_page',
           placement: 'top',
         },
       },
@@ -410,7 +412,7 @@ test('routes delegated document clicks through CTA tracking', { skip: !moduleExi
       analyticsPlacement: 'test',
       cta: 'apply',
     },
-    href: 'https://forms.gle/B1fWgX3MjtHUHGNt5',
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
     closest(selector) {
       return selector === '[data-cta]' ? applicationLink : null;
     },
@@ -425,7 +427,7 @@ test('routes delegated document clicks through CTA tracking', { skip: !moduleExi
       command === 'event' && eventName === 'application_form_open'
     ));
   assert.equal(applicationEvents.length, 1);
-  assert.equal(applicationEvents[0][2].destination, 'google_form');
+  assert.equal(applicationEvents[0][2].destination, 'application_page');
   assert.equal(applicationEvents[0][2].placement, 'test');
 });
 
@@ -482,4 +484,29 @@ test('records a section view on first visible exposure', { skip: !moduleExists }
     .filter(([command, eventName]) => command === 'event' && eventName === 'section_view');
   assert.equal(sectionEvents.length, 1);
   assert.equal(sectionEvents[0][2].section_id, 'events');
+});
+
+test('a prefilled apply link still reports the Meta conversion', { skip: !moduleExists }, () => {
+  // 목적지 대조가 쿼리까지 맞추라고 하면 /apply/?event=... 링크가 전부 어긋나고
+  // ApplicationFormOpen이 조용히 사라진다. GA는 남아 있어 눈치채기 어렵다.
+  const { browserWindow, chooseConsent, clickDocument } = createBrowserHarness();
+  const metaCalls = [];
+  browserWindow.fbq = (...args) => metaCalls.push(args);
+
+  const applicationLink = {
+    dataset: { analyticsPlacement: 'desktop_sidebar', cta: 'apply' },
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-gocheok',
+    closest(selector) {
+      return selector === '[data-cta]' ? applicationLink : null;
+    },
+  };
+
+  chooseConsent('accept');
+  clickDocument(applicationLink);
+
+  const conversions = metaCalls.filter(([command, name]) => (
+    command === 'trackCustom' && name === 'ApplicationFormOpen'
+  ));
+  assert.equal(conversions.length, 1, 'prefilled apply link must still fire ApplicationFormOpen');
+  assert.equal(conversions[0][2].destination, 'application_page');
 });

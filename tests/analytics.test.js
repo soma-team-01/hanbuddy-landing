@@ -61,3 +61,35 @@ test('states the advertising purpose and the way out in the banner itself', () =
     assert.match(block, /Cookie settings|쿠키 설정/, 'point to the way out');
   }
 });
+
+test('apply CTAs point at the landing form, not the Google Form', () => {
+  // 스펙 14절이 세어둔 6개 파일 전부. about을 빠뜨리면 그 페이지만 외부 폼으로 나간다.
+  const pages = ['index.html', 'about/index.html', 'events/kbo-gocheok/index.html',
+    'events/kbo-jamsil/index.html', 'events/kleague/index.html', 'events/hanriver/index.html'];
+  for (const page of pages) {
+    const source = readFileSync(join(__dirname, '..', page), 'utf8');
+    assert.doesNotMatch(source, /forms\.gle/, `${page} still links the Google Form`);
+    assert.match(source, /href="\/apply\//, `${page} must link the landing form`);
+  }
+  assert.match(analyticsJs, /application_page: '\/apply\/'/);
+  assert.doesNotMatch(analyticsJs, /google_form:/);
+});
+
+test('event pages prefill their own event on the landing form', () => {
+  // 프리필이 없으면 잠실 카드를 눌러도 폼에서 회차를 처음부터 골라야 한다.
+  for (const eventId of ['kbo-gocheok', 'kbo-jamsil', 'kleague', 'hanriver']) {
+    const source = readFileSync(join(__dirname, '..', 'events', eventId, 'index.html'), 'utf8');
+    const links = source.match(/href="\/apply\/\?event=([a-z-]+)"/g) || [];
+    assert.equal(links.length, 2, `${eventId} should carry both apply CTAs`);
+    for (const link of links) {
+      assert.ok(link.includes(`event=${eventId}`), `${eventId} prefills the wrong event: ${link}`);
+    }
+  }
+});
+
+test('pages no longer claim they store nothing', () => {
+  for (const page of ['events/kbo-gocheok/index.html', 'events/hanriver/index.html']) {
+    const source = readFileSync(join(__dirname, '..', page), 'utf8');
+    assert.doesNotMatch(source, /never stores your application answers/);
+  }
+});
