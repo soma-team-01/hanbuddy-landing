@@ -101,7 +101,7 @@ test('application payload never collects browser attribution data', () => {
 
   const submitted = html.match(/track\('generate_lead',[\s\S]*?^        \}\);/m)?.[0] || '';
   assert.ok(submitted, 'generate_lead event must be readable');
-  assert.match(submitted, /source: payload\.source/);
+  assert.match(submitted, /lead_source: payload\.source/);
   assert.doesNotMatch(submitted, /sourceOther/);
 });
 

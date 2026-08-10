@@ -124,7 +124,7 @@
     params: {
       ...pageContext,
       content_type: 'experience',
-      item_id: contentId,
+      content_id: contentId,
       availability_status: availabilityStatus,
     },
   });
