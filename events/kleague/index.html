@@ -75,17 +75,21 @@
 
     <!-- Photo collage (click to enlarge) -->
     <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
-      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2" aria-label="Open photo 1 of 2 in full screen">
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 3 in full screen">
         <img src="/assets/photos/kleague/kleague-worldcup-day.webp" width="1600" height="1200" class="h-64 w-full object-cover transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
              alt="Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves" />
       </button>
-      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 2 in full screen">
-        <img src="/assets/photos/kleague/kleague-night.webp" width="1180" height="1573" loading="lazy" class="h-[430px] w-full object-cover object-[50%_45%] transition group-hover:opacity-95"
+      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 3 in full screen">
+        <img src="/assets/photos/kleague/kleague-night.webp" width="1180" height="1573" loading="lazy" class="h-[209px] w-full object-cover object-[50%_45%] transition group-hover:opacity-95"
              alt="Floodlights over the pitch at Seoul World Cup Stadium during a night football match" />
-        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 2 photos</span>
+      </button>
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 3 in full screen">
+        <img src="/assets/photos/kleague/kleague-kickoff.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_62%] transition group-hover:opacity-95"
+             alt="Players lining up for kickoff in front of packed stands at a K League match" />
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 3 photos</span>
       </button>
       <button type="button" data-photo="1" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
-        📷 View all 2 photos
+        📷 View all 3 photos
       </button>
     </div>
 
@@ -236,10 +240,9 @@
   <div id="lightbox" class="fixed inset-0 z-[90] hidden items-center justify-center bg-ink/95 p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
     <button type="button" data-lb-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-xl font-bold text-on-primary transition hover:bg-canvas-soft/30" aria-label="Close photo viewer">&times;</button>
     <button type="button" data-lb-prev class="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:left-6" aria-label="Previous photo">&lsaquo;</button>
-    <figure class="flex max-h-full max-w-5xl flex-col items-center">
+    <div class="flex max-h-full max-w-5xl flex-col items-center">
       <img id="lightbox-img" src="/assets/photos/kleague/kleague-worldcup-day.webp" alt="Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
-      <figcaption id="lightbox-caption" class="mt-3 max-w-xl text-center text-sm font-semibold text-on-primary/80"></figcaption>
-    </figure>
+    </div>
     <button type="button" data-lb-next class="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:right-6" aria-label="Next photo">&rsaquo;</button>
     <p id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-bold text-on-primary/70"></p>
   </div>
@@ -248,11 +251,11 @@
     const PHOTOS = [
       { src: '/assets/photos/kleague/kleague-worldcup-day.webp', alt: 'Seoul World Cup Stadium packed with football fans holding Ulsan HD scarves' },
       { src: '/assets/photos/kleague/kleague-night.webp', alt: 'Floodlights over the pitch at Seoul World Cup Stadium during a night football match' },
+      { src: '/assets/photos/kleague/kleague-kickoff.webp', alt: 'Players lining up for kickoff in front of packed stands at a K League match' },
     ];
 
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxCaption = document.getElementById('lightbox-caption');
     const lightboxCounter = document.getElementById('lightbox-counter');
     const lightboxButtons = [...lightbox.querySelectorAll('button')];
     const closeButton = lightbox.querySelector('[data-lb-close]');
@@ -263,7 +266,6 @@
       const photo = PHOTOS[photoIndex];
       lightboxImg.src = photo.src;
       lightboxImg.alt = photo.alt;
-      lightboxCaption.textContent = photo.alt;
       lightboxCounter.textContent = `${photoIndex + 1} / ${PHOTOS.length}`;
     };
 

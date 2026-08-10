@@ -140,6 +140,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 - How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
 - Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
 - Event detail photo lightbox: collage thumbnails open a full-screen viewer with prev/next arrows, arrow-key and Escape support. It is a modal dialog, so it must always move focus to the close button on open, keep Tab cycling inside the dialog while open, and return focus to the thumbnail that opened it — a keyboard user tabbing out to the page behind the overlay is a defect, not a style choice.
+- The lightbox shows the photo and the `n / total` counter only. No on-screen caption (유현님 rule, 2026-08-10): the photos speak for themselves and a description per photo was upkeep with no reader payoff. The `alt` attribute stays on every image for screen readers, so removing a caption is never a reason to drop `alt`.
 
 ### Completed-run Evidence
 

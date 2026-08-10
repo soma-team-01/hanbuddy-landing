@@ -26,7 +26,7 @@ test('every event carries an id, canonical title, price and at least one slot', 
 });
 
 test('slot expiry is judged in KST regardless of the reader timezone', () => {
-  // 8/8 17:00 KST 슬롯은 8/10 시점에서 지났다.
+  // 8/8 17:00 KST는 8/10 시점에서 지났다.
   assert.equal(isSlotPast('2026-08-08T17:00', AUG10), true);
   assert.equal(isSlotPast('2026-08-12T17:30', AUG10), false);
   // 경계: 슬롯 시작 시각 정각은 지난 것으로 본다.
@@ -34,10 +34,26 @@ test('slot expiry is judged in KST regardless of the reader timezone', () => {
 });
 
 test('openEvents drops past slots and events whose slots have all passed', () => {
+  // 날짜 목록은 회차마다 바뀐다. 특정 날짜를 박지 말고 규칙 자체를 검사한다.
   const open = openEvents(AUG10);
-  const hanriver = open.find((e) => e.id === 'hanriver');
-  assert.ok(hanriver, 'han river still has 8/15 and 8/16');
-  assert.deepEqual(hanriver.slots.map((s) => s.iso), ['2026-08-15T17:00', '2026-08-16T17:00']);
+  assert.ok(open.length > 0, 'AUG10 기준으로 열려 있는 회차가 있어야 한다');
+
+  for (const event of open) {
+    for (const slot of event.slots) {
+      assert.equal(isSlotPast(slot.iso, AUG10), false, `지난 슬롯이 남았다: ${event.id} ${slot.iso}`);
+    }
+  }
+
+  // 아직 남은 슬롯은 하나도 빠뜨리지 않고, 전부 지난 회차는 목록에서 사라진다.
+  for (const defined of EVENT_SLOTS) {
+    const future = defined.slots.filter((slot) => !isSlotPast(slot.iso, AUG10)).map((slot) => slot.iso);
+    const found = open.find((event) => event.id === defined.id);
+    if (future.length === 0) {
+      assert.equal(found, undefined, `슬롯이 전부 지난 ${defined.id}는 사라져야 한다`);
+    } else {
+      assert.deepEqual(found?.slots.map((slot) => slot.iso), future, `${defined.id} 잔여 슬롯 불일치`);
+    }
+  }
 
   // 모든 슬롯이 지난 뒤에는 이벤트 자체가 사라진다.
   const afterEverything = openEvents(Date.parse('2026-09-01T00:00:00+09:00'));
