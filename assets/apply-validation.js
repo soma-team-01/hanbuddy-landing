@@ -27,7 +27,8 @@
     const event = slots.findEvent(text(payload.eventId));
     if (!event) return fail('eventId');
 
-    const slot = slots.findSlot(event.id, text(payload.slotIso));
+    // now를 넘겨야 상시 오픈 회차의 리드타임·기간 판정이 호출 시각과 어긋나지 않는다.
+    const slot = slots.findSlot(event.id, text(payload.slotIso), now);
     if (!slot || slots.isSlotPast(slot.iso, now)) return fail('slotIso');
 
     const guests = Number(text(payload.guests));

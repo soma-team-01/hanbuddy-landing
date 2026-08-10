@@ -119,7 +119,10 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
 - Primary CTA: warm-red `primary` fill, white `on-primary` text, `primary-hover` hover, and no glow.
-- Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
+- Secondary CTA: an outline pill matching the primary's shape and height — thin `primary` border, `canvas-soft` fill, `primary-strong` label, no trailing arrow (유현님 rule, 2026-08-10). On the final primary band, use a thin `on-primary-strong` border instead. Never a second filled `primary`: two filled pills leave the field with no primary, and the action we want clicked loses its advantage.
+- The primary CTA carries `border border-transparent` so it matches the outline secondary's height exactly. Without it the two pills sit 2px apart, which is visible when they are side by side in the hero.
+- The secondary was plain arrowed text until 2026-08-10. It was replaced because it had no tap boundary on mobile, where the hero CTA band sits over the polaroid photos: bare text read as body copy on a photo, while a filled pill blocks the image behind it and stays legible.
+- Arrows (`→`) now belong to inline text links only (the hero rating chip, `read their reviews`), not to pill buttons.
 - External CTA anchors keep `target="_blank"` and `rel="noopener"`. Internal ones (`#anchor`, `/apply/`) stay in the same tab:
   a new tab for a page of our own strands the visitor with a back button that does nothing.
 
@@ -136,6 +139,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Event Cards and Steps
 
+- Two scheduling models coexist and the card must say which one it is. Fixed-slot activities (baseball, football, Han River) list real published dates because tickets and spots are bought ahead. Weekday-recurring activities (Korean BBQ, chimaek) show `Every weekday · 7:00 PM` and `Pick your date when you apply` instead, because a restaurant booking costs nothing to keep open. Never print a date list on a recurring card: the day it passes, the card is lying.
+- Detail pages for recurring activities carry a single photo and no lightbox. A lightbox over one image is a modal with arrows that do nothing.
 - Event cards (`#events`): Meetup-style compact cards on the `panel` band (same band as `#reviews`), in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
 - How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
 - Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
@@ -145,7 +150,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### Completed-run Evidence
 
 - Public proof mentions only completed-operation facts, approved photos, and the approved guest quotes (the verbatim list lives in `AGENTS.md` CONVENTIONS — currently 5 quotes; nothing else may be quoted).
-- Completed runs usable as proof: only the two completed Jamsil KBO runs, 2026-06-25 and 2026-07-26. Han River, K League, and jjimjilbang photos may be used only for upcoming/coming-up items or with neutral place-describing captions — never as completed-operation proof.
+- Completed runs usable as proof: only the two completed Jamsil KBO runs, 2026-06-25 and 2026-07-26. Han River, K League, Korean BBQ, and chimaek photos may be used only for upcoming items or with neutral place-describing captions — never as completed-operation proof.
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
@@ -186,15 +191,15 @@ photography and lets the fields carry the page. One column, `max-w-2xl`, no phot
   cannot produce two applications from one person.
 - **Done screen** replaces the form in place rather than routing to a new URL: a refresh should return an empty form,
   and a shared link must never expose someone else's application number. It carries the number, the 24-hour promise,
-  and the Instagram/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
+  and the Instagram/WhatsApp/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
   messenger, because the visitor just chose their own channel and any name we print is wrong for everyone else.
 - **Closed state**: when every slot has passed, the form is replaced by a short "next dates are on the way" note
-  with the same two channel links. An empty form the visitor cannot complete is worse than an honest message.
+  with the same channel links. An empty form the visitor cannot complete is worse than an honest message.
 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, WhatsApp for international guests (added 2026-08-10), KakaoTalk open chat as the local-buddy channel, and the one-line buddy-recruitment note.
 - The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)

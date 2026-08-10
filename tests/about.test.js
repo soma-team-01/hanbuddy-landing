@@ -43,7 +43,9 @@ test('about page never claims un-operated activities as completed meetups', () =
   assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
 
   // 완료(status: 'done')로 표기할 수 있는 회차는 실제로 운영한 것뿐이다. 날짜 화이트리스트로 고정한다.
-  // K리그·찜질방은 여전히 미운영이므로 완료 항목에 등장하면 안 된다.
+  // K리그와 음식 회차는 여전히 미운영이므로 완료 항목에 등장하면 안 된다.
+  // 활동이 늘 때마다 이 목록을 손으로 늘리는 대신, 운영한 적 있는 회차의
+  // 이름만 통과시키는 편이 안전하지만 지금은 날짜 화이트리스트가 그 역할을 한다.
   const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
   assert.equal(doneEntries.length, 6, '완료 항목은 EN/KO 각각 3건, 총 6건이어야 함');
   const operatedDates = ['2026.06.25', '2026.07.26', '2026.08.01'];
@@ -52,7 +54,13 @@ test('about page never claims un-operated activities as completed meetups', () =
       operatedDates.some((date) => entry.includes(date)),
       `승인되지 않은 완료 날짜: ${entry}`,
     );
-    assert.doesNotMatch(entry, /kleague|jjimjilbang/, `미운영 활동이 완료로 표기됨: ${entry}`);
+    // 활동 이름만 잡는다. `chimaek`을 통짜로 막으면 실제로 운영한 잠실 KBO의
+    // "chants and chimaek in the stands"까지 걸린다(2026-08-10에 실제로 걸렸다).
+    assert.doesNotMatch(
+      entry,
+      /kleague|K League|K리그 축구|samgyeopsal|Korean BBQ Night|삼겹살 나이트|Chimaek Night|치맥 나이트/,
+      `미운영 활동이 완료로 표기됨: ${entry}`,
+    );
   }
 });
 

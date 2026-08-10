@@ -10,6 +10,7 @@
       application_page: '/apply/',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
       kakaotalk: 'https://open.kakao.com/o/sP3n4rFi',
+      whatsapp: 'https://wa.me/821082970110',
     }),
   });
 
@@ -49,6 +50,11 @@
     contact: Object.freeze({
       gaEvent: 'contact_click',
       destination: 'kakaotalk',
+      metaEvent: 'Contact',
+    }),
+    whatsapp: Object.freeze({
+      gaEvent: 'contact_click',
+      destination: 'whatsapp',
       metaEvent: 'Contact',
     }),
     meetup: Object.freeze({

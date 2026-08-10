@@ -338,6 +338,36 @@ test('uses separate GA events for contact, community, profile, and navigation ac
     },
   );
 
+  // WhatsApp은 인스타·카톡과 같은 문의 채널이므로 같은 GA 이벤트를 쓰고
+  // destination으로만 갈린다. 채널별 이벤트 이름을 새로 파면 전환 집계가 쪼개진다.
+  assert.deepEqual(
+    analytics.buildCtaEvent({
+      ctaKey: 'whatsapp',
+      placement: 'footer',
+      pageContext,
+    }),
+    {
+      ga: {
+        name: 'contact_click',
+        params: {
+          page_type: 'about',
+          content_language: 'ko',
+          destination: 'whatsapp',
+          placement: 'footer',
+        },
+      },
+      meta: {
+        name: 'Contact',
+        params: {
+          page_type: 'about',
+          content_language: 'ko',
+          destination: 'whatsapp',
+          placement: 'footer',
+        },
+      },
+    },
+  );
+
   assert.deepEqual(
     analytics.buildCtaEvent({
       ctaKey: 'meetup',

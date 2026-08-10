@@ -270,6 +270,16 @@
       </label>
     </template>
 
+    <!--
+      상시 오픈 회차의 날짜 선택. 목록에는 신청 가능한 평일만 들어가므로
+      주말과 리드타임 이내 날짜는 고를 수가 없다. 규칙을 문장으로 설명하지
+      않아도 지켜지고, 최소 인원이나 마감 시각을 노출하지 않아도 된다.
+    -->
+    <template data-slot-select-template>
+      <select name="slotIso" required
+              class="focusable w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+    </template>
+
     <template data-choice-template="koreanLevel">
       <label class="choice flex cursor-pointer items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm font-semibold">
         <input type="radio" name="koreanLevel" required />
@@ -291,6 +301,9 @@
         <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
            class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
            data-i18n="apply.done.instagram">DM us on Instagram</a>
+        <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.whatsapp">Message us on WhatsApp</a>
         <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
            class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
            data-i18n="apply.done.kakao">KakaoTalk open chat</a>
@@ -306,6 +319,9 @@
         <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
            class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
            data-i18n="apply.done.instagram">DM us on Instagram</a>
+        <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
+           class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
+           data-i18n="apply.done.whatsapp">Message us on WhatsApp</a>
         <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
            class="focusable rounded-full border border-line-strong px-6 py-3 text-center text-sm font-bold text-ink"
            data-i18n="apply.done.kakao">KakaoTalk open chat</a>
@@ -369,6 +385,7 @@
     const CONFIG = {
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
+      whatsapp: 'https://wa.me/821082970110',
     };
 
     const CONTENT_MAP = Object.freeze({
@@ -417,6 +434,7 @@
             body: 'We’ll be in touch within 24 hours to confirm your spot, the meeting point and payment.',
             idLabel: 'Your application number',
             instagram: 'DM us on Instagram',
+            whatsapp: 'Message us on WhatsApp',
             kakao: 'KakaoTalk open chat',
           },
           closed: {
@@ -483,6 +501,7 @@
             body: '24시간 안에 연락드려 자리를 확정해 드립니다. 집결 장소와 결제도 그때 안내해 드려요.',
             idLabel: '신청 번호',
             instagram: '인스타그램 DM 보내기',
+            whatsapp: 'WhatsApp으로 문의하기',
             kakao: '카카오톡 오픈채팅',
           },
           closed: {
@@ -586,20 +605,46 @@
       const container = document.querySelector('[data-slot-options]');
       const template = document.querySelector('[data-slot-template]');
       const priceLine = document.querySelector('[data-event-price]');
+      // 언어를 바꿔도 고르던 날짜는 그대로 둔다. 회차 select가 이미 그렇게 한다.
+      const chosen = form.elements.slotIso?.value || '';
       clear(container);
       const event = SLOTS.openEvents().find((e) => e.id === form.elements.eventId.value);
       priceLine.textContent = event
         ? CONTENT_MAP[language].apply.pricePerPerson(event.price.toLocaleString())
         : '';
       if (!event) return;
+
+      // 상시 오픈 회차는 고를 수 있는 평일이 20일치쯤 된다. 라디오로 깔면
+      // 폼이 화면 몇 개 길이가 되므로 select 하나로 접는다.
+      if (event.recurring) {
+        const select = document.querySelector('[data-slot-select-template]')
+          .content.cloneNode(true).querySelector('select');
+        SLOTS.recurringDates(event).forEach((slot) => {
+          const option = document.createElement('option');
+          option.value = slot.iso;
+          option.textContent = slot.label[language];
+          select.appendChild(option);
+        });
+        container.appendChild(select);
+        if (chosen && [...select.options].some((option) => option.value === chosen)) {
+          select.value = chosen;
+        }
+        return;
+      }
+
       event.slots.forEach((slot, index) => {
         const row = template.content.cloneNode(true);
         const input = row.querySelector('input');
         input.value = slot.iso;
-        if (index === 0) input.checked = true;
+        if (slot.iso === chosen || (!chosen && index === 0)) input.checked = true;
         row.querySelector('[data-choice-label]').textContent = slot.label[language];
         container.appendChild(row);
       });
+      // 회차를 바꾸면 이전 날짜는 사라지므로 첫 칸을 고른 상태로 만든다.
+      if (!container.querySelector('input:checked')) {
+        const first = container.querySelector('input');
+        if (first) first.checked = true;
+      }
     };
 
     const renderEvents = (language) => {
@@ -722,7 +767,9 @@
 
       const payload = {
         eventId: form.elements.eventId.value,
-        slotIso: form.querySelector('input[name="slotIso"]:checked')?.value || '',
+        // 고정 슬롯은 라디오, 상시 오픈은 select다. RadioNodeList와 select 모두
+        // .value가 고른 값을 주므로 렌더 방식이 달라도 이 줄은 그대로다.
+        slotIso: form.elements.slotIso?.value || '',
         guests: form.elements.guests.value,
         name: form.elements.name.value,
         nationality: form.elements.nationality.value,
