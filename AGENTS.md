@@ -19,7 +19,7 @@ hanbuddy-landing/
 |   |-- kbo-gocheok/index.html  # /events/kbo-gocheok — Gocheok dome detail page (collage, sticky booking card, lightbox)
 |   |-- kbo-jamsil/index.html   # /events/kbo-jamsil — same template for the open-air Jamsil night
 |   |-- kleague/index.html    # /events/kleague — same template, three-photo collage
-|   |-- samgyeopsal/index.html # /events/samgyeopsal — weekday-recurring food event: single photo, no lightbox
+|   |-- samgyeopsal/index.html # /events/samgyeopsal — weekday-recurring food event, four-photo collage
 |   |-- chimaek/index.html    # /events/chimaek — same shape as samgyeopsal
 |   `-- hanriver/index.html   # /events/hanriver — same template for the Han River picnic
 |-- assets/
@@ -29,8 +29,8 @@ hanbuddy-landing/
 |   |-- photos/kbo/           # run1-* (2026-06-25) and kbo-0726-* (2026-07-26) public WebP derivatives
 |   |-- photos/hanriver/      # hanriver-* public WebP derivatives
 |   |-- photos/kleague/       # team-owned K League photos (coming-soon card / backdrop)
-|   |-- photos/samgyeopsal/   # team-owned Korean BBQ photos (card + landscape OG derivative)
-|   |-- photos/chimaek/       # team-owned chimaek photos (consented, card + landscape OG derivative)
+|   |-- photos/samgyeopsal/   # team-owned Korean BBQ photos: 4 collage shots + landscape OG derivative
+|   |-- photos/chimaek/       # team-owned chimaek photos: 4 collage shots + landscape OG derivative
 |   `-- raw/                  # untracked originals (.gitignore); never deploy
 |-- scripts/dev-server.js     # local dev server (never deployed): real function, stubbed storage, no secrets
 |-- tests/                    # node --test suites: about/apply copy sync, slot-vs-card drift, form validation, API privacy, deploy allowlist, analytics consent, review carousel, palette/typography vs DESIGN.md
@@ -146,7 +146,7 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 - Public photos are EXIF-stripped WebP derivatives only; originals stay untracked in `assets/raw/` (or outside the repo) and must never deploy.
 - Participant photo use is consent-based (tracked per run by the team); bystander faces get blurred (`kbo-0726-group.webp` precedent). Selfies from Samsung front cameras may be saved mirrored — check jersey/sign text after conversion.
 - Backdrop/decorative photos must not show identifiable faces up close (유현님 rule, 2026-07-29); landscape orientation only for full-bleed backdrops (see DESIGN.md).
-- `assets/photos/kleague/*`, `assets/photos/samgyeopsal/*`, and `assets/photos/chimaek/*` are team-owned. The chimaek photo shows a guest from the shoulders down with consent recorded on 2026-08-10; no face is in frame. The CC0 jjimjilbang photos were deleted on 2026-08-10 with the activity.
+- `assets/photos/kleague/*`, `assets/photos/samgyeopsal/*`, and `assets/photos/chimaek/*` are team-owned. Only `chimaek-table.webp` shows a person (a guest from the shoulders down, consent recorded 2026-08-10). Every other food photo was chosen or cropped so that no person appears at all: `samgyeopsal-table.webp` is cropped 24% off the top for exactly this reason, and shots where people were central to the frame were left out of the set. The CC0 jjimjilbang photos were deleted on 2026-08-10 with the activity.
 - Event detail pages need a **landscape** OG image. Card photos are portrait (1200×1600), so the food pages carry a separate `*-og.webp` cropped to 1600×1000. Reusing the portrait card image as OG is the bug that already bit `run1-group.webp`.
 - When adding a public asset folder or extension, update the `.vercelignore` allowlist in the same change.
 

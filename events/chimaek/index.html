@@ -73,12 +73,25 @@
       <p class="mt-1 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
     </div>
 
-    <!-- 사진이 한 장뿐이라 콜라주와 라이트박스를 두지 않는다. 넘길 것이 없는
-         라이트박스는 화살표만 있고 아무 일도 하지 않는 모달이 된다. -->
-    <figure class="photo-card mt-6 aspect-[16/10] overflow-hidden rounded-2xl">
-      <img src="/assets/photos/chimaek/chimaek-table.webp" width="1200" height="1600"
-           class="h-full w-full object-cover object-[50%_55%]" alt="A basket of Korean fried chicken with cheese balls and a mug of draft beer on a pub table" />
-    </figure>
+    <!-- Photo collage (click to enlarge) -->
+    <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 4 in full screen">
+        <img src="/assets/photos/chimaek/chimaek-table.webp" width="1200" height="1600" class="h-64 w-full object-cover object-[50%_55%] transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
+             alt="A basket of Korean fried chicken with cheese balls and a mug of draft beer on a pub table" />
+      </button>
+      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 4 in full screen">
+        <img src="/assets/photos/chimaek/chimaek-half.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_50%] transition group-hover:opacity-95"
+             alt="A box split between sauced chicken and plain fried chicken, the half-and-half order" />
+      </button>
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 4 in full screen">
+        <img src="/assets/photos/chimaek/chimaek-basket.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_50%] transition group-hover:opacity-95"
+             alt="Fried chicken pieces and cheese balls packed in a takeaway box" />
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 4 photos</span>
+      </button>
+      <button type="button" data-photo="1" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
+        📷 View all 4 photos
+      </button>
+    </div>
 
     <!-- Two-column: content + booking card -->
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
@@ -220,5 +233,85 @@
     </div>
   </section>
 
+  <!-- Lightbox -->
+  <div id="lightbox" class="fixed inset-0 z-[90] hidden items-center justify-center bg-ink/95 p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button type="button" data-lb-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-xl font-bold text-on-primary transition hover:bg-canvas-soft/30" aria-label="Close photo viewer">&times;</button>
+    <button type="button" data-lb-prev class="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:left-6" aria-label="Previous photo">&lsaquo;</button>
+    <div class="flex max-h-full max-w-5xl flex-col items-center">
+      <img id="lightbox-img" src="/assets/photos/chimaek/chimaek-table.webp" alt="A basket of Korean fried chicken with cheese balls and a mug of draft beer on a pub table" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
+    </div>
+    <button type="button" data-lb-next class="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:right-6" aria-label="Next photo">&rsaquo;</button>
+    <p id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-bold text-on-primary/70"></p>
+  </div>
+
+  <script>
+    const PHOTOS = [
+      { src: '/assets/photos/chimaek/chimaek-table.webp', alt: 'A basket of Korean fried chicken with cheese balls and a mug of draft beer on a pub table' },
+      { src: '/assets/photos/chimaek/chimaek-half.webp', alt: 'A box split between sauced chicken and plain fried chicken, the half-and-half order' },
+      { src: '/assets/photos/chimaek/chimaek-basket.webp', alt: 'Fried chicken pieces and cheese balls packed in a takeaway box' },
+      { src: '/assets/photos/chimaek/chimaek-box.webp', alt: 'Crisp fried chicken including a drumstick in an open chicken box' },
+    ];
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxButtons = [...lightbox.querySelectorAll('button')];
+    const closeButton = lightbox.querySelector('[data-lb-close]');
+    let photoIndex = 0;
+    let lastFocused = null;
+
+    const renderPhoto = () => {
+      const photo = PHOTOS[photoIndex];
+      lightboxImg.src = photo.src;
+      lightboxImg.alt = photo.alt;
+      lightboxCounter.textContent = `${photoIndex + 1} / ${PHOTOS.length}`;
+    };
+
+    const openLightbox = (index) => {
+      photoIndex = index;
+      renderPhoto();
+      lastFocused = document.activeElement;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      closeButton.focus();
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+      lastFocused = null;
+    };
+
+    const stepPhoto = (delta) => {
+      photoIndex = (photoIndex + delta + PHOTOS.length) % PHOTOS.length;
+      renderPhoto();
+    };
+
+    document.querySelectorAll('[data-photo]').forEach((el) => {
+      el.addEventListener('click', () => openLightbox(Number(el.getAttribute('data-photo'))));
+    });
+    lightbox.querySelector('[data-lb-close]').addEventListener('click', closeLightbox);
+    lightbox.querySelector('[data-lb-prev]').addEventListener('click', () => stepPhoto(-1));
+    lightbox.querySelector('[data-lb-next]').addEventListener('click', () => stepPhoto(1));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') stepPhoto(-1);
+      else if (e.key === 'ArrowRight') stepPhoto(1);
+      else if (e.key === 'Tab') {
+        // Tab must not reach the page behind the open dialog.
+        e.preventDefault();
+        const step = e.shiftKey ? -1 : 1;
+        const current = lightboxButtons.indexOf(document.activeElement);
+        lightboxButtons[(current + step + lightboxButtons.length) % lightboxButtons.length].focus();
+      }
+    });
+  </script>
 </body>
 </html>
