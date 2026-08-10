@@ -73,20 +73,33 @@
       <p class="mt-1 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
     </div>
 
-    <!-- 사진이 한 장뿐이라 콜라주와 라이트박스를 두지 않는다. 넘길 것이 없는
-         라이트박스는 화살표만 있고 아무 일도 하지 않는 모달이 된다. -->
-    <figure class="photo-card mt-6 aspect-[16/10] overflow-hidden rounded-2xl">
-      <img src="/assets/photos/samgyeopsal/samgyeopsal-grill.webp" width="1200" height="1600"
-           class="h-full w-full object-cover object-[50%_45%]" alt="Pork belly grilling on a round Korean griddle with kimchi, bean sprouts and a bubbling stew" />
-    </figure>
+    <!-- Photo collage (click to enlarge) -->
+    <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 4 in full screen">
+        <img src="/assets/photos/samgyeopsal/samgyeopsal-grill.webp" width="1200" height="1600" class="h-64 w-full object-cover  transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
+             alt="Pork belly grilling on a round Korean griddle with kimchi, bean sprouts and a bubbling stew" />
+      </button>
+      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 4 in full screen">
+        <img src="/assets/photos/samgyeopsal/samgyeopsal-spread.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_45%] transition group-hover:opacity-95"
+             alt="Raw pork belly laid out on a hot plate with kimchi, garlic, mushrooms and ssamjang" />
+      </button>
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 4 in full screen">
+        <img src="/assets/photos/samgyeopsal/samgyeopsal-flame.webp" width="1200" height="1600" loading="lazy" class="h-[209px] w-full object-cover object-[50%_40%] transition group-hover:opacity-95"
+             alt="Strips of raw pork belly on a stone grill with flames rising between them" />
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 4 photos</span>
+      </button>
+      <button type="button" data-photo="0" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
+        📷 View all 4 photos
+      </button>
+    </div>
 
     <!-- Two-column: content + booking card -->
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
       <div class="max-w-2xl">
-        <h2 class="font-display text-2xl font-extrabold tracking-tight">Ordering for one is the problem. We fix it.</h2>
+        <h2 class="font-display text-2xl font-extrabold tracking-tight">The Korean dinner everyone tells you to try. This is you actually trying it.</h2>
         <div class="mt-4 space-y-4 text-base leading-7 text-muted">
           <p>Most Korean BBQ places will not cook a single portion, so grilling pork belly on your own is quietly off the table when you are travelling alone. Coming in with a buddy and a few other guests makes that problem disappear.</p>
-          <p>Your buddy shows you the order the cuts go on and when to turn them, then hands you the tongs. You wrap your own ssam with lettuce, perilla leaf, garlic and ssamjang, and everyone builds one for the person next to them.</p>
+          <p>Your buddy shows you the order the cuts go on and when to turn them, then hands you the tongs. They talk you through building a ssam as well: lettuce, perilla leaf, garlic and ssamjang, in whatever combination you end up liking.</p>
         </div>
 
         <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
@@ -97,14 +110,6 @@
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
             <span><span class="font-bold text-ink">Pork belly, side dishes and rice</span>: all covered by the ₩20,000 fee.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Drinks not included</span>: order your own if you want one. Nobody will push you to drink.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Small group</span>: up to 6 guests with one local buddy, about 2 hours.</span>
           </li>
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
@@ -220,5 +225,85 @@
     </div>
   </section>
 
+  <!-- Lightbox -->
+  <div id="lightbox" class="fixed inset-0 z-[90] hidden items-center justify-center bg-ink/95 p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button type="button" data-lb-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-xl font-bold text-on-primary transition hover:bg-canvas-soft/30" aria-label="Close photo viewer">&times;</button>
+    <button type="button" data-lb-prev class="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:left-6" aria-label="Previous photo">&lsaquo;</button>
+    <div class="flex max-h-full max-w-5xl flex-col items-center">
+      <img id="lightbox-img" src="/assets/photos/samgyeopsal/samgyeopsal-grill.webp" alt="Pork belly grilling on a round Korean griddle with kimchi, bean sprouts and a bubbling stew" class="max-h-[80vh] w-auto max-w-full rounded-xl object-contain" />
+    </div>
+    <button type="button" data-lb-next class="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-canvas-soft/15 text-2xl font-bold text-on-primary transition hover:bg-canvas-soft/30 sm:right-6" aria-label="Next photo">&rsaquo;</button>
+    <p id="lightbox-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-bold text-on-primary/70"></p>
+  </div>
+
+  <script>
+    const PHOTOS = [
+      { src: '/assets/photos/samgyeopsal/samgyeopsal-grill.webp', alt: 'Pork belly grilling on a round Korean griddle with kimchi, bean sprouts and a bubbling stew' },
+      { src: '/assets/photos/samgyeopsal/samgyeopsal-spread.webp', alt: 'Raw pork belly laid out on a hot plate with kimchi, garlic, mushrooms and ssamjang' },
+      { src: '/assets/photos/samgyeopsal/samgyeopsal-flame.webp', alt: 'Strips of raw pork belly on a stone grill with flames rising between them' },
+      { src: '/assets/photos/samgyeopsal/samgyeopsal-table.webp', alt: 'A round Korean grill ringed with pork belly around a pot of stew, garlic and dipping sauces' },
+    ];
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxButtons = [...lightbox.querySelectorAll('button')];
+    const closeButton = lightbox.querySelector('[data-lb-close]');
+    let photoIndex = 0;
+    let lastFocused = null;
+
+    const renderPhoto = () => {
+      const photo = PHOTOS[photoIndex];
+      lightboxImg.src = photo.src;
+      lightboxImg.alt = photo.alt;
+      lightboxCounter.textContent = `${photoIndex + 1} / ${PHOTOS.length}`;
+    };
+
+    const openLightbox = (index) => {
+      photoIndex = index;
+      renderPhoto();
+      lastFocused = document.activeElement;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      closeButton.focus();
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+      lastFocused = null;
+    };
+
+    const stepPhoto = (delta) => {
+      photoIndex = (photoIndex + delta + PHOTOS.length) % PHOTOS.length;
+      renderPhoto();
+    };
+
+    document.querySelectorAll('[data-photo]').forEach((el) => {
+      el.addEventListener('click', () => openLightbox(Number(el.getAttribute('data-photo'))));
+    });
+    lightbox.querySelector('[data-lb-close]').addEventListener('click', closeLightbox);
+    lightbox.querySelector('[data-lb-prev]').addEventListener('click', () => stepPhoto(-1));
+    lightbox.querySelector('[data-lb-next]').addEventListener('click', () => stepPhoto(1));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') stepPhoto(-1);
+      else if (e.key === 'ArrowRight') stepPhoto(1);
+      else if (e.key === 'Tab') {
+        // Tab must not reach the page behind the open dialog.
+        e.preventDefault();
+        const step = e.shiftKey ? -1 : 1;
+        const current = lightboxButtons.indexOf(document.activeElement);
+        lightboxButtons[(current + step + lightboxButtons.length) % lightboxButtons.length].focus();
+      }
+    });
+  </script>
 </body>
 </html>
