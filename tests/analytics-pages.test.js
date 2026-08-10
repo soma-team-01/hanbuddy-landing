@@ -128,22 +128,22 @@ test('language switches call the shared analytics API with both languages', () =
   }
 });
 
-test('event detail pages load shared analytics with canonical page and experience context', () => {
+test('event detail pages load shared analytics with canonical page and content context', () => {
   assert.ok(eventCardIds.size >= 3, 'event card ids must be readable from the home page');
 
   for (const { name, html } of detailPages) {
     assert.match(html, /<script src="\/assets\/analytics\.js"><\/script>/, `${name} analytics module`);
 
     const context = html.match(
-      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-experience-type="([a-z0-9-]+)"[^>]*data-analytics-consent-mode="advanced"/,
+      /<body[^>]*data-analytics-page-type="event_detail"[^>]*data-analytics-content-id="([a-z0-9-]+)"[^>]*data-analytics-consent-mode="advanced"/,
     );
     assert.ok(context, `${name} detail context`);
 
-    // 상세페이지의 experience type과 카드 id가 갈리면 GA와 시트에서 같은 회차가
+    // 상세페이지의 content id와 카드 id가 갈리면 GA와 시트에서 같은 회차가
     // 두 이름으로 집계된다.
     assert.ok(
       eventCardIds.has(context[1]),
-      `${name} experience type "${context[1]}" must match an event card id (${[...eventCardIds].join(', ')})`,
+      `${name} content id "${context[1]}" must match an event card id (${[...eventCardIds].join(', ')})`,
     );
   }
 });

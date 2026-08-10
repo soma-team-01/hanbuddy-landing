@@ -61,13 +61,16 @@
   const buildPageContext = ({
     pageType = 'page',
     contentLanguage = 'en',
-    experienceType = '',
+    contentId = '',
   } = {}) => {
     const context = {
       page_type: pageType,
       content_language: contentLanguage,
     };
-    if (experienceType) context.experience_type = experienceType;
+    if (contentId) {
+      context.content_type = 'experience';
+      context.content_id = contentId;
+    }
     return context;
   };
 
@@ -237,7 +240,7 @@
   const currentPageContext = () => buildPageContext({
     pageType: document.body?.dataset.analyticsPageType || 'page',
     contentLanguage: document.documentElement.lang || 'en',
-    experienceType: document.body?.dataset.analyticsExperienceType || '',
+    contentId: document.body?.dataset.analyticsContentId || '',
   });
 
   const currentConsentMode = () => (
