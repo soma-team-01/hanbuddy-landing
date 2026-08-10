@@ -56,8 +56,10 @@ test('the done screen keeps its promise positive and channel-agnostic', () => {
   ].map((match) => match[1]);
   // 정규식이 아무것도 못 잡으면 아래 단언은 통과해 버린다. 마크업 한 벌 + 카피 EN/KO.
   assert.equal(promises.length, 3, `약속 문장을 못 찾았다: ${promises.length}`);
+  // 폼의 연락 수단 선택지 전부 + 흔한 한글 표기. 대소문자는 무시한다.
+  const channelNames = /whats\s?app|왓츠앱|\bline\b|라인|wechat|위챗|instagram|인스타(그램)?|kakao\s?talk|카카오톡|카톡/i;
   for (const promise of promises) {
-    assert.doesNotMatch(promise, /WhatsApp|LINE|WeChat|Instagram|KakaoTalk|카카오톡|인스타/);
+    assert.doesNotMatch(promise, channelNames, `약속 문장에 채널 이름이 들어갔다: ${promise.trim()}`);
   }
 });
 

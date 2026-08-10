@@ -189,15 +189,15 @@ photography and lets the fields carry the page. One column, `max-w-2xl`, no phot
   cannot produce two applications from one person.
 - **Done screen** replaces the form in place rather than routing to a new URL: a refresh should return an empty form,
   and a shared link must never expose someone else's application number. It carries the number, the 24-hour promise,
-  and the Instagram/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
+  and the Instagram/WhatsApp/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
   messenger, because the visitor just chose their own channel and any name we print is wrong for everyone else.
 - **Closed state**: when every slot has passed, the form is replaced by a short "next dates are on the way" note
-  with the same two channel links. An empty form the visitor cannot complete is worse than an honest message.
+  with the same channel links. An empty form the visitor cannot complete is worse than an honest message.
 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, WhatsApp for international guests (added 2026-08-10), KakaoTalk open chat as the local-buddy channel, and the one-line buddy-recruitment note.
 - The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
