@@ -27,6 +27,7 @@
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
 
   <script src="/assets/analytics.js"></script>
+  <script src="/assets/suggest-validation.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -631,6 +632,73 @@
       </div>
     </section>
 
+    <!-- Suggest an activity: 열린 회차가 맞지 않는 방문자가 이탈하는 대신 수요를 남기는 폼 -->
+    <section id="suggest" class="bg-panel" data-analytics-section>
+      <div class="mx-auto max-w-6xl px-5 py-14 lg:py-16">
+        <div class="mx-auto grid max-w-4xl items-center gap-8 lg:grid-cols-[1fr_auto]">
+          <div>
+            <p class="eyebrow" data-i18n="suggest.eyebrow">Your idea</p>
+            <h2 class="mt-3 font-display text-2xl font-extrabold leading-tight tracking-tight text-ink sm:text-3xl" data-i18n="suggest.title">
+              Don&rsquo;t see what you&rsquo;re looking for?
+            </h2>
+            <p class="mt-3 max-w-md text-base leading-7 text-muted" data-i18n="suggest.body">
+              Tell us the activity and the dates that work for you. If enough people want it, we&rsquo;ll set it up and let you know.
+            </p>
+          </div>
+          <form class="w-full rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-subtle sm:p-6 lg:w-[26rem]" data-suggest-form novalidate>
+            <label class="block text-sm font-bold text-ink">
+              <span data-i18n="suggest.activityLabel">What would you like to do?</span>
+              <input type="text" name="activity" maxlength="200" autocomplete="off"
+                     data-i18n-placeholder="suggest.activityPlaceholder"
+                     placeholder="e.g. Noraebang night, hiking, Korean cooking class"
+                     class="focusable mt-1.5 w-full rounded-xl border border-line-soft bg-canvas px-4 py-2.5 text-base font-normal text-ink placeholder:text-muted/70" />
+            </label>
+            <label class="mt-4 block text-sm font-bold text-ink">
+              <span data-i18n="suggest.datesLabel">When works for you?</span>
+              <input type="text" name="dates" maxlength="200" autocomplete="off"
+                     data-i18n-placeholder="suggest.datesPlaceholder"
+                     placeholder="e.g. Aug 22-24, or any weekend evening"
+                     class="focusable mt-1.5 w-full rounded-xl border border-line-soft bg-canvas px-4 py-2.5 text-base font-normal text-ink placeholder:text-muted/70" />
+            </label>
+            <label class="mt-4 block text-sm font-bold text-ink">
+              <span data-i18n="suggest.contactLabel">How can we reach you?</span>
+              <span class="font-normal text-muted" data-i18n="suggest.contactOptional">(optional)</span>
+              <input type="text" name="contact" maxlength="100" autocomplete="off"
+                     data-i18n-placeholder="suggest.contactPlaceholder"
+                     placeholder="Instagram / WhatsApp ID"
+                     class="focusable mt-1.5 w-full rounded-xl border border-line-soft bg-canvas px-4 py-2.5 text-base font-normal text-ink placeholder:text-muted/70" />
+            </label>
+            <!-- 봇만 채우는 필드. 채워져 있으면 저장하지 않는다 -->
+            <div class="sr-only" aria-hidden="true">
+              <label for="suggest-website">Website</label>
+              <input type="text" id="suggest-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <p id="suggest-error" class="mt-3 hidden rounded-xl bg-primary-soft px-4 py-3 text-sm font-bold text-primary-strong" role="alert" data-suggest-error></p>
+            <button type="submit" data-suggest-submit data-i18n="suggest.submit"
+                    class="focusable mt-5 w-full rounded-xl bg-primary px-6 py-3 text-base font-extrabold text-on-primary transition hover:bg-primary-hover">
+              Send my idea
+            </button>
+            <p class="mt-2.5 text-center text-xs leading-5 text-muted" data-i18n="suggest.note">
+              No commitment. This just tells us what to open next.
+            </p>
+            <p class="mt-1.5 text-center text-xs leading-5 text-muted">
+              <span data-i18n="suggest.privacyNote">We only use your contact to tell you when this opens.</span>
+              <a href="/privacy/" class="focusable font-bold underline" data-i18n="suggest.privacyLink">Privacy</a>
+            </p>
+          </form>
+          <div class="hidden w-full rounded-2xl border border-line-soft bg-canvas-soft p-6 text-center shadow-subtle sm:p-8 lg:w-[26rem]" data-suggest-done>
+            <p class="text-4xl" aria-hidden="true">💡</p>
+            <h3 class="mt-3 font-display text-xl font-extrabold tracking-tight text-ink" tabindex="-1" data-i18n="suggest.doneTitle">
+              Thanks for your idea!
+            </h3>
+            <p class="mt-2 text-sm leading-6 text-muted" data-i18n="suggest.doneBody">
+              We&rsquo;ll keep it in mind when we plan the next meetups. If you left your contact, we&rsquo;ll message you when it opens.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section id="how" class="mx-auto max-w-6xl px-5 py-16 lg:py-20" data-analytics-section>
       <div class="mx-auto max-w-2xl text-center">
@@ -638,7 +706,8 @@
           Joining takes 2 minutes.
         </h2>
       </div>
-      <div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-3" data-how-items></div>
+      <!-- 모바일에서도 1·2·3이 가로로 나란히 서도록 3열을 고정한다 -->
+      <div class="mx-auto mt-10 grid max-w-4xl grid-cols-3 gap-3 sm:gap-6" data-how-items></div>
     </section>
 
     <!-- Guest reviews -->
@@ -1006,6 +1075,29 @@
             },
           ],
         },
+        suggest: {
+          eyebrow: 'Your idea',
+          title: 'Don’t see what you’re looking for?',
+          body: 'Tell us the activity and the dates that work for you. If enough people want it, we’ll set it up and let you know.',
+          activityLabel: 'What would you like to do?',
+          activityPlaceholder: 'e.g. Noraebang night, hiking, Korean cooking class',
+          datesLabel: 'When works for you?',
+          datesPlaceholder: 'e.g. Aug 22-24, or any weekend evening',
+          contactLabel: 'How can we reach you?',
+          contactOptional: '(optional)',
+          contactPlaceholder: 'Instagram / WhatsApp ID',
+          submit: 'Send my idea',
+          sending: 'Sending...',
+          note: 'No commitment. This just tells us what to open next.',
+          privacyNote: 'We only use your contact to tell you when this opens.',
+          privacyLink: 'Privacy',
+          doneTitle: 'Thanks for your idea!',
+          doneBody: 'We’ll keep it in mind when we plan the next meetups. If you left your contact, we’ll message you when it opens.',
+          errors: {
+            field: 'Please check the highlighted field.',
+            generic: 'Something went wrong. Please try again, or DM us on Instagram.',
+          },
+        },
         how: {
           title: 'Joining takes 2 minutes.',
           items: [
@@ -1226,6 +1318,29 @@
             },
           ],
         },
+        suggest: {
+          eyebrow: '원하는 활동 제안',
+          title: '찾는 활동이 없나요?',
+          body: '하고 싶은 활동과 가능한 날짜를 알려주세요. 원하는 분이 모이면 저희가 열고 알려드릴게요.',
+          activityLabel: '어떤 활동을 하고 싶나요?',
+          activityPlaceholder: '예: 노래방, 등산, 한식 쿠킹 클래스',
+          datesLabel: '언제가 좋나요?',
+          datesPlaceholder: '예: 8월 22-24일, 또는 아무 주말 저녁',
+          contactLabel: '연락처를 남겨주시겠어요?',
+          contactOptional: '(선택)',
+          contactPlaceholder: 'Instagram / WhatsApp 아이디',
+          submit: '아이디어 보내기',
+          sending: '보내는 중...',
+          note: '부담 없이 남겨주세요. 다음에 열 활동을 정할 때 참고합니다.',
+          privacyNote: '연락처는 이 활동이 열렸을 때 알려드리는 데만 사용합니다.',
+          privacyLink: '개인정보 안내',
+          doneTitle: '아이디어 감사합니다!',
+          doneBody: '다음 모임을 준비할 때 참고할게요. 연락처를 남겼다면 활동이 열리는 대로 메시지를 드립니다.',
+          errors: {
+            field: '표시된 항목을 확인해 주세요.',
+            generic: '전송에 문제가 생겼어요. 다시 시도하거나 Instagram DM으로 알려주세요.',
+          },
+        },
         how: {
           title: '신청은 2분이면 충분합니다.',
           items: [
@@ -1370,6 +1485,10 @@
         const text = getByPath(copy, el.getAttribute('data-i18n-alt'));
         if (typeof text === 'string') el.setAttribute('alt', text);
       });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const text = getByPath(copy, el.getAttribute('data-i18n-placeholder'));
+        if (typeof text === 'string') el.setAttribute('placeholder', text);
+      });
     };
 
     const syncMeta = (copy) => {
@@ -1493,14 +1612,114 @@
       clear(container);
       copy.how.items.forEach((item) => {
         const article = document.createElement('article');
-        article.className = 'rounded-2xl bg-panel px-6 py-6 text-center';
-        const badge = textNode('p', 'mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-primary font-display text-sm font-extrabold text-on-primary', item.step);
+        // 좁은 화면은 3열이 빠듯하므로 여백과 글자를 한 단계 줄인다
+        article.className = 'rounded-2xl bg-panel px-3 py-4 text-center sm:px-6 sm:py-6';
+        const badge = textNode('p', 'mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary font-display text-sm font-extrabold text-on-primary sm:h-9 sm:w-9', item.step);
         article.append(
           badge,
-          textNode('h3', 'mt-4 font-display text-lg font-bold leading-snug text-ink', item.title),
-          textNode('p', 'mt-2 text-sm leading-6 text-muted', item.body),
+          textNode('h3', 'mt-3 font-display text-base font-bold leading-snug text-ink sm:mt-4 sm:text-lg', item.title),
+          textNode('p', 'mt-2 text-xs leading-5 text-muted sm:text-sm sm:leading-6', item.body),
         );
         container.appendChild(article);
+      });
+    };
+
+    // ===== 활동 제안 폼 =====
+    const suggestLanguage = () => (SUPPORTED_LANGUAGES.includes(document.documentElement.lang)
+      ? document.documentElement.lang
+      : 'en');
+
+    const initSuggestForm = () => {
+      const form = document.querySelector('[data-suggest-form]');
+      if (!form) return;
+      const errorBox = form.querySelector('[data-suggest-error]');
+      const submitButton = form.querySelector('[data-suggest-submit]');
+      let started = false;
+
+      const clearErrors = () => {
+        errorBox.classList.add('hidden');
+        form.querySelectorAll('[aria-invalid]').forEach((el) => {
+          el.removeAttribute('aria-invalid');
+          el.removeAttribute('aria-describedby');
+        });
+      };
+
+      const showError = (field, message) => {
+        errorBox.textContent = message;
+        errorBox.classList.remove('hidden');
+        const target = form.elements[field];
+        if (target && field !== 'website') {
+          target.setAttribute('aria-invalid', 'true');
+          target.setAttribute('aria-describedby', 'suggest-error');
+          target.focus({ preventScroll: true });
+          target.scrollIntoView({ block: 'center' });
+        }
+      };
+
+      form.addEventListener('input', () => {
+        if (started) return;
+        started = true;
+        window.HanBuddyAnalytics?.trackEvent?.('suggestion_start', {
+          content_language: suggestLanguage(),
+        });
+      });
+
+      form.addEventListener('submit', async (submitEvent) => {
+        submitEvent.preventDefault();
+        const copy = CONTENT_MAP[suggestLanguage()] ?? CONTENT_MAP.en;
+        clearErrors();
+
+        const payload = {
+          activity: form.elements.activity.value,
+          dates: form.elements.dates.value,
+          contact: form.elements.contact.value,
+          website: form.elements.website.value,
+          language: suggestLanguage(),
+        };
+
+        // 모듈 로드가 실패하면 서버 검증에 맡긴다. 여기서 멈추면 아무 안내도 못 준다.
+        const local = window.HanBuddySuggestValidation?.validateSuggestion?.(payload)
+          ?? { ok: true };
+        if (!local.ok) {
+          window.HanBuddyAnalytics?.trackEvent?.('suggestion_error', {
+            field: local.field,
+            content_language: suggestLanguage(),
+          });
+          return showError(local.field, copy.suggest.errors.field);
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = copy.suggest.sending;
+
+        try {
+          const response = await fetch('/api/suggest', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!result.ok) {
+            if (result.code === 'VALIDATION' && result.field) {
+              return showError(result.field, copy.suggest.errors.field);
+            }
+            throw new Error('storage');
+          }
+          form.classList.add('hidden');
+          const done = document.querySelector('[data-suggest-done]');
+          done.classList.remove('hidden');
+          // 폼을 감추면 포커스가 body로 떨어진다. 화면 리더 사용자도
+          // 접수됐다는 사실을 들을 수 있게 감사 메시지로 옮긴다.
+          done.querySelector('h3').focus({ preventScroll: true });
+          window.HanBuddyAnalytics?.trackEvent?.('suggestion_submit', {
+            content_language: suggestLanguage(),
+          });
+        } catch {
+          errorBox.textContent = copy.suggest.errors.generic;
+          errorBox.classList.remove('hidden');
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = copy.suggest.submit;
+        }
       });
     };
 
@@ -1683,6 +1902,7 @@
 
     syncCtas();
     startPhotoBackdrop();
+    initSuggestForm();
     applyLanguage(safeStoredLanguage());
   </script>
 </body>
