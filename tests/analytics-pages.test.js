@@ -145,6 +145,11 @@ test('event detail pages load shared analytics with canonical page and content c
       eventCardIds.has(context[1]),
       `${name} content id "${context[1]}" must match an event card id (${[...eventCardIds].join(', ')})`,
     );
+    assert.strictEqual(
+      context[1],
+      name,
+      `${name} content id "${context[1]}" must match its event page id`,
+    );
   }
 });
 
