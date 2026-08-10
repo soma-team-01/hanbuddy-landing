@@ -44,7 +44,21 @@ test('the done screen keeps its promise positive and channel-agnostic', () => {
   assert.match(html, /24시간 안에 연락드려 자리를 확정해 드립니다/);
   // 부정문과 채널 이름은 쓰지 않기로 했다(스펙 5.5).
   assert.doesNotMatch(html, /not confirmed|자리가 확정된 것은 아닙니다/);
-  assert.doesNotMatch(html, /done[\s\S]{0,400}(WhatsApp|LINE|WeChat)/);
+
+  // 스펙 5.5가 막는 건 "어느 채널로 연락하겠다"는 약속 문장이다. 게스트가 폼에서
+  // 고른 수단이 제각각이라, 약속에 특정 앱을 박으면 다른 걸 고른 사람에게 틀린
+  // 문장이 된다. 아래 버튼들은 반대 방향(게스트가 우리에게 연락하는 창구)이고
+  // 이미 Instagram·KakaoTalk이 버튼으로 있으므로 이 금지 대상이 아니다.
+  // 2026-08-10 이전에는 done 이후 400자를 통째로 훑어서 둘을 구분하지 못했다.
+  const promises = [
+    ...html.matchAll(/data-i18n="apply\.done\.body">([\s\S]*?)<\/p>/g),
+    ...html.matchAll(/\bbody: '([^']*(?:24 hours|24시간)[^']*)'/g),
+  ].map((match) => match[1]);
+  // 정규식이 아무것도 못 잡으면 아래 단언은 통과해 버린다. 마크업 한 벌 + 카피 EN/KO.
+  assert.equal(promises.length, 3, `약속 문장을 못 찾았다: ${promises.length}`);
+  for (const promise of promises) {
+    assert.doesNotMatch(promise, /WhatsApp|LINE|WeChat|Instagram|KakaoTalk|카카오톡|인스타/);
+  }
 });
 
 test('privacy notice states purpose, retention and the request channel', () => {

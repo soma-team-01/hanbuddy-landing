@@ -119,7 +119,10 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
 - Primary CTA: warm-red `primary` fill, white `on-primary` text, `primary-hover` hover, and no glow.
-- Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
+- Secondary CTA: an outline pill matching the primary's shape and height — thin `primary` border, `canvas-soft` fill, `primary-strong` label, no trailing arrow (유현님 rule, 2026-08-10). On the final primary band, use a thin `on-primary-strong` border instead. Never a second filled `primary`: two filled pills leave the field with no primary, and the action we want clicked loses its advantage.
+- The primary CTA carries `border border-transparent` so it matches the outline secondary's height exactly. Without it the two pills sit 2px apart, which is visible when they are side by side in the hero.
+- The secondary was plain arrowed text until 2026-08-10. It was replaced because it had no tap boundary on mobile, where the hero CTA band sits over the polaroid photos: bare text read as body copy on a photo, while a filled pill blocks the image behind it and stays legible.
+- Arrows (`→`) now belong to inline text links only (the hero rating chip, `read their reviews`), not to pill buttons.
 - External CTA anchors keep `target="_blank"` and `rel="noopener"`. Internal ones (`#anchor`, `/apply/`) stay in the same tab:
   a new tab for a page of our own strands the visitor with a back button that does nothing.
 

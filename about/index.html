@@ -387,7 +387,7 @@
 
         <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a href="/apply/" data-cta="apply"
-             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="hero.primaryCta">
+             class="focusable focusable-on-primary-strong rounded-full border border-transparent bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="hero.primaryCta">
             Join a meetup
           </a>
           <a href="/#events"
@@ -527,12 +527,16 @@
         </h2>
         <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           <a href="/apply/" data-cta="apply"
-             class="focusable focusable-on-primary-strong rounded-full bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
+             class="focusable focusable-on-primary-strong rounded-full border border-transparent bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="join.formButton">
             Join a meetup
           </a>
           <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
              class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.instagramButton">
             DM us on Instagram
+          </a>
+          <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
+             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.whatsappButton">
+            Message us on WhatsApp
           </a>
           <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
              class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="join.kakaoButton">
@@ -562,6 +566,15 @@
                 <rect x="3" y="3" width="18" height="18" rx="5"></rect>
                 <circle cx="12" cy="12" r="4"></circle>
                 <circle cx="17.5" cy="6.5" r="1" class="fill-current stroke-none"></circle>
+              </svg>
+            </a>
+            <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
+               data-footer-social-icon aria-label="Message HanBuddy on WhatsApp"
+               data-i18n-aria="footer.whatsappAria" title="WhatsApp"
+               class="focusable inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-soft bg-panel-raised text-ink transition hover:border-primary/35 hover:text-primary-strong">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-5 w-5">
+                <path fill="currentColor" d="M12 2.5a9.4 9.4 0 0 0-8.1 14.1L2.5 21.5l5.05-1.35A9.4 9.4 0 1 0 12 2.5Zm0 1.8a7.6 7.6 0 1 1-3.9 14.13l-.28-.17-3 .8.81-2.93-.18-.29A7.6 7.6 0 0 1 12 4.3Z"></path>
+                <path fill="currentColor" d="M9.3 7.6c-.17-.4-.35-.4-.52-.41h-.44c-.15 0-.4.06-.61.29-.21.23-.8.78-.8 1.9s.82 2.2.94 2.35c.11.16 1.59 2.54 3.93 3.46 1.95.77 2.34.62 2.76.58.42-.04 1.37-.56 1.56-1.1.2-.54.2-1 .14-1.1-.06-.1-.21-.15-.44-.27-.23-.11-1.37-.68-1.58-.75-.21-.08-.37-.12-.52.11-.16.24-.6.76-.74.91-.13.16-.27.18-.5.06-.23-.12-.98-.36-1.87-1.15-.69-.62-1.16-1.38-1.29-1.61-.14-.24-.02-.36.1-.48.1-.1.23-.27.35-.4.11-.14.15-.24.23-.4.08-.15.04-.29-.02-.4-.06-.12-.51-1.25-.7-1.7Z"></path>
               </svg>
             </a>
             <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
@@ -647,6 +660,7 @@
       apply: '/apply/',
       contact: 'https://open.kakao.com/o/sP3n4rFi',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
+      whatsapp: 'https://wa.me/821082970110',
       meetup: 'https://www.meetup.com/discover-korea-with-local-buddies/',
     };
 
@@ -782,6 +796,7 @@
           title: 'See you at the next meetup?',
           formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
+          whatsappButton: 'Message us on WhatsApp',
           kakaoButton: 'KakaoTalk open chat',
         },
         footer: {
@@ -789,6 +804,7 @@
           aboutLink: 'About HanBuddy',
           contactChannelsAria: 'Community and contact channels',
           instagramAria: 'Send HanBuddy a direct message on Instagram',
+          whatsappAria: 'Message HanBuddy on WhatsApp',
           kakaoAria: 'Ask HanBuddy in KakaoTalk open chat',
           meetupAria: 'Visit HanBuddy’s Meetup group',
           credibility: 'HanBuddy is run by team ZeroOne of AI·SW Maestro, a national talent program hosted by Korea’s Ministry of Science and ICT.',
@@ -934,6 +950,7 @@
           title: '다음 모임에서 만날까요?',
           formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
+          whatsappButton: 'WhatsApp으로 문의하기',
           kakaoButton: 'KakaoTalk 오픈채팅',
         },
         footer: {
@@ -941,6 +958,7 @@
           aboutLink: 'HanBuddy 소개',
           contactChannelsAria: '커뮤니티 및 문의 채널',
           instagramAria: 'HanBuddy Instagram DM으로 문의하기',
+          whatsappAria: 'HanBuddy WhatsApp으로 문의하기',
           kakaoAria: 'HanBuddy KakaoTalk 오픈채팅으로 문의하기',
           meetupAria: 'HanBuddy Meetup 그룹 보기',
           credibility: 'HanBuddy는 과학기술정보통신부 주최 AI·SW마에스트로 17기 팀 ZeroOne이 운영합니다.',
