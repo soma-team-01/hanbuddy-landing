@@ -139,6 +139,8 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 ### Event Cards and Steps
 
+- Two scheduling models coexist and the card must say which one it is. Fixed-slot activities (baseball, football, Han River) list real published dates because tickets and spots are bought ahead. Weekday-recurring activities (Korean BBQ, chimaek) show `Every weekday · 7:00 PM` and `Pick your date when you apply` instead, because a restaurant booking costs nothing to keep open. Never print a date list on a recurring card: the day it passes, the card is lying.
+- Detail pages for recurring activities carry a single photo and no lightbox. A lightbox over one image is a modal with arrows that do nothing.
 - Event cards (`#events`): Meetup-style compact cards on the `panel` band (same band as `#reviews`), in a 2-col mobile / 4-col desktop grid — 16/10 photo with a single bold price (or "Coming soon") badge chip on the image, uppercase date line in `primary-strong`, emoji + title, one-line tagline. The price appears once, on the badge only. Open events are whole-card links to `/events/*` detail pages; coming-soon events are buttons that fire a toast. Dates are real, published operating dates — never placeholder dates.
 - How-it-works steps (`#how`): three centered `panel` cards, each opened by a filled `primary` number badge — Apply / We confirm / Have fun.
 - Event detail pages (`/events/*`): title block, photo collage, then content beside a sticky booking card (desktop) or above a fixed bottom CTA bar (mobile). Only approved facts (dates, price, inclusions) appear on the booking surfaces.
@@ -148,7 +150,7 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 ### Completed-run Evidence
 
 - Public proof mentions only completed-operation facts, approved photos, and the approved guest quotes (the verbatim list lives in `AGENTS.md` CONVENTIONS — currently 5 quotes; nothing else may be quoted).
-- Completed runs usable as proof: only the two completed Jamsil KBO runs, 2026-06-25 and 2026-07-26. Han River, K League, and jjimjilbang photos may be used only for upcoming/coming-up items or with neutral place-describing captions — never as completed-operation proof.
+- Completed runs usable as proof: only the two completed Jamsil KBO runs, 2026-06-25 and 2026-07-26. Han River, K League, Korean BBQ, and chimaek photos may be used only for upcoming items or with neutral place-describing captions — never as completed-operation proof.
 - Maintainer-only guardrail: do not expose F001, 4/5, 30,000, under 30,000, Less than 30,000, pre-acquaintance, local Korean interaction, proof of scale, learning signal, PMF caveats, payment sensitivity, or improvement criticism in public marketing copy.
 - Public WebP photos are proof assets; do not use raw JPGs, private chats, names, phone numbers, or unapproved direct quotes.
 
