@@ -31,7 +31,8 @@ const MUST_DEPLOY = [
   'assets/photos/kbo/run1-hero.webp',
   'assets/photos/hanriver/hanriver-fountain.webp',
   'assets/photos/kleague/kleague-night.webp',
-  'assets/photos/jjimjilbang/jjimjilbang-kiln-room.webp',
+  'assets/photos/samgyeopsal/samgyeopsal-grill.webp',
+  'assets/photos/chimaek/chimaek-og.webp',
   ...eventPages,
 ];
 

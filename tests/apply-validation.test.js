@@ -113,3 +113,41 @@ test('form options are exposed for the page to render', () => {
   assert.deepEqual(FIELD_OPTIONS.koreanLevel, ['None', 'Basic', 'Intermediate', 'Fluent']);
   assert.ok(FIELD_OPTIONS.contactMethod.includes('KakaoTalk'));
 });
+
+// 상시 오픈 회차는 서버가 날짜를 직접 판정한다. 폼의 select는 브라우저에만 있고,
+// 신청 요청은 누구나 손으로 만들어 보낼 수 있다.
+const foodApplication = (slotIso) => ({ ...valid(), eventId: 'samgyeopsal', slotIso });
+
+test('a weekday inside the booking window is accepted for a recurring event', () => {
+  const result = validateApplication(foodApplication('2026-08-12T19:00'), AUG10);
+  assert.equal(result.ok, true, result.field);
+  assert.equal(result.value.eventTitle, 'Korean BBQ Night');
+  // slotIso 형식은 고정 슬롯 회차와 같아야 한다. 시트 5열이 이 문자열을 그대로 받는다.
+  assert.match(result.value.slotIso, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+  assert.equal(result.value.slotIso, '2026-08-12T19:00');
+});
+
+test('the server rejects recurring dates the date picker would never offer', () => {
+  const rejected = {
+    '토요일': '2026-08-15T19:00',
+    '일요일': '2026-08-16T19:00',
+    '리드타임 이내': '2026-08-11T19:00',
+    '당일': '2026-08-10T19:00',
+    '지난 날짜': '2026-08-05T19:00',
+    '기간 밖': '2026-10-14T19:00',
+    '다른 집합 시각': '2026-08-12T20:00',
+    '다른 회차의 슬롯': '2026-08-22T17:00',
+  };
+  for (const [label, slotIso] of Object.entries(rejected)) {
+    const result = validateApplication(foodApplication(slotIso), AUG10);
+    assert.equal(result.ok, false, `${label}(${slotIso})이 통과했다`);
+    assert.equal(result.field, 'slotIso', `${label}은 slotIso로 걸려야 한다`);
+  }
+});
+
+test('a recurring date cannot be attached to a fixed-slot event', () => {
+  // 야구는 티켓을 미리 사두므로 임의의 평일을 열어 줄 수 없다.
+  const result = validateApplication({ ...valid(), slotIso: '2026-08-12T19:00' }, AUG10);
+  assert.equal(result.ok, false);
+  assert.equal(result.field, 'slotIso');
+});
