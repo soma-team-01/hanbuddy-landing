@@ -534,6 +534,11 @@
     const form = document.querySelector('[data-apply]');
     const errorBox = document.querySelector('[data-form-error]');
     const prefilledEvent = new URLSearchParams(location.search).get('event');
+    if (SLOTS.openEvents().some((event) => event.id === prefilledEvent)) {
+      // analytics.js는 DOMContentLoaded에서 초기화되므로, 검증된 프리필 ID를
+      // 먼저 페이지 컨텍스트에 올리면 신청 페이지 조회도 같은 퍼널로 이어진다.
+      document.body.dataset.analyticsContentId = prefilledEvent;
+    }
     let startedTracked = false;
 
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
@@ -721,7 +726,8 @@
         restoreErrorBox();
       }
       track('application_error', {
-        event_id: form.elements.eventId.value,
+        content_type: 'experience',
+        content_id: form.elements.eventId.value,
         field,
         content_language: currentLanguage(),
       });
@@ -731,7 +737,8 @@
       if (startedTracked) return;
       startedTracked = true;
       track('application_start', {
-        event_id: form.elements.eventId.value,
+        content_type: 'experience',
+        content_id: form.elements.eventId.value,
         prefilled: Boolean(prefilledEvent),
         content_language: currentLanguage(),
       });
@@ -805,10 +812,11 @@
         done.querySelector('h1').focus({ preventScroll: true });
         window.scrollTo({ top: 0 });
         track('generate_lead', {
-          event_id: payload.eventId,
+          content_type: 'experience',
+          content_id: payload.eventId,
           date_slot: payload.slotIso,
           guests: Number(payload.guests),
-          source: payload.source,
+          lead_source: payload.source,
           prefilled: Boolean(prefilledEvent),
           content_language: currentLanguage(),
         });

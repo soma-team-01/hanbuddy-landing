@@ -219,19 +219,20 @@ test('builds a stable page context without empty optional values', { skip: !modu
     analytics.buildPageContext({
       pageType: 'event_detail',
       contentLanguage: 'en',
-      experienceType: 'kbo',
+      contentId: 'kbo',
     }),
     {
       page_type: 'event_detail',
       content_language: 'en',
-      experience_type: 'kbo',
+      content_type: 'experience',
+      content_id: 'kbo',
     },
   );
   assert.deepEqual(
     analytics.buildPageContext({
       pageType: 'home',
       contentLanguage: 'ko',
-      experienceType: '',
+      contentId: '',
     }),
     {
       page_type: 'home',
@@ -439,7 +440,7 @@ test('maps an event-card click to the GA recommended content-selection schema', 
         page_type: 'home',
         content_language: 'en',
         content_type: 'experience',
-        item_id: 'kbo-0805',
+        content_id: 'kbo-0805',
         availability_status: 'open',
       },
     },

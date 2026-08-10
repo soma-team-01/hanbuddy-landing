@@ -92,13 +92,21 @@ test('the page declares its analytics context', () => {
   assert.match(html, /data-analytics-page-type="application"/);
 });
 
-test('the three funnel events carry the language, as the analytics spec requires', () => {
+test('a valid prefilled event joins the application page view to the content funnel', () => {
+  assert.match(html, /SLOTS\.openEvents\(\)\.some\(\(event\) => event\.id === prefilledEvent\)/);
+  assert.match(html, /document\.body\.dataset\.analyticsContentId = prefilledEvent/);
+});
+
+test('the three funnel events carry the shared analytics context', () => {
   // trackGa는 파라미터를 자동으로 채우지 않는다. 여기서 빠뜨리면 스펙 9.2가
-  // 요구하는 content_language 없이 이벤트가 쌓인다.
+  // 요구하는 공통 컨텍스트 없이 이벤트가 쌓인다.
   for (const name of ['application_start', 'application_error', 'generate_lead']) {
     const call = html.match(new RegExp(`track\\('${name}',[\\s\\S]*?\\}\\);`));
     assert.ok(call, `missing track call: ${name}`);
     assert.match(call[0], /content_language:/, `${name} must report content_language`);
+    assert.match(call[0], /content_type: 'experience'/, `${name} must report content_type`);
+    assert.match(call[0], /content_id:/, `${name} must report content_id`);
+    assert.doesNotMatch(call[0], /experience_id:|event_id:/, `${name} must not fork the content identifier`);
   }
 });
 
@@ -117,7 +125,7 @@ test('application payload never collects browser attribution data', () => {
 
   const submitted = html.match(/track\('generate_lead',[\s\S]*?^        \}\);/m)?.[0] || '';
   assert.ok(submitted, 'generate_lead event must be readable');
-  assert.match(submitted, /source: payload\.source/);
+  assert.match(submitted, /lead_source: payload\.source/);
   assert.doesNotMatch(submitted, /sourceOther/);
 });
 
