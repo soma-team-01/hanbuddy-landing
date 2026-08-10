@@ -212,3 +212,15 @@ test('public metadata uses the canonical production origin', () => {
     );
   }
 });
+
+test('the mobile photo gallery button opens at the first photo', () => {
+  // data-photo="1"이면 갤러리가 2번째 사진부터 열린다. 한강 템플릿에서 복사되며
+  // 6개 페이지 중 5개에 같은 값이 퍼져 있었다(2026-08-10 CodeRabbit 지적).
+  for (const { name, html } of detailPages) {
+    const mobileButton = html.match(
+      /<button type="button" data-photo="(\d+)"[^>]*lg:hidden"[^>]*aria-label="Open photo gallery">/,
+    );
+    assert.ok(mobileButton, `${name}: 모바일 갤러리 버튼을 찾지 못했다`);
+    assert.equal(mobileButton[1], '0', `${name}: 갤러리가 ${Number(mobileButton[1]) + 1}번째 사진부터 열린다`);
+  }
+});
