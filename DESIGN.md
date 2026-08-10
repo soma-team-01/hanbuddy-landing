@@ -119,7 +119,10 @@ Use an 8px-first rhythm because the MVP Figma surfaces use compact app spacing. 
 
 - All buttons are pills (`rounded-full`), matching the MVP app.
 - Primary CTA: warm-red `primary` fill, white `on-primary` text, `primary-hover` hover, and no glow.
-- Secondary CTA: plain `primary-strong` text with a trailing arrow (`→`); on the final primary band, use an `on-primary-strong` fill or thin `on-primary-strong` border.
+- Secondary CTA: an outline pill matching the primary's shape and height — thin `primary` border, `canvas-soft` fill, `primary-strong` label, no trailing arrow (유현님 rule, 2026-08-10). On the final primary band, use a thin `on-primary-strong` border instead. Never a second filled `primary`: two filled pills leave the field with no primary, and the action we want clicked loses its advantage.
+- The primary CTA carries `border border-transparent` so it matches the outline secondary's height exactly. Without it the two pills sit 2px apart, which is visible when they are side by side in the hero.
+- The secondary was plain arrowed text until 2026-08-10. It was replaced because it had no tap boundary on mobile, where the hero CTA band sits over the polaroid photos: bare text read as body copy on a photo, while a filled pill blocks the image behind it and stays legible.
+- Arrows (`→`) now belong to inline text links only (the hero rating chip, `read their reviews`), not to pill buttons.
 - External CTA anchors keep `target="_blank"` and `rel="noopener"`. Internal ones (`#anchor`, `/apply/`) stay in the same tab:
   a new tab for a page of our own strands the visitor with a back button that does nothing.
 
@@ -186,15 +189,15 @@ photography and lets the fields carry the page. One column, `max-w-2xl`, no phot
   cannot produce two applications from one person.
 - **Done screen** replaces the form in place rather than routing to a new URL: a refresh should return an empty form,
   and a shared link must never expose someone else's application number. It carries the number, the 24-hour promise,
-  and the Instagram/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
+  and the Instagram/WhatsApp/KakaoTalk links. It states the promise positively ("we'll confirm your spot") and names no
   messenger, because the visitor just chose their own channel and any name we print is wrong for everyone else.
 - **Closed state**: when every slot has passed, the form is replaced by a short "next dates are on the way" note
-  with the same two channel links. An empty form the visitor cannot complete is worse than an honest message.
+  with the same channel links. An empty form the visitor cannot complete is worse than an honest message.
 
 ### About Page and Final CTA
 
 - Team/credibility content lives on `/about` (operator positioning: the team plans, runs, and improves every meetup — never "engineering team" framing), with the AI·SW Maestro card inside the team section. The page is a full-bleed photo hero, an origin section, a zigzag how-we-run-it section, and a dark timeline band of completed and upcoming runs. The main page links to it from the nav and footer only.
-- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, KakaoTalk open chat as the secondary and local-buddy channel, and the one-line buddy-recruitment note.
+- Final CTA (`#apply`) is the single large `ink` band over the photo backdrop: the `/apply/` form as the primary action, Instagram DM as the default guest inquiry channel, WhatsApp for international guests (added 2026-08-10), KakaoTalk open chat as the local-buddy channel, and the one-line buddy-recruitment note.
 - The section carries no privacy paragraph (removed 2026-08-03). The consent banner is the single place that explains analytics and form data ("This page never sends your form answers to these tools"), and it is shown before anything loads, so repeating it under the CTA only added small low-contrast text to the closing screen. Keep new data/cookie wording in the banner, not here.
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
