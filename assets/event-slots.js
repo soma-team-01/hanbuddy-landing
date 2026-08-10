@@ -42,10 +42,10 @@
       title: { en: 'Han River Picnic', ko: '한강 피크닉' },
       price: 25000,
       slots: [
-        { iso: '2026-08-08T17:00', label: { en: 'Sat, Aug 8 · Meet at 5:00 PM', ko: '8월 8일 (토) · 5:00 집합' } },
-        { iso: '2026-08-09T17:00', label: { en: 'Sun, Aug 9 · Meet at 5:00 PM', ko: '8월 9일 (일) · 5:00 집합' } },
         { iso: '2026-08-15T17:00', label: { en: 'Sat, Aug 15 · Meet at 5:00 PM', ko: '8월 15일 (토) · 5:00 집합' } },
         { iso: '2026-08-16T17:00', label: { en: 'Sun, Aug 16 · Meet at 5:00 PM', ko: '8월 16일 (일) · 5:00 집합' } },
+        { iso: '2026-08-22T17:00', label: { en: 'Sat, Aug 22 · Meet at 5:00 PM', ko: '8월 22일 (토) · 5:00 집합' } },
+        { iso: '2026-08-23T17:00', label: { en: 'Sun, Aug 23 · Meet at 5:00 PM', ko: '8월 23일 (일) · 5:00 집합' } },
       ],
     },
   ]);
