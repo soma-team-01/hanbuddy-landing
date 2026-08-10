@@ -6,6 +6,7 @@
 !/assets/analytics.js
 !/assets/event-slots.js
 !/assets/apply-validation.js
+!/assets/suggest-validation.js
 !/assets/brand
 /assets/brand/*
 !/assets/brand/*.webp
@@ -59,3 +60,4 @@
 !/api
 /api/*
 !/api/apply.js
+!/api/suggest.js
