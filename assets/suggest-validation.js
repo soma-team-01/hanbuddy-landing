@@ -4,7 +4,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.HanBuddySuggestValidation = api;
 })(typeof window === 'undefined' ? null : window, () => {
-  const MAX_LENGTH = { activity: 200, dates: 200, contact: 100 };
+  const MAX_LENGTH = { activity: 200, contact: 100 };
 
   const fail = (field) => ({ ok: false, field });
   const text = (value) => (typeof value === 'string' ? value.trim() : '');
@@ -13,10 +13,8 @@
     // 봇만 채우는 필드. 성공처럼 보이게 응답하되 저장하지 않는다(호출부에서 처리).
     if (text(payload.website)) return fail('website');
 
-    for (const field of ['activity', 'dates']) {
-      const value = text(payload[field]);
-      if (!value || value.length > MAX_LENGTH[field]) return fail(field);
-    }
+    const activity = text(payload.activity);
+    if (!activity || activity.length > MAX_LENGTH.activity) return fail('activity');
 
     const contact = text(payload.contact);
     if (contact.length > MAX_LENGTH.contact) return fail('contact');
@@ -26,8 +24,7 @@
     return {
       ok: true,
       value: {
-        activity: text(payload.activity),
-        dates: text(payload.dates),
+        activity,
         contact,
         language,
       },

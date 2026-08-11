@@ -20,7 +20,6 @@ const { buildSuggestionId, buildRow, safeLog, ALLOWED_LOG_KEYS } = handler;
 
 const suggestion = () => ({
   activity: 'Noraebang night',
-  dates: 'Any weekend evening',
   contact: '@hanbuddy_fan',
   website: '',
   language: 'en',
@@ -43,12 +42,12 @@ test('the row matches the suggestions sheet header order exactly', () => {
   const row = buildRow({
     suggestionId: 'HBS-20260810-ABCDEF',
     timestampKst: '2026-08-10 21:14:03',
-    value: { activity: 'Noraebang night', dates: 'Aug 22-24', contact: '@julie', language: 'en' },
+    value: { activity: 'Noraebang night', contact: '@julie', language: 'en' },
   });
   assert.deepEqual(row, [
-    '2026-08-10 21:14:03', 'HBS-20260810-ABCDEF', 'Noraebang night', 'Aug 22-24', '@julie', 'en',
+    '2026-08-10 21:14:03', 'HBS-20260810-ABCDEF', 'Noraebang night', '@julie', 'en',
   ]);
-  assert.equal(row.length, 6);
+  assert.equal(row.length, 5);
 });
 
 test('non-POST methods are rejected', async () => {
@@ -120,7 +119,7 @@ test('a successful submission appends the row and notifies Discord', async () =>
 
   assert.equal(response.code, 200);
   assert.match(response.body.suggestionId, /^HBS-\d{8}-/);
-  assert.equal(sheetBody.values[0].length, 6);
+  assert.equal(sheetBody.values[0].length, 5);
   assert.equal(sheetBody.values[0][2], 'Noraebang night');
   assert.ok(webhookBody.content.includes('Noraebang night'));
 });
