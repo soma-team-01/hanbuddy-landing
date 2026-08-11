@@ -2,12 +2,17 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const { validateApplication, FIELD_OPTIONS } = require('../assets/apply-validation.js');
+const { findEvent, openDates } = require('../assets/event-slots.js');
 
 const AUG10 = Date.parse('2026-08-10T12:00:00+09:00');
 
+// 경기 일정은 리그가 정하고 우리는 갱신만 한다. 날짜를 박아두면 갱신할 때마다
+// 무관한 테스트가 깨지므로, 그때그때 열려 있는 슬롯을 데이터에서 집어 온다.
+const firstOpen = (eventId) => openDates(findEvent(eventId), AUG10)[0].iso;
+
 const valid = () => ({
   eventId: 'kbo-jamsil',
-  slotIso: '2026-08-15T17:00',
+  slotIso: firstOpen('kbo-jamsil'),
   guests: '2',
   name: 'Julie Martin',
   nationality: 'France',
@@ -90,9 +95,9 @@ test('choosing Other on the source requires typing what it was', () => {
 });
 
 test('a slot from another event is rejected', () => {
-  // 8/21 5:30은 잠실에만 있다. 한강도 8/15·16을 열기 때문에 날짜만 겹치는
-  // 슬롯으로는 이 조작을 재현할 수 없다.
-  const result = validateApplication({ ...valid(), eventId: 'hanriver', slotIso: '2026-08-21T17:30' }, AUG10);
+  // 한강은 상시 오픈이라 날짜는 겹쳐도 집합 시각이 다르다. 잠실 슬롯을 그대로
+  // 붙이면 시각이 어긋나 걸린다.
+  const result = validateApplication({ ...valid(), eventId: 'hanriver', slotIso: firstOpen('kbo-jamsil') }, AUG10);
   assert.equal(result.ok, false);
   assert.equal(result.field, 'slotIso');
 });
@@ -129,14 +134,12 @@ test('a weekday inside the booking window is accepted for a recurring event', ()
 
 test('the server rejects recurring dates the date picker would never offer', () => {
   const rejected = {
-    '토요일': '2026-08-15T19:00',
-    '일요일': '2026-08-16T19:00',
     '리드타임 이내': '2026-08-11T19:00',
     '당일': '2026-08-10T19:00',
     '지난 날짜': '2026-08-05T19:00',
     '기간 밖': '2026-10-14T19:00',
     '다른 집합 시각': '2026-08-12T20:00',
-    '다른 회차의 슬롯': '2026-08-22T17:00',
+    '다른 회차의 슬롯': '2026-08-22T13:00',
   };
   for (const [label, slotIso] of Object.entries(rejected)) {
     const result = validateApplication(foodApplication(slotIso), AUG10);

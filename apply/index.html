@@ -12,6 +12,7 @@
   <script src="/assets/analytics.js"></script>
   <script src="/assets/event-slots.js"></script>
   <script src="/assets/apply-validation.js"></script>
+  <script src="/assets/date-picker.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -179,7 +180,12 @@
 
         <fieldset>
           <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.slot">Which day?</legend>
-          <div class="mt-2 space-y-2" data-slot-options></div>
+          <!--
+            달력 자체는 스크립트가 그리지만 필드는 마크업이 선언한다. 이름이
+            HTML에 남아 있어야 폼 계약을 소스에서 읽을 수 있다.
+          -->
+          <input type="hidden" name="slotIso" data-slot-value />
+          <div class="mt-2" data-slot-options></div>
         </fieldset>
 
         <div>
@@ -258,27 +264,6 @@
                 data-i18n="apply.submit">Send application</button>
       </form>
     </div>
-
-    <!--
-      라디오는 값만 스크립트가 채우고 필드 자체는 마크업이 선언한다.
-      이름과 required가 HTML에 남아 있어야 폼 계약을 소스에서 읽을 수 있다.
-    -->
-    <template data-slot-template>
-      <label class="choice flex cursor-pointer items-center gap-3 rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base">
-        <input type="radio" name="slotIso" required class="h-5 w-5" />
-        <span data-choice-label></span>
-      </label>
-    </template>
-
-    <!--
-      상시 오픈 회차의 날짜 선택. 목록에는 신청 가능한 평일만 들어가므로
-      주말과 리드타임 이내 날짜는 고를 수가 없다. 규칙을 문장으로 설명하지
-      않아도 지켜지고, 최소 인원이나 마감 시각을 노출하지 않아도 된다.
-    -->
-    <template data-slot-select-template>
-      <select name="slotIso" required
-              class="focusable w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
-    </template>
 
     <template data-choice-template="koreanLevel">
       <label class="choice flex cursor-pointer items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm font-semibold">
@@ -421,6 +406,19 @@
             sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
           },
           pricePerPerson: (amount) => `₩${amount} per person`,
+          calendar: {
+            months: ['January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December'],
+            weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            monthTitle: (month, year) => `${month} ${year}`,
+            gridLabel: 'Choose a date',
+            prevMonth: 'Previous month',
+            nextMonth: 'Next month',
+            unavailable: (day) => `Day ${day}, not available`,
+            selected: (label) => `Selected: ${label}`,
+            pickPrompt: 'Pick a highlighted day.',
+            noDates: 'No dates are open for this meetup right now. Tell us what you would like on the home page and we will let you know when it opens.',
+          },
           privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
           consentLabel: 'I agree to the collection and use of my information above.',
           submit: 'Send application',
@@ -488,6 +486,19 @@
             sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
           },
           pricePerPerson: (amount) => `1인 ₩${amount}`,
+          calendar: {
+            months: ['1월', '2월', '3월', '4월', '5월', '6월',
+              '7월', '8월', '9월', '10월', '11월', '12월'],
+            weekdays: ['일', '월', '화', '수', '목', '금', '토'],
+            monthTitle: (month, year) => `${year}년 ${month}`,
+            gridLabel: '날짜 선택',
+            prevMonth: '이전 달',
+            nextMonth: '다음 달',
+            unavailable: (day) => `${day}일, 신청할 수 없는 날짜`,
+            selected: (label) => `선택: ${label}`,
+            pickPrompt: '강조된 날짜 중에서 골라 주세요.',
+            noDates: '지금은 신청할 수 있는 날짜가 없어요. 홈에서 원하는 활동을 알려주시면 열릴 때 알려드릴게요.',
+          },
           privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
           consentLabel: '위 개인정보 수집·이용에 동의합니다.',
           submit: '신청 보내기',
@@ -601,50 +612,26 @@
       document.querySelector('meta[name="description"]')?.setAttribute('content', copy.meta.description);
     };
 
+    // 캘린더는 한 번만 만들고 회차·언어가 바뀔 때 날짜만 갈아 끼운다. 매번 새로
+    // 그리면 방금 고른 날짜와 키보드 포커스가 함께 날아간다.
+    const datePicker = HanBuddyDatePicker.create({
+      mount: document.querySelector('[data-slot-options]'),
+      input: document.querySelector('[data-slot-value]'),
+      labels: {
+        en: CONTENT_MAP.en.apply.calendar,
+        ko: CONTENT_MAP.ko.apply.calendar,
+      },
+    });
+
     const renderSlots = (language) => {
-      const container = document.querySelector('[data-slot-options]');
-      const template = document.querySelector('[data-slot-template]');
       const priceLine = document.querySelector('[data-event-price]');
-      // 언어를 바꿔도 고르던 날짜는 그대로 둔다. 회차 select가 이미 그렇게 한다.
-      const chosen = form.elements.slotIso?.value || '';
-      clear(container);
       const event = SLOTS.openEvents().find((e) => e.id === form.elements.eventId.value);
       priceLine.textContent = event
         ? CONTENT_MAP[language].apply.pricePerPerson(event.price.toLocaleString())
         : '';
-      if (!event) return;
-
-      // 상시 오픈 회차는 고를 수 있는 평일이 20일치쯤 된다. 라디오로 깔면
-      // 폼이 화면 몇 개 길이가 되므로 select 하나로 접는다.
-      if (event.recurring) {
-        const select = document.querySelector('[data-slot-select-template]')
-          .content.cloneNode(true).querySelector('select');
-        SLOTS.recurringDates(event).forEach((slot) => {
-          const option = document.createElement('option');
-          option.value = slot.iso;
-          option.textContent = slot.label[language];
-          select.appendChild(option);
-        });
-        container.appendChild(select);
-        if (chosen && [...select.options].some((option) => option.value === chosen)) {
-          select.value = chosen;
-        }
-        return;
-      }
-
-      event.slots.forEach((slot, index) => {
-        const row = template.content.cloneNode(true);
-        const input = row.querySelector('input');
-        input.value = slot.iso;
-        if (slot.iso === chosen || (!chosen && index === 0)) input.checked = true;
-        row.querySelector('[data-choice-label]').textContent = slot.label[language];
-        container.appendChild(row);
-      });
-      // 회차를 바꾸면 이전 날짜는 사라지므로 첫 칸을 고른 상태로 만든다.
-      if (!container.querySelector('input:checked')) {
-        const first = container.querySelector('input');
-        if (first) first.checked = true;
-      }
+      // 열려 있는 날짜는 회차 모델과 무관하게 openDates 하나로 받는다.
+      // 경기가 없는 날은 이 목록에 없으므로 캘린더에서 눌리지 않는다.
+      datePicker.setDates(event ? SLOTS.openDates(event) : [], language);
     };
 
     const renderEvents = (language) => {
@@ -710,7 +697,11 @@
 
     const showFieldError = (field, copy) => {
       const input = form.elements[field];
-      const target = input && input.length ? input[0] : input;
+      // slotIso는 hidden input이라 포커스가 걸리지 않는다. 지목만 하고 아무 데도
+      // 못 가면 무엇이 잘못됐는지 알 방법이 없으므로 캘린더 자체를 지목한다.
+      const target = field === 'slotIso'
+        ? datePicker.element
+        : (input && input.length ? input[0] : input);
       errorBox.textContent = copy.apply.errors.field;
       errorBox.classList.remove('hidden');
       if (target) {
@@ -720,7 +711,9 @@
         // 올라간 순간 메시지가 화면 밖으로 나가 보이는 피드백이 하나도 남지 않는다.
         (target.closest('fieldset') || target.closest('div'))?.appendChild(errorBox) ?? restoreErrorBox();
         // 스크롤은 직접 잡는다. 브라우저 기본 스크롤은 sticky 헤더 밑에 항목을 숨긴다.
-        target.focus({ preventScroll: true });
+        // 캘린더는 래퍼가 포커스를 못 받으므로 안쪽의 고를 수 있는 날로 넘긴다.
+        if (field === 'slotIso') datePicker.focus();
+        else target.focus({ preventScroll: true });
         target.scrollIntoView({ block: 'center' });
       } else {
         restoreErrorBox();

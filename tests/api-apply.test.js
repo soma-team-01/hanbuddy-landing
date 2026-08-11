@@ -16,10 +16,14 @@ process.env.APPLICATIONS_SHEET_ID = 'test-sheet';
 process.env.DISCORD_WEBHOOK_URL = 'https://discord.test/webhook';
 
 const handler = require('../api/apply.js');
+const { findEvent, openDates } = require('../assets/event-slots.js');
+
+// 경기 일정은 리그가 정한다. 날짜를 박아두면 일정 갱신 때마다 여기가 깨진다.
+const openJamsilSlot = () => openDates(findEvent('kbo-jamsil'))[0].iso;
 const { buildApplicationId, buildRow, safeLog, ALLOWED_LOG_KEYS } = handler;
 
 const application = () => ({
-  eventId: 'kbo-jamsil', slotIso: '2026-08-15T17:00', guests: '1', name: 'Test',
+  eventId: 'kbo-jamsil', slotIso: openJamsilSlot(), guests: '1', name: 'Test',
   nationality: 'France', koreanLevel: 'None', contactMethod: 'WhatsApp', contactId: 'x',
   paymentMethod: 'Cash', requests: '', source: '', consent: true, language: 'en',
 });
