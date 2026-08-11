@@ -16,10 +16,17 @@ process.env.APPLICATIONS_SHEET_ID = 'test-sheet';
 process.env.DISCORD_WEBHOOK_URL = 'https://discord.test/webhook';
 
 const handler = require('../api/apply.js');
+const { findEvent, openDates } = require('../assets/event-slots.js');
+
+// 핸들러는 now를 받지 않고 Date.now()로 판정하므로, 고정 시각을 넘겨 맞출 수가 없다.
+// 야구 회차를 쓰면 리그 일정이 떨어진 날부터 열린 슬롯이 없어 이 스위트가
+// 통째로 죽는다(신청 API의 문제가 아닌데도). 언제 돌려도 날짜가 있는 상시 오픈
+// 회차를 쓴다. 고정 슬롯 경로는 apply-validation 테스트가 따로 덮는다.
+const openFoodSlot = () => openDates(findEvent('samgyeopsal'))[0].iso;
 const { buildApplicationId, buildRow, safeLog, ALLOWED_LOG_KEYS } = handler;
 
 const application = () => ({
-  eventId: 'kbo-jamsil', slotIso: '2026-08-15T17:00', guests: '1', name: 'Test',
+  eventId: 'samgyeopsal', slotIso: openFoodSlot(), guests: '1', name: 'Test',
   nationality: 'France', koreanLevel: 'None', contactMethod: 'WhatsApp', contactId: 'x',
   paymentMethod: 'Cash', requests: '', source: '', consent: true, language: 'en',
 });
