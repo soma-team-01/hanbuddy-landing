@@ -22,20 +22,43 @@ const withoutQuotes = (source) => source
   .replace(/<figcaption[\s\S]*?<\/figcaption>/g, '')
   .replace(/<blockquote[\s\S]*?<\/blockquote>/g, '');
 
+// 축약형(Aug)만 보면 "August 12"를 놓친다. \b는 Aug 뒤의 u에서 경계가 없어
+// 매치되지 않는데, 실제로 고척 본문에 그렇게 한 문단이 살아남아 있었다.
+const DATE_PATTERNS = [
+  /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s{0,2}\d{1,2}\b/,
+  /\d{1,2}\s*월\s*\d{1,2}\s*일/,
+  /\b20\d{2}-\d{2}-\d{2}\b/,
+];
+
 test('detail pages never print a specific date', () => {
   // 날짜는 신청 캘린더에서만 고른다. 상세페이지에 박아두면 그날이 지나는 순간
   // 거짓말이 되고, 리그 일정을 갱신할 때마다 여섯 페이지를 손으로 따라가야 한다.
   //
   // 축약형(Aug)만 보면 "August 12"를 놓친다. \b는 Aug 뒤의 u에서 경계가 없어
   // 매치되지 않는데, 실제로 고척 본문에 그렇게 한 문단이 살아남아 있었다.
-  const monthDay = /\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s{0,2}\d{1,2}\b/;
-  const koreanDate = /\d{1,2}\s*월\s*\d{1,2}\s*일/;
-  const isoDate = /\b20\d{2}-\d{2}-\d{2}\b/;
   for (const slug of pages) {
     const source = withoutQuotes(html(slug));
-    assert.doesNotMatch(source, monthDay, `${slug}에 영문 날짜가 남아 있다`);
-    assert.doesNotMatch(source, koreanDate, `${slug}에 한글 날짜가 남아 있다`);
-    assert.doesNotMatch(source, isoDate, `${slug}에 ISO 날짜가 남아 있다`);
+    for (const pattern of DATE_PATTERNS) {
+      assert.doesNotMatch(source, pattern, `${slug}에 날짜가 남아 있다`);
+    }
+  }
+});
+
+test('the date detector actually catches the formats it claims to', () => {
+  // 이 파일의 정규식이 한 번 헐거웠다. 축약형만 봐서 "August 12"를 놓쳤고,
+  // 고치면서 May를 빠뜨렸다. 검사기 자체를 검사해 두 번 겪지 않게 한다.
+  const caught = (text) => DATE_PATTERNS.some((pattern) => pattern.test(text));
+  for (const sample of [
+    'Aug 12', 'August 12', 'Aug. 12', 'May 12', 'May 12, 2026',
+    'September 6 (Sun)', '2026-05-12', '8월 12일', '10월 24일',
+  ]) {
+    assert.ok(caught(sample), `놓친 날짜 형식: ${sample}`);
+  }
+  // 날짜가 아닌 문장까지 잡으면 카피를 쓸 때마다 거짓 경보가 난다.
+  for (const sample of [
+    'You may bring 2 friends', 'Marching in with 3 chants', 'about 2 hours', '₩60,000',
+  ]) {
+    assert.equal(caught(sample), false, `날짜가 아닌데 잡혔다: ${sample}`);
   }
 });
 
