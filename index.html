@@ -642,7 +642,7 @@
               Don&rsquo;t see what you&rsquo;re looking for?
             </h2>
             <p class="mt-3 max-w-md text-base leading-7 text-muted" data-i18n="suggest.body">
-              Tell us the activity and the dates that work for you. If enough people want it, we&rsquo;ll set it up and let you know.
+              Every activity on this page runs on the date you choose. Want something we don&rsquo;t run yet? Tell us here.
             </p>
           </div>
           <form class="w-full rounded-2xl border border-line-soft bg-canvas-soft p-5 shadow-subtle sm:p-6 lg:w-[26rem]" data-suggest-form novalidate>
@@ -651,13 +651,6 @@
               <input type="text" name="activity" maxlength="200" autocomplete="off"
                      data-i18n-placeholder="suggest.activityPlaceholder"
                      placeholder="e.g. Noraebang night, hiking, Korean cooking class"
-                     class="focusable mt-1.5 w-full rounded-xl border border-line-soft bg-canvas px-4 py-2.5 text-base font-normal text-ink placeholder:text-muted/70" />
-            </label>
-            <label class="mt-4 block text-sm font-bold text-ink">
-              <span data-i18n="suggest.datesLabel">When works for you?</span>
-              <input type="text" name="dates" maxlength="200" autocomplete="off"
-                     data-i18n-placeholder="suggest.datesPlaceholder"
-                     placeholder="e.g. Aug 22-24, or any weekend evening"
                      class="focusable mt-1.5 w-full rounded-xl border border-line-soft bg-canvas px-4 py-2.5 text-base font-normal text-ink placeholder:text-muted/70" />
             </label>
             <label class="mt-4 block text-sm font-bold text-ink">
@@ -1072,11 +1065,9 @@
         suggest: {
           eyebrow: 'Your idea',
           title: 'Don’t see what you’re looking for?',
-          body: 'Tell us the activity and the dates that work for you. If enough people want it, we’ll set it up and let you know.',
+          body: 'Every activity on this page runs on the date you choose. Want something we don’t run yet? Tell us here.',
           activityLabel: 'What would you like to do?',
           activityPlaceholder: 'e.g. Noraebang night, hiking, Korean cooking class',
-          datesLabel: 'When works for you?',
-          datesPlaceholder: 'e.g. Aug 22-24, or any weekend evening',
           contactLabel: 'How can we reach you?',
           contactOptional: '(optional)',
           contactPlaceholder: 'Instagram / WhatsApp ID',
@@ -1309,11 +1300,9 @@
         suggest: {
           eyebrow: '원하는 활동 제안',
           title: '찾는 활동이 없나요?',
-          body: '하고 싶은 활동과 가능한 날짜를 알려주세요. 원하는 분이 모이면 저희가 열고 알려드릴게요.',
+          body: '위 활동은 모두 원하는 날짜에 신청할 수 있어요. 아직 없는 활동이 하고 싶다면 여기에 알려주세요.',
           activityLabel: '어떤 활동을 하고 싶나요?',
           activityPlaceholder: '예: 노래방, 등산, 한식 쿠킹 클래스',
-          datesLabel: '언제가 좋나요?',
-          datesPlaceholder: '예: 8월 22-24일, 또는 아무 주말 저녁',
           contactLabel: '연락처를 남겨주시겠어요?',
           contactOptional: '(선택)',
           contactPlaceholder: 'Instagram / WhatsApp 아이디',
@@ -1656,7 +1645,6 @@
 
         const payload = {
           activity: form.elements.activity.value,
-          dates: form.elements.dates.value,
           contact: form.elements.contact.value,
           website: form.elements.website.value,
           language: suggestLanguage(),

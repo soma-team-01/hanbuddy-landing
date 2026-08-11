@@ -14,7 +14,7 @@ test('the suggest section sits between the events grid and how-it-works', () => 
 });
 
 test('the suggest form carries every field the API validates', () => {
-  for (const name of ['activity', 'dates', 'contact', 'website']) {
+  for (const name of ['activity', 'contact', 'website']) {
     assert.match(html, new RegExp(`name="${name}"`), `input ${name} must exist`);
   }
   // honeypot은 스크린 리더와 탭 순서에서 빠져야 진짜 사람이 걸리지 않는다.
@@ -57,6 +57,12 @@ test('how-it-works steps stay side by side on mobile', () => {
 
 test('the suggest endpoint the form posts to is the deployed function path', () => {
   assert.match(html, /fetch\('\/api\/suggest'/);
+});
+
+test('the suggest form no longer asks for a date', () => {
+  // 날짜는 신청 캘린더가 받는다. 제안 폼에 남아 있으면 같은 것을 두 번 묻는다.
+  const section = html.slice(html.indexOf('id="suggest"'), html.indexOf('id="how"'));
+  assert.doesNotMatch(section, /name="dates"/, '제안 폼에 날짜 입력이 남아 있다');
 });
 
 test('placeholders are wired into the language sync', () => {

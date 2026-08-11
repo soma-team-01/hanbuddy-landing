@@ -40,7 +40,6 @@ const buildRow = ({ suggestionId, timestampKst, value }) => [
   timestampKst,
   suggestionId,
   value.activity,
-  value.dates,
   value.contact,
   value.language,
 ];
@@ -85,7 +84,7 @@ const appendRow = async (row, signal) => {
   const token = await accessToken(signal);
   const sheetId = process.env.APPLICATIONS_SHEET_ID;
   const tab = process.env.SUGGESTIONS_SHEET_TAB || 'suggestions';
-  const range = encodeURIComponent(`${tab}!A:F`);
+  const range = encodeURIComponent(`${tab}!A:E`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append`
     + '?valueInputOption=RAW&insertDataOption=INSERT_ROWS';
   const response = await fetch(url, {
@@ -104,7 +103,6 @@ const notifyDiscord = async ({ suggestionId, value, sheetFailed, signal }) => {
     sheetFailed ? '⚠️ **시트 저장 실패** 아래 내용을 수동으로 옮겨주세요' : '💡 **새 활동 제안**',
     `\`${suggestionId}\``,
     `활동: ${value.activity}`,
-    `날짜: ${value.dates}`,
     value.contact ? `연락처: ${value.contact} (팔로업 가능)` : '연락처 없음',
     `언어: ${value.language}`,
   ];
