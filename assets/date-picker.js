@@ -83,7 +83,11 @@
     const step = (delta) => {
       const isos = enabledIsos();
       const at = isos.indexOf(selected);
-      const target = isos[(at < 0 ? 0 : at) + delta];
+      // 아직 고른 날이 없으면 진행 방향의 끝에서 시작한다. at을 0으로 보면
+      // 오른쪽 화살표가 첫 날짜를 건너뛰고 두 번째 날부터 고르게 된다.
+      const target = at < 0
+        ? (delta > 0 ? isos[0] : isos.at(-1))
+        : isos[at + delta];
       if (target) select(target, { focus: true });
     };
 
@@ -101,7 +105,15 @@
 
     const focusActive = () => {
       const target = grid.querySelector('[tabindex="0"]');
-      if (target) target.focus();
+      if (target) {
+        target.focus();
+        return;
+      }
+      // 사이 달에 열린 날이 하나도 없을 수 있다(예: 9월은 비고 10월만 열림).
+      // 그 달에는 포커스를 줄 칸이 없는데, 포커스가 body로 떨어지면 keydown이
+      // 닿지 않아 PageUp으로 되돌아올 수도 없다. 그리드 자체가 받는다.
+      grid.tabIndex = -1;
+      grid.focus();
     };
 
     const render = () => {

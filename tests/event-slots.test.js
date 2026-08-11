@@ -69,7 +69,20 @@ test('the meeting label reads the time from the slot, not from the weekday', () 
   assert.ok(afternoon, '오후 경기 슬롯이 사라졌다. 이 테스트의 전제가 깨졌다');
   const slot = openDates(gocheok, AUG10).find((s) => s.iso === afternoon);
   assert.match(slot.label.en, /Meet at 1:00 PM/);
-  assert.match(slot.label.ko, /1:00 집합/);
+  // 한국어는 24시간제다. 12시간제면 13:00과 새벽 1시가 같은 문자열이 된다.
+  assert.match(slot.label.ko, /13:00 집합/);
+});
+
+test('Korean labels never render an ambiguous 12-hour clock', () => {
+  for (const event of EVENT_SLOTS) {
+    for (const slot of openDates(event, AUG10)) {
+      const time = slot.iso.slice(11, 16);
+      assert.ok(
+        slot.label.ko.includes(`${time} 집합`),
+        `${event.id} ${slot.iso}: KO 라벨이 24시간제가 아니다 -> ${slot.label.ko}`,
+      );
+    }
+  }
 });
 
 test('recurring events declare a complete weekday rule', () => {

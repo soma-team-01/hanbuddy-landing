@@ -114,10 +114,13 @@
     const day = weekdayIndex(ymd);
     const month = Number(ymd.slice(5, 7)) - 1;
     const dayOfMonth = Number(ymd.slice(8, 10));
-    const clock = clockLabel(iso.slice(11, 16));
+    const time = iso.slice(11, 16);
+    const clock = clockLabel(time);
+    // 한국어는 24시간제로 적는다. 12시간제로 쓰면 13:00 경기와 새벽 1시가 모두
+    // "1:00 집합"이 되고, 18:00은 "6:00 집합"이라 아침으로 읽힌다.
     return {
       en: `${DAYS_EN[day]}, ${MONTHS_EN[month]} ${dayOfMonth} · Meet at ${clock.hour12} ${clock.suffix}`,
-      ko: `${month + 1}월 ${dayOfMonth}일 (${DAYS_KO[day]}) · ${clock.hour12} 집합`,
+      ko: `${month + 1}월 ${dayOfMonth}일 (${DAYS_KO[day]}) · ${time} 집합`,
     };
   };
 
