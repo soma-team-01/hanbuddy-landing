@@ -5,7 +5,6 @@ const { MAX_LENGTH, validateSuggestion } = require('../assets/suggest-validation
 
 const suggestion = () => ({
   activity: 'Noraebang night',
-  dates: 'Any weekend evening',
   contact: '@hanbuddy_fan',
   website: '',
   language: 'en',
@@ -15,30 +14,34 @@ test('a complete suggestion passes and comes back trimmed', () => {
   const result = validateSuggestion({
     ...suggestion(),
     activity: '  Noraebang night  ',
-    dates: ' Any weekend evening ',
     contact: '  @hanbuddy_fan ',
   });
   assert.equal(result.ok, true);
   assert.deepEqual(result.value, {
     activity: 'Noraebang night',
-    dates: 'Any weekend evening',
     contact: '@hanbuddy_fan',
     language: 'en',
   });
 });
 
-test('contact is optional but activity and dates are not', () => {
+test('contact is optional but the activity is not', () => {
   assert.equal(validateSuggestion({ ...suggestion(), contact: '' }).ok, true);
-  for (const field of ['activity', 'dates']) {
-    for (const value of ['', '   ', undefined]) {
-      const result = validateSuggestion({ ...suggestion(), [field]: value });
-      assert.deepEqual(result, { ok: false, field });
-    }
+  for (const value of ['', '   ', undefined]) {
+    const result = validateSuggestion({ ...suggestion(), activity: value });
+    assert.deepEqual(result, { ok: false, field: 'activity' });
   }
 });
 
+test('a date field is not accepted any more', () => {
+  // 모든 활동이 원하는 날짜에 열리므로 제안 폼은 활동만 받는다. 남은 dates 값이
+  // 있어도 저장 대상에 끼면 시트 열이 밀린다.
+  const result = validateSuggestion({ ...suggestion(), dates: 'any weekend' });
+  assert.equal(result.ok, true);
+  assert.equal('dates' in result.value, false, 'dates가 저장 값에 남아 있다');
+});
+
 test('over-length values are rejected with the right field', () => {
-  for (const field of ['activity', 'dates', 'contact']) {
+  for (const field of ['activity', 'contact']) {
     const over = 'x'.repeat(MAX_LENGTH[field] + 1);
     assert.deepEqual(validateSuggestion({ ...suggestion(), [field]: over }), { ok: false, field });
     const exact = 'x'.repeat(MAX_LENGTH[field]);
