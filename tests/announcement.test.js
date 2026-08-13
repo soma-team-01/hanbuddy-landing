@@ -21,8 +21,14 @@ test('the announcement bar is wired to copy, a target, and a dismiss control', (
   assert.match(html, /data-announcement-dismiss/);
   assert.match(html, /data-i18n-aria="announcement\.dismissAria"/, 'the dismiss control needs a translated label');
 
-  // 이벤트 카드와 같은 스키마로 클릭을 센다.
-  assert.match(html, /data-announcement-link[\s\S]{0,200}data-analytics-content-id="kbo-gocheok"/);
+  // 이벤트 카드와 같은 스키마로 클릭을 센다. 회차를 넘길 때 여기까지 고치게
+  // 만들면 무관한 테스트가 깨지므로, 밀어주는 회차에서 id를 끌어온다.
+  const promotedSlug = announcement.href.split('/')[2];
+  assert.match(
+    html,
+    new RegExp(`data-announcement-link[\\s\\S]{0,200}data-analytics-content-id="${promotedSlug}"`),
+    'the bar must be counted as the run it promotes',
+  );
 
   // CTA가 문장에 섞여 있으면 클릭 대상으로 읽히지 않는다. 버튼 모양을 고정한다.
   const link = html.match(/<a data-announcement-link[\s\S]*?<\/a>/)[0];
