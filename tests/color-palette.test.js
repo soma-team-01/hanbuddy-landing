@@ -195,11 +195,14 @@ test('the two card sections share one band color, keeping the light rhythm to tw
   assert.deepEqual(sectionBgs('events'), ['bg-panel']);
   assert.deepEqual(sectionBgs('reviews'), ['bg-panel']);
   assert.deepEqual(sectionBgs('apply'), ['bg-ink']);
+  // #suggest가 #events와 같은 panel이면 두 섹션이 한 덩어리로 붙어 읽힌다.
+  // 밝은 톤은 두 가지만 번갈아야 하므로 사이에 오는 톤은 canvas여야 한다.
+  assert.deepEqual(sectionBgs('suggest'), ['bg-canvas']);
   // 톤 차이가 구분선 역할을 하므로 #events의 상단 보더는 없앴다.
   assert.doesNotMatch(html, /<section id="events" class="[^"]*\bborder-t\b/);
   // 문서에도 리듬 전체가 값으로 적혀 있어야 한다. 제목만 맞추면 값이 바뀌어도 통과한다.
   assert.match(
     design,
-    /hero `canvas` -> `#events` `panel` -> `#how` `canvas` -> `#reviews` `panel` -> `#apply` `ink`/,
+    /hero `canvas` -> `#events` `panel` -> `#suggest` `canvas` -> `#reviews` `panel` -> `#apply` `ink`/,
   );
 });

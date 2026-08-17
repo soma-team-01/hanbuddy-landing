@@ -376,6 +376,17 @@
       #top .hero-cta-band .hp4 { right: -62px; top: 4px; transform: rotate(-7deg); }
     }
 
+    /* 모바일(<768px): 좁은 화면에 폴라로이드 네 장이 연달아 깔리면 히어로가
+       빽빽해진다. 제목을 감싸는 위 두 장만 남기고 버튼 뒤 한강 두 장은 숨긴다.
+       태블릿(768~1279px)은 폭에 여유가 있어 네 장을 그대로 둔다. */
+    @media (max-width: 767px) {
+      #top .hero-cta-band > .hero-polaroids { display: none; }
+
+      /* 위 62px은 hp3·hp4가 깔린 자리를 본문이 비켜 가라고 준 여백이다.
+         사진이 빠지면 그대로 빈 공백만 남으므로 같이 줄인다. */
+      #top .hero-cta-band > .hero-subtitle { margin-top: 24px; }
+    }
+
     .hero-polaroids {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -633,7 +644,7 @@
     </section>
 
     <!-- Suggest an activity: 열린 회차가 맞지 않는 방문자가 이탈하는 대신 수요를 남기는 폼 -->
-    <section id="suggest" class="bg-panel" data-analytics-section>
+    <section id="suggest" class="bg-canvas" data-analytics-section>
       <div class="mx-auto max-w-6xl px-5 py-14 lg:py-16">
         <div class="mx-auto grid max-w-4xl items-center gap-8 lg:grid-cols-[1fr_auto]">
           <div>
@@ -690,17 +701,6 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- How it works -->
-    <section id="how" class="mx-auto max-w-6xl px-5 py-16 lg:py-20" data-analytics-section>
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="how.title">
-          Joining takes 2 minutes.
-        </h2>
-      </div>
-      <!-- 모바일에서도 1·2·3이 가로로 나란히 서도록 3열을 고정한다 -->
-      <div class="mx-auto mt-10 grid max-w-4xl grid-cols-3 gap-3 sm:gap-6" data-how-items></div>
     </section>
 
     <!-- Guest reviews -->
@@ -957,7 +957,6 @@
           links: [
             { href: '/about', label: 'About' },
             { href: '#events', label: 'Events' },
-            { href: '#how', label: 'How it works' },
             { href: '#reviews', label: 'Reviews' },
             { href: '#apply', label: 'Join' },
           ],
@@ -1083,14 +1082,6 @@
             generic: 'Something went wrong. Please try again, or DM us on Instagram.',
           },
         },
-        how: {
-          title: 'Joining takes 2 minutes.',
-          items: [
-            { step: '1', title: 'Apply', body: 'Pick your plan and your day on the application form.' },
-            { step: '2', title: 'We confirm', body: 'We message you directly with the meeting spot and details.' },
-            { step: '3', title: 'Have fun', body: 'Meet your buddy and enjoy the day like a local.' },
-          ],
-        },
         reviews: {
           eyebrow: 'Guest reviews',
           title: 'Our guests say it best.',
@@ -1192,7 +1183,6 @@
           links: [
             { href: '/about', label: '소개' },
             { href: '#events', label: '이벤트' },
-            { href: '#how', label: '참여 방법' },
             { href: '#reviews', label: '후기' },
             { href: '#apply', label: '신청' },
           ],
@@ -1317,14 +1307,6 @@
             field: '표시된 항목을 확인해 주세요.',
             generic: '전송에 문제가 생겼어요. 다시 시도하거나 Instagram DM으로 알려주세요.',
           },
-        },
-        how: {
-          title: '신청은 2분이면 충분합니다.',
-          items: [
-            { step: '1', title: '신청', body: '신청 폼에서 원하는 플랜과 날짜를 선택하세요.' },
-            { step: '2', title: '확인', body: '만남 장소와 세부 사항을 직접 메시지로 안내해 드립니다.' },
-            { step: '3', title: '즐기기', body: '버디를 만나 로컬처럼 하루를 즐기세요.' },
-          ],
         },
         reviews: {
           eyebrow: '게스트 후기',
@@ -1580,24 +1562,6 @@
       restartReviewAlignment();
     };
 
-    const renderHowItems = (copy) => {
-      const container = document.querySelector('[data-how-items]');
-      if (!container) return;
-      clear(container);
-      copy.how.items.forEach((item) => {
-        const article = document.createElement('article');
-        // 좁은 화면은 3열이 빠듯하므로 여백과 글자를 한 단계 줄인다
-        article.className = 'rounded-2xl bg-panel px-3 py-4 text-center sm:px-6 sm:py-6';
-        const badge = textNode('p', 'mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary font-display text-sm font-extrabold text-on-primary sm:h-9 sm:w-9', item.step);
-        article.append(
-          badge,
-          textNode('h3', 'mt-3 font-display text-base font-bold leading-snug text-ink sm:mt-4 sm:text-lg', item.title),
-          textNode('p', 'mt-2 text-xs leading-5 text-muted sm:text-sm sm:leading-6', item.body),
-        );
-        container.appendChild(article);
-      });
-    };
-
     // ===== 활동 제안 폼 =====
     const suggestLanguage = () => (SUPPORTED_LANGUAGES.includes(document.documentElement.lang)
       ? document.documentElement.lang
@@ -1748,7 +1712,6 @@
       renderAnnouncement();
       renderEventCards(copy);
       renderReviewCards(copy);
-      renderHowItems(copy);
     };
 
     const setLanguageButtonState = (lang) => {

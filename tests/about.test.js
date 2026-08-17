@@ -105,6 +105,16 @@ test('about page uses root-absolute asset paths only', () => {
   assert.match(aboutHtml, /src="\/assets\/brand\/soma-logo\.webp"/);
 });
 
+test('about never links to a landing anchor that no longer exists', () => {
+  // About의 내비게이션은 랜딩 섹션을 `/#id`로 가리킨다. 랜딩에서 섹션을 지울 때
+  // 여기를 같이 안 고치면 About에서만 죽은 앵커로 점프한다(#how, 2026-08-18).
+  const landingAnchors = [...aboutHtml.matchAll(/href\s*[:=]\s*["']\/#([a-z-]+)["']/g)].map((m) => m[1]);
+  assert.ok(landingAnchors.length > 0, 'About는 랜딩 섹션 링크를 갖고 있어야 한다');
+  for (const id of new Set(landingAnchors)) {
+    assert.match(indexHtml, new RegExp(`<section id="${id}"`), `랜딩에 없는 #${id}를 가리킨다`);
+  }
+});
+
 test('shared copy stays in sync between index and about', () => {
   const sharedSnippets = [
     "{ href: '/about', label: 'About' }",

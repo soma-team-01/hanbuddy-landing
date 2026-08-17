@@ -80,7 +80,12 @@ test('cards run oldest to newest, and the carousel opens on the second one', () 
   assert.match(indexHtml, /const DEFAULT_REVIEW_CARD_INDEX = 1;/);
   assert.match(indexHtml, /function alignReviewsToDefaultCard\(\)/);
   // 렌더 직후 시작 위치를 잡아야 언어 전환 뒤에도 2번 카드에서 출발한다.
-  const renderer = indexHtml.slice(indexHtml.indexOf('const renderReviewCards'), indexHtml.indexOf('const renderHowItems'));
+  // 끝 표시는 renderReviewCards 바로 다음에 오는 선언이어야 한다. 없는 문자열을 쓰면
+  // indexOf가 -1이라 파일 전체를 훑게 되고, 호출이 어디에 있든 통과해 버린다.
+  const rendererStart = indexHtml.indexOf('const renderReviewCards');
+  const rendererEnd = indexHtml.indexOf('const renderAnnouncement');
+  assert.ok(rendererStart !== -1 && rendererEnd > rendererStart, 'renderReviewCards 범위를 잡지 못했다');
+  const renderer = indexHtml.slice(rendererStart, rendererEnd);
   assert.match(renderer, /restartReviewAlignment\(\);/);
   // 사용자가 직접 넘긴 뒤에는 시작 위치를 다시 강제하지 않는다.
   assert.match(indexHtml, /const stopReviewAlignment = \(\) => \{ reviewAlignmentPending = false; \};/);

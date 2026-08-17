@@ -52,7 +52,7 @@ test('home and About no longer embed vendor loader implementations', () => {
 });
 
 test('tracked landing sections declare the shared section contract', () => {
-  for (const id of ['events', 'how', 'reviews', 'apply']) {
+  for (const id of ['events', 'suggest', 'reviews', 'apply']) {
     assert.match(
       homeHtml,
       new RegExp(`<section id="${id}"[^>]*data-analytics-section`),
