@@ -17,6 +17,21 @@ const reviewCardsBlock = (locale) => {
   return indexHtml.slice(cardsStart, cardsEnd);
 };
 
+test('review cards share one height at every width', () => {
+  // 트랙이 items-start면 카드가 인용문 길이만큼만 자라 높이가 제각각이 된다.
+  // 모바일에서 272/198/222/247px로 어긋나 있었다(2026-08-18).
+  const track = indexHtml.match(/class="review-track[^"]*"/)[0];
+  assert.match(track, /\bitems-stretch\b/, '트랙은 카드 높이를 맞춰야 한다');
+  assert.doesNotMatch(track, /(?<!sm:)\bitems-start\b/, '어느 폭에서도 높이를 풀면 안 된다');
+  // 높이를 맞추면 짧은 후기는 남는 자리가 인용문과 출처 사이에 통째로 몰린다.
+  // 인용문을 세로 가운데 두어 위아래로 나눈다.
+  assert.match(
+    indexHtml,
+    /blockquote\.className = '[^']*\bflex\b[^']*\bflex-1\b[^']*\bitems-center\b/,
+    '인용문은 남는 높이 안에서 세로 가운데에 놓여야 한다',
+  );
+});
+
 test('review carousel exposes a scroll track and both arrow controls', () => {
   assert.match(indexHtml, /class="review-track[^"]*"/);
   assert.match(indexHtml, /data-review-cards/);
