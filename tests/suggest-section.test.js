@@ -54,7 +54,10 @@ test('the how-it-works section is gone, wiring included', () => {
   assert.doesNotMatch(html, /id="how"/, '섹션 마크업이 남아 있다');
   assert.doesNotMatch(html, /data-how-items/, '렌더 대상 컨테이너가 남아 있다');
   assert.doesNotMatch(html, /renderHowItems/, '렌더러가 남아 있다');
-  assert.doesNotMatch(html, /href: '#how'/, '내비게이션에 죽은 앵커가 남아 있다');
+  // 내비게이션은 CONTENT_MAP이 그리지만 정적 fallback 마크업도 같은 앵커를 쓸 수 있다.
+  // 한쪽만 보면 나머지 한쪽에 남은 죽은 앵커가 그대로 배포된다.
+  assert.doesNotMatch(html, /href\s*:\s*["']#how["']/, '동적 내비게이션에 죽은 앵커가 남아 있다');
+  assert.doesNotMatch(html, /href\s*=\s*["']#how["']/, '정적 마크업에 죽은 앵커가 남아 있다');
 });
 
 test('the suggest endpoint the form posts to is the deployed function path', () => {

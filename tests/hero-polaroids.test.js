@@ -31,6 +31,14 @@ test('the hero keeps four polaroids on desktop and tablet', () => {
   const tablet = mediaBlock('max-width: 1279px');
   assert.match(tablet, /\.hp3 \{/);
   assert.match(tablet, /\.hp4 \{/);
+  // 배치 규칙이 있어도 같은 블록이 컨테이너를 숨기면 사진은 사라진다.
+  for (const [label, block] of [['데스크톱', desktop], ['태블릿', tablet]]) {
+    assert.doesNotMatch(
+      block,
+      /\.hero-polaroids \{[^}]*display:\s*none/,
+      `${label}에서 폴라로이드 묶음을 숨기고 있다`,
+    );
+  }
 });
 
 test('phones drop the lower polaroid pair and close the gap it left', () => {
@@ -41,11 +49,12 @@ test('phones drop the lower polaroid pair and close the gap it left', () => {
     /\.hero-cta-band > \.hero-polaroids \{[^}]*display: none/,
     '버튼 뒤 폴라로이드 쌍이 모바일에서 숨겨져야 한다',
   );
-  // 사진이 빠진 자리를 그대로 두면 본문 앞이 빈 공백이 된다. 여백도 같이 줄인다.
+  // 사진이 빠진 자리를 그대로 두면 본문 앞이 빈 공백이 된다. 값까지 고정해야
+  // 태블릿용 62px로 되돌아간 경우를 잡는다(선언 존재만 보면 통과해 버린다).
   assert.match(
     phone,
-    /\.hero-cta-band > \.hero-subtitle \{[^}]*margin-top/,
-    '사진을 숨겼으면 본문 위 여백도 줄여야 한다',
+    /\.hero-cta-band > \.hero-subtitle \{[^}]*margin-top:\s*24px/,
+    '사진을 숨겼으면 본문 위 여백도 24px로 줄여야 한다',
   );
   // 제목을 감싸는 위 두 장은 남는다. 여기까지 숨기면 첫 화면에 사진이 없어진다.
   assert.doesNotMatch(phone, /\.hero-lead[^}]*display: none/);
