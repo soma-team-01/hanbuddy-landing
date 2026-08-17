@@ -5,12 +5,12 @@ const test = require('node:test');
 
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 
-test('the suggest section sits between the events grid and how-it-works', () => {
+test('the suggest section sits between the events grid and the reviews', () => {
   const events = html.indexOf('id="events"');
   const suggest = html.indexOf('id="suggest"');
-  const how = html.indexOf('id="how"');
-  assert.ok(events > -1 && suggest > -1 && how > -1, 'all three sections must exist');
-  assert.ok(events < suggest && suggest < how, 'order must be events, suggest, how');
+  const reviews = html.indexOf('id="reviews"');
+  assert.ok(events > -1 && suggest > -1 && reviews > -1, 'all three sections must exist');
+  assert.ok(events < suggest && suggest < reviews, 'order must be events, suggest, reviews');
 });
 
 test('the suggest form carries every field the API validates', () => {
@@ -48,11 +48,13 @@ test('every data-i18n suggest key resolves in the copy object', () => {
   }
 });
 
-test('how-it-works steps stay side by side on mobile', () => {
-  const container = html.match(/<div class="[^"]*"[^>]*data-how-items><\/div>/);
-  assert.ok(container, 'the how-items container must exist');
-  // sm: 접두사 없는 grid-cols-3이어야 모바일에서도 가로로 선다.
-  assert.match(container[0], /(?<!sm:)grid-cols-3/, 'mobile must keep three columns');
+test('the how-it-works section is gone, wiring included', () => {
+  // 2026-08-18 삭제. 마크업만 지우고 카피·렌더러·내비 링크가 남으면 죽은 앵커와
+  // 호출되지 않는 코드가 조용히 쌓인다.
+  assert.doesNotMatch(html, /id="how"/, '섹션 마크업이 남아 있다');
+  assert.doesNotMatch(html, /data-how-items/, '렌더 대상 컨테이너가 남아 있다');
+  assert.doesNotMatch(html, /renderHowItems/, '렌더러가 남아 있다');
+  assert.doesNotMatch(html, /href: '#how'/, '내비게이션에 죽은 앵커가 남아 있다');
 });
 
 test('the suggest endpoint the form posts to is the deployed function path', () => {
@@ -61,7 +63,7 @@ test('the suggest endpoint the form posts to is the deployed function path', () 
 
 test('the suggest form no longer asks for a date', () => {
   // 날짜는 신청 캘린더가 받는다. 제안 폼에 남아 있으면 같은 것을 두 번 묻는다.
-  const section = html.slice(html.indexOf('id="suggest"'), html.indexOf('id="how"'));
+  const section = html.slice(html.indexOf('id="suggest"'), html.indexOf('id="reviews"'));
   assert.doesNotMatch(section, /name="dates"/, '제안 폼에 날짜 입력이 남아 있다');
 });
 

@@ -70,7 +70,6 @@ hanbuddy-landing/
 | `.review-track` / `.review-arrow` | CSS utility | `index.html` style block | Quote-card carousel: hidden scrollbar on the snap track, dimmed end-state arrows |
 | `#top` | section | `index.html` | Hero: headline, pill CTAs, rating chip linking to `#reviews`, featured guest-quote card, polaroid scatter |
 | `#events` | section | `index.html` | Meetup-style event cards from `CONTENT_MAP.events.cards` (2-col mobile / 4-col desktop) on the `panel` band shared with `#reviews`: open events link to `/events/*`, coming-soon cards show a toast |
-| `#how` | section | `index.html` | 3-step join flow cards (Apply / We confirm / Have fun) |
 | `#reviews` | section | `index.html` | Guest reviews on a flat `panel` band (no photos): aggregate rating chip + a manual arrow carousel of 5 approved quote cards, oldest first, opening on card 2; rules in DESIGN.md "Guest Reviews" |
 | `#apply` | section | `index.html` | Final CTA `ink` band over an autoplay crossfading photo backdrop (`data-photo-backdrop`, `ink`/70 scrim): `/apply/`, Instagram DM, WhatsApp, KakaoTalk, one-line buddy note. Cookie disclosure lives in the consent banner; the personal-data notice lives in the form |
 | `/apply/` | page | `apply/index.html` | The application form: renders open events and their remaining slots from `EVENT_SLOTS`, validates with the shared module, posts to `/api/apply`, and switches to the done screen in place. `?event=<id>` prefills but stays changeable |
