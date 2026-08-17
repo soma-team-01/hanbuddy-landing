@@ -487,10 +487,10 @@
     <div class="relative mx-auto max-w-6xl px-11 py-2 sm:px-12 sm:py-2.5">
       <div class="text-center [text-wrap:balance]">
         <p class="inline text-[13px] font-semibold leading-[1.55] sm:text-sm sm:leading-6" data-i18n="announcement.text">
-          ⚽ Aug 15 (Sat) &middot; K League Football Night
+          ⚾ Aug 21 (Fri) &middot; Open-Air KBO Baseball Night at Jamsil
         </p>
-        <a data-announcement-link href="/events/kleague/"
-           data-analytics-content-id="kleague" data-analytics-content-status="open"
+        <a data-announcement-link href="/events/kbo-jamsil/"
+           data-analytics-content-id="kbo-jamsil" data-analytics-content-status="open"
            class="focusable focusable-on-primary-strong ml-1.5 inline-block whitespace-nowrap rounded-full bg-on-primary px-2.5 py-0.5 align-middle text-[11px] font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px sm:px-4 sm:py-1.5 sm:text-xs">
           <span data-i18n="announcement.cta">Join us</span>
           <span aria-hidden="true" class="ml-0.5">&rarr;</span>
@@ -630,7 +630,10 @@
           <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="events.title">
             Pick a day, meet us there.
           </h2>
-          <p class="mt-4 text-base leading-7 text-muted" data-i18n="events.body">
+          <!-- 리드 문단은 데스크톱에서만. 제목이 이미 같은 말을 하고("Pick a day"),
+               세부 확인 약속은 카드 아래 note가 다시 한 번 한다. 좁은 화면에서는
+               제목 밑 서너 줄짜리 회색 문단이 섹션마다 반복돼 읽는 부담만 늘었다. -->
+          <p class="mt-4 hidden text-base leading-7 text-muted sm:block" data-i18n="events.body">
             Choose the day that works for you when you apply. It takes 2 minutes, and we&rsquo;ll confirm the details with you.
           </p>
         </div>
@@ -711,7 +714,7 @@
           <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl" data-i18n="reviews.title">
             Our guests say it best.
           </h2>
-          <p class="mt-4 text-base leading-7 text-muted" data-i18n="reviews.body">
+          <p class="mt-4 hidden text-base leading-7 text-muted sm:block" data-i18n="reviews.body">
             Every guest fills in a short survey after each meetup. Here&rsquo;s what they told us.
           </p>
           <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2 text-sm font-bold text-primary-strong">
@@ -722,7 +725,7 @@
 
         <div class="relative mx-auto mt-12 max-w-5xl sm:px-14">
           <!-- 모바일은 카드 1장만 보이므로 내용 높이대로, 여러 장 보이는 화면부터 높이를 맞춘다 -->
-          <div class="review-track flex items-start snap-x snap-mandatory gap-6 overflow-x-auto pb-1 sm:items-stretch"
+          <div class="review-track flex items-stretch snap-x snap-mandatory gap-6 overflow-x-auto pb-1"
                role="region" tabindex="0" aria-label="Guest review cards" data-i18n-aria="reviews.trackAria"
                data-review-cards></div>
 
@@ -921,9 +924,9 @@
     // 이 시각이 지나면 공지가 렌더되지 않는다. 다음 회차로 넘길 때는 여기와
     // CONTENT_MAP의 `announcement.text`(EN/KO)를 함께 바꾼다.
     const ANNOUNCEMENT = {
-      id: 'kleague-2026-08-15',
-      href: '/events/kleague/',
-      endsAt: '2026-08-15T18:30:00+09:00',
+      id: 'kbo-jamsil-2026-08-21',
+      href: '/events/kbo-jamsil/',
+      endsAt: '2026-08-21T18:00:00+09:00',
     };
     const ANNOUNCEMENT_DISMISS_KEY = 'hanbuddy.announcementDismissed';
 
@@ -1141,7 +1144,7 @@
           privacyLink: 'Privacy',
         },
         announcement: {
-          text: '⚽ Aug 15 (Sat) · K League Football Night',
+          text: '⚾ Aug 21 (Fri) · Open-Air KBO Baseball Night at Jamsil',
           cta: 'Join us',
           dismissAria: 'Dismiss this announcement',
         },
@@ -1367,7 +1370,7 @@
           privacyLink: '개인정보·분석 안내',
         },
         announcement: {
-          text: '⚽ 8월 15일 (토) · K리그 축구 직관',
+          text: '⚾ 8월 21일 (금) · 잠실 야외 야구 직관',
           cta: '신청하기',
           dismissAria: '알림 닫기',
         },
@@ -1530,7 +1533,10 @@
         content.className = 'flex flex-1 flex-col p-4 sm:p-5';
         content.append(
           textNode('h3', 'font-display text-base font-extrabold leading-snug tracking-tight text-ink sm:text-lg', `${item.emoji} ${item.title}`),
-          textNode('p', 'mt-1.5 text-sm leading-6 text-muted', item.tagline),
+          // 한 줄 설명은 데스크톱에서만 보인다. 모바일은 2열이라 폭이 좁아 이 문장이
+          // 3~4줄로 늘어나면서 카드 높이를 324~230px로 들쭉날쭉하게 만들었다.
+          // 사진·가격 배지·제목만으로도 무엇인지 읽히고, 나머지는 상세 페이지가 말한다.
+          textNode('p', 'mt-1.5 hidden text-sm leading-6 text-muted sm:block', item.tagline),
         );
         card.append(figure, content);
         container.appendChild(card);
@@ -1546,7 +1552,10 @@
         figure.className = 'flex w-[85%] shrink-0 snap-start flex-col rounded-2xl bg-canvas-soft p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
 
         const blockquote = document.createElement('blockquote');
-        blockquote.className = 'flex-1 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
+        // 카드 높이는 가장 긴 인용문이 정한다. 짧은 후기는 남는 자리가 통째로
+        // 인용문과 출처 사이에 몰려 카드가 비어 보이므로, 인용문을 세로 가운데에
+        // 두어 여백을 위아래로 나눈다. 출처 줄은 바닥에 남아 카드끼리 정렬된다.
+        blockquote.className = 'flex flex-1 items-center font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl';
         blockquote.textContent = item.quote;
 
         const caption = document.createElement('figcaption');
