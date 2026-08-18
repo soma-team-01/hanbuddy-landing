@@ -39,7 +39,7 @@ test('the final CTA does not name the channels its own buttons already are', () 
     assert.ok(body, 'finalCta.body를 찾지 못했다');
     assert.doesNotMatch(
       body[1],
-      /Instagram|WhatsApp|KakaoTalk|오픈채팅/,
+      /Instagram|WhatsApp|KakaoTalk|오픈채팅|인스타그램|왓츠앱|카카오톡/,
       '채널 이름은 버튼이 말한다. 문장으로 다시 나열하지 않는다',
     );
   }
@@ -50,9 +50,13 @@ test('the final CTA gives phones a shorter vertical frame than the photo band ne
   // 좁은 화면만 줄이고 sm 이상은 원래 여백을 되찾아야 한다.
   const inner = html.match(/<div class="(relative z-10 mx-auto grid max-w-6xl[^"]*)"/);
   assert.ok(inner, '최종 CTA 안쪽 래퍼를 찾지 못했다');
-  assert.match(inner[1], /(?:^|\s)py-12(?:\s|$)/, '폰에서는 세로 여백을 줄여야 한다');
-  assert.match(inner[1], /\bsm:py-20\b/, 'sm 이상에서 사진 배경 여백을 되찾아야 한다');
-  assert.match(inner[1], /\blg:py-32\b/, '데스크톱 여백은 그대로다');
+  // 클래스를 쪼개서 본다. `py-12 py-20`처럼 둘 다 남으면 Tailwind에서 뒤가 이겨
+  // 폰 축소가 무효가 되는데, 존재 여부만 보는 검사는 그대로 통과한다.
+  const classes = inner[1].split(/\s+/);
+  assert.ok(classes.includes('py-12'), '폰에서는 세로 여백을 줄여야 한다');
+  assert.ok(!classes.includes('py-20'), '모바일 기본 여백에 py-20이 남아 있으면 축소가 무효다');
+  assert.ok(classes.includes('sm:py-20'), 'sm 이상에서 사진 배경 여백을 되찾아야 한다');
+  assert.ok(classes.includes('lg:py-32'), '데스크톱 여백은 그대로다');
 });
 
 test('event cards drop their one-line tagline on mobile only', () => {
