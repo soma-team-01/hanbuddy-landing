@@ -143,10 +143,6 @@
       color: var(--color-primary-strong);
     }
 
-    .eyebrow-on-primary {
-      color: rgba(255, 255, 255, 0.84);
-    }
-
     .photo-card {
       position: relative;
       overflow: hidden;
@@ -769,8 +765,7 @@
            배경이 보일 자리는 sm 이상에서 원래대로 확보한다. -->
       <div class="relative z-10 mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-20 lg:grid-cols-[1fr_auto] lg:items-center lg:py-32">
         <div>
-          <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Baseball &middot; Han River &middot; more coming</p>
-          <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
+          <h2 class="max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
             See you at the next meetup?
           </h2>
           <!-- 채널 이름을 문장으로 나열하지 않는다. 바로 아래 버튼이 같은 세 채널을
@@ -782,24 +777,53 @@
             Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.
           </p>
         </div>
-        <!-- 채널이 4개라 sm 구간에서 한 줄에 밀어넣으면 라벨이 3줄로 접힌다. 감싸서 2열로 흘린다. -->
-        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:flex-col lg:flex-nowrap">
+        <!-- 신청이 이 섹션의 유일한 주 행동이라 채워진 버튼은 하나만 둔다.
+             문의 채널은 아이콘과 11px 라벨을 3열 한 줄로 묶었다
+             (세로 버튼 3개 198px -> 한 줄 67px). 브랜드 상징색은 쓰지 않는다:
+             어두운 배경에서 채도 높은 색이 주 CTA보다 세게 튀고, 승인 팔레트
+             밖의 장식색이라 DESIGN.md 2절이 막는다. -->
+        <div class="flex flex-col items-stretch gap-5">
           <a href="/apply/" data-cta="apply"
              class="focusable focusable-on-primary-strong rounded-full border border-transparent bg-on-primary-strong px-7 py-3.5 text-center text-base font-bold text-primary-strong transition hover:bg-primary-soft active:translate-y-px" data-i18n="finalCta.formButton">
             Join a meetup
           </a>
-          <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.instagramButton">
-            DM us on Instagram
-          </a>
-          <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.whatsappButton">
-            Message us on WhatsApp
-          </a>
-          <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
-             class="focusable focusable-on-primary-strong rounded-full border border-on-primary-strong/40 px-7 py-3.5 text-center text-base font-bold text-on-primary-strong transition hover:bg-primary-hover hover:text-on-primary active:translate-y-px" data-i18n="finalCta.kakaoButton">
-            KakaoTalk open chat
-          </a>
+          <!-- 3열 그리드라 행 전체 폭이 위 버튼과 같아진다. 아이콘만 두면 바로 아래
+               푸터 아이콘과 같은 요소로 읽혀서, 작은 라벨을 붙여 구분한다. -->
+          <div class="grid grid-cols-3 gap-3" role="group"
+               aria-label="Contact channels" data-i18n-aria="finalCta.channelsAria">
+            <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
+               aria-label="DM us on Instagram" data-i18n-aria="finalCta.instagramAria"
+               class="focusable focusable-on-primary-strong flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-on-primary-strong/40 px-2 py-3 text-on-primary-strong transition hover:border-transparent hover:bg-primary-hover hover:text-on-primary active:translate-y-px">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-current" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.5" cy="6.5" r="1" class="fill-current stroke-none"></circle>
+              </svg>
+              <span class="text-[11px] font-bold leading-none tracking-tight" data-i18n="finalCta.instagramLabel">Instagram</span>
+            </a>
+            <a href="https://wa.me/821082970110" target="_blank" rel="noopener" data-cta="whatsapp"
+               aria-label="Message us on WhatsApp" data-i18n-aria="finalCta.whatsappAria"
+               class="focusable focusable-on-primary-strong flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-on-primary-strong/40 px-2 py-3 text-on-primary-strong transition hover:border-transparent hover:bg-primary-hover hover:text-on-primary active:translate-y-px">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-6 w-6">
+                <path fill="currentColor" d="M12 2.5a9.4 9.4 0 0 0-8.1 14.1L2.5 21.5l5.05-1.35A9.4 9.4 0 1 0 12 2.5Zm0 1.8a7.6 7.6 0 1 1-3.9 14.13l-.28-.17-3 .8.81-2.93-.18-.29A7.6 7.6 0 0 1 12 4.3Z"></path>
+                <path fill="currentColor" d="M9.3 7.6c-.17-.4-.35-.4-.52-.41h-.44c-.15 0-.4.06-.61.29-.21.23-.8.78-.8 1.9s.82 2.2.94 2.35c.11.16 1.59 2.54 3.93 3.46 1.95.77 2.34.62 2.76.58.42-.04 1.37-.56 1.56-1.1.2-.54.2-1 .14-1.1-.06-.1-.21-.15-.44-.27-.23-.11-1.37-.68-1.58-.75-.21-.08-.37-.12-.52.11-.16.24-.6.75-.73.9-.14.16-.27.18-.5.06-.23-.11-.97-.36-1.85-1.14-.68-.61-1.14-1.36-1.28-1.59-.13-.23-.01-.36.1-.47.11-.1.23-.27.35-.4.11-.14.15-.24.23-.39.08-.16.04-.29-.02-.4-.06-.12-.52-1.26-.71-1.72Z"></path>
+              </svg>
+              <span class="text-[11px] font-bold leading-none tracking-tight" data-i18n="finalCta.whatsappLabel">WhatsApp</span>
+            </a>
+            <a href="https://open.kakao.com/o/sP3n4rFi" target="_blank" rel="noopener" data-cta="contact"
+               aria-label="KakaoTalk open chat" data-i18n-aria="finalCta.kakaoAria"
+               class="focusable focusable-on-primary-strong flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-on-primary-strong/40 px-2 py-3 text-on-primary-strong transition hover:border-transparent hover:bg-primary-hover hover:text-on-primary active:translate-y-px">
+              <!-- 푸터 아이콘은 밝은 바탕에 어두운 말풍선이라 점이 흰색이다.
+                   여기서는 말풍선이 흰색이므로 점을 배경색으로 뚫어야 보인다. -->
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="h-6 w-6">
+                <path fill="currentColor" d="M12 3.5c-5.52 0-10 3.36-10 7.5 0 2.68 1.88 5.03 4.7 6.36L5.5 21l4.24-2.35c.73.12 1.49.18 2.26.18 5.52 0 10-3.36 10-7.5S17.52 3.5 12 3.5Z"></path>
+                <circle cx="8.5" cy="11.2" r="0.9" fill="var(--color-ink)"></circle>
+                <circle cx="12" cy="11.2" r="0.9" fill="var(--color-ink)"></circle>
+                <circle cx="15.5" cy="11.2" r="0.9" fill="var(--color-ink)"></circle>
+              </svg>
+              <span class="text-[11px] font-bold leading-none tracking-tight" data-i18n="finalCta.kakaoLabel">KakaoTalk</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1127,14 +1151,17 @@
           ],
         },
         finalCta: {
-          eyebrow: 'Baseball · Han River · more coming',
           title: 'See you at the next meetup?',
           body: 'Pick your event and day, and we’ll take it from there. It takes about 2 minutes.',
           buddyNote: 'Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.',
           formButton: 'Join a meetup',
-          instagramButton: 'DM us on Instagram',
-          whatsappButton: 'Message us on WhatsApp',
-          kakaoButton: 'KakaoTalk open chat',
+          channelsAria: 'Contact channels',
+          instagramLabel: 'Instagram',
+          whatsappLabel: 'WhatsApp',
+          kakaoLabel: 'KakaoTalk',
+          instagramAria: 'DM us on Instagram',
+          whatsappAria: 'Message us on WhatsApp',
+          kakaoAria: 'KakaoTalk open chat',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
@@ -1353,14 +1380,17 @@
           ],
         },
         finalCta: {
-          eyebrow: '야구 · 한강 · 계속 추가 중',
           title: '다음 모임에서 만날까요?',
           body: '원하는 이벤트와 날짜만 골라 주세요. 2분이면 충분합니다.',
           buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
           formButton: '모임 참여하기',
-          instagramButton: 'Instagram DM으로 문의하기',
-          whatsappButton: 'WhatsApp으로 문의하기',
-          kakaoButton: 'KakaoTalk 오픈채팅',
+          channelsAria: '문의 채널',
+          instagramLabel: 'Instagram',
+          whatsappLabel: 'WhatsApp',
+          kakaoLabel: 'KakaoTalk',
+          instagramAria: 'Instagram DM으로 문의하기',
+          whatsappAria: 'WhatsApp으로 문의하기',
+          kakaoAria: 'KakaoTalk 오픈채팅',
         },
         footer: {
           brand: 'HanBuddy by ZeroOne',
