@@ -181,6 +181,18 @@
       cursor: default;
     }
 
+    /* 제목이 두 줄이 되는 폭에서 "Experience Korea / like a local!"로 끊기게 한다.
+       그냥 두면 컨테이너 폭에 따라 "Experience Korea like a / local!"처럼 의미
+       단위가 잘리고, text-wrap: balance는 줄 폭만 보고 "Experience /
+       Korea like a local!"을 고른다. em이라 36px·60px 두 크기에 함께 맞는다
+       ("Experience Korea"는 8.2em, "Experience Korea like"는 10em). */
+    .hero-title { max-width: 8.5em; }
+
+    /* 한 줄이 들어가는 폭부터는 제한을 풀어 원래대로 한 줄로 둔다. */
+    @media (min-width: 880px) {
+      .hero-title { max-width: none; }
+    }
+
     /* ===== 히어로 폴라로이드: 사진첩에 붙여놓은 스냅 ===== */
     .hero-polaroid {
       position: relative;
@@ -308,7 +320,6 @@
       }
 
       #top .hero-copy > .hero-title { order: 1; margin-top: 0; }
-      #top .hero-copy > .hero-eyebrow { order: 2; margin-top: 14px; }
       #top .hero-copy > .hero-cta-band { order: 3; margin-top: 26px; }
       #top .hero-copy > .hero-rating { order: 4; align-self: center; }
       #top .hero-copy > .hero-quote { order: 5; }
@@ -417,7 +428,6 @@
       #top .hero-copy { position: static; }
 
       #top .hero-copy .hero-title,
-      #top .hero-copy .hero-eyebrow,
       #top .hero-copy .hero-subtitle,
       #top .hero-copy .hero-actions,
       #top .hero-copy .hero-rating,
@@ -550,10 +560,7 @@
       </div>
 
       <div class="hero-copy relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-14 text-center sm:pt-20">
-        <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">
-          Seoul &middot; Meetups every week
-        </p>
-        <h1 class="hero-title mx-auto mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl" data-i18n="hero.title">
+        <h1 class="hero-title mx-auto font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-6xl" data-i18n="hero.title">
           Experience Korea like a local!
         </h1>
         <!-- 모바일에서 한강 두 장이 이 묶음의 배경 레이어가 되어 버튼 양옆에 선다.
@@ -581,10 +588,10 @@
           </div>
 
           <p class="hero-subtitle mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-            Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.
+            Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.
           </p>
 
-          <div class="hero-actions mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div class="hero-actions mx-auto mt-8 grid max-w-md grid-cols-1 gap-4 sm:grid-cols-2">
             <a href="/apply/" data-cta="apply"
                class="focusable rounded-full border border-transparent bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
               Join a meetup
@@ -996,9 +1003,8 @@
           primaryCtaShort: 'Join',
         },
         hero: {
-          eyebrow: 'Seoul · Meetups every week',
           title: 'Experience Korea like a local!',
-          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a friendly local buddy who orders the food, teaches you the chants, and makes you feel at home.',
+          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.',
           primaryCta: 'Join a meetup',
           contactCta: 'DM us on Instagram',
           ratingNote: '4.7 / 5 from our guests · read their reviews',
@@ -1225,9 +1231,8 @@
           primaryCtaShort: '신청',
         },
         hero: {
-          eyebrow: '서울 · 매주 열리는 모임',
           title: 'Experience Korea like a local!',
-          subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려주고, 낯선 곳을 편안하게 만들어 드립니다.',
+          subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려드립니다.',
           primaryCta: '모임 참여하기',
           contactCta: 'Instagram DM으로 문의하세요',
           ratingNote: '게스트 평점 4.7 / 5 · 후기 보러 가기',

@@ -119,3 +119,38 @@ test('the KakaoTalk glyph stays legible when the bubble is inverted', () => {
     assert.match(dot, /fill="var\(--color-ink\)"/, '점은 모두 배경색으로 뚫어야 한다');
   }
 });
+
+test('the hero headline breaks between the two phrases, not mid-phrase', () => {
+  // 두 줄이 되는 폭에서 컨테이너 폭에 맡기면 "Experience Korea like a / local!"처럼
+  // 의미 단위가 잘리고, text-wrap: balance는 줄 폭만 보고 "Experience /
+  // Korea like a local!"을 고른다. em 기반 max-width가 끊는 지점을 고정한다.
+  const rule = html.match(/\.hero-title \{ max-width: ([^;]+); \}/);
+  assert.ok(rule, '제목 폭 제한 규칙이 없다');
+  assert.match(rule[1], /em$/, '두 폰트 크기에 함께 맞으려면 em이어야 한다');
+  // 한 줄이 들어가는 폭에서는 제한이 풀려야 한다.
+  assert.match(
+    html,
+    /@media \(min-width: 880px\) \{\s*\.hero-title \{ max-width: none; \}/,
+    '넓은 화면에서는 제한을 풀어 한 줄로 둔다',
+  );
+  // balance가 살아 있으면 max-width 안에서 다시 어절 단위를 무시한다.
+  const h1 = html.match(/<h1 class="hero-title[^"]*"/);
+  assert.ok(h1);
+  assert.doesNotMatch(h1[0], /text-wrap:balance/, 'balance는 끊는 지점을 우리 뜻대로 두지 않는다');
+});
+
+test('the two hero CTAs share one width', () => {
+  // 라벨 길이가 달라 버튼 폭이 제각각이었다. 그리드가 칸을 균등하게 나눈다.
+  const actions = html.match(/<div class="hero-actions ([^"]*)"/);
+  assert.ok(actions, '히어로 버튼 묶음을 찾지 못했다');
+  const classes = actions[1].split(/\s+/);
+  assert.ok(classes.includes('grid'), '폭을 맞추려면 그리드여야 한다');
+  assert.ok(classes.includes('sm:grid-cols-2'), '넓은 화면에서 두 칸이 균등해야 한다');
+  assert.ok(!classes.includes('sm:flex-row'), 'flex로 되돌리면 폭이 내용 길이를 따라간다');
+});
+
+test('the hero opens on the headline, not a label above it', () => {
+  // "Seoul · Meetups every week"은 제목이 이미 하는 말이었다(2026-08-18 제거).
+  assert.doesNotMatch(html, /data-i18n="hero\.eyebrow"/, '히어로 eyebrow가 다시 붙었다');
+  assert.doesNotMatch(html, /hero-eyebrow/, 'eyebrow 전용 규칙이 남아 있다');
+});
