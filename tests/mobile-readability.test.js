@@ -84,23 +84,38 @@ test('the contact channels sit in one row that matches the primary button width'
 
 test('each contact icon keeps a visible label and a spoken one', () => {
   // 아이콘만 두면 30px 아래 푸터 아이콘과 같은 요소로 읽힌다. 라벨이 그 구분이다.
-  const section = html.slice(html.indexOf('aria-label="Contact channels"'), html.indexOf('</section>', html.indexOf('aria-label="Contact channels"')));
-  for (const key of ['instagram', 'whatsapp', 'kakao']) {
-    assert.match(section, new RegExp(`data-i18n="finalCta\\.${key}Label"`), `${key} 라벨이 보여야 한다`);
-    assert.match(section, new RegExp(`data-i18n-aria="finalCta\\.${key}Aria"`), `${key} 접근성 이름이 있어야 한다`);
-  }
-  // 클릭 집계는 data-cta 위임으로 잡힌다. 버튼을 아이콘으로 바꿔도 남아 있어야 한다.
-  for (const cta of ['instagram', 'whatsapp', 'contact']) {
-    assert.match(section, new RegExp(`data-cta="${cta}"`), `${cta} 클릭 집계가 빠졌다`);
+  // 링크 단위로 봐야 한다. 섹션 전체에서 찾으면 Instagram의 라벨이 WhatsApp
+  // 링크에 붙어 있어도 통과한다.
+  const start = html.indexOf('aria-label="Contact channels"');
+  const section = html.slice(start, html.indexOf('</section>', start));
+  const links = [...section.matchAll(/<a\s[\s\S]*?<\/a>/g)].map((m) => m[0]);
+  // KakaoTalk의 추적 키만 채널명이 아니라 contact다. 링크마다 셋을 함께 확인한다.
+  const channels = [
+    { cta: 'instagram', key: 'instagram' },
+    { cta: 'whatsapp', key: 'whatsapp' },
+    { cta: 'contact', key: 'kakao' },
+  ];
+  assert.equal(links.length, channels.length, '문의 채널 링크 수가 맞지 않는다');
+  for (const { cta, key } of channels) {
+    const link = links.find((a) => a.includes(`data-cta="${cta}"`));
+    assert.ok(link, `${cta} 링크가 없다`);
+    assert.match(link, new RegExp(`data-i18n="finalCta\\.${key}Label"`), `${cta} 링크에 보이는 라벨이 없다`);
+    assert.match(link, new RegExp(`data-i18n-aria="finalCta\\.${key}Aria"`), `${cta} 링크에 접근성 이름이 없다`);
   }
 });
 
 test('the KakaoTalk glyph stays legible when the bubble is inverted', () => {
   // 푸터는 밝은 바탕에 어두운 말풍선이라 점이 흰색이다. 최종 CTA는 말풍선이
   // 흰색이므로 같은 SVG를 그대로 쓰면 점 세 개가 사라진다.
-  const section = html.slice(html.indexOf('aria-label="Contact channels"'), html.indexOf('</section>', html.indexOf('aria-label="Contact channels"')));
+  const start = html.indexOf('aria-label="Contact channels"');
+  const section = html.slice(start, html.indexOf('</section>', start));
   const kakao = section.match(/<a[^>]*data-cta="contact"[\s\S]*?<\/a>/);
   assert.ok(kakao, '카카오 링크를 찾지 못했다');
   assert.doesNotMatch(kakao[0], /fill="white"/, '흰 말풍선 위에 흰 점을 찍으면 안 보인다');
-  assert.match(kakao[0], /fill="var\(--color-ink\)"/, '점은 배경색으로 뚫어야 한다');
+  // 하나만 세면 나머지 두 개가 다른 색이어도 통과한다. 점 전부를 확인한다.
+  const dots = [...kakao[0].matchAll(/<circle[^>]*>/g)].map((m) => m[0]);
+  assert.equal(dots.length, 3, '말풍선 안 점은 세 개다');
+  for (const dot of dots) {
+    assert.match(dot, /fill="var\(--color-ink\)"/, '점은 모두 배경색으로 뚫어야 한다');
+  }
 });
