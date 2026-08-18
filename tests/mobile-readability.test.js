@@ -29,6 +29,36 @@ test('the suggest lead stays on mobile because the heading does not replace it',
   assert.doesNotMatch(cls, /\bhidden\b/, '제안 섹션 안내까지 접으면 안 된다');
 });
 
+test('the final CTA does not name the channels its own buttons already are', () => {
+  // 본문이 Instagram·WhatsApp·KakaoTalk을 나열하고, 바로 아래 버튼 셋이 같은
+  // 채널이고, 푸터 아이콘이 한 번 더 말하고 있었다(2026-08-18).
+  const copy = html.match(/finalCta: \{[\s\S]*?\n {8}\},/g) ?? [];
+  assert.equal(copy.length, 2, 'EN·KO finalCta 카피가 둘 다 있어야 한다');
+  for (const block of copy) {
+    const body = block.match(/body: '([^']+)'/);
+    assert.ok(body, 'finalCta.body를 찾지 못했다');
+    assert.doesNotMatch(
+      body[1],
+      /Instagram|WhatsApp|KakaoTalk|오픈채팅|인스타그램|왓츠앱|카카오톡/,
+      '채널 이름은 버튼이 말한다. 문장으로 다시 나열하지 않는다',
+    );
+  }
+});
+
+test('the final CTA gives phones a shorter vertical frame than the photo band needs', () => {
+  // 사진 배경이 보일 여백이 폰에서는 상하 160px이라 섹션이 화면 하나를 넘겼다.
+  // 좁은 화면만 줄이고 sm 이상은 원래 여백을 되찾아야 한다.
+  const inner = html.match(/<div class="(relative z-10 mx-auto grid max-w-6xl[^"]*)"/);
+  assert.ok(inner, '최종 CTA 안쪽 래퍼를 찾지 못했다');
+  // 클래스를 쪼개서 본다. `py-12 py-20`처럼 둘 다 남으면 Tailwind에서 뒤가 이겨
+  // 폰 축소가 무효가 되는데, 존재 여부만 보는 검사는 그대로 통과한다.
+  const classes = inner[1].split(/\s+/);
+  assert.ok(classes.includes('py-12'), '폰에서는 세로 여백을 줄여야 한다');
+  assert.ok(!classes.includes('py-20'), '모바일 기본 여백에 py-20이 남아 있으면 축소가 무효다');
+  assert.ok(classes.includes('sm:py-20'), 'sm 이상에서 사진 배경 여백을 되찾아야 한다');
+  assert.ok(classes.includes('lg:py-32'), '데스크톱 여백은 그대로다');
+});
+
 test('event cards drop their one-line tagline on mobile only', () => {
   // 2열이라 폭이 좁아 이 문장이 3~4줄로 늘어나면서 카드 높이를 324~230px로
   // 들쭉날쭉하게 만들었다. 사진·가격 배지·제목만으로 무엇인지 읽힌다.
