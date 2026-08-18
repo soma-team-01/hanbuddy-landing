@@ -11,7 +11,7 @@ const aboutHtml = existsSync(aboutPath) ? readFileSync(aboutPath, 'utf8') : '';
 
 test('about page exists with core sections', () => {
   assert.ok(aboutHtml.length > 0, 'about/index.html must exist');
-  for (const id of ['top', 'origin', 'how', 'timeline', 'team', 'join']) {
+  for (const id of ['top', 'origin', 'how', 'timeline', 'team']) {
     assert.match(aboutHtml, new RegExp(`<section id="${id}"`), `missing section #${id}`);
   }
 });
@@ -169,4 +169,14 @@ test('index footer links to the About page', () => {
   );
   assert.match(indexHtml, /aboutLink: 'About HanBuddy'/);
   assert.match(indexHtml, /aboutLink: 'HanBuddy 소개'/);
+});
+
+test('about ends on its own story, not a duplicated final CTA', () => {
+  // 랜딩의 #apply와 같은 말을 하는 CTA 섹션이 About 끝에도 있었다(2026-08-18 제거).
+  // 신청 경로는 헤더와 히어로에 이미 있고, 문의는 푸터 아이콘이 받는다.
+  assert.doesNotMatch(aboutHtml, /<section id="join"/, 'CTA 섹션이 다시 붙었다');
+  assert.doesNotMatch(aboutHtml, /data-i18n="join\./, 'join 카피가 남아 있다');
+  // 신청 경로 자체는 사라지면 안 된다.
+  const applyLinks = [...aboutHtml.matchAll(/data-cta="apply"/g)];
+  assert.ok(applyLinks.length >= 2, `About에 신청 경로가 ${applyLinks.length}개뿐이다`);
 });

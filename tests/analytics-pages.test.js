@@ -59,7 +59,7 @@ test('tracked landing sections declare the shared section contract', () => {
       `home section #${id} must be tracked`,
     );
   }
-  for (const id of ['origin', 'how', 'timeline', 'team', 'join']) {
+  for (const id of ['origin', 'how', 'timeline', 'team']) {
     assert.match(
       aboutHtml,
       new RegExp(`<section id="${id}"[^>]*data-analytics-section`),
