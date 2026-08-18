@@ -764,15 +764,19 @@
         <div class="absolute inset-0 bg-ink/70"></div>
       </div>
 
-      <!-- 사진 배경이 보일 여백을 확보하려고 다른 섹션보다 세로를 넉넉히 준다 -->
-      <div class="relative z-10 mx-auto grid max-w-6xl gap-8 px-5 py-20 lg:grid-cols-[1fr_auto] lg:items-center lg:py-32">
+      <!-- 사진 배경이 보일 여백을 확보하려고 다른 섹션보다 세로를 넉넉히 준다.
+           다만 폰에서는 그 여백만 160px이라 섹션이 화면 하나를 통째로 넘겼다.
+           배경이 보일 자리는 sm 이상에서 원래대로 확보한다. -->
+      <div class="relative z-10 mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-20 lg:grid-cols-[1fr_auto] lg:items-center lg:py-32">
         <div>
           <p class="eyebrow eyebrow-on-primary" data-i18n="finalCta.eyebrow">Baseball &middot; Han River &middot; more coming</p>
           <h2 class="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl" data-i18n="finalCta.title">
             See you at the next meetup?
           </h2>
+          <!-- 채널 이름을 문장으로 나열하지 않는다. 바로 아래 버튼이 같은 세 채널을
+               더 명확하게(누를 수 있게) 말하고, 푸터 아이콘이 한 번 더 말한다. -->
           <p class="mt-5 max-w-2xl text-base leading-8 text-on-primary-strong/85" data-i18n="finalCta.body">
-            Pick your event and day, and we’ll take it from there. It takes about 2 minutes. Questions? Reach us on Instagram, WhatsApp, or KakaoTalk.
+            Pick your event and day, and we’ll take it from there. It takes about 2 minutes.
           </p>
           <p class="mt-4 max-w-2xl text-sm leading-6 text-on-primary-strong/85" data-i18n="finalCta.buddyNote">
             Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.
@@ -1125,7 +1129,7 @@
         finalCta: {
           eyebrow: 'Baseball · Han River · more coming',
           title: 'See you at the next meetup?',
-          body: 'Pick your event and day, and we’ll take it from there. It takes about 2 minutes. Questions? Reach us on Instagram, WhatsApp, or KakaoTalk.',
+          body: 'Pick your event and day, and we’ll take it from there. It takes about 2 minutes.',
           buddyNote: 'Korean local who wants to host? Buddies are welcome too. Say hi in the open chat.',
           formButton: 'Join a meetup',
           instagramButton: 'DM us on Instagram',
@@ -1351,7 +1355,7 @@
         finalCta: {
           eyebrow: '야구 · 한강 · 계속 추가 중',
           title: '다음 모임에서 만날까요?',
-          body: '원하는 이벤트와 날짜만 골라 주세요. 2분이면 충분합니다. 궁금한 점은 Instagram DM, WhatsApp, KakaoTalk 오픈채팅 중 편한 곳으로 문의해 주세요.',
+          body: '원하는 이벤트와 날짜만 골라 주세요. 2분이면 충분합니다.',
           buddyNote: '호스트로 함께하고 싶은 한국인 로컬 버디도 환영합니다. 오픈채팅에서 인사해 주세요.',
           formButton: '모임 참여하기',
           instagramButton: 'Instagram DM으로 문의하기',
