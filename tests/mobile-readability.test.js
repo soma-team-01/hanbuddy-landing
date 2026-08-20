@@ -169,3 +169,83 @@ test('the hero lead is desktop-only', () => {
   assert.match(cls, /\bhidden\b/, '히어로 본문은 폰에서 접혀야 한다');
   assert.match(cls, /\bsm:block\b/, '데스크톱에서는 다시 보여야 한다');
 });
+
+test('the hero quote swaps to a shorter one on phones instead of running four lines', () => {
+  // 대표 인용은 110자라 375px에서 네 줄이 됐다. 폰에서만 더 짧은 승인 후기로
+  // 바꾸는데, 두 blockquote가 서로의 반대 조건을 들고 있어야 성립한다.
+  // 한쪽 클래스만 손대면 폰에서 인용이 두 개 다 보이거나 하나도 안 보인다.
+  const quoteClass = (key) => {
+    const el = html.match(new RegExp(`<blockquote class="([^"]*)"[^>]*data-i18n="${key}"`));
+    assert.ok(el, `${key} blockquote를 찾지 못했다`);
+    return el[1].split(/\s+/);
+  };
+
+  const short = quoteClass('hero\\.quoteShort');
+  assert.ok(short.includes('sm:hidden'), '짧은 인용은 데스크톱에서 사라져야 한다');
+  assert.ok(!short.includes('hidden'), '짧은 인용이 폰에서도 숨으면 폰에 인용이 없다');
+
+  const full = quoteClass('hero\\.quote');
+  assert.ok(full.includes('hidden'), '긴 인용은 폰에서 접혀야 한다');
+  assert.ok(full.includes('sm:block'), '긴 인용은 데스크톱에서 다시 보여야 한다');
+
+  // 인용만 갈아끼우고 출처를 놔두면 남의 후기에 다른 사람 출처가 붙는다.
+  // 실제로 그렇게 만들었다가 브라우저에서 잡았다(2026-08-20: 7월 회차 후기에
+  // "our first baseball night"이 붙어 있었다). 짝을 여기서 고정한다.
+  const captionClass = (key) => {
+    const el = html.match(new RegExp(`<figcaption class="([^"]*)"[^>]*data-i18n="${key}"`));
+    assert.ok(el, `${key} figcaption을 찾지 못했다`);
+    return el[1].split(/\s+/);
+  };
+
+  const shortBy = captionClass('hero\\.quoteShortBy');
+  assert.ok(shortBy.includes('sm:hidden'), '짧은 인용의 출처는 데스크톱에서 사라져야 한다');
+  assert.ok(!shortBy.includes('hidden'), '짧은 인용의 출처가 폰에서도 숨으면 출처 없는 인용이 된다');
+
+  const fullBy = captionClass('hero\\.quoteBy');
+  assert.ok(fullBy.includes('hidden'), '긴 인용의 출처는 폰에서 접혀야 한다');
+  assert.ok(fullBy.includes('sm:block'), '긴 인용의 출처는 데스크톱에서 다시 보여야 한다');
+});
+
+test('the phone quote is an approved review that the carousel does not open on', () => {
+  // 캐러셀은 DEFAULT_REVIEW_CARD_INDEX 카드에서 출발한다. 히어로가 폰에서 그 카드와
+  // 같은 문장을 쓰면, 없애려던 중복이 바로 아래에서 그대로 다시 생긴다.
+  const defaultIndex = Number(html.match(/const DEFAULT_REVIEW_CARD_INDEX = (\d+);/)[1]);
+  for (const locale of ['en', 'ko']) {
+    const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
+    const heroShort = block.match(/quoteShort: '(“[^”]+”)'/);
+    assert.ok(heroShort, `${locale} hero.quoteShort 카피가 없다`);
+
+    const cards = [...block.matchAll(/quote: '(“[^”]+”)'/g)].map((m) => m[1]);
+    // 첫 항목은 히어로 대표 인용이고, 그 뒤가 리뷰 카드 5개다.
+    const cardQuotes = cards.slice(1);
+    assert.equal(cardQuotes.length, 5, `${locale} 리뷰 카드가 5개가 아니다`);
+    assert.ok(cardQuotes.includes(heroShort[1]), `${locale} 폰 인용이 승인된 후기가 아니다`);
+    assert.notEqual(
+      heroShort[1],
+      cardQuotes[defaultIndex],
+      `${locale} 폰 인용이 캐러셀 첫 화면과 같은 문장이다`,
+    );
+
+    // 클래스 짝만 맞아도 출처가 다른 회차를 가리키면 사실이 틀린다.
+    // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
+    const run = (text) => (text.match(/June|July|6월|7월/) ?? [])[0];
+    const metas = [...block.matchAll(/meta: '([^']+)'/g)].map((m) => m[1]);
+    const sourceMeta = metas[cardQuotes.indexOf(heroShort[1])];
+    const heroShortBy = block.match(/quoteShortBy: '([^']+)'/);
+    assert.ok(heroShortBy, `${locale} hero.quoteShortBy 카피가 없다`);
+    assert.equal(
+      run(heroShortBy[1]),
+      run(sourceMeta),
+      `${locale} 폰 인용의 출처 회차가 그 후기가 나온 회차와 다르다`,
+    );
+  }
+});
+
+test('the sections do not repeat a promise the apply flow already makes', () => {
+  // upcoming 하단 note와 제안 폼의 "No commitment" 줄은 각각 데스크톱 리드 문단과
+  // 바로 위 버튼이 이미 하는 말이었다(2026-08-20 제거). 개인정보 고지는 남는다.
+  assert.doesNotMatch(html, /data-i18n="events\.note"/, 'upcoming 하단 note가 다시 붙었다');
+  assert.doesNotMatch(html, /data-i18n="suggest\.note"/, '제안 폼 안심 문구가 다시 붙었다');
+  const privacyNotes = [...html.matchAll(/data-i18n="suggest\.privacyNote"/g)];
+  assert.equal(privacyNotes.length, 1, '연락처 수집 목적 고지는 남아 있어야 한다');
+});

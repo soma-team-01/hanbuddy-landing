@@ -494,10 +494,10 @@
     <div class="relative mx-auto max-w-6xl px-11 py-2 sm:px-12 sm:py-2.5">
       <div class="text-center [text-wrap:balance]">
         <p class="inline text-[13px] font-semibold leading-[1.55] sm:text-sm sm:leading-6" data-i18n="announcement.text">
-          ⚾ Aug 21 (Fri) &middot; Open-Air KBO Baseball Night at Jamsil
+          ⚽ Aug 25 (Tue) &middot; K League Football Night at Seoul World Cup Stadium
         </p>
-        <a data-announcement-link href="/events/kbo-jamsil/"
-           data-analytics-content-id="kbo-jamsil" data-analytics-content-status="open"
+        <a data-announcement-link href="/events/kleague/"
+           data-analytics-content-id="kleague" data-analytics-content-status="open"
            class="focusable focusable-on-primary-strong ml-1.5 inline-block whitespace-nowrap rounded-full bg-on-primary px-2.5 py-0.5 align-middle text-[11px] font-extrabold text-ink transition hover:bg-primary-soft active:translate-y-px sm:px-4 sm:py-1.5 sm:text-xs">
           <span data-i18n="announcement.cta">Join us</span>
           <span aria-hidden="true" class="ml-0.5">&rarr;</span>
@@ -594,7 +594,7 @@
 
           <div class="hero-actions mt-8 flex justify-center">
             <a href="/apply/" data-cta="apply"
-               class="focusable rounded-full border border-transparent bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
+               class="focusable rounded-full border border-transparent bg-primary px-10 py-4 text-center text-lg font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
               Join a meetup
             </a>
           </div>
@@ -611,10 +611,20 @@
         <figure class="hero-quote relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
           <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
           <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
-          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
+          <!-- 같은 인용을 폰에서 20px 볼드로 깔면 네 줄이 된다. 좁은 화면에서는 더 짧은
+               승인 후기로 바꿔 두 줄로 만든다. 리뷰 캐러셀이 2번 카드에서 출발하므로
+               (DEFAULT_REVIEW_CARD_INDEX) 여기에는 3번 카드를 써야 바로 아래와 겹치지 않는다.
+               `sm:hidden`과 `hidden sm:block` 한 쌍이 계약이다. 한쪽만 지우면 둘 다 보인다. -->
+          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:hidden" data-i18n="hero.quoteShort">
+            &ldquo;Great experience to enjoy a baseball game with a local&rdquo;
+          </blockquote>
+          <blockquote class="mt-2 hidden font-display text-xl font-bold leading-snug tracking-tight text-ink sm:block sm:text-2xl" data-i18n="hero.quote">
             &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
           </blockquote>
-          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
+          <figcaption class="mt-3 text-sm font-semibold text-primary-strong sm:hidden" data-i18n="hero.quoteShortBy">
+            — Guest at our July baseball night, Jamsil Stadium
+          </figcaption>
+          <figcaption class="mt-3 hidden text-sm font-semibold text-primary-strong sm:block" data-i18n="hero.quoteBy">
             — Guest at our first baseball night, Jamsil Stadium
           </figcaption>
         </figure>
@@ -639,10 +649,6 @@
         </div>
 
         <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3" data-event-cards></div>
-
-        <p class="mx-auto mt-8 max-w-2xl text-center text-sm leading-6 text-muted" data-i18n="events.note">
-          We&rsquo;ll confirm the meeting spot and details with you directly before the day.
-        </p>
       </div>
     </section>
 
@@ -685,10 +691,7 @@
                     class="focusable mt-5 w-full rounded-xl bg-primary px-6 py-3 text-base font-extrabold text-on-primary transition hover:bg-primary-hover">
               Send my idea
             </button>
-            <p class="mt-2.5 text-center text-xs leading-5 text-muted" data-i18n="suggest.note">
-              No commitment. This just tells us what to open next.
-            </p>
-            <p class="mt-1.5 text-center text-xs leading-5 text-muted">
+            <p class="mt-2.5 text-center text-xs leading-5 text-muted">
               <span data-i18n="suggest.privacyNote">We only use your contact to tell you when this opens.</span>
               <a href="/privacy/" class="focusable font-bold underline" data-i18n="suggest.privacyLink">Privacy</a>
             </p>
@@ -956,9 +959,9 @@
     // 이 시각이 지나면 공지가 렌더되지 않는다. 다음 회차로 넘길 때는 여기와
     // CONTENT_MAP의 `announcement.text`(EN/KO)를 함께 바꾼다.
     const ANNOUNCEMENT = {
-      id: 'kbo-jamsil-2026-08-21',
-      href: '/events/kbo-jamsil/',
-      endsAt: '2026-08-21T18:00:00+09:00',
+      id: 'kleague-2026-08-25',
+      href: '/events/kleague/',
+      endsAt: '2026-08-25T18:30:00+09:00',
     };
     const ANNOUNCEMENT_DISMISS_KEY = 'hanbuddy.announcementDismissed';
 
@@ -1006,6 +1009,8 @@
           ratingNote: '4.7 / 5 from our guests · read their reviews',
           quoteEyebrow: 'Guest review',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
+          quoteShort: '“Great experience to enjoy a baseball game with a local”',
+          quoteShortBy: '— Guest at our July baseball night, Jamsil Stadium',
           quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
           photoCap1: 'new friends, Jul 26 ⚾',
           photoCap2: 'first baseball night ⚾',
@@ -1016,7 +1021,6 @@
           eyebrow: 'Upcoming events',
           title: 'Pick a day, meet us there.',
           body: 'Choose the day that works for you when you apply. It takes 2 minutes, and we’ll confirm the details with you.',
-          note: 'We’ll confirm the meeting spot and details with you directly before the day.',
           detailAria: 'View event details',
           comingSoonToast: 'Almost ready! Follow @hanbuddy_kr on Instagram to hear first 🙌',
           cards: [
@@ -1105,7 +1109,6 @@
           contactPlaceholder: 'Instagram / WhatsApp ID',
           submit: 'Send my idea',
           sending: 'Sending...',
-          note: 'No commitment. This just tells us what to open next.',
           privacyNote: 'We only use your contact to tell you when this opens.',
           privacyLink: 'Privacy',
           doneTitle: 'Thanks for your idea!',
@@ -1177,7 +1180,7 @@
           privacyLink: 'Privacy',
         },
         announcement: {
-          text: '⚾ Aug 21 (Fri) · Open-Air KBO Baseball Night at Jamsil',
+          text: '⚽ Aug 25 (Tue) · K League Football Night at Seoul World Cup Stadium',
           cta: 'Join us',
           dismissAria: 'Dismiss this announcement',
         },
@@ -1233,6 +1236,8 @@
           ratingNote: '게스트 평점 4.7 / 5 · 후기 보러 가기',
           quoteEyebrow: '게스트 후기',
           quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
+          quoteShort: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
+          quoteShortBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
           quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
           photoCap1: '새 친구들, 7월 26일 ⚾',
           photoCap2: '첫 야구 직관 ⚾',
@@ -1243,7 +1248,6 @@
           eyebrow: '다가오는 이벤트',
           title: '날짜를 골라 바로 신청하세요.',
           body: '신청할 때 원하는 날짜를 직접 고르세요. 2분이면 충분하고, 세부 사항은 저희가 직접 안내해 드려요.',
-          note: '모임 전 만남 장소와 세부 사항을 직접 안내해 드립니다.',
           detailAria: '이벤트 상세 보기',
           comingSoonToast: '준비 중이에요! 오픈 소식은 인스타그램 @hanbuddy_kr에서 가장 먼저 알려드릴게요 🙌',
           cards: [
@@ -1332,7 +1336,6 @@
           contactPlaceholder: 'Instagram / WhatsApp 아이디',
           submit: '아이디어 보내기',
           sending: '보내는 중...',
-          note: '부담 없이 남겨주세요. 다음에 열 활동을 정할 때 참고합니다.',
           privacyNote: '연락처는 이 활동이 열렸을 때 알려드리는 데만 사용합니다.',
           privacyLink: '개인정보 안내',
           doneTitle: '아이디어 감사합니다!',
@@ -1404,7 +1407,7 @@
           privacyLink: '개인정보·분석 안내',
         },
         announcement: {
-          text: '⚾ 8월 21일 (금) · 잠실 야외 야구 직관',
+          text: '⚽ 8월 25일 (화) · 서울월드컵경기장 K리그 직관',
           cta: '신청하기',
           dismissAria: '알림 닫기',
         },
