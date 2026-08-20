@@ -249,3 +249,42 @@ test('the sections do not repeat a promise the apply flow already makes', () => 
   const privacyNotes = [...html.matchAll(/data-i18n="suggest\.privacyNote"/g)];
   assert.equal(privacyNotes.length, 1, '연락처 수집 목적 고지는 남아 있어야 한다');
 });
+
+test('the rating pill stays one line on phones instead of wrapping around the stars', () => {
+  // 43자짜리 문구가 폰에서 두 줄로 감기면, 별과 화살표만 세로 중앙에 남아
+  // 알약이 뚱뚱해진다(2026-08-20). 좁은 화면에서만 짧은 문구를 쓴다.
+  const spanClass = (key) => {
+    const el = html.match(new RegExp(`<span class="([^"]*)"[^>]*data-i18n="${key}"`));
+    assert.ok(el, `${key} span을 찾지 못했다`);
+    return el[1].split(/\s+/);
+  };
+
+  const short = spanClass('hero\\.ratingNoteShort');
+  assert.ok(short.includes('sm:hidden'), '짧은 문구는 데스크톱에서 사라져야 한다');
+  assert.ok(!short.includes('hidden'), '짧은 문구가 폰에서도 숨으면 별점이 사라진다');
+
+  const full = spanClass('hero\\.ratingNote');
+  assert.ok(full.includes('hidden'), '긴 문구는 폰에서 접혀야 한다');
+  assert.ok(full.includes('sm:inline'), '긴 문구는 데스크톱에서 다시 보여야 한다');
+
+  // 짧은 쪽이 길어지면 다시 감긴다. 별·화살표·좌우 여백을 뺀 폭에 들어갈 만큼만 둔다.
+  for (const locale of ['en', 'ko']) {
+    const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
+    const copy = block.match(/ratingNoteShort: '([^']+)'/);
+    assert.ok(copy, `${locale} hero.ratingNoteShort 카피가 없다`);
+    assert.ok(copy[1].length <= 24, `${locale} 폰 문구가 길어 다시 감긴다: "${copy[1]}"`);
+  }
+
+  // 320px(구형 SE·폴드 커버)에서는 짧은 문구만으로도 11px이 모자랐다.
+  // 좁은 화면에서만 좌우 여백과 간격을 줄여 채웠고, sm 이상에서 되찾는다.
+  // 클래스를 쪼개서 본다. `px-4 px-5`처럼 둘 다 남으면 뒤가 이겨 축소가 무효인데,
+  // 존재 여부만 보는 검사는 그대로 통과한다.
+  const pill = html.match(/<a href="#reviews" class="(hero-rating[^"]*)"/);
+  assert.ok(pill, '별점 알약을 찾지 못했다');
+  const pillClasses = pill[1].split(/\s+/);
+  assert.ok(pillClasses.includes('px-4'), '폰에서는 좌우 여백을 줄여야 320px에 들어간다');
+  assert.ok(!pillClasses.includes('px-5'), '모바일 기본 여백에 px-5가 남아 있으면 축소가 무효다');
+  assert.ok(pillClasses.includes('sm:px-5'), 'sm 이상에서 원래 여백을 되찾아야 한다');
+  assert.ok(pillClasses.includes('gap-1.5'), '폰에서는 별과 문구 간격도 줄인다');
+  assert.ok(pillClasses.includes('sm:gap-2'), 'sm 이상에서 원래 간격을 되찾아야 한다');
+});
