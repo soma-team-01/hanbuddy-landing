@@ -43,12 +43,12 @@ test('about page never claims un-operated activities as completed meetups', () =
   assert.doesNotMatch(aboutHtml, /실제 모임의 순간들/);
 
   // 완료(status: 'done')로 표기할 수 있는 회차는 실제로 운영한 것뿐이다. 날짜 화이트리스트로 고정한다.
-  // K리그와 음식 회차는 여전히 미운영이므로 완료 항목에 등장하면 안 된다.
-  // 활동이 늘 때마다 이 목록을 손으로 늘리는 대신, 운영한 적 있는 회차의
-  // 이름만 통과시키는 편이 안전하지만 지금은 날짜 화이트리스트가 그 역할을 한다.
+  // 2026-08-20 기준 실제 운영: 잠실 KBO 2회(06.25, 07.26) + 상암 K리그 1회(08.15).
+  // 한강 피크닉은 8/1 취소 후 운영 기록이 확인된 적 없고(잘못 올라갔던 완료 표기는
+  // 2026-08-20에 내렸다), 음식 회차도 미운영이므로 완료 항목에 등장하면 안 된다.
   const doneEntries = aboutHtml.match(/status:\s*'done'[\s\S]*?\}/g) ?? [];
   assert.equal(doneEntries.length, 6, '완료 항목은 EN/KO 각각 3건, 총 6건이어야 함');
-  const operatedDates = ['2026.06.25', '2026.07.26', '2026.08.01'];
+  const operatedDates = ['2026.06.25', '2026.07.26', '2026.08.15'];
   for (const entry of doneEntries) {
     assert.ok(
       operatedDates.some((date) => entry.includes(date)),
@@ -58,13 +58,38 @@ test('about page never claims un-operated activities as completed meetups', () =
     // "chants and chimaek in the stands"까지 걸린다(2026-08-10에 실제로 걸렸다).
     assert.doesNotMatch(
       entry,
-      /kleague|K League|K리그 축구|samgyeopsal|Korean BBQ Night|삼겹살 나이트|Chimaek Night|치맥 나이트/,
+      /hanriver|Han River|한강 피크닉|samgyeopsal|Korean BBQ Night|삼겹살 나이트|Chimaek Night|치맥 나이트/,
       `미운영 활동이 완료로 표기됨: ${entry}`,
     );
   }
 });
 
-test('about page does not duplicate the rating or guest quotes from index', () => {
+test('about upcoming entries carry no hardcoded dates (they go stale)', () => {
+  // 예정 회차에 날짜를 박으면 지난 날짜가 "예정"으로 남아 운영 중단처럼 보인다
+  // (2026-08-20에 실제로 8/12·8/15가 지난 채 걸려 있었다). 날짜는 신청 캘린더가
+  // 정본(assets/event-slots.js)이고, About 예정 목록은 상시 라벨만 쓴다.
+  const upcomingEntries = aboutHtml.match(/status:\s*'upcoming'[\s\S]*?\}/g) ?? [];
+  assert.ok(upcomingEntries.length > 0, '예정 회차가 하나도 없다');
+  for (const entry of upcomingEntries) {
+    assert.doesNotMatch(
+      entry,
+      /\b\d{4}[./-]\d{1,2}(?:[./-]\d{1,2})?\b|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d+월\s*\d+|coming soon|공개 예정/,
+      `예정 회차에 날짜성 문자열이 박혀 있다: ${entry}`,
+    );
+  }
+});
+
+test('about carries exactly one guest quote and points at index #reviews', () => {
+  // 2026-08-20 결정: About은 사회적 증거로 승인 인용 5번("explaining" 인용) 딱 하나만
+  // 싣고, 나머지 인용과 종합 평점은 index #reviews 전용으로 남긴다. About은 결제 직전
+  // "믿을 만한가"를 확인하러 오는 페이지라 인용 0개는 구멍이고, 전부 실으면 중복이다.
+  assert.match(aboutHtml, /fantastic job of explaining/, 'about must carry the approved explaining quote (EN)');
+  assert.match(aboutHtml, /무슨 일이 벌어지고 있는지/, 'about must carry the approved explaining quote (KO)');
+  assert.match(aboutHtml, /href="\/#reviews"[^>]*data-i18n="how\.quoteLink"/, 'quote must link to index #reviews');
+  // "딱 하나"를 실제로 센다 — 존재만 확인하면 인용 블록이 늘어나도 통과해 버린다.
+  assert.equal((aboutHtml.match(/data-i18n="how\.quote"/g) ?? []).length, 1, 'quote block must appear exactly once');
+  assert.equal((aboutHtml.match(/data-i18n="how\.quoteLink"/g) ?? []).length, 1, 'review link must appear exactly once');
+
   // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
   // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
   assert.doesNotMatch(aboutHtml, /4\.7\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
