@@ -390,7 +390,8 @@
       #top .hero-cta-band > .hero-polaroids { display: none; }
 
       /* 위 62px은 hp3·hp4가 깔린 자리를 본문이 비켜 가라고 준 여백이다.
-         사진이 빠지면 그대로 빈 공백만 남으므로 같이 줄인다. */
+         사진이 빠지면 그대로 빈 공백만 남으므로 같이 줄인다. 본문 자체는
+         640px 미만에서 접히므로, 이 값이 실제로 쓰이는 구간은 640~767px이다. */
       #top .hero-cta-band > .hero-subtitle { margin-top: 24px; }
     }
 
@@ -587,18 +588,14 @@
             </figure>
           </div>
 
-          <p class="hero-subtitle mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
+          <p class="hero-subtitle mx-auto mt-6 hidden max-w-2xl text-base leading-7 text-muted sm:block sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
             Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.
           </p>
 
-          <div class="hero-actions mx-auto mt-8 grid max-w-md grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="hero-actions mt-8 flex justify-center">
             <a href="/apply/" data-cta="apply"
                class="focusable rounded-full border border-transparent bg-primary px-8 py-3.5 text-center text-base font-bold text-on-primary transition hover:bg-primary-hover active:translate-y-px" data-i18n="hero.primaryCta">
               Join a meetup
-            </a>
-            <a href="https://www.instagram.com/hanbuddy_kr/" target="_blank" rel="noopener" data-cta="instagram"
-               class="focusable rounded-full border border-primary/40 bg-canvas-soft px-8 py-3.5 text-center text-base font-bold text-primary-strong transition hover:border-primary hover:bg-primary-soft active:translate-y-px">
-              <span data-i18n="hero.contactCta">DM us on Instagram</span>
             </a>
           </div>
         </div>
@@ -1006,7 +1003,6 @@
           title: 'Experience Korea like a local!',
           subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.',
           primaryCta: 'Join a meetup',
-          contactCta: 'DM us on Instagram',
           ratingNote: '4.7 / 5 from our guests · read their reviews',
           quoteEyebrow: 'Guest review',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
@@ -1234,7 +1230,6 @@
           title: 'Experience Korea like a local!',
           subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려드립니다.',
           primaryCta: '모임 참여하기',
-          contactCta: 'Instagram DM으로 문의하세요',
           ratingNote: '게스트 평점 4.7 / 5 · 후기 보러 가기',
           quoteEyebrow: '게스트 후기',
           quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
