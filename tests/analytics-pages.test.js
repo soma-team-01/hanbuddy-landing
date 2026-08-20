@@ -74,10 +74,27 @@ test('event cards expose canonical content-selection metadata', () => {
   assert.doesNotMatch(homeHtml, /track\('event_card_click'/);
 });
 
-test('scrolling to the apply section is distinct from opening the form', () => {
-  // 같은 CTA 키를 쓰면 섹션까지 스크롤한 사람과 폼을 연 사람이 한 숫자로 뭉친다.
-  assert.match(homeHtml, /href="#apply" data-cta="apply_section"/);
-  assert.doesNotMatch(homeHtml, /href="#apply" data-cta="apply"/);
+test('every apply CTA opens the form instead of scrolling to a section', () => {
+  // 2026-08-20까지 상단 nav 버튼만 `#apply`(최종 CTA 섹션)로 스크롤했다. 폼까지
+  // 한 번 더 눌러야 해서 유현님 지시로 전부 폼 직행으로 통일했다. 섹션 스크롤과
+  // 폼 오픈을 분리해 세던 `apply_section` 키는 이제 홈에서 쓰지 않는다.
+  assert.doesNotMatch(homeHtml, /data-cta="apply_section"/, '홈에 섹션 스크롤 CTA가 다시 생겼다');
+  assert.doesNotMatch(homeHtml, /href="#apply"/, '신청 CTA가 폼 대신 섹션으로 간다');
+
+  // 헤더 버튼이 실제로 폼을 가리키는지 본다. href만 맞고 data-cta가 없으면
+  // 링크는 되지만 전환이 집계되지 않는다.
+  const header = homeHtml.match(/<header[\s\S]*?<\/header>/);
+  assert.ok(header, '헤더를 찾지 못했다');
+  assert.match(
+    header[0],
+    /<a href="\/apply\/" data-cta="apply"/,
+    '헤더 CTA는 /apply/를 열고 apply로 집계돼야 한다',
+  );
+
+  // placement로 갈라 보므로 nav·히어로·최종 CTA가 한 숫자로 뭉치지 않는다.
+  // 세 자리 모두 살아 있어야 그 구분이 의미를 갖는다.
+  const applyCtas = [...homeHtml.matchAll(/<a href="\/apply\/" data-cta="apply"/g)];
+  assert.equal(applyCtas.length, 3, '신청 CTA는 헤더·히어로·최종 CTA 세 곳이다');
 });
 
 test('the apply page loads shared analytics with its own page context', () => {
