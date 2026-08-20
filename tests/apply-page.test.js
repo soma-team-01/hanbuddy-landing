@@ -27,13 +27,26 @@ test('the fields we stopped asking for are gone from every layer of the page', (
   }
 });
 
-test('the contact channel and its ID share one row on every screen width', () => {
-  // 폼 길이를 줄이려고 붙인 한 줄이다. sm: 접두사가 붙으면 정작 길이가 문제인
-  // 모바일에서만 두 줄로 돌아간다.
-  const row = html.match(/<div class="grid grid-cols-2[^"]*">[\s\S]*?field-contactId[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/);
-  assert.ok(row, 'contactMethod and contactId must sit in one grid row');
-  assert.match(row[0], /field-contactMethod/);
-  assert.doesNotMatch(row[0], /sm:grid-cols|md:grid-cols/, 'the row must not collapse on mobile');
+test('the contact channel and its ID read as one field on every screen width', () => {
+  // 폼 길이를 줄이려고 제목 하나에 칸 둘을 묶었다. 테두리를 공유하는 상자가
+  // 사라지면 다시 따로 노는 두 필드로 보인다. sm: 접두사가 붙으면 정작 길이가
+  // 문제인 모바일에서만 두 줄로 돌아간다.
+  const pair = html.match(/<div class="contact-pair[^"]*">[\s\S]*?<\/div>/);
+  assert.ok(pair, 'contactMethod and contactId must share one bordered box');
+  assert.match(pair[0], /id="field-contactMethod"/);
+  assert.match(pair[0], /id="field-contactId"/);
+  assert.doesNotMatch(pair[0], /sm:|md:/, 'the pair must not restack on mobile');
+
+  // 제목이 하나뿐이니 각 칸의 역할은 sr-only 라벨만 말한다. 이게 빠지면
+  // 스크린리더에는 이름 없는 입력 두 개가 남는다.
+  for (const id of ['field-contactMethod', 'field-contactId']) {
+    assert.match(html, new RegExp(`<label for="${id}" class="sr-only"`), `${id} needs an sr-only label`);
+  }
+  assert.match(html, /<legend[^>]*data-i18n="apply\.fields\.contactMethod"/, 'the pair needs one visible heading');
+
+  // 안쪽 칸에는 테두리가 없다. 초점과 오류 표시를 칸에 걸면 아무것도 안 보인다.
+  assert.match(html, /\.contact-pair:focus-within/);
+  assert.match(html, /\.contact-pair:has\(\[aria-invalid='true'\]\)/);
 });
 
 test('the optional questions come after the one we act on', () => {

@@ -104,6 +104,19 @@ test('a slot that already passed is rejected', () => {
   assert.equal(result.field, 'slotIso');
 });
 
+test('what we store is exactly what the privacy notice declares', () => {
+  // 고지문은 사람이 쓰고 저장 항목은 코드가 정한다. 둘이 갈라지면 동의를 받은
+  // 범위 밖의 정보를 갖고 있게 된다. 여기에 키가 늘거나 줄면 apply/index.html의
+  // apply.privacy(EN/KO) 두 벌을 같이 고치라는 뜻이다. 카피 문장 자체는 박지
+  // 않는다. 표현은 바뀌어도 되고 범위만 어긋나면 안 된다.
+  const result = validateApplication(valid(), AUG10);
+  assert.equal(result.ok, true, result.field);
+  assert.deepEqual(Object.keys(result.value).sort(), [
+    'contactId', 'contactMethod', 'eventId', 'eventTitle', 'guests',
+    'language', 'name', 'nationality', 'requests', 'slotIso', 'source',
+  ]);
+});
+
 test('the honeypot silently fails validation', () => {
   const result = validateApplication({ ...valid(), website: 'http://spam.example' }, AUG10);
   assert.equal(result.ok, false);
