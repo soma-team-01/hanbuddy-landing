@@ -145,3 +145,27 @@ test('the backdrop stays autoplay-only, with no manual controls', () => {
   assert.match(driver, /\}, 6000\);/);
   assert.match(indexHtml, /\.backdrop-slide \{\s*transition: opacity 1000ms ease-in-out;/);
 });
+
+test('phones show exactly one review card, with no sliver of the next one', () => {
+  // 카드가 85%였을 때 다음 카드가 15% 걸쳐 보였다(2026-08-20 유현님 지적).
+  // 더 있다는 신호는 트랙 아래 화살표가 하므로 엿보기 폭은 필요 없다.
+  // `figure.className`은 사진 카드에도 있고 그쪽이 먼저 나온다.
+  // 리뷰 카드만 가진 `snap-start`로 잡는다.
+  const cls = indexHtml.match(/figure\.className = '([^']*\bsnap-start\b[^']*)'/);
+  assert.ok(cls, '리뷰 카드 className을 찾지 못했다');
+  const classes = cls[1].split(/\s+/);
+
+  assert.ok(classes.includes('w-full'), '폰에서는 카드가 트랙 폭을 다 써야 한다');
+  // 모바일 기본 폭에 퍼센트가 남으면 엿보기가 되살아난다. sm: 이상 분기는 무관.
+  const mobileWidths = classes.filter((c) => /^w-/.test(c));
+  assert.deepEqual(mobileWidths, ['w-full'], `모바일 폭이 하나가 아니다: ${mobileWidths.join(', ')}`);
+
+  // 여러 장 보이는 화면은 그대로 둔다. 폰만 바꾼 것이지 캐러셀을 없앤 게 아니다.
+  assert.ok(classes.some((c) => c.startsWith('sm:w-')), 'sm 이상에서는 여러 장이 보여야 한다');
+  assert.ok(classes.some((c) => c.startsWith('md:w-')), 'md 이상에서는 세 장이 보여야 한다');
+
+  // 화살표가 유일한 "더 있다" 신호가 되므로 폰에서 사라지면 안 된다.
+  const arrowRow = indexHtml.match(/<div class="(mt-8 flex items-center justify-center[^"]*)"/);
+  assert.ok(arrowRow, '화살표 줄을 찾지 못했다');
+  assert.doesNotMatch(arrowRow[1], /\bhidden\b/, '폰에서 화살표를 숨기면 넘길 방법이 사라진다');
+});
