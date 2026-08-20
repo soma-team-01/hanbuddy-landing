@@ -81,20 +81,36 @@ test('every apply CTA opens the form instead of scrolling to a section', () => {
   assert.doesNotMatch(homeHtml, /data-cta="apply_section"/, '홈에 섹션 스크롤 CTA가 다시 생겼다');
   assert.doesNotMatch(homeHtml, /href="#apply"/, '신청 CTA가 폼 대신 섹션으로 간다');
 
-  // 헤더 버튼이 실제로 폼을 가리키는지 본다. href만 맞고 data-cta가 없으면
-  // 링크는 되지만 전환이 집계되지 않는다.
+  // 속성 순서에 기대지 않는다. 태그를 먼저 뽑고 href와 data-cta를 따로 본다.
+  // href만 맞고 data-cta가 없으면 링크는 되지만 전환이 집계되지 않는다.
+  const applyCtas = (html) => [...html.matchAll(/<a\s[^>]*>/g)]
+    .map((m) => m[0])
+    .filter((tag) => /href=["']\/apply\/["']/.test(tag) && /data-cta=["']apply["']/.test(tag));
+
+  // analytics.js의 ctaPlacement는 header → footer → 가장 가까운 section[id] 순으로
+  // 자리를 정한다. 세 자리에 하나씩 있어야 nav·top·apply로 갈라 볼 수 있다.
+  // 개수만 세면 헤더에 세 개가 몰려 있어도 통과한다.
   const header = homeHtml.match(/<header[\s\S]*?<\/header>/);
   assert.ok(header, '헤더를 찾지 못했다');
-  assert.match(
-    header[0],
-    /<a href="\/apply\/" data-cta="apply"/,
-    '헤더 CTA는 /apply/를 열고 apply로 집계돼야 한다',
-  );
 
-  // placement로 갈라 보므로 nav·히어로·최종 CTA가 한 숫자로 뭉치지 않는다.
-  // 세 자리 모두 살아 있어야 그 구분이 의미를 갖는다.
-  const applyCtas = [...homeHtml.matchAll(/<a href="\/apply\/" data-cta="apply"/g)];
-  assert.equal(applyCtas.length, 3, '신청 CTA는 헤더·히어로·최종 CTA 세 곳이다');
+  // 이 파일의 <section>은 중첩되지 않는다. 다음 <section 직전까지가 한 구간이다.
+  const sectionById = (id) => {
+    const open = homeHtml.search(new RegExp(`<section[^>]*\\bid="${id}"`));
+    assert.notEqual(open, -1, `#${id} 섹션을 찾지 못했다`);
+    const nextOpen = homeHtml.indexOf('<section', open + 1);
+    return homeHtml.slice(open, nextOpen === -1 ? undefined : nextOpen);
+  };
+
+  const byPlacement = {
+    nav: applyCtas(header[0]),
+    top: applyCtas(sectionById('top')),
+    apply: applyCtas(sectionById('apply')),
+  };
+  for (const [placement, ctas] of Object.entries(byPlacement)) {
+    assert.equal(ctas.length, 1, `placement=${placement} 자리의 신청 CTA가 ${ctas.length}개다`);
+  }
+  // 위 세 자리 밖에 신청 CTA가 더 생기면 placement 구분이 흐려진다.
+  assert.equal(applyCtas(homeHtml).length, 3, '신청 CTA는 헤더·히어로·최종 CTA 세 곳뿐이어야 한다');
 });
 
 test('the apply page loads shared analytics with its own page context', () => {
