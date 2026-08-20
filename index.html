@@ -601,9 +601,10 @@
         </div>
 
         <!-- Compact guest-rating proof linking to full reviews -->
-        <a href="#reviews" class="hero-rating focusable mt-8 inline-flex items-center gap-2 rounded-full bg-primary-soft px-5 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
+        <a href="#reviews" class="hero-rating focusable mt-8 inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-4 py-2.5 text-sm font-bold text-primary-strong transition hover:opacity-85 sm:gap-2 sm:px-5">
           <span aria-hidden="true" class="tracking-tight">★★★★★</span>
-          <span data-i18n="hero.ratingNote">4.7 / 5 from our guests · read their reviews</span>
+          <span class="sm:hidden" data-i18n="hero.ratingNoteShort">4.7 / 5 from our guests</span>
+          <span class="hidden sm:inline" data-i18n="hero.ratingNote">4.7 / 5 from our guests · read their reviews</span>
           <span aria-hidden="true">&rarr;</span>
         </a>
 
@@ -1007,6 +1008,7 @@
           subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.',
           primaryCta: 'Join a meetup',
           ratingNote: '4.7 / 5 from our guests · read their reviews',
+          ratingNoteShort: '4.7 / 5 from our guests',
           quoteEyebrow: 'Guest review',
           quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
           quoteShort: '“Great experience to enjoy a baseball game with a local”',
@@ -1234,6 +1236,7 @@
           subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려드립니다.',
           primaryCta: '모임 참여하기',
           ratingNote: '게스트 평점 4.7 / 5 · 후기 보러 가기',
+          ratingNoteShort: '게스트 평점 4.7 / 5',
           quoteEyebrow: '게스트 후기',
           quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
           quoteShort: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
