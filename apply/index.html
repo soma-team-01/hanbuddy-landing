@@ -128,6 +128,29 @@
       box-shadow: 0 0 0 3px rgba(209, 63, 50, 0.18);
     }
 
+    /*
+      기본 마커는 브라우저마다 모양과 색이 달라 회색 고지문 옆에서 튄다.
+      직접 그려서 열림 상태를 회전으로 보여준다.
+    */
+    .privacy-toggle > summary {
+      list-style: none;
+    }
+
+    .privacy-toggle > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .privacy-toggle > summary::before {
+      content: '\25B8';
+      display: inline-block;
+      margin-right: 0.375rem;
+      transition: transform 150ms ease;
+    }
+
+    .privacy-toggle[open] > summary::before {
+      transform: rotate(90deg);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -248,8 +271,24 @@
                     class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
         </div>
 
+        <!--
+          고지 전문을 그대로 펼쳐 두면 폼 마지막이 글 덩어리가 된다. 목적과 보유
+          기간, 거부했을 때 벌어지는 일만 남기고 나머지는 접는다. details는 닫혀
+          있어도 내용이 DOM에 있어서, 동의 체크 전에 누구나 펼쳐 읽을 수 있다.
+          이 두 벌을 합친 것이 법에서 요구하는 고지 전체다. 한쪽만 고치지 말 것.
+        -->
         <div class="rounded-2xl bg-panel p-5">
-          <p class="text-xs leading-6 text-muted" data-i18n="apply.privacy"></p>
+          <p class="text-xs leading-6 text-muted" data-i18n="apply.privacySummary"></p>
+          <details class="privacy-toggle mt-2">
+            <!--
+              summary의 display는 건드리지 않는다. list-item이 아닌 값(inline-block
+              등)을 주면 브라우저에 따라 펼침 위젯 취급을 잃는다. 초점 링이 한 줄을
+              통째로 두르지 않게 하려는 것뿐이라면 w-fit으로 충분하다.
+            -->
+            <summary class="focusable w-fit cursor-pointer rounded text-xs font-bold text-ink"
+                     data-i18n="apply.privacyToggle">What we collect and who sees it</summary>
+            <p class="mt-2 text-xs leading-6 text-muted" data-i18n="apply.privacy"></p>
+          </details>
           <label class="mt-3 flex items-start gap-3 text-sm font-semibold text-ink">
             <input type="checkbox" id="field-consent" name="consent" required class="focusable mt-1 h-5 w-5" />
             <span data-i18n="apply.consentLabel">I agree to the collection and use of my information above.</span>
@@ -413,7 +452,10 @@
             pickPrompt: 'Pick a highlighted day.',
             noDates: 'No dates are open for this meetup right now. Tell us what you would like on the home page and we will let you know when it opens.',
           },
-          privacy: 'We collect your name, nationality, contact details, the booking you make here (meetup, date, party size, requests, how you found us) and the language you apply in, so we can confirm your spot, share the meeting point and match you with a buddy, who only sees what they need for the day. We delete it 6 months after the meetup. You can decline, but then we cannot confirm a spot. To see or delete your data, email zeroone.soma@gmail.com.',
+          // 항상 보이는 두 줄. 나머지는 privacyToggle을 눌러야 나온다.
+          privacySummary: 'We use your details to run this meetup and delete them 6 months after. Declining means we cannot confirm a spot.',
+          privacyToggle: 'What we collect and who sees it',
+          privacy: 'Your name, nationality, contact details, the booking you make here (meetup, date, party size, requests, how you found us) and the language you apply in. We use them to confirm your spot, share the meeting point and match you with a buddy, who only sees what they need for the day. To see or delete your data, email zeroone.soma@gmail.com.',
           consentLabel: 'I agree to the collection and use of my information above.',
           submit: 'Send application',
           sending: 'Sending…',
@@ -493,7 +535,9 @@
             pickPrompt: '강조된 날짜 중에서 골라 주세요.',
             noDates: '지금은 신청할 수 있는 날짜가 없어요. 홈에서 원하는 활동을 알려주시면 열릴 때 알려드릴게요.',
           },
-          privacy: '자리 확정, 집결 장소 안내, 버디 배정을 위해 이름, 국적, 연락처, 신청 내용(모임, 날짜, 인원, 요청사항, 유입 경로), 신청 언어를 수집하며 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
+          privacySummary: '이 모임 운영을 위해 신청 정보를 수집하며 행사 종료 후 6개월간 보관한 뒤 파기합니다. 거부하시면 자리를 확정해 드릴 수 없습니다.',
+          privacyToggle: '수집 항목과 공유 범위',
+          privacy: '이름, 국적, 연락처, 신청 내용(모임, 날짜, 인원, 요청사항, 유입 경로), 신청 언어를 수집합니다. 자리 확정, 집결 장소 안내, 버디 배정에 사용하며 버디에게는 당일 필요한 정보만 공유합니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
           consentLabel: '위 개인정보 수집·이용에 동의합니다.',
           submit: '신청 보내기',
           sending: '보내는 중…',

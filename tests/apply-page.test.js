@@ -110,6 +110,39 @@ test('privacy notice states purpose, retention and the request channel', () => {
   assert.match(html, /buddy/i, 'must disclose sharing with the assigned buddy');
 });
 
+test('the collapsed half of the notice is still readable before consenting', () => {
+  // 고지를 접은 건 길이 때문이지 감추려는 게 아니다. details는 닫혀 있어도
+  // 내용이 DOM에 있어야 하고, hidden이 붙거나 스크립트가 열어줘야 하는
+  // 구조가 되면 동의 전에 읽을 수 없는 고지가 된다.
+  const box = html.match(/<details class="privacy-toggle[^"]*">[\s\S]*?<\/details>/);
+  assert.ok(box, 'the notice detail must live in a details element');
+  const summary = box[0].match(/<summary[\s\S]*?>/)[0];
+  assert.match(summary, /data-i18n="apply\.privacyToggle"/, 'the toggle needs a label');
+  // summary의 display를 바꾸면 브라우저에 따라 펼침 위젯 취급을 잃어 키보드로
+  // 열 수 없게 된다. 마우스로는 멀쩡해 보여서 눈으로는 못 잡는다.
+  assert.doesNotMatch(summary, /\b(?:inline-block|inline-flex|flex|grid|contents|hidden)\b/,
+    'summary must keep its native display');
+  assert.match(box[0], /data-i18n="apply\.privacy"/, 'the full notice belongs inside the toggle');
+  assert.doesNotMatch(box[0], /class="[^"]*\bhidden\b/, 'nothing in the notice may be display:none');
+
+  // 접힌 쪽과 보이는 쪽을 합친 것이 고지 전체다. 요약만 남고 상세가 빠지면
+  // 수집 항목을 알리지 않은 채 동의를 받게 된다.
+  assert.match(html, /data-i18n="apply\.privacySummary"/, 'the always-visible summary must exist');
+  const consent = html.indexOf('name="consent"');
+  assert.ok(html.indexOf('data-i18n="apply.privacySummary"') < consent, 'the notice must precede the checkbox');
+  // 클래스 이름만 찾으면 style 블록의 .privacy-toggle 규칙이 먼저 잡혀
+  // 순서 검사가 늘 통과한다. 마크업 여는 태그로 고정한다.
+  assert.ok(html.indexOf('<details class="privacy-toggle') < consent, 'the toggle must precede the checkbox');
+});
+
+test('every language ships both halves of the privacy notice', () => {
+  // 한쪽 언어에만 키를 넣으면 그 언어에서 고지가 통째로 빈 문단이 된다.
+  for (const key of ['privacySummary', 'privacyToggle', 'privacy']) {
+    const hits = html.match(new RegExp(`^ {10}${key}: '`, 'gm')) || [];
+    assert.equal(hits.length, 2, `${key} must exist in both EN and KO copy`);
+  }
+});
+
 test('nav and shared footer identity stay in sync with index', () => {
   for (const snippet of ['HanBuddy by ZeroOne', '<script src="/assets/analytics.js"></script>']) {
     assert.ok(html.includes(snippet), `apply page missing: ${snippet}`);
