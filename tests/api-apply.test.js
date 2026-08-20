@@ -27,8 +27,8 @@ const { buildApplicationId, buildRow, safeLog, ALLOWED_LOG_KEYS } = handler;
 
 const application = () => ({
   eventId: 'samgyeopsal', slotIso: openFoodSlot(), guests: '1', name: 'Test',
-  nationality: 'France', koreanLevel: 'None', contactMethod: 'WhatsApp', contactId: 'x',
-  paymentMethod: 'Cash', requests: '', source: '', consent: true, language: 'en',
+  nationality: 'France', contactMethod: 'WhatsApp', contactId: 'x',
+  requests: '', source: '', consent: true, language: 'en',
 });
 
 test('application id is readable, KST-dated and free of look-alike characters', () => {
@@ -50,10 +50,8 @@ test('the row matches the sheet header order exactly', () => {
       guests: 2,
       name: 'Julie',
       nationality: 'France',
-      koreanLevel: 'Basic',
       contactMethod: 'WhatsApp',
       contactId: '+82 10 0000 0000',
-      paymentMethod: 'PayPal',
       requests: '',
       source: 'Instagram',
       language: 'en',
@@ -62,7 +60,9 @@ test('the row matches the sheet header order exactly', () => {
   assert.deepEqual(row, [
     '2026-08-06 21:14:03', 'HB-20260806-ABCDEF', 'kbo-jamsil',
     'Open-Air KBO Baseball Night at Jamsil', '2026-08-15 17:00', 2,
-    'Julie', 'France', 'Basic', 'WhatsApp', '+82 10 0000 0000', 'PayPal',
+    // 9·12·17열은 더 이상 묻지 않는 한국어 수준·결제 수단·referrer 자리다.
+    // 비워 두어야 이미 쌓인 신청 행과 열이 어긋나지 않는다.
+    'Julie', 'France', '', 'WhatsApp', '+82 10 0000 0000', '',
     '', 'Instagram', 'en', 'TRUE', '',
   ]);
   assert.equal(row.length, 17);

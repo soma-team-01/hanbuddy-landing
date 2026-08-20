@@ -101,18 +101,6 @@
       outline-offset: 4px;
     }
 
-    /* 선택된 항목은 색만이 아니라 테두리 굵기로도 구분된다. */
-    .choice:has(input:checked) {
-      border-color: var(--color-primary);
-      background: #fff0ec;
-      color: var(--color-primary-strong);
-    }
-
-    .choice:focus-within {
-      outline: 3px solid var(--color-primary-strong);
-      outline-offset: 2px;
-    }
-
     /*
       Tailwind CDN은 이 블록보다 뒤에 스타일시트를 주입한다. 같은 명시도로 쓰면
       .border-line-strong이 이겨서 잘못된 항목이 정상 항목과 똑같이 보인다.
@@ -206,33 +194,26 @@
                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
         </div>
 
-        <fieldset>
-          <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.koreanLevel">Korean level</legend>
-          <div class="mt-2 flex flex-wrap gap-2" data-options="koreanLevel"></div>
-        </fieldset>
-
-        <div>
-          <label for="field-contactMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactMethod">How should we reach you?</label>
-          <select id="field-contactMethod" name="contactMethod" required
-                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
-        </div>
-
-        <div>
-          <label for="field-contactId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactId">Your ID or number there</label>
-          <input type="text" id="field-contactId" name="contactId" maxlength="200" required
-                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
-        </div>
-
-        <div>
-          <label for="field-paymentMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.paymentMethod">Preferred payment method</label>
-          <select id="field-paymentMethod" name="paymentMethod" required
-                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
-        </div>
-
-        <div>
-          <label for="field-requests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.requests">Anything we should prepare for?</label>
-          <textarea id="field-requests" name="requests" rows="3" maxlength="1000"
-                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
+        <!--
+          연락 채널과 그 채널의 아이디는 한 쌍이라 좁은 화면에서도 한 줄에 둔다.
+          라벨 길이가 서로 달라 두 줄로 접히는 쪽이 생기므로, 입력칸은 mt-auto로
+          칸 아래에 붙여 두 열의 높이를 맞춘다.
+        -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col">
+            <label for="field-contactMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactMethod">How should we reach you?</label>
+            <div class="mt-auto pt-2">
+              <select id="field-contactMethod" name="contactMethod" required
+                      class="focusable w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label for="field-contactId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactId">Your ID or number there</label>
+            <div class="mt-auto pt-2">
+              <input type="text" id="field-contactId" name="contactId" maxlength="200" required
+                     class="focusable w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+            </div>
+          </div>
         </div>
 
         <div>
@@ -246,6 +227,12 @@
                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"
                    data-i18n-placeholder="apply.fields.sourceOtherPlaceholder" placeholder="e.g. Reddit, a poster at my school" />
           </div>
+        </div>
+
+        <div>
+          <label for="field-requests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.requests">Anything we should prepare for?</label>
+          <textarea id="field-requests" name="requests" rows="3" maxlength="1000"
+                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
         </div>
 
         <div class="rounded-2xl bg-panel p-5">
@@ -264,13 +251,6 @@
                 data-i18n="apply.submit">Send application</button>
       </form>
     </div>
-
-    <template data-choice-template="koreanLevel">
-      <label class="choice flex cursor-pointer items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm font-semibold">
-        <input type="radio" name="koreanLevel" required />
-        <span data-choice-label></span>
-      </label>
-    </template>
 
     <div class="hidden" data-apply-done>
       <p class="text-4xl" aria-hidden="true">🎉</p>
@@ -396,10 +376,8 @@
             guests: 'How many people, including you?',
             name: 'Full name',
             nationality: 'Nationality',
-            koreanLevel: 'Korean level',
             contactMethod: 'How should we reach you?',
             contactId: 'Your ID or number there',
-            paymentMethod: 'Preferred payment method',
             requests: 'Anything we should prepare for?',
             source: 'How did you hear about us?',
             sourceOther: 'Where did you hear about us?',
@@ -419,7 +397,7 @@
             pickPrompt: 'Pick a highlighted day.',
             noDates: 'No dates are open for this meetup right now. Tell us what you would like on the home page and we will let you know when it opens.',
           },
-          privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
+          privacy: 'We collect your name, nationality, contact details and any requests to confirm your spot, share the meeting point and match you with a buddy, who only sees what they need for the day. We delete it 6 months after the meetup. You can decline, but then we cannot confirm a spot. To see or delete your data, email zeroone.soma@gmail.com.',
           consentLabel: 'I agree to the collection and use of my information above.',
           submit: 'Send application',
           sending: 'Sending…',
@@ -476,10 +454,8 @@
             guests: '본인 포함 몇 분인가요?',
             name: '이름',
             nationality: '국적',
-            koreanLevel: '한국어 수준',
             contactMethod: '어떻게 연락드릴까요?',
             contactId: '해당 채널의 아이디나 번호',
-            paymentMethod: '희망 결제 수단',
             requests: '미리 준비할 것이 있을까요?',
             source: '어떻게 알고 오셨나요?',
             sourceOther: '어디에서 알게 되셨나요?',
@@ -499,7 +475,7 @@
             pickPrompt: '강조된 날짜 중에서 골라 주세요.',
             noDates: '지금은 신청할 수 있는 날짜가 없어요. 홈에서 원하는 활동을 알려주시면 열릴 때 알려드릴게요.',
           },
-          privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
+          privacy: '자리 확정, 집결 장소 안내, 버디 배정을 위해 이름, 국적, 연락처, 요청사항을 수집하며 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
           consentLabel: '위 개인정보 수집·이용에 동의합니다.',
           submit: '신청 보내기',
           sending: '보내는 중…',
@@ -658,20 +634,7 @@
 
     // 선택지 값은 시트에 그대로 저장되므로 언어와 무관하게 영문 그대로 쓴다.
     const renderChoices = () => {
-      const container = document.querySelector('[data-options="koreanLevel"]');
-      const template = document.querySelector('[data-choice-template="koreanLevel"]');
-      const chosen = form.elements.koreanLevel ? form.elements.koreanLevel.value : '';
-      clear(container);
-      VALIDATION.FIELD_OPTIONS.koreanLevel.forEach((value, index) => {
-        const row = template.content.cloneNode(true);
-        const input = row.querySelector('input');
-        input.value = value;
-        if (value === chosen || (!chosen && index === 0)) input.checked = true;
-        row.querySelector('[data-choice-label]').textContent = value;
-        container.appendChild(row);
-      });
-
-      for (const field of ['contactMethod', 'paymentMethod', 'source']) {
+      for (const field of ['contactMethod', 'source']) {
         const select = form.elements[field];
         const previous = select.value;
         clear(select);
@@ -766,10 +729,8 @@
         guests: form.elements.guests.value,
         name: form.elements.name.value,
         nationality: form.elements.nationality.value,
-        koreanLevel: form.querySelector('input[name="koreanLevel"]:checked')?.value || '',
         contactMethod: form.elements.contactMethod.value,
         contactId: form.elements.contactId.value,
-        paymentMethod: form.elements.paymentMethod.value,
         requests: form.elements.requests.value,
         source: form.elements.source.value,
         sourceOther: form.elements.sourceOther.value,

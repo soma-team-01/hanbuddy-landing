@@ -46,15 +46,16 @@ const buildRow = ({ applicationId, timestampKst, value }) => [
   value.guests,
   value.name,
   value.nationality,
-  value.koreanLevel,
+  // 더 이상 묻지 않는 한국어 수준 열. 아래 결제 수단·referrer와 함께 비워 둔다.
+  // 열을 당기면 이미 쌓인 신청 행과 헤더가 한 칸씩 어긋난다.
+  '',
   value.contactMethod,
   value.contactId,
-  value.paymentMethod,
+  '',
   value.requests,
   value.source,
   value.language,
   'TRUE',
-  // 기존 referrer 열을 비워 둬 고정된 A:Q 시트 순서를 보존한다.
   '',
 ];
 
@@ -122,9 +123,8 @@ const notifyDiscord = async ({ applicationId, value, sheetFailed, signal }) => {
     sheetFailed ? '⚠️ **시트 저장 실패** 아래 내용을 수동으로 옮겨주세요' : '🎉 **새 신청**',
     `\`${applicationId}\``,
     `${value.eventTitle} · ${value.slotIso.replace('T', ' ')} · ${value.guests}명`,
-    `${value.name} (${value.nationality}, Korean: ${value.koreanLevel})`,
+    `${value.name} (${value.nationality})`,
     `${value.contactMethod}: ${value.contactId}`,
-    `결제 희망: ${value.paymentMethod}`,
     value.source ? `유입: ${value.source}` : null,
     value.requests ? `요청: ${value.requests}` : null,
   ].filter(Boolean);

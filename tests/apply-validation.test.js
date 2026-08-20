@@ -16,10 +16,8 @@ const valid = () => ({
   guests: '2',
   name: 'Julie Martin',
   nationality: 'France',
-  koreanLevel: 'Basic',
   contactMethod: 'WhatsApp',
   contactId: '+82 10 1234 5678',
-  paymentMethod: 'PayPal',
   requests: '',
   source: 'Instagram',
   consent: true,
@@ -36,7 +34,7 @@ test('a complete application passes and comes back normalised', () => {
 
 test('every required field is enforced and reported by name', () => {
   for (const field of ['eventId', 'slotIso', 'guests', 'name', 'nationality',
-    'koreanLevel', 'contactMethod', 'contactId', 'paymentMethod']) {
+    'contactMethod', 'contactId']) {
     const payload = valid();
     payload[field] = '';
     const result = validateApplication(payload, AUG10);
@@ -67,9 +65,7 @@ test('free text is capped so a huge payload cannot be pushed into the sheet', ()
 });
 
 test('choice fields only accept values the form offers', () => {
-  assert.equal(validateApplication({ ...valid(), koreanLevel: 'Native' }, AUG10).field, 'koreanLevel');
   assert.equal(validateApplication({ ...valid(), contactMethod: 'Telegram' }, AUG10).field, 'contactMethod');
-  assert.equal(validateApplication({ ...valid(), paymentMethod: 'Crypto' }, AUG10).field, 'paymentMethod');
   assert.equal(validateApplication({ ...valid(), source: 'TikTok' }, AUG10).field, 'source');
   // source는 선택 항목이라 비어 있어도 된다.
   assert.equal(validateApplication({ ...valid(), source: '' }, AUG10).ok, true);
@@ -115,8 +111,8 @@ test('the honeypot silently fails validation', () => {
 });
 
 test('form options are exposed for the page to render', () => {
-  assert.deepEqual(FIELD_OPTIONS.koreanLevel, ['None', 'Basic', 'Intermediate', 'Fluent']);
   assert.ok(FIELD_OPTIONS.contactMethod.includes('KakaoTalk'));
+  assert.ok(FIELD_OPTIONS.source.includes('Instagram'));
 });
 
 // 상시 오픈 회차는 서버가 날짜를 직접 판정한다. 폼의 select는 브라우저에만 있고,

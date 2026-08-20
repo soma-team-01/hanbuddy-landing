@@ -9,7 +9,7 @@ const indexHtml = readFileSync(join(root, 'index.html'), 'utf8');
 
 test('every required field is present, labelled and marked required', () => {
   for (const name of ['eventId', 'slotIso', 'guests', 'name', 'nationality',
-    'koreanLevel', 'contactMethod', 'contactId', 'paymentMethod', 'consent']) {
+    'contactMethod', 'contactId', 'consent']) {
     assert.match(html, new RegExp(`name="${name}"`), `missing field: ${name}`);
   }
   // 라벨이 입력과 연결되어야 스크린리더가 읽는다.
@@ -17,6 +17,32 @@ test('every required field is present, labelled and marked required', () => {
     assert.match(html, new RegExp(`<label[^>]*for="${id}"`), `missing label for ${id}`);
     assert.match(html, new RegExp(`id="${id}"[^>]*required`), `${id} must be required`);
   }
+});
+
+test('the fields we stopped asking for are gone from every layer of the page', () => {
+  // 필드 하나는 마크업·i18n·payload 세 군데에 흩어져 있다. 한 군데만 지우면
+  // 라벨은 사라졌는데 payload가 undefined를 보내거나 그 반대가 된다.
+  for (const field of ['koreanLevel', 'paymentMethod']) {
+    assert.doesNotMatch(html, new RegExp(field), `${field} still appears on the page`);
+  }
+});
+
+test('the contact channel and its ID share one row on every screen width', () => {
+  // 폼 길이를 줄이려고 붙인 한 줄이다. sm: 접두사가 붙으면 정작 길이가 문제인
+  // 모바일에서만 두 줄로 돌아간다.
+  const row = html.match(/<div class="grid grid-cols-2[^"]*">[\s\S]*?field-contactId[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/);
+  assert.ok(row, 'contactMethod and contactId must sit in one grid row');
+  assert.match(row[0], /field-contactMethod/);
+  assert.doesNotMatch(row[0], /sm:grid-cols|md:grid-cols/, 'the row must not collapse on mobile');
+});
+
+test('the optional questions come after the one we act on', () => {
+  // 유입 경로는 우리 참고용이고 요청사항은 당일 준비에 쓴다. 준비할 것이
+  // 마지막에 있어야 신청자가 방금 고른 회차를 떠올리며 적는다.
+  const source = html.indexOf('name="source"');
+  const requests = html.indexOf('name="requests"');
+  assert.ok(source > 0 && requests > 0, 'both fields must exist');
+  assert.ok(source < requests, 'the source question must come before the requests box');
 });
 
 test('choosing Other on the source reveals a text input', () => {

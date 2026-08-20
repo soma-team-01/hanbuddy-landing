@@ -8,9 +8,7 @@
   if (root) root.HanBuddyApplyValidation = api;
 })(typeof window === 'undefined' ? null : window, (slots) => {
   const FIELD_OPTIONS = Object.freeze({
-    koreanLevel: ['None', 'Basic', 'Intermediate', 'Fluent'],
     contactMethod: ['WhatsApp', 'LINE', 'KakaoTalk', 'Instagram DM', 'WeChat', 'Other'],
-    paymentMethod: ['Korean bank transfer', 'PayPal', 'Card payment link', 'Cash', 'I need help'],
     source: ['Offline promotion', 'Meetup', 'Instagram', 'Friend', 'University community', 'Other'],
   });
 
@@ -39,9 +37,7 @@
       if (!value || value.length > MAX_LENGTH[field]) return fail(field);
     }
 
-    for (const field of ['koreanLevel', 'contactMethod', 'paymentMethod']) {
-      if (!FIELD_OPTIONS[field].includes(text(payload[field]))) return fail(field);
-    }
+    if (!FIELD_OPTIONS.contactMethod.includes(text(payload.contactMethod))) return fail('contactMethod');
 
     const source = text(payload.source);
     if (source && !FIELD_OPTIONS.source.includes(source)) return fail('source');
@@ -70,10 +66,8 @@
         guests,
         name: text(payload.name),
         nationality: text(payload.nationality),
-        koreanLevel: text(payload.koreanLevel),
         contactMethod: text(payload.contactMethod),
         contactId: text(payload.contactId),
-        paymentMethod: text(payload.paymentMethod),
         requests,
         source: storedSource,
         language,
