@@ -73,7 +73,7 @@ test('about upcoming entries carry no hardcoded dates (they go stale)', () => {
   for (const entry of upcomingEntries) {
     assert.doesNotMatch(
       entry,
-      /\d{4}\.\d{2}|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d+월\s*\d+|coming soon|공개 예정/,
+      /\b\d{4}[./-]\d{1,2}(?:[./-]\d{1,2})?\b|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d+월\s*\d+|coming soon|공개 예정/,
       `예정 회차에 날짜성 문자열이 박혀 있다: ${entry}`,
     );
   }
@@ -86,6 +86,9 @@ test('about carries exactly one guest quote and points at index #reviews', () =>
   assert.match(aboutHtml, /fantastic job of explaining/, 'about must carry the approved explaining quote (EN)');
   assert.match(aboutHtml, /무슨 일이 벌어지고 있는지/, 'about must carry the approved explaining quote (KO)');
   assert.match(aboutHtml, /href="\/#reviews"[^>]*data-i18n="how\.quoteLink"/, 'quote must link to index #reviews');
+  // "딱 하나"를 실제로 센다 — 존재만 확인하면 인용 블록이 늘어나도 통과해 버린다.
+  assert.equal((aboutHtml.match(/data-i18n="how\.quote"/g) ?? []).length, 1, 'quote block must appear exactly once');
+  assert.equal((aboutHtml.match(/data-i18n="how\.quoteLink"/g) ?? []).length, 1, 'review link must appear exactly once');
 
   // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
   // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
