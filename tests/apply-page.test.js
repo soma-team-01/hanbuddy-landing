@@ -35,7 +35,9 @@ test('the contact channel and its ID read as one field on every screen width', (
   assert.ok(pair, 'contactMethod and contactId must share one bordered box');
   assert.match(pair[0], /id="field-contactMethod"/);
   assert.match(pair[0], /id="field-contactId"/);
-  assert.doesNotMatch(pair[0], /sm:|md:/, 'the pair must not restack on mobile');
+  // 표준 중단점 전부 + 이 레포가 실제로 쓰는 임의 중단점(min-[380px]:)까지 막는다.
+  // 하나라도 빠지면 "모든 폭에서 한 줄"이라는 계약이 그 폭에서만 조용히 깨진다.
+  assert.doesNotMatch(pair[0], /\b(?:sm|md|lg|xl|2xl):|min-\[/, 'the pair must not restack at any width');
 
   // 제목이 하나뿐이니 각 칸의 역할은 sr-only 라벨만 말한다. 이게 빠지면
   // 스크린리더에는 이름 없는 입력 두 개가 남는다.
