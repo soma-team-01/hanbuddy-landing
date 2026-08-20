@@ -37,7 +37,7 @@ test('the contact channel and its ID read as one field on every screen width', (
   assert.match(pair[0], /id="field-contactId"/);
   // 표준 중단점 전부 + 이 레포가 실제로 쓰는 임의 중단점(min-[380px]:)까지 막는다.
   // 하나라도 빠지면 "모든 폭에서 한 줄"이라는 계약이 그 폭에서만 조용히 깨진다.
-  assert.doesNotMatch(pair[0], /\b(?:sm|md|lg|xl|2xl):|min-\[/, 'the pair must not restack at any width');
+  assert.doesNotMatch(pair[0], /\b(?:sm|md|lg|xl|2xl):|\b(?:min|max)-\[/, 'the pair must not restack at any width');
 
   // 제목이 하나뿐이니 각 칸의 역할은 sr-only 라벨만 말한다. 이게 빠지면
   // 스크린리더에는 이름 없는 입력 두 개가 남는다.
@@ -123,7 +123,10 @@ test('the collapsed half of the notice is still readable before consenting', () 
   assert.doesNotMatch(summary, /\b(?:inline-block|inline-flex|flex|grid|contents|hidden)\b/,
     'summary must keep its native display');
   assert.match(box[0], /data-i18n="apply\.privacy"/, 'the full notice belongs inside the toggle');
-  assert.doesNotMatch(box[0], /class="[^"]*\bhidden\b/, 'nothing in the notice may be display:none');
+  // 클래스만 보면 hidden 속성이나 aria-hidden, 인라인 display:none으로도
+  // 같은 사고가 난다. 감추는 수단을 전부 차단한다.
+  assert.doesNotMatch(box[0], /class="[^"]*\bhidden\b|\shidden[\s>]|aria-hidden="true"|display:\s*none/,
+    'nothing in the notice may be hidden from anyone');
 
   // 접힌 쪽과 보이는 쪽을 합친 것이 고지 전체다. 요약만 남고 상세가 빠지면
   // 수집 항목을 알리지 않은 채 동의를 받게 된다.
@@ -137,9 +140,15 @@ test('the collapsed half of the notice is still readable before consenting', () 
 
 test('every language ships both halves of the privacy notice', () => {
   // 한쪽 언어에만 키를 넣으면 그 언어에서 고지가 통째로 빈 문단이 된다.
+  // 전체 개수만 세면 EN에 두 번, KO에 0번이어도 통과하므로 블록을 갈라 센다.
+  const koStart = html.indexOf('      ko: {');
+  assert.ok(koStart > 0, 'the KO copy block must exist');
+  const blocks = { EN: html.slice(0, koStart), KO: html.slice(koStart) };
   for (const key of ['privacySummary', 'privacyToggle', 'privacy']) {
-    const hits = html.match(new RegExp(`^ {10}${key}: '`, 'gm')) || [];
-    assert.equal(hits.length, 2, `${key} must exist in both EN and KO copy`);
+    for (const [lang, block] of Object.entries(blocks)) {
+      const hits = block.match(new RegExp(`^ {10}${key}: '`, 'gm')) || [];
+      assert.equal(hits.length, 1, `${key} must appear exactly once in ${lang}`);
+    }
   }
 });
 
