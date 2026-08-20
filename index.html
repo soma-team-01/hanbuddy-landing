@@ -728,7 +728,9 @@
         </div>
 
         <div class="relative mx-auto mt-12 max-w-5xl sm:px-14">
-          <!-- 모바일은 카드 1장만 보이므로 내용 높이대로, 여러 장 보이는 화면부터 높이를 맞춘다 -->
+          <!-- 카드 높이는 모든 폭에서 맞춘다(items-stretch, 접두사 없음). 모바일에서 풀었다가
+               높이가 어긋나는 회귀가 있었고 tests/reviews.test.js가 그걸 막고 있다.
+               모바일은 카드가 트랙 폭을 다 써서 한 장만 보이고, 넘길 수 있다는 신호는 아래 화살표가 한다. -->
           <div class="review-track flex items-stretch snap-x snap-mandatory gap-6 overflow-x-auto pb-1"
                role="region" tabindex="0" aria-label="Guest review cards" data-i18n-aria="reviews.trackAria"
                data-review-cards></div>
