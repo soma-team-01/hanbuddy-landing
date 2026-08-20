@@ -101,18 +101,6 @@
       outline-offset: 4px;
     }
 
-    /* 선택된 항목은 색만이 아니라 테두리 굵기로도 구분된다. */
-    .choice:has(input:checked) {
-      border-color: var(--color-primary);
-      background: #fff0ec;
-      color: var(--color-primary-strong);
-    }
-
-    .choice:focus-within {
-      outline: 3px solid var(--color-primary-strong);
-      outline-offset: 2px;
-    }
-
     /*
       Tailwind CDN은 이 블록보다 뒤에 스타일시트를 주입한다. 같은 명시도로 쓰면
       .border-line-strong이 이겨서 잘못된 항목이 정상 항목과 똑같이 보인다.
@@ -123,6 +111,44 @@
     textarea[aria-invalid='true'] {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(209, 63, 50, 0.18);
+    }
+
+    /*
+      연락처 묶음은 테두리가 안쪽 두 칸이 아니라 감싸는 상자에 있다. 초점과
+      오류 표시를 칸에 걸면 테두리 없는 요소에 걸려 아무것도 보이지 않는다.
+      :has()는 명시도가 0,2,0이라 Tailwind의 .border-line-strong을 이긴다.
+    */
+    .contact-pair:focus-within {
+      outline: 3px solid var(--color-primary-strong);
+      outline-offset: 4px;
+    }
+
+    .contact-pair:has([aria-invalid='true']) {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(209, 63, 50, 0.18);
+    }
+
+    /*
+      기본 마커는 브라우저마다 모양과 색이 달라 회색 고지문 옆에서 튄다.
+      직접 그려서 열림 상태를 회전으로 보여준다.
+    */
+    .privacy-toggle > summary {
+      list-style: none;
+    }
+
+    .privacy-toggle > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .privacy-toggle > summary::before {
+      content: '\25B8';
+      display: inline-block;
+      margin-right: 0.375rem;
+      transition: transform 150ms ease;
+    }
+
+    .privacy-toggle[open] > summary::before {
+      transform: rotate(90deg);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -188,16 +214,24 @@
           <div class="mt-2" data-slot-options></div>
         </fieldset>
 
-        <div>
-          <label for="field-guests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.guests">How many people, including you?</label>
-          <input type="number" id="field-guests" name="guests" min="1" max="10" value="1" required inputmode="numeric"
-                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
-        </div>
-
+        <!--
+          지금까지 신청 전원이 1인이라 인원 질문은 기본으로 접는다. 일행이 있는
+          사람만 링크를 눌러 펼친다. 접혀 있어도 input이 DOM에 있어 항상 숫자가
+          전송되므로 검증·API·시트 계약은 그대로다. 서버가 guests 오류를 돌려주면
+          스크립트가 상자를 먼저 펼친 뒤 지목한다.
+        -->
         <div>
           <label for="field-name" class="block text-sm font-bold text-ink" data-i18n="apply.fields.name">Full name</label>
           <input type="text" id="field-name" name="name" maxlength="100" required autocomplete="name"
                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+          <button type="button" data-guests-toggle
+                  class="focusable mt-2 rounded text-sm font-bold text-primary-strong"
+                  data-i18n="apply.guestsToggle">+ Coming with friends?</button>
+          <div class="hidden mt-2" data-guests-box>
+            <label for="field-guests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.guests">How many people, including you?</label>
+            <input type="number" id="field-guests" name="guests" min="1" max="10" value="1" required inputmode="numeric"
+                   class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
+          </div>
         </div>
 
         <div>
@@ -206,34 +240,25 @@
                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
         </div>
 
+        <!--
+          채널과 그 채널의 아이디는 질문 하나의 두 부분이다. 제목을 하나만 두고
+          테두리도 공유해서 한 필드로 읽히게 한다. 화면에서 사라진 각 칸의 역할은
+          sr-only 라벨이 대신 말한다. 초점 링과 오류 테두리는 개별 입력이 아니라
+          묶음(.contact-pair)에 걸어야 한 덩어리로 보이는 모양이 유지된다.
+        -->
         <fieldset>
-          <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.koreanLevel">Korean level</legend>
-          <div class="mt-2 flex flex-wrap gap-2" data-options="koreanLevel"></div>
+          <legend class="text-sm font-bold text-ink" data-i18n="apply.fields.contactMethod">How should we reach you?</legend>
+          <div class="contact-pair mt-2 flex items-stretch overflow-hidden rounded-xl border border-line-strong bg-canvas-soft">
+            <label for="field-contactMethod" class="sr-only" data-i18n="apply.fields.contactChannel">Contact channel</label>
+            <select id="field-contactMethod" name="contactMethod" required
+                    class="w-auto shrink-0 border-0 bg-transparent py-3 pl-4 pr-2 text-base focus:outline-none"></select>
+            <span aria-hidden="true" class="my-2 w-px shrink-0 bg-line-strong"></span>
+            <label for="field-contactId" class="sr-only" data-i18n="apply.fields.contactId">Your ID or number there</label>
+            <input type="text" id="field-contactId" name="contactId" maxlength="200" required
+                   class="w-full min-w-0 border-0 bg-transparent px-4 py-3 text-base focus:outline-none"
+                   data-i18n-placeholder="apply.fields.contactIdPlaceholder" placeholder="ID or phone number" />
+          </div>
         </fieldset>
-
-        <div>
-          <label for="field-contactMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactMethod">How should we reach you?</label>
-          <select id="field-contactMethod" name="contactMethod" required
-                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
-        </div>
-
-        <div>
-          <label for="field-contactId" class="block text-sm font-bold text-ink" data-i18n="apply.fields.contactId">Your ID or number there</label>
-          <input type="text" id="field-contactId" name="contactId" maxlength="200" required
-                 class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
-        </div>
-
-        <div>
-          <label for="field-paymentMethod" class="block text-sm font-bold text-ink" data-i18n="apply.fields.paymentMethod">Preferred payment method</label>
-          <select id="field-paymentMethod" name="paymentMethod" required
-                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></select>
-        </div>
-
-        <div>
-          <label for="field-requests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.requests">Anything we should prepare for?</label>
-          <textarea id="field-requests" name="requests" rows="3" maxlength="1000"
-                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
-        </div>
 
         <div>
           <label for="field-source" class="block text-sm font-bold text-ink" data-i18n="apply.fields.source">How did you hear about us?</label>
@@ -248,8 +273,30 @@
           </div>
         </div>
 
+        <div>
+          <label for="field-requests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.requests">Anything we should prepare for?</label>
+          <textarea id="field-requests" name="requests" rows="3" maxlength="1000"
+                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base"></textarea>
+        </div>
+
+        <!--
+          고지 전문을 그대로 펼쳐 두면 폼 마지막이 글 덩어리가 된다. 목적과 보유
+          기간, 거부했을 때 벌어지는 일만 남기고 나머지는 접는다. details는 닫혀
+          있어도 내용이 DOM에 있어서, 동의 체크 전에 누구나 펼쳐 읽을 수 있다.
+          이 두 벌을 합친 것이 법에서 요구하는 고지 전체다. 한쪽만 고치지 말 것.
+        -->
         <div class="rounded-2xl bg-panel p-5">
-          <p class="text-xs leading-6 text-muted" data-i18n="apply.privacy"></p>
+          <p class="text-xs leading-6 text-muted" data-i18n="apply.privacySummary"></p>
+          <details class="privacy-toggle mt-2">
+            <!--
+              summary의 display는 건드리지 않는다. list-item이 아닌 값(inline-block
+              등)을 주면 브라우저에 따라 펼침 위젯 취급을 잃는다. 초점 링이 한 줄을
+              통째로 두르지 않게 하려는 것뿐이라면 w-fit으로 충분하다.
+            -->
+            <summary class="focusable w-fit cursor-pointer rounded text-xs font-bold text-ink"
+                     data-i18n="apply.privacyToggle">What we collect and who sees it</summary>
+            <p class="mt-2 text-xs leading-6 text-muted" data-i18n="apply.privacy"></p>
+          </details>
           <label class="mt-3 flex items-start gap-3 text-sm font-semibold text-ink">
             <input type="checkbox" id="field-consent" name="consent" required class="focusable mt-1 h-5 w-5" />
             <span data-i18n="apply.consentLabel">I agree to the collection and use of my information above.</span>
@@ -264,13 +311,6 @@
                 data-i18n="apply.submit">Send application</button>
       </form>
     </div>
-
-    <template data-choice-template="koreanLevel">
-      <label class="choice flex cursor-pointer items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm font-semibold">
-        <input type="radio" name="koreanLevel" required />
-        <span data-choice-label></span>
-      </label>
-    </template>
 
     <div class="hidden" data-apply-done>
       <p class="text-4xl" aria-hidden="true">🎉</p>
@@ -396,15 +436,17 @@
             guests: 'How many people, including you?',
             name: 'Full name',
             nationality: 'Nationality',
-            koreanLevel: 'Korean level',
             contactMethod: 'How should we reach you?',
+            // 화면에는 안 보이지만 스크린리더는 두 칸을 따로 읽는다.
+            contactChannel: 'Contact channel',
             contactId: 'Your ID or number there',
-            paymentMethod: 'Preferred payment method',
+            contactIdPlaceholder: 'ID or phone number',
             requests: 'Anything we should prepare for?',
             source: 'How did you hear about us?',
             sourceOther: 'Where did you hear about us?',
             sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
           },
+          guestsToggle: '+ Coming with friends?',
           pricePerPerson: (amount) => `₩${amount} per person`,
           calendar: {
             months: ['January', 'February', 'March', 'April', 'May', 'June',
@@ -419,7 +461,10 @@
             pickPrompt: 'Pick a highlighted day.',
             noDates: 'No dates are open for this meetup right now. Tell us what you would like on the home page and we will let you know when it opens.',
           },
-          privacy: 'We collect your name, nationality, Korean level, contact details, payment preference and any requests to run this meetup: confirming your spot, arranging payment, sharing the meeting point, and matching you with a buddy. Your assigned buddy sees what they need for the day. We keep it for 6 months after the meetup, then delete it. You can decline, but we cannot confirm a spot without it. To see or delete your data, email zeroone.soma@gmail.com.',
+          // 항상 보이는 두 줄. 나머지는 privacyToggle을 눌러야 나온다.
+          privacySummary: 'We use your details to run this meetup and delete them 6 months after. Declining means we cannot confirm a spot.',
+          privacyToggle: 'What we collect and who sees it',
+          privacy: 'Your name, nationality, contact details, the booking you make here (meetup, date, party size, requests, how you found us) and the language you apply in. We use them to confirm your spot, share the meeting point and match you with a buddy, who only sees what they need for the day. To see or delete your data, email zeroone.soma@gmail.com.',
           consentLabel: 'I agree to the collection and use of my information above.',
           submit: 'Send application',
           sending: 'Sending…',
@@ -476,15 +521,16 @@
             guests: '본인 포함 몇 분인가요?',
             name: '이름',
             nationality: '국적',
-            koreanLevel: '한국어 수준',
             contactMethod: '어떻게 연락드릴까요?',
+            contactChannel: '연락 채널',
             contactId: '해당 채널의 아이디나 번호',
-            paymentMethod: '희망 결제 수단',
+            contactIdPlaceholder: '아이디 또는 전화번호',
             requests: '미리 준비할 것이 있을까요?',
             source: '어떻게 알고 오셨나요?',
             sourceOther: '어디에서 알게 되셨나요?',
             sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
           },
+          guestsToggle: '+ 일행이 있나요?',
           pricePerPerson: (amount) => `1인 ₩${amount}`,
           calendar: {
             months: ['1월', '2월', '3월', '4월', '5월', '6월',
@@ -499,7 +545,9 @@
             pickPrompt: '강조된 날짜 중에서 골라 주세요.',
             noDates: '지금은 신청할 수 있는 날짜가 없어요. 홈에서 원하는 활동을 알려주시면 열릴 때 알려드릴게요.',
           },
-          privacy: '이 회차 운영을 위해 이름, 국적, 한국어 수준, 연락처, 희망 결제 수단, 요청사항을 수집합니다. 참가 확인, 결제 안내, 집결 장소 공유, 버디 배정에 사용하며 배정된 버디에게는 당일 필요한 정보만 공유합니다. 행사 종료 후 6개월간 보관한 뒤 파기합니다. 동의를 거부하실 수 있으나 그 경우 자리를 확정해 드릴 수 없습니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
+          privacySummary: '이 모임 운영을 위해 신청 정보를 수집하며 행사 종료 후 6개월간 보관한 뒤 파기합니다. 거부하시면 자리를 확정해 드릴 수 없습니다.',
+          privacyToggle: '수집 항목과 공유 범위',
+          privacy: '이름, 국적, 연락처, 신청 내용(모임, 날짜, 인원, 요청사항, 유입 경로), 신청 언어를 수집합니다. 자리 확정, 집결 장소 안내, 버디 배정에 사용하며 버디에게는 당일 필요한 정보만 공유합니다. 열람·삭제 요청은 zeroone.soma@gmail.com으로 보내주세요.',
           consentLabel: '위 개인정보 수집·이용에 동의합니다.',
           submit: '신청 보내기',
           sending: '보내는 중…',
@@ -658,20 +706,7 @@
 
     // 선택지 값은 시트에 그대로 저장되므로 언어와 무관하게 영문 그대로 쓴다.
     const renderChoices = () => {
-      const container = document.querySelector('[data-options="koreanLevel"]');
-      const template = document.querySelector('[data-choice-template="koreanLevel"]');
-      const chosen = form.elements.koreanLevel ? form.elements.koreanLevel.value : '';
-      clear(container);
-      VALIDATION.FIELD_OPTIONS.koreanLevel.forEach((value, index) => {
-        const row = template.content.cloneNode(true);
-        const input = row.querySelector('input');
-        input.value = value;
-        if (value === chosen || (!chosen && index === 0)) input.checked = true;
-        row.querySelector('[data-choice-label]').textContent = value;
-        container.appendChild(row);
-      });
-
-      for (const field of ['contactMethod', 'paymentMethod', 'source']) {
+      for (const field of ['contactMethod', 'source']) {
         const select = form.elements[field];
         const previous = select.value;
         clear(select);
@@ -702,6 +737,9 @@
       const target = field === 'slotIso'
         ? datePicker.element
         : (input && input.length ? input[0] : input);
+      // 접힌 인원 상자를 지목해야 하면 먼저 펼친다. 안 그러면 포커스도
+      // 스크롤도 갈 곳이 없어 오류가 화면에 안 보인다.
+      if (field === 'guests') revealGuests();
       errorBox.textContent = copy.apply.errors.field;
       errorBox.classList.remove('hidden');
       if (target) {
@@ -740,6 +778,17 @@
     form.elements.eventId.addEventListener('change', () => renderSlots(currentLanguage()));
 
     // Other를 골랐을 때만 직접 입력을 보여주고, 되돌리면 값도 비운다.
+    // 인원 입력은 접어서 시작한다. 한번 펼치면 되돌리지 않는다. 값을 1로
+    // 두면 접힌 것과 같은 신청이라 접기 버튼까지 만들 이유가 없다.
+    const guestsToggle = form.querySelector('[data-guests-toggle]');
+    const guestsBox = document.querySelector('[data-guests-box]');
+    const revealGuests = ({ focusWhenRevealed = false } = {}) => {
+      guestsToggle.classList.add('hidden');
+      guestsBox.classList.remove('hidden');
+      if (focusWhenRevealed) form.elements.guests.focus();
+    };
+    guestsToggle.addEventListener('click', () => revealGuests({ focusWhenRevealed: true }));
+
     const sourceOtherBox = document.querySelector('[data-source-other]');
     // 포커스 이동은 방금 Other를 고른 사람에게만 의미가 있다. 언어 전환에서도
     // 이 함수를 부르는데, 거기서 포커스를 옮기면 EN/KO 버튼을 누른 키보드
@@ -766,10 +815,8 @@
         guests: form.elements.guests.value,
         name: form.elements.name.value,
         nationality: form.elements.nationality.value,
-        koreanLevel: form.querySelector('input[name="koreanLevel"]:checked')?.value || '',
         contactMethod: form.elements.contactMethod.value,
         contactId: form.elements.contactId.value,
-        paymentMethod: form.elements.paymentMethod.value,
         requests: form.elements.requests.value,
         source: form.elements.source.value,
         sourceOther: form.elements.sourceOther.value,

@@ -9,13 +9,72 @@ const indexHtml = readFileSync(join(root, 'index.html'), 'utf8');
 
 test('every required field is present, labelled and marked required', () => {
   for (const name of ['eventId', 'slotIso', 'guests', 'name', 'nationality',
-    'koreanLevel', 'contactMethod', 'contactId', 'paymentMethod', 'consent']) {
+    'contactMethod', 'contactId', 'consent']) {
     assert.match(html, new RegExp(`name="${name}"`), `missing field: ${name}`);
   }
   // 라벨이 입력과 연결되어야 스크린리더가 읽는다.
   for (const id of ['field-name', 'field-nationality', 'field-contactId', 'field-guests']) {
     assert.match(html, new RegExp(`<label[^>]*for="${id}"`), `missing label for ${id}`);
     assert.match(html, new RegExp(`id="${id}"[^>]*required`), `${id} must be required`);
+  }
+});
+
+test('the fields we stopped asking for are gone from every layer of the page', () => {
+  // 필드 하나는 마크업·i18n·payload 세 군데에 흩어져 있다. 한 군데만 지우면
+  // 라벨은 사라졌는데 payload가 undefined를 보내거나 그 반대가 된다.
+  for (const field of ['koreanLevel', 'paymentMethod']) {
+    assert.doesNotMatch(html, new RegExp(field), `${field} still appears on the page`);
+  }
+});
+
+test('the contact channel and its ID read as one field on every screen width', () => {
+  // 폼 길이를 줄이려고 제목 하나에 칸 둘을 묶었다. 테두리를 공유하는 상자가
+  // 사라지면 다시 따로 노는 두 필드로 보인다. sm: 접두사가 붙으면 정작 길이가
+  // 문제인 모바일에서만 두 줄로 돌아간다.
+  const pair = html.match(/<div class="contact-pair[^"]*">[\s\S]*?<\/div>/);
+  assert.ok(pair, 'contactMethod and contactId must share one bordered box');
+  assert.match(pair[0], /id="field-contactMethod"/);
+  assert.match(pair[0], /id="field-contactId"/);
+  // 표준 중단점 전부 + 이 레포가 실제로 쓰는 임의 중단점(min-[380px]:)까지 막는다.
+  // 하나라도 빠지면 "모든 폭에서 한 줄"이라는 계약이 그 폭에서만 조용히 깨진다.
+  assert.doesNotMatch(pair[0], /\b(?:sm|md|lg|xl|2xl):|\b(?:min|max)-\[/, 'the pair must not restack at any width');
+
+  // 제목이 하나뿐이니 각 칸의 역할은 sr-only 라벨만 말한다. 이게 빠지면
+  // 스크린리더에는 이름 없는 입력 두 개가 남는다.
+  for (const id of ['field-contactMethod', 'field-contactId']) {
+    assert.match(html, new RegExp(`<label for="${id}" class="sr-only"`), `${id} needs an sr-only label`);
+  }
+  assert.match(html, /<legend[^>]*data-i18n="apply\.fields\.contactMethod"/, 'the pair needs one visible heading');
+
+  // 안쪽 칸에는 테두리가 없다. 초점과 오류 표시를 칸에 걸면 아무것도 안 보인다.
+  assert.match(html, /\.contact-pair:focus-within/);
+  assert.match(html, /\.contact-pair:has\(\[aria-invalid='true'\]\)/);
+});
+
+test('the optional questions come after the one we act on', () => {
+  // 유입 경로는 우리 참고용이고 요청사항은 당일 준비에 쓴다. 준비할 것이
+  // 마지막에 있어야 신청자가 방금 고른 회차를 떠올리며 적는다.
+  const source = html.indexOf('name="source"');
+  const requests = html.indexOf('name="requests"');
+  assert.ok(source > 0 && requests > 0, 'both fields must exist');
+  assert.ok(source < requests, 'the source question must come before the requests box');
+});
+
+test('the guests question starts folded behind the friends link', () => {
+  // 지금까지 신청 전원이 1인이라 인원 입력은 접혀서 시작한다. 접혀 있어도
+  // input이 DOM에 있어 항상 숫자가 전송되므로 폼 계약은 그대로다.
+  assert.match(html, /<button type="button" data-guests-toggle/);
+  const box = html.match(/<div class="hidden mt-2" data-guests-box>[\s\S]*?<\/div>/);
+  assert.ok(box, 'the guests box must start hidden');
+  assert.match(box[0], /name="guests"/);
+  assert.match(box[0], /value="1"/, 'the folded state must submit 1');
+  assert.match(html, /guestsToggle\.addEventListener\('click'/, 'the link must reveal the box');
+  // 서버가 guests 오류를 돌려주면 접힌 상자를 먼저 펼쳐야 오류가 보인다.
+  assert.match(html, /if \(field === 'guests'\) revealGuests\(\);/);
+  // 링크 카피는 EN/KO 양쪽에 있어야 한다.
+  const koStart = html.indexOf('      ko: {');
+  for (const [lang, block] of Object.entries({ EN: html.slice(0, koStart), KO: html.slice(koStart) })) {
+    assert.match(block, /guestsToggle: '/, `guestsToggle copy missing in ${lang}`);
   }
 });
 
@@ -67,6 +126,48 @@ test('privacy notice states purpose, retention and the request channel', () => {
   assert.match(html, /6 months|6개월/);
   assert.match(html, /zeroone\.soma@gmail\.com/);
   assert.match(html, /buddy/i, 'must disclose sharing with the assigned buddy');
+});
+
+test('the collapsed half of the notice is still readable before consenting', () => {
+  // 고지를 접은 건 길이 때문이지 감추려는 게 아니다. details는 닫혀 있어도
+  // 내용이 DOM에 있어야 하고, hidden이 붙거나 스크립트가 열어줘야 하는
+  // 구조가 되면 동의 전에 읽을 수 없는 고지가 된다.
+  const box = html.match(/<details class="privacy-toggle[^"]*">[\s\S]*?<\/details>/);
+  assert.ok(box, 'the notice detail must live in a details element');
+  const summary = box[0].match(/<summary[\s\S]*?>/)[0];
+  assert.match(summary, /data-i18n="apply\.privacyToggle"/, 'the toggle needs a label');
+  // summary의 display를 바꾸면 브라우저에 따라 펼침 위젯 취급을 잃어 키보드로
+  // 열 수 없게 된다. 마우스로는 멀쩡해 보여서 눈으로는 못 잡는다.
+  assert.doesNotMatch(summary, /\b(?:inline-block|inline-flex|flex|grid|contents|hidden)\b/,
+    'summary must keep its native display');
+  assert.match(box[0], /data-i18n="apply\.privacy"/, 'the full notice belongs inside the toggle');
+  // 클래스만 보면 hidden 속성이나 aria-hidden, 인라인 display:none으로도
+  // 같은 사고가 난다. 감추는 수단을 전부 차단한다.
+  assert.doesNotMatch(box[0], /class="[^"]*\bhidden\b|\shidden[\s>]|aria-hidden="true"|display:\s*none/,
+    'nothing in the notice may be hidden from anyone');
+
+  // 접힌 쪽과 보이는 쪽을 합친 것이 고지 전체다. 요약만 남고 상세가 빠지면
+  // 수집 항목을 알리지 않은 채 동의를 받게 된다.
+  assert.match(html, /data-i18n="apply\.privacySummary"/, 'the always-visible summary must exist');
+  const consent = html.indexOf('name="consent"');
+  assert.ok(html.indexOf('data-i18n="apply.privacySummary"') < consent, 'the notice must precede the checkbox');
+  // 클래스 이름만 찾으면 style 블록의 .privacy-toggle 규칙이 먼저 잡혀
+  // 순서 검사가 늘 통과한다. 마크업 여는 태그로 고정한다.
+  assert.ok(html.indexOf('<details class="privacy-toggle') < consent, 'the toggle must precede the checkbox');
+});
+
+test('every language ships both halves of the privacy notice', () => {
+  // 한쪽 언어에만 키를 넣으면 그 언어에서 고지가 통째로 빈 문단이 된다.
+  // 전체 개수만 세면 EN에 두 번, KO에 0번이어도 통과하므로 블록을 갈라 센다.
+  const koStart = html.indexOf('      ko: {');
+  assert.ok(koStart > 0, 'the KO copy block must exist');
+  const blocks = { EN: html.slice(0, koStart), KO: html.slice(koStart) };
+  for (const key of ['privacySummary', 'privacyToggle', 'privacy']) {
+    for (const [lang, block] of Object.entries(blocks)) {
+      const hits = block.match(new RegExp(`^ {10}${key}: '`, 'gm')) || [];
+      assert.equal(hits.length, 1, `${key} must appear exactly once in ${lang}`);
+    }
+  }
 });
 
 test('nav and shared footer identity stay in sync with index', () => {
