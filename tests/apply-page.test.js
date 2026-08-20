@@ -60,6 +60,24 @@ test('the optional questions come after the one we act on', () => {
   assert.ok(source < requests, 'the source question must come before the requests box');
 });
 
+test('the guests question starts folded behind the friends link', () => {
+  // 지금까지 신청 전원이 1인이라 인원 입력은 접혀서 시작한다. 접혀 있어도
+  // input이 DOM에 있어 항상 숫자가 전송되므로 폼 계약은 그대로다.
+  assert.match(html, /<button type="button" data-guests-toggle/);
+  const box = html.match(/<div class="hidden mt-2" data-guests-box>[\s\S]*?<\/div>/);
+  assert.ok(box, 'the guests box must start hidden');
+  assert.match(box[0], /name="guests"/);
+  assert.match(box[0], /value="1"/, 'the folded state must submit 1');
+  assert.match(html, /guestsToggle\.addEventListener\('click'/, 'the link must reveal the box');
+  // 서버가 guests 오류를 돌려주면 접힌 상자를 먼저 펼쳐야 오류가 보인다.
+  assert.match(html, /if \(field === 'guests'\) revealGuests\(\);/);
+  // 링크 카피는 EN/KO 양쪽에 있어야 한다.
+  const koStart = html.indexOf('      ko: {');
+  for (const [lang, block] of Object.entries({ EN: html.slice(0, koStart), KO: html.slice(koStart) })) {
+    assert.match(block, /guestsToggle: '/, `guestsToggle copy missing in ${lang}`);
+  }
+});
+
 test('choosing Other on the source reveals a text input', () => {
   assert.match(html, /name="sourceOther"/);
   assert.match(html, /data-source-other/);
