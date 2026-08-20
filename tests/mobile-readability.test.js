@@ -119,3 +119,53 @@ test('the KakaoTalk glyph stays legible when the bubble is inverted', () => {
     assert.match(dot, /fill="var\(--color-ink\)"/, '점은 모두 배경색으로 뚫어야 한다');
   }
 });
+
+test('the hero headline breaks between the two phrases, not mid-phrase', () => {
+  // 두 줄이 되는 폭에서 컨테이너 폭에 맡기면 "Experience Korea like a / local!"처럼
+  // 의미 단위가 잘리고, text-wrap: balance는 줄 폭만 보고 "Experience /
+  // Korea like a local!"을 고른다. em 기반 max-width가 끊는 지점을 고정한다.
+  const rule = html.match(/\.hero-title \{ max-width: ([^;]+); \}/);
+  assert.ok(rule, '제목 폭 제한 규칙이 없다');
+  assert.match(rule[1], /em$/, '두 폰트 크기에 함께 맞으려면 em이어야 한다');
+  // 한 줄이 들어가는 폭에서는 제한이 풀려야 한다.
+  assert.match(
+    html,
+    /@media \(min-width: 880px\) \{\s*\.hero-title \{ max-width: none; \}/,
+    '넓은 화면에서는 제한을 풀어 한 줄로 둔다',
+  );
+  // balance가 살아 있으면 max-width 안에서 다시 어절 단위를 무시한다.
+  const h1 = html.match(/<h1 class="hero-title[^"]*"/);
+  assert.ok(h1);
+  // Tailwind는 같은 것을 두 표기로 쓸 수 있다. 임의값만 막으면 유틸리티
+  // 클래스(text-balance)로 다시 들어온다.
+  assert.doesNotMatch(h1[0], /text-wrap:balance/, 'balance는 끊는 지점을 우리 뜻대로 두지 않는다');
+  assert.doesNotMatch(h1[0], /\btext-balance\b/, 'text-balance 유틸리티도 같은 결과를 낸다');
+});
+
+test('the hero offers exactly one action', () => {
+  // 버튼 둘을 나란히 두려고 폭을 맞추다 보니 "DM us on Instagram"이 칸 안에서
+  // 두 줄이 되어 옆 버튼과 어긋났다(2026-08-18). 히어로의 주 행동은 신청 하나이고,
+  // 문의는 최종 CTA의 아이콘 셋과 푸터가 받는다.
+  const actions = html.match(/<div class="hero-actions[^"]*">([\s\S]*?)<\/div>/);
+  assert.ok(actions, '히어로 버튼 묶음을 찾지 못했다');
+  const links = [...actions[1].matchAll(/<a\s/g)];
+  assert.equal(links.length, 1, `히어로 버튼이 ${links.length}개다`);
+  assert.match(actions[1], /data-cta="apply"/, '남는 하나는 신청 버튼이어야 한다');
+  assert.doesNotMatch(html, /data-i18n="hero\.contactCta"/, '히어로 문의 버튼 카피가 남아 있다');
+  // 문의 경로 자체는 페이지에 남아야 한다.
+  const instagramCtas = [...html.matchAll(/data-cta="instagram"/g)];
+  assert.ok(instagramCtas.length >= 2, 'Instagram 경로가 최종 CTA와 푸터에 남아야 한다');
+});
+
+test('the hero opens on the headline, not a label above it', () => {
+  // "Seoul · Meetups every week"은 제목이 이미 하는 말이었다(2026-08-18 제거).
+  assert.doesNotMatch(html, /data-i18n="hero\.eyebrow"/, '히어로 eyebrow가 다시 붙었다');
+  assert.doesNotMatch(html, /hero-eyebrow/, 'eyebrow 전용 규칙이 남아 있다');
+});
+
+test('the hero lead is desktop-only', () => {
+  // 제목과 버튼만으로 첫 화면이 서고, 본문은 폰에서 넉 줄을 먹고 있었다.
+  const cls = hiddenOnMobile('data-i18n="hero.subtitle"');
+  assert.match(cls, /\bhidden\b/, '히어로 본문은 폰에서 접혀야 한다');
+  assert.match(cls, /\bsm:block\b/, '데스크톱에서는 다시 보여야 한다');
+});
