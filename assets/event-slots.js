@@ -23,6 +23,9 @@
       id: 'kbo-gocheok',
       title: { en: 'Indoor Dome KBO Baseball Night', ko: '고척돔 실내 야구 직관' },
       price: 60000,
+      // 카드에 먼저 보여줄 날짜. 오픈은 전부 열어두되, 사람을 모으고 싶은 날은
+      // 운영자가 고른다. slots에 없는 날이나 지난 날은 카드에서 조용히 빠진다.
+      featured: ['2026-09-01'],
       // 키움 홈경기일만. 원정 기간에는 열리는 날이 없다.
       slots: [
         '2026-08-12T18:00', '2026-08-13T18:00', '2026-08-21T18:00', '2026-08-22T17:00',
@@ -35,6 +38,7 @@
       id: 'kbo-jamsil',
       title: { en: 'Open-Air KBO Baseball Night at Jamsil', ko: '잠실 야외 야구 직관' },
       price: 60000,
+      featured: ['2026-08-30'],
       // 두산과 LG가 함께 쓰는 구장이라 리그 휴식일인 월요일만 비고 거의 매일 열린다.
       slots: [
         '2026-08-12T18:00', '2026-08-13T18:00', '2026-08-14T18:00', '2026-08-15T18:00',
@@ -126,6 +130,40 @@
 
   const toSlot = (iso) => ({ iso, label: slotLabel(iso) });
 
+  // 카드용 짧은 라벨. 집합 시각을 일부러 뺀다: 카드는 "언제쯤 열리나"만 답하고,
+  // 정확한 집합 시각은 날짜를 고르는 신청 캘린더가 말한다.
+  const shortLabel = (iso) => {
+    const ymd = iso.slice(0, 10);
+    const day = weekdayIndex(ymd);
+    const month = Number(ymd.slice(5, 7)) - 1;
+    const dayOfMonth = Number(ymd.slice(8, 10));
+    return {
+      en: `${DAYS_EN[day]}, ${MONTHS_EN[month]} ${dayOfMonth}`,
+      ko: `${month + 1}월 ${dayOfMonth}일 (${DAYS_KO[day]})`,
+    };
+  };
+
+  // 랜딩 카드에 보여줄 날짜. featured(운영자가 밀고 싶은 날)가 먼저 오고,
+  // 남는 자리는 가까운 오픈일이 채운다. 당일은 뺀다: 신청은 받을 수 있지만
+  // 카드에서 "오늘"을 권했다가 몇 시간 뒤 지나가면 첫 칩부터 거짓말이 된다.
+  // 상시 오픈 회차는 빈 배열을 준다. 다음 날짜가 항상 "모레"라 정보가 없고,
+  // 고정 일정처럼 읽히면 "아무 날이나 된다"는 장점이 가려진다.
+  const highlightDates = (event, count = 3, now = Date.now()) => {
+    if (!event || event.recurring || !event.slots) return [];
+    const today = kstToday(now);
+    // slots가 시간순이라는 건 테스트가 지키는 약속이지 이 함수의 전제가 아니다.
+    // 여기서 직접 정렬해야 "가까운 순"이 입력 순서와 무관하게 성립한다.
+    const open = event.slots
+      .filter((iso) => !isSlotPast(iso, now) && iso.slice(0, 10) > today)
+      .sort((a, b) => slotEpoch(a) - slotEpoch(b));
+    const featured = (event.featured || [])
+      .map((ymd) => open.find((iso) => iso.slice(0, 10) === ymd))
+      .filter(Boolean);
+    const rest = open.filter((iso) => !featured.includes(iso));
+    return featured.concat(rest).slice(0, count)
+      .map((iso) => ({ iso, label: shortLabel(iso) }));
+  };
+
   // 상시 오픈 회차가 지금 받을 수 있는 날짜 전부. 폼은 이 목록만 보여주므로
   // 리드타임 이내 날짜는 애초에 고를 수가 없다.
   const recurringDates = (event, now = Date.now()) => {
@@ -178,5 +216,6 @@
     findSlot,
     openDates,
     recurringDates,
+    highlightDates,
   };
 });

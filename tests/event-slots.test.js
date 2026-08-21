@@ -6,6 +6,7 @@ const test = require('node:test');
 const slots = require('../assets/event-slots.js');
 const {
   EVENT_SLOTS, isSlotPast, isWeekend, openEvents, findEvent, findSlot, openDates, recurringDates,
+  highlightDates,
 } = slots;
 
 // 2026-08-10 12:00 KST (월요일)
@@ -82,6 +83,65 @@ test('Korean labels never render an ambiguous 12-hour clock', () => {
         `${event.id} ${slot.iso}: KO 라벨이 24시간제가 아니다 -> ${slot.label.ko}`,
       );
     }
+  }
+});
+
+test('featured days point at real match days', () => {
+  // featured는 운영자가 카드에 먼저 띄우고 싶은 날이다. slots에 없는 날을 적으면
+  // 조용히 무시되므로, 오타를 여기서 잡지 않으면 밀고 싶던 날이 그냥 안 뜬다.
+  for (const event of fixedEvents) {
+    for (const ymd of event.featured || []) {
+      assert.match(ymd, /^\d{4}-\d{2}-\d{2}$/, `bad featured: ${ymd}`);
+      assert.ok(
+        event.slots.some((iso) => iso.slice(0, 10) === ymd),
+        `${event.id} featured ${ymd}는 경기일이 아니다`,
+      );
+    }
+  }
+});
+
+test('card highlights put featured first, skip today and cap the count', () => {
+  // 실데이터는 날짜가 계속 바뀌므로 규칙은 합성 회차로 검사한다. 슬롯을 일부러
+  // 뒤섞어 둔다: "가까운 순"이 선언 순서가 아니라 정렬에서 나와야 한다.
+  const event = {
+    id: 'synthetic',
+    slots: ['2026-08-20T18:00', '2026-08-10T18:00', '2026-08-30T18:00', '2026-08-12T18:00', '2026-08-11T18:00'],
+    featured: ['2026-08-30'],
+  };
+  // 8/10 아침: 당일 경기가 아직 시작 전이라 openDates에는 살아 있는 시각.
+  const morning = Date.parse('2026-08-10T09:00:00+09:00');
+
+  // featured가 맨 앞, 나머지는 가까운 순. 당일(8/10)은 신청은 가능해도 카드에서 뺀다.
+  assert.deepEqual(
+    highlightDates(event, 3, morning).map((slot) => slot.iso),
+    ['2026-08-30T18:00', '2026-08-11T18:00', '2026-08-12T18:00'],
+  );
+  assert.equal(highlightDates(event, 4, morning).length, 4);
+
+  // featured가 지나가면 강조 없이 가까운 순으로 돌아간다.
+  const afterFeatured = Date.parse('2026-08-30T23:00:00+09:00');
+  assert.deepEqual(highlightDates(event, 3, afterFeatured), []);
+
+  // 경기일이 아닌 featured는 무시된다(위 테스트가 실데이터에서 오타를 막는다).
+  const typo = { ...event, featured: ['2026-08-25'] };
+  assert.equal(highlightDates(typo, 3, morning)[0].iso, '2026-08-11T18:00');
+});
+
+test('card highlight labels carry a date but never a meeting time', () => {
+  // 카드는 "언제쯤 열리나"만 답한다. 집합 시각까지 찍으면 신청 캘린더와
+  // 두 군데서 시각을 관리하게 되고, 하나만 고치는 사고가 돌아온다.
+  for (const event of fixedEvents) {
+    const highlights = highlightDates(event, 3, AUG10);
+    assert.ok(highlights.length > 0, `${event.id}에 카드 날짜가 없다`);
+    for (const slot of highlights) {
+      assert.match(slot.label.en, /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), [A-Z][a-z]{2} \d+$/, slot.label.en);
+      assert.match(slot.label.ko, /^\d+월 \d+일 \([일월화수목금토]\)$/, slot.label.ko);
+    }
+  }
+  // 상시 오픈 회차는 카드에 날짜를 찍지 않는다. 다음 날짜가 항상 리드타임 끝이라
+  // 정보가 없고, 고정 일정처럼 읽히면 "아무 날이나"라는 장점이 가려진다.
+  for (const event of recurringEvents) {
+    assert.deepEqual(highlightDates(event, 3, AUG10), []);
   }
 });
 
@@ -234,9 +294,9 @@ test('findSlot rejects unknown events', () => {
 
 const homeHtml = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 
-test('event cards carry no dates at all', () => {
-  // 날짜는 이제 신청 캘린더에서만 고른다. 카드에 날짜가 남아 있으면 그날이
-  // 지나는 순간 거짓말이 되고, "내 날짜가 없네" 하고 떠나는 이탈이 돌아온다.
+test('event cards carry no hardcoded dates', () => {
+  // 카드의 날짜 칩은 렌더 시점에 highlightDates()로 뽑는다. 카피에 날짜를 손으로
+  // 적으면 그날이 지나는 순간 거짓말이 되므로, 하드코딩만은 계속 막는다.
   // 카드 하나치 블록으로 잘라서 본다. 통째로 훑으면 다른 섹션의 날짜까지 걸린다.
   const blocks = homeHtml.split(/\n {12}\{\n/).slice(1);
   for (const event of EVENT_SLOTS) {
