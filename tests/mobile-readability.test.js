@@ -70,7 +70,16 @@ test('event cards render no tagline at all, but life cards keep the any-day line
     html.indexOf('const renderReviewCards'),
   );
   assert.doesNotMatch(renderer, /item\.tagline/, '카드 태그라인 렌더링이 되살아났다');
-  assert.ok(renderer.includes('copy.events.anyDay'), '라이프 카드의 상시 안내 줄이 사라졌다');
+  // 상시 안내는 짧은 판(모바일)·긴 판(데스크톱) 한 쌍이다. 모바일 3열 폭에서는
+  // 긴 문장이 어중간하게 꺾인다("pick"만 다음 줄). 히어로 인용과 같은 계약:
+  // 서로 반대 조건을 들고 있어야 폰에 한 줄만 남는다.
+  const anyShort = renderer.match(/textNode\('p', '([^']*)', copy\.events\.anyDayShort\)/);
+  assert.ok(anyShort, '모바일용 짧은 상시 안내가 없다');
+  assert.match(anyShort[1], /\bsm:hidden\b/, '짧은 판은 데스크톱에서 사라져야 한다');
+  const anyFull = renderer.match(/textNode\('p', '([^']*)', copy\.events\.anyDay\)/);
+  assert.ok(anyFull, '데스크톱용 상시 안내가 없다');
+  assert.match(anyFull[1], /\bhidden\b/, '긴 판은 모바일에서 접혀야 한다');
+  assert.match(anyFull[1], /\bsm:block\b/, '긴 판은 데스크톱에서 다시 보여야 한다');
 });
 
 test('the contact channels sit in one row that matches the primary button width', () => {

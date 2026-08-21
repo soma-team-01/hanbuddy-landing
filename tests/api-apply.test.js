@@ -45,7 +45,7 @@ test('the row matches the sheet header order exactly', () => {
     timestampKst: '2026-08-06 21:14:03',
     value: {
       eventId: 'kbo-jamsil',
-      eventTitle: 'Open-Air KBO Baseball Night at Jamsil',
+      eventTitle: 'Open-Air KBO Baseball Night',
       slotIso: '2026-08-15T17:00',
       guests: 2,
       name: 'Julie',
@@ -59,7 +59,7 @@ test('the row matches the sheet header order exactly', () => {
   });
   assert.deepEqual(row, [
     '2026-08-06 21:14:03', 'HB-20260806-ABCDEF', 'kbo-jamsil',
-    'Open-Air KBO Baseball Night at Jamsil', '2026-08-15 17:00', 2,
+    'Open-Air KBO Baseball Night', '2026-08-15 17:00', 2,
     // 9·12·17열은 더 이상 묻지 않는 한국어 수준·결제 수단·referrer 자리다.
     // 비워 두어야 이미 쌓인 신청 행과 열이 어긋나지 않는다.
     'Julie', 'France', '', 'WhatsApp', '+82 10 0000 0000', '',
