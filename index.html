@@ -1642,9 +1642,10 @@
             content.appendChild(chipRow);
           }
         } else {
-          // 라이프 카드는 모바일 3열이라 여전히 폭이 좁다. 태그라인은 접고,
-          // "아무 날이나 된다"는 한 줄만 남긴다. 카피는 지우지 않는다.
-          content.appendChild(textNode('p', 'mt-1.5 hidden text-sm leading-6 text-muted sm:block', item.tagline));
+          // 라이프 카드도 태그라인 없이 사진·제목·상시 안내 한 줄로 선다(유현님
+          // 결정 2026-08-22, 스포츠 카드와 같은 이유). 카피는 CONTENT_MAP에 남는다.
+          // anyDay 줄은 날짜 칩의 카운터파트라 남긴다: 이게 빠지면 회차 모델
+          // 구분(경기일 고정 vs 아무 날이나)이 카드에서 사라진다.
           content.appendChild(textNode('p', 'mt-1 text-[11px] font-semibold text-muted sm:mt-1.5 sm:text-sm', copy.events.anyDay));
         }
         card.append(figure, content);
