@@ -100,31 +100,40 @@ test('featured days point at real match days', () => {
   }
 });
 
-test('card highlights put featured first, skip today and cap the count', () => {
+test('card highlights start at the featured day and run forward only', () => {
   // 실데이터는 날짜가 계속 바뀌므로 규칙은 합성 회차로 검사한다. 슬롯을 일부러
-  // 뒤섞어 둔다: "가까운 순"이 선언 순서가 아니라 정렬에서 나와야 한다.
+  // 뒤섞어 둔다: 순서가 선언 순서가 아니라 정렬에서 나와야 한다.
   const event = {
     id: 'synthetic',
     slots: ['2026-08-20T18:00', '2026-08-10T18:00', '2026-08-30T18:00', '2026-08-12T18:00', '2026-08-11T18:00'],
-    featured: ['2026-08-30'],
+    featured: ['2026-08-12'],
   };
   // 8/10 아침: 당일 경기가 아직 시작 전이라 openDates에는 살아 있는 시각.
   const morning = Date.parse('2026-08-10T09:00:00+09:00');
 
-  // featured가 맨 앞, 나머지는 가까운 순. 당일(8/10)은 신청은 가능해도 카드에서 뺀다.
+  // featured부터 시간순으로만 나간다(2026-08-22 결정). featured보다 이른 8/11은
+  // 감추고, 당일(8/10)은 신청은 가능해도 카드에서 뺀다. 시간이 역행하는 칩
+  // 나열("9/1 다음 8/23")이 어색하다는 피드백이 이 규칙의 출발점이다.
   assert.deepEqual(
     highlightDates(event, 3, morning).map((slot) => slot.iso),
-    ['2026-08-30T18:00', '2026-08-11T18:00', '2026-08-12T18:00'],
+    ['2026-08-12T18:00', '2026-08-20T18:00', '2026-08-30T18:00'],
   );
-  assert.equal(highlightDates(event, 4, morning).length, 4);
+  assert.equal(highlightDates(event, 2, morning).length, 2, 'count 상한이 안 먹는다');
 
-  // featured가 지나가면 강조 없이 가까운 순으로 돌아간다.
-  const afterFeatured = Date.parse('2026-08-30T23:00:00+09:00');
-  assert.deepEqual(highlightDates(event, 3, afterFeatured), []);
+  // featured가 지나가면 앵커 없이 가까운 순으로 돌아간다.
+  const afterFeatured = Date.parse('2026-08-12T23:00:00+09:00');
+  assert.deepEqual(
+    highlightDates(event, 3, afterFeatured).map((slot) => slot.iso),
+    ['2026-08-20T18:00', '2026-08-30T18:00'],
+  );
 
-  // 경기일이 아닌 featured는 무시된다(위 테스트가 실데이터에서 오타를 막는다).
+  // 경기일이 아닌 featured는 무시된다(다른 테스트가 실데이터에서 오타를 막는다).
   const typo = { ...event, featured: ['2026-08-25'] };
   assert.equal(highlightDates(typo, 3, morning)[0].iso, '2026-08-11T18:00');
+
+  // featured가 여럿이면 가장 이른 살아 있는 날이 앵커가 된다.
+  const multi = { ...event, featured: ['2026-08-30', '2026-08-12'] };
+  assert.equal(highlightDates(multi, 3, morning)[0].iso, '2026-08-12T18:00');
 });
 
 test('card highlight labels carry a date but never a meeting time', () => {

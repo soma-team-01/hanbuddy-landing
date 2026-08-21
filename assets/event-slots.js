@@ -156,12 +156,15 @@
     const open = event.slots
       .filter((iso) => !isSlotPast(iso, now) && iso.slice(0, 10) > today)
       .sort((a, b) => slotEpoch(a) - slotEpoch(b));
-    const featured = (event.featured || [])
-      .map((ymd) => open.find((iso) => iso.slice(0, 10) === ymd))
-      .filter(Boolean);
-    const rest = open.filter((iso) => !featured.includes(iso));
-    return featured.concat(rest).slice(0, count)
-      .map((iso) => ({ iso, label: shortLabel(iso) }));
+    // featured가 살아 있으면 그날부터 순방향으로만 보여준다(2026-08-22 결정).
+    // featured 뒤에 그보다 이른 날짜가 붙으면 시간이 역행해 어색하고, featured
+    // 앞의 가까운 날짜는 일부러 감춰 모으고 싶은 날로 시선을 몬다. featured가
+    // 전부 지나가면 앵커 없이 가까운 순으로 돌아간다.
+    const anchor = (event.featured || [])
+      .filter((ymd) => open.some((iso) => iso.slice(0, 10) === ymd))
+      .sort()[0];
+    const visible = anchor ? open.filter((iso) => iso.slice(0, 10) >= anchor) : open;
+    return visible.slice(0, count).map((iso) => ({ iso, label: shortLabel(iso) }));
   };
 
   // 상시 오픈 회차가 지금 받을 수 있는 날짜 전부. 폼은 이 목록만 보여주므로
