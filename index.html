@@ -27,6 +27,7 @@
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
 
   <script src="/assets/analytics.js"></script>
+  <script src="/assets/event-slots.js"></script>
   <script src="/assets/suggest-validation.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -648,7 +649,11 @@
           </p>
         </div>
 
-        <div class="mt-12 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3" data-event-cards></div>
+        <p class="mt-12 text-sm font-extrabold uppercase tracking-widest text-muted" data-i18n="events.sportHeading">Sports nights</p>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3" data-event-cards-sport></div>
+
+        <p class="mt-10 text-sm font-extrabold uppercase tracking-widest text-muted" data-i18n="events.lifeHeading">Food &amp; chill</p>
+        <div class="mt-4 grid grid-cols-3 gap-3 sm:gap-6" data-event-cards-life></div>
       </div>
     </section>
 
@@ -1023,6 +1028,10 @@
           body: 'Choose the day that works for you when you apply. It takes 2 minutes, and we’ll confirm the details with you.',
           detailAria: 'View event details',
           comingSoonToast: 'Almost ready! Follow @hanbuddy_kr on Instagram to hear first 🙌',
+          sportHeading: 'Sports nights',
+          lifeHeading: 'Food & chill',
+          anyDay: '📅 Any day you pick',
+          moreDates: '+ more dates',
           cards: [
             {
               id: 'kbo-gocheok',
@@ -1250,6 +1259,10 @@
           body: '신청할 때 원하는 날짜를 직접 고르세요. 2분이면 충분하고, 세부 사항은 저희가 직접 안내해 드려요.',
           detailAria: '이벤트 상세 보기',
           comingSoonToast: '준비 중이에요! 오픈 소식은 인스타그램 @hanbuddy_kr에서 가장 먼저 알려드릴게요 🙌',
+          sportHeading: '스포츠 직관',
+          lifeHeading: '푸드 & 피크닉',
+          anyDay: '📅 원하는 날 아무 때나',
+          moreDates: '+ 더 있어요',
           cards: [
             {
               id: 'kbo-gocheok',
@@ -1529,11 +1542,27 @@
       }, 3200);
     };
 
+    // 스포츠 직관은 주력 상품이라 카드를 크게 쓰고 날짜 칩까지 얹는다. 음식·한강은
+    // 아무 날이나 열리는 보조 상품이라 작게 간다. 그룹 소속은 회차 모델(recurring)이
+    // 아니라 이 목록이 정한다: 상품 위계는 운영 판단이지 데이터 모양이 아니다.
+    const SPORT_EVENT_IDS = ['kbo-gocheok', 'kbo-jamsil', 'kleague'];
+    // 데스크톱은 칩 3개까지 보여준다. 하나를 더 받아와서 "+ more dates"를 붙일지
+    // 실제 데이터로 판단한다. 개수를 따로 세면 당일 제외 규칙과 어긋날 수 있다.
+    const CARD_DATE_COUNT = 3;
+    const cardDates = (eventId) => (window.HanBuddyEventSlots
+      ? window.HanBuddyEventSlots.highlightDates(window.HanBuddyEventSlots.findEvent(eventId), CARD_DATE_COUNT + 1)
+      : []);
+
     const renderEventCards = (copy) => {
-      const container = document.querySelector('[data-event-cards]');
-      if (!container) return;
-      clear(container);
+      const sportContainer = document.querySelector('[data-event-cards-sport]');
+      const lifeContainer = document.querySelector('[data-event-cards-life]');
+      if (!sportContainer || !lifeContainer) return;
+      const lang = copy.meta.htmlLang === 'ko' ? 'ko' : 'en';
+      clear(sportContainer);
+      clear(lifeContainer);
       copy.events.cards.forEach((item) => {
+        const isSport = SPORT_EVENT_IDS.includes(item.id);
+        const container = isSport ? sportContainer : lifeContainer;
         const isOpen = item.status === 'open';
         const card = document.createElement(isOpen ? 'a' : 'button');
         card.className = 'group flex flex-col overflow-hidden rounded-2xl border border-line-soft bg-canvas text-left shadow-subtle transition hover:-translate-y-0.5 hover:shadow-raised focusable';
@@ -1548,7 +1577,11 @@
         card.dataset.analyticsContentStatus = item.status;
 
         const figure = document.createElement('figure');
-        figure.className = 'photo-card relative aspect-[16/10] rounded-none';
+        // 스포츠 사진은 모바일 1열 풀폭이라 16/10 그대로 두면 카드 하나가 화면을
+        // 다 먹는다. 납작한 2:1로 눌러 세 장이 한두 스크롤 안에 들어오게 한다.
+        figure.className = isSport
+          ? 'photo-card relative aspect-[2/1] rounded-none sm:aspect-[16/10]'
+          : 'photo-card relative aspect-square rounded-none sm:aspect-[16/10]';
         const img = document.createElement('img');
         img.src = item.image;
         img.loading = 'lazy';
@@ -1556,25 +1589,59 @@
         const altText = getByPath(copy, item.imageAlt);
         if (typeof altText === 'string') img.alt = altText;
         figure.appendChild(img);
-        // 오픈 예정 카드는 가격 배지와 날짜 줄 없이 내보낸다. 라벨로 미리 걸러내지 않은
-        // 상태에서 클릭이 얼마나 나오는지로 수요를 본다(GA select_content, availability_status=soon).
         if (isOpen) {
           figure.appendChild(textNode(
             'span',
-            'absolute left-2.5 top-2.5 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold tracking-tight text-ink shadow-raised sm:left-3 sm:top-3 sm:px-3.5 sm:py-1.5 sm:text-sm',
+            isSport
+              ? 'absolute left-2.5 top-2.5 rounded-full bg-canvas-soft px-3 py-1 text-xs font-extrabold tracking-tight text-ink shadow-raised sm:left-3 sm:top-3 sm:px-3.5 sm:py-1.5 sm:text-sm'
+              : 'absolute left-2 top-2 rounded-full bg-canvas-soft px-2 py-0.5 text-[10px] font-extrabold tracking-tight text-ink shadow-raised sm:left-3 sm:top-3 sm:px-3.5 sm:py-1.5 sm:text-sm',
             item.badge,
           ));
         }
 
         const content = document.createElement('div');
-        content.className = 'flex flex-1 flex-col p-4 sm:p-5';
+        content.className = isSport ? 'flex flex-1 flex-col p-4 sm:p-5' : 'flex flex-1 flex-col p-2.5 sm:p-5';
         content.append(
-          textNode('h3', 'font-display text-base font-extrabold leading-snug tracking-tight text-ink sm:text-lg', `${item.emoji} ${item.title}`),
-          // 한 줄 설명은 데스크톱에서만 보인다. 모바일은 2열이라 폭이 좁아 이 문장이
-          // 3~4줄로 늘어나면서 카드 높이를 324~230px로 들쭉날쭉하게 만들었다.
-          // 사진·가격 배지·제목만으로도 무엇인지 읽히고, 나머지는 상세 페이지가 말한다.
-          textNode('p', 'mt-1.5 hidden text-sm leading-6 text-muted sm:block', item.tagline),
+          textNode(
+            'h3',
+            isSport
+              ? 'font-display text-lg font-extrabold leading-snug tracking-tight text-ink'
+              : 'font-display text-xs font-extrabold leading-snug tracking-tight text-ink sm:text-lg',
+            `${item.emoji} ${item.title}`,
+          ),
         );
+        if (isSport) {
+          // 1열 풀폭이라 태그라인이 한두 줄로 끝난다. 2열 시절의 접기(2026-08-18)는
+          // 폭이 좁아 3~4줄로 늘어나던 문제였고, 그 전제가 사라진 쪽만 되살린다.
+          content.appendChild(textNode('p', 'mt-1 text-sm leading-6 text-muted', item.tagline));
+          const dates = cardDates(item.id);
+          if (dates.length) {
+            const chipRow = document.createElement('div');
+            chipRow.className = 'mt-3 flex flex-wrap items-center gap-1.5';
+            dates.slice(0, CARD_DATE_COUNT).forEach((slot, index) => {
+              // 첫 칩이 featured(없으면 가장 가까운 날)라 브랜드색으로 민다.
+              // 셋째 칩은 좁은 화면에서 "+ more dates"를 둘째 줄로 밀어내므로 숨긴다.
+              let chipClass = index === 0
+                ? 'rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary-strong'
+                : 'rounded-full bg-canvas-soft px-2.5 py-1 text-xs font-bold text-muted ring-1 ring-line-soft';
+              if (index === CARD_DATE_COUNT - 1) chipClass += ' hidden sm:inline-block';
+              chipRow.appendChild(textNode('span', chipClass, slot.label[lang]));
+            });
+            // 모바일은 칩을 2개만 보여주므로 "+ more dates" 기준도 화면마다 다르다.
+            if (dates.length > CARD_DATE_COUNT - 1) {
+              chipRow.appendChild(textNode('span', 'py-1 text-xs font-bold text-muted sm:hidden', copy.events.moreDates));
+            }
+            if (dates.length > CARD_DATE_COUNT) {
+              chipRow.appendChild(textNode('span', 'hidden py-1 text-xs font-bold text-muted sm:inline-block', copy.events.moreDates));
+            }
+            content.appendChild(chipRow);
+          }
+        } else {
+          // 라이프 카드는 모바일 3열이라 여전히 폭이 좁다. 태그라인은 접고,
+          // "아무 날이나 된다"는 한 줄만 남긴다. 카피는 지우지 않는다.
+          content.appendChild(textNode('p', 'mt-1.5 hidden text-sm leading-6 text-muted sm:block', item.tagline));
+          content.appendChild(textNode('p', 'mt-1 text-[11px] font-semibold text-muted sm:mt-1.5 sm:text-sm', copy.events.anyDay));
+        }
         card.append(figure, content);
         container.appendChild(card);
       });
