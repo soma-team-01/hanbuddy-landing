@@ -226,9 +226,9 @@ test('the phone quote is an approved review that the carousel does not open on',
     assert.ok(heroShort, `${locale} hero.quoteShort 카피가 없다`);
 
     const cards = [...block.matchAll(/quote: '(“[^”]+”)'/g)].map((m) => m[1]);
-    // 첫 항목은 히어로 대표 인용이고, 그 뒤가 리뷰 카드 5개다.
+    // 첫 항목은 히어로 대표 인용이고, 그 뒤가 리뷰 카드 7개다.
     const cardQuotes = cards.slice(1);
-    assert.equal(cardQuotes.length, 5, `${locale} 리뷰 카드가 5개가 아니다`);
+    assert.equal(cardQuotes.length, 7, `${locale} 리뷰 카드가 7개가 아니다`);
     assert.ok(cardQuotes.includes(heroShort[1]), `${locale} 폰 인용이 승인된 후기가 아니다`);
     assert.notEqual(
       heroShort[1],
@@ -238,7 +238,7 @@ test('the phone quote is an approved review that the carousel does not open on',
 
     // 클래스 짝만 맞아도 출처가 다른 회차를 가리키면 사실이 틀린다.
     // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
-    const run = (text) => (text.match(/June|July|6월|7월/) ?? [])[0];
+    const run = (text) => (text.match(/June|July|August|6월|7월|8월/) ?? [])[0];
     const metas = [...block.matchAll(/meta: '([^']+)'/g)].map((m) => m[1]);
     const sourceMeta = metas[cardQuotes.indexOf(heroShort[1])];
     const heroShortBy = block.match(/quoteShortBy: '([^']+)'/);

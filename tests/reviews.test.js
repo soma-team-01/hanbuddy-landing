@@ -60,13 +60,13 @@ test('arrow controls stay keyboard- and screen-reader-usable', () => {
   }
 });
 
-test('both locales ship the same five approved review cards', () => {
+test('both locales ship the same seven approved review cards', () => {
   for (const locale of ['en', 'ko']) {
     const block = reviewCardsBlock(locale);
     const quotes = block.match(/quote: '/g) ?? [];
-    assert.equal(quotes.length, 5, `${locale} must have 5 review cards`);
-    assert.equal((block.match(/meta: '/g) ?? []).length, 5, `${locale} cards need meta lines`);
-    assert.equal((block.match(/tag: '/g) ?? []).length, 5, `${locale} cards need program tags`);
+    assert.equal(quotes.length, 7, `${locale} must have 7 review cards`);
+    assert.equal((block.match(/meta: '/g) ?? []).length, 7, `${locale} cards need meta lines`);
+    assert.equal((block.match(/tag: '/g) ?? []).length, 7, `${locale} cards need program tags`);
   }
 });
 
@@ -74,9 +74,13 @@ test('newly added quotes match the approved survey wording', () => {
   const en = reviewCardsBlock('en');
   assert.match(en, /If you are looking to experience Korean baseball culture with local Koreans/);
   assert.match(en, /They did a fantastic job of explaining what was happening during the game/);
+  assert.match(en, /The experience was great! The guide was nice and it was like being with friends/);
+  assert.match(en, /Super fun experience and our guide was super kind, helpful and made the experience amazing!!/);
   const ko = reviewCardsBlock('ko');
   assert.match(ko, /한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면/);
   assert.match(ko, /경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요/);
+  assert.match(ko, /가이드는 친절했고 친구들과 함께 있는 것 같았어요/);
+  assert.match(ko, /가이드가 무척 친절하고 큰 도움이 되어 최고의 경험이 됐어요/);
 });
 
 test('cards run oldest to newest, and the carousel opens on the second one', () => {
@@ -84,15 +88,15 @@ test('cards run oldest to newest, and the carousel opens on the second one', () 
   const quoteOrder = (locale) => [...reviewCardsBlock(locale).matchAll(/quote: '“([^”]+)”'/g)].map((m) => m[1]);
 
   const en = quoteOrder('en');
-  assert.equal(en.length, 5);
+  assert.equal(en.length, 7);
   assert.match(en[0], /^If you are looking to experience Korean baseball culture/);
-  assert.match(en[4], /^They did a fantastic job/);
+  assert.match(en[6], /^Super fun experience and our guide/);
 
   // KO 순서가 EN과 어긋나면 언어를 바꿨을 때 다른 후기가 기본 노출된다.
   const ko = quoteOrder('ko');
-  assert.equal(ko.length, 5);
+  assert.equal(ko.length, 7);
   assert.match(ko[0], /^한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면/);
-  assert.match(ko[4], /^경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요/);
+  assert.match(ko[6], /^정말 재미있는 경험이었고/);
 
   assert.match(indexHtml, /const DEFAULT_REVIEW_CARD_INDEX = 1;/);
   assert.match(indexHtml, /function alignReviewsToDefaultCard\(\)/);

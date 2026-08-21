@@ -92,12 +92,14 @@ test('about carries exactly one guest quote and points at index #reviews', () =>
 
   // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
   // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
-  assert.doesNotMatch(aboutHtml, /4\.7\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
+  assert.doesNotMatch(aboutHtml, /4\.\d\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
   for (const quote of [
     'this is the program you want to join',
     'Great experience to enjoy a baseball game with a local',
     'It was fun to watch the game and cheer together',
     'will definitely be going to another game with HanBuddy',
+    'The guide was nice and it was like being with friends',
+    'Super fun experience and our guide was super kind',
   ]) {
     assert.ok(!aboutHtml.includes(quote), `guest quote duplicated on about: ${quote}`);
   }
