@@ -1035,7 +1035,7 @@
           sportHeading: 'Sports nights',
           lifeHeading: 'Food & chill',
           anyDay: '📅 Any day you pick',
-          moreDates: '+ more dates',
+          anyDayShort: '📅 Any day',
           cards: [
             {
               id: 'kbo-gocheok',
@@ -1054,7 +1054,7 @@
               status: 'open',
               href: '/events/kbo-jamsil/',
               emoji: '⚾',
-              title: 'Open-Air KBO Baseball Night at Jamsil',
+              title: 'Open-Air KBO Baseball Night',
               tagline: 'The open-air classic: floodlights, chants, chicken & beer.',
               badge: '₩60,000',
               image: 'assets/photos/kbo/kbo-0726-lights.webp',
@@ -1267,7 +1267,7 @@
           sportHeading: '스포츠 직관',
           lifeHeading: '푸드 & 피크닉',
           anyDay: '📅 원하는 날 아무 때나',
-          moreDates: '+ 더 있어요',
+          anyDayShort: '📅 아무 날이나',
           cards: [
             {
               id: 'kbo-gocheok',
@@ -1551,11 +1551,10 @@
     // 아무 날이나 열리는 보조 상품이라 작게 간다. 그룹 소속은 회차 모델(recurring)이
     // 아니라 이 목록이 정한다: 상품 위계는 운영 판단이지 데이터 모양이 아니다.
     const SPORT_EVENT_IDS = ['kbo-gocheok', 'kbo-jamsil', 'kleague'];
-    // 데스크톱은 칩 3개까지 보여준다. 하나를 더 받아와서 "+ more dates"를 붙일지
-    // 실제 데이터로 판단한다. 개수를 따로 세면 당일 제외 규칙과 어긋날 수 있다.
+    // 데스크톱은 칩 3개, 모바일은 앞의 2개만 보여준다.
     const CARD_DATE_COUNT = 3;
     const cardDates = (eventId) => (window.HanBuddyEventSlots
-      ? window.HanBuddyEventSlots.highlightDates(window.HanBuddyEventSlots.findEvent(eventId), CARD_DATE_COUNT + 1)
+      ? window.HanBuddyEventSlots.highlightDates(window.HanBuddyEventSlots.findEvent(eventId), CARD_DATE_COUNT)
       : []);
 
     const renderEventCards = (copy) => {
@@ -1616,36 +1615,31 @@
           ),
         );
         if (isSport) {
-          // 스포츠 카드는 어느 화면에서도 태그라인을 그리지 않는다(유현님 결정
-          // 2026-08-22): 사진·제목·날짜 칩만으로 서고, 회색 문단은 제목과 칩
-          // 사이 시선을 끊는다. 카피 자체는 CONTENT_MAP에 남아 있다.
+          // 카드는 어느 화면에서도 태그라인을 그리지 않는다: 사진·제목·날짜 칩만으로
+          // 서고, 회색 문단은 제목과 칩 사이 시선을 끊는다. 카피는 CONTENT_MAP에 남는다.
           const dates = cardDates(item.id);
           if (dates.length) {
             const chipRow = document.createElement('div');
             chipRow.className = 'mt-3 flex flex-wrap items-center gap-1.5';
-            dates.slice(0, CARD_DATE_COUNT).forEach((slot, index) => {
+            dates.forEach((slot, index) => {
               // 첫 칩이 featured(없으면 가장 가까운 날)라 브랜드색으로 민다.
-              // 셋째 칩은 좁은 화면에서 "+ more dates"를 둘째 줄로 밀어내므로 숨긴다.
+              // 셋째 칩은 좁은 화면에서 둘째 줄로 넘어가므로 숨긴다. "+ more"류
+              // 꼬리표는 달지 않는다: 전체 날짜는 어차피 신청 캘린더가 보여준다.
               let chipClass = index === 0
                 ? 'rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary-strong'
                 : 'rounded-full bg-canvas-soft px-2.5 py-1 text-xs font-bold text-muted ring-1 ring-line-soft';
               if (index === CARD_DATE_COUNT - 1) chipClass += ' hidden sm:inline-block';
               chipRow.appendChild(textNode('span', chipClass, slot.label[lang]));
             });
-            // 모바일은 칩을 2개만 보여주므로 "+ more dates" 기준도 화면마다 다르다.
-            if (dates.length > CARD_DATE_COUNT - 1) {
-              chipRow.appendChild(textNode('span', 'py-1 text-xs font-bold text-muted sm:hidden', copy.events.moreDates));
-            }
-            if (dates.length > CARD_DATE_COUNT) {
-              chipRow.appendChild(textNode('span', 'hidden py-1 text-xs font-bold text-muted sm:inline-block', copy.events.moreDates));
-            }
             content.appendChild(chipRow);
           }
         } else {
-          // 라이프 카드는 모바일 3열이라 여전히 폭이 좁다. 태그라인은 접고,
-          // "아무 날이나 된다"는 한 줄만 남긴다. 카피는 지우지 않는다.
-          content.appendChild(textNode('p', 'mt-1.5 hidden text-sm leading-6 text-muted sm:block', item.tagline));
-          content.appendChild(textNode('p', 'mt-1 text-[11px] font-semibold text-muted sm:mt-1.5 sm:text-sm', copy.events.anyDay));
+          // 라이프 카드도 태그라인 없이 사진·제목·상시 안내 한 줄로 선다. anyDay
+          // 줄은 날짜 칩의 카운터파트라 남긴다: 이게 빠지면 회차 모델 구분(경기일
+          // 고정 vs 아무 날이나)이 카드에서 사라진다. 모바일 3열에서는 문장이
+          // 어중간하게 꺾여서("pick"만 다음 줄) 짧은 판을 따로 쓴다.
+          content.appendChild(textNode('p', 'mt-1 text-[11px] font-semibold text-muted sm:hidden', copy.events.anyDayShort));
+          content.appendChild(textNode('p', 'mt-1.5 hidden text-sm font-semibold text-muted sm:block', copy.events.anyDay));
         }
         card.append(figure, content);
         container.appendChild(card);

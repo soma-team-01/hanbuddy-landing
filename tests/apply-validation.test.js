@@ -28,7 +28,7 @@ test('a complete application passes and comes back normalised', () => {
   const result = validateApplication(valid(), AUG10);
   assert.equal(result.ok, true);
   assert.equal(result.value.guests, 2);
-  assert.equal(result.value.eventTitle, 'Open-Air KBO Baseball Night at Jamsil');
+  assert.equal(result.value.eventTitle, 'Open-Air KBO Baseball Night');
   assert.equal(result.value.name, 'Julie Martin');
 });
 

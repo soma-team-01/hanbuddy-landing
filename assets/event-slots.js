@@ -36,7 +36,7 @@
     },
     {
       id: 'kbo-jamsil',
-      title: { en: 'Open-Air KBO Baseball Night at Jamsil', ko: '잠실 야외 야구 직관' },
+      title: { en: 'Open-Air KBO Baseball Night', ko: '잠실 야외 야구 직관' },
       price: 60000,
       featured: ['2026-08-30'],
       // 두산과 LG가 함께 쓰는 구장이라 리그 휴식일인 월요일만 비고 거의 매일 열린다.
