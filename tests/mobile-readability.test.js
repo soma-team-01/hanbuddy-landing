@@ -59,20 +59,24 @@ test('the final CTA gives phones a shorter vertical frame than the photo band ne
   assert.ok(classes.includes('lg:py-32'), '데스크톱 여백은 그대로다');
 });
 
-test('event card taglines follow the card width: sport stays, life folds on mobile', () => {
-  // 태그라인 접기(2026-08-18)는 2열 카드의 좁은 폭 때문이었다. 스포츠 카드가
-  // 모바일 1열 풀폭이 되면서(2026-08-22) 그쪽만 전제가 사라졌다. 라이프 카드는
-  // 모바일 3열이라 여전히 좁고, 카피를 지우는 대신 접는 규칙도 그대로다.
+test('sport cards render no tagline anywhere; life taglines are desktop-only', () => {
+  // 2026-08-18에 좁은 2열 카드 때문에 태그라인을 모바일에서 접었고, 풀폭 스포츠
+  // 카드에서 잠깐 되살렸다가 2026-08-22 유현님 결정으로 스포츠는 어느 화면에서도
+  // 그리지 않는다: 사진·제목·날짜 칩만으로 서고, 회색 문단은 제목과 칩 사이
+  // 시선을 끊는다. 카피는 CONTENT_MAP에 남긴다(지우는 대신 안 그린다).
   const renderer = html.slice(
     html.indexOf('const renderEventCards'),
     html.indexOf('const renderReviewCards'),
   );
   const taglines = [...renderer.matchAll(/textNode\('p', '([^']*)', item\.tagline\)/g)].map((m) => m[1]);
-  assert.equal(taglines.length, 2, '스포츠·라이프 태그라인 렌더링이 하나씩 있어야 한다');
-  const [sport, life] = taglines;
-  assert.doesNotMatch(sport, /\bhidden\b/, '풀폭 스포츠 카드에서는 접을 이유가 없다');
-  assert.match(life, /\bhidden\b/, '좁은 라이프 카드에서는 접혀야 한다');
-  assert.match(life, /\bsm:block\b/, '라이프 태그라인도 데스크톱에서는 보여야 한다');
+  assert.equal(taglines.length, 1, '태그라인 렌더링은 라이프 카드 한 곳뿐이어야 한다');
+  const [life] = taglines;
+  assert.match(life, /\bhidden\b/, '라이프 태그라인은 모바일에서 접혀야 한다');
+  assert.match(life, /\bsm:block\b/, '라이프 태그라인은 데스크톱에서 다시 보여야 한다');
+  // 라이프 쪽 렌더링인지 못박는다. 스포츠 분기가 태그라인을 다시 들이면
+  // 개수 단언이 잡지만, 위치가 바뀌는 리팩터링까지 조용히 통과시키지 않는다.
+  const lifeBranch = renderer.slice(renderer.lastIndexOf('} else {'));
+  assert.ok(lifeBranch.includes(`'${life}'`), '남은 태그라인 렌더링이 라이프 분기에 있지 않다');
 });
 
 test('the contact channels sit in one row that matches the primary button width', () => {

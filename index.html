@@ -1616,9 +1616,9 @@
           ),
         );
         if (isSport) {
-          // 1열 풀폭이라 태그라인이 한두 줄로 끝난다. 2열 시절의 접기(2026-08-18)는
-          // 폭이 좁아 3~4줄로 늘어나던 문제였고, 그 전제가 사라진 쪽만 되살린다.
-          content.appendChild(textNode('p', 'mt-1 text-sm leading-6 text-muted', item.tagline));
+          // 스포츠 카드는 어느 화면에서도 태그라인을 그리지 않는다(유현님 결정
+          // 2026-08-22): 사진·제목·날짜 칩만으로 서고, 회색 문단은 제목과 칩
+          // 사이 시선을 끊는다. 카피 자체는 CONTENT_MAP에 남아 있다.
           const dates = cardDates(item.id);
           if (dates.length) {
             const chipRow = document.createElement('div');
