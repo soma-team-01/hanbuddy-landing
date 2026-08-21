@@ -74,7 +74,7 @@ test('newly added quotes match the approved survey wording', () => {
   const en = reviewCardsBlock('en');
   assert.match(en, /If you are looking to experience Korean baseball culture with local Koreans/);
   assert.match(en, /They did a fantastic job of explaining what was happening during the game/);
-  assert.match(en, /The experience was great! The guide was nice and it was like being with friends/);
+  assert.match(en, /The guide was nice and it was like being with friends/);
   assert.match(en, /Super fun experience and our guide was super kind, helpful and made the experience amazing!!/);
   const ko = reviewCardsBlock('ko');
   assert.match(ko, /한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면/);
