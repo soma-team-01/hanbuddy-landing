@@ -33,7 +33,7 @@ const MUST_DEPLOY = [
   'assets/brand/apple-touch-icon.png',
   'assets/photos/kbo/run1-hero.webp',
   'assets/photos/hanriver/hanriver-fountain.webp',
-  'assets/photos/kleague/kleague-night.webp',
+  'assets/photos/kleague/kleague-0815-crew.webp',
   'assets/photos/samgyeopsal/samgyeopsal-grill.webp',
   'assets/photos/samgyeopsal/samgyeopsal-table.webp',
   'assets/photos/chimaek/chimaek-og.webp',
