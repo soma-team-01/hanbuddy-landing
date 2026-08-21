@@ -151,7 +151,11 @@
   const highlightDates = (event, count = 3, now = Date.now()) => {
     if (!event || event.recurring || !event.slots) return [];
     const today = kstToday(now);
-    const open = event.slots.filter((iso) => !isSlotPast(iso, now) && iso.slice(0, 10) > today);
+    // slots가 시간순이라는 건 테스트가 지키는 약속이지 이 함수의 전제가 아니다.
+    // 여기서 직접 정렬해야 "가까운 순"이 입력 순서와 무관하게 성립한다.
+    const open = event.slots
+      .filter((iso) => !isSlotPast(iso, now) && iso.slice(0, 10) > today)
+      .sort((a, b) => slotEpoch(a) - slotEpoch(b));
     const featured = (event.featured || [])
       .map((ymd) => open.find((iso) => iso.slice(0, 10) === ymd))
       .filter(Boolean);
