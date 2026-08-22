@@ -79,25 +79,24 @@ test('about upcoming entries carry no hardcoded dates (they go stale)', () => {
   }
 });
 
-test('about carries exactly one guest quote and points at index #reviews', () => {
-  // 2026-08-20 결정: About은 사회적 증거로 승인 인용 5번("explaining" 인용) 딱 하나만
-  // 싣고, 나머지 인용과 종합 평점은 index #reviews 전용으로 남긴다. About은 결제 직전
-  // "믿을 만한가"를 확인하러 오는 페이지라 인용 0개는 구멍이고, 전부 실으면 중복이다.
-  assert.match(aboutHtml, /fantastic job of explaining/, 'about must carry the approved explaining quote (EN)');
-  assert.match(aboutHtml, /무슨 일이 벌어지고 있는지/, 'about must carry the approved explaining quote (KO)');
-  assert.match(aboutHtml, /href="\/#reviews"[^>]*data-i18n="how\.quoteLink"/, 'quote must link to index #reviews');
-  // "딱 하나"를 실제로 센다 — 존재만 확인하면 인용 블록이 늘어나도 통과해 버린다.
-  assert.equal((aboutHtml.match(/data-i18n="how\.quote"/g) ?? []).length, 1, 'quote block must appear exactly once');
-  assert.equal((aboutHtml.match(/data-i18n="how\.quoteLink"/g) ?? []).length, 1, 'review link must appear exactly once');
+test('about shows the aggregate rating (synced with index) and points at index #reviews', () => {
+  // 2026-08-22 결정: About의 사회적 증거는 개별 인용이 아니라 평균 평점 하나다
+  // (인용은 맥락 없이 뜬금없다는 피드백). 인용 전체는 index #reviews 전용으로 남긴다.
+  // 평점 문자열은 손으로 적으면 index만 갱신되고 About이 낡으므로, index에서 뽑아 비교한다.
+  const ratings = [...indexHtml.matchAll(/^\s*rating: '(.+)',$/gm)].map((m) => m[1]);
+  assert.equal(ratings.length, 2, 'index must carry EN and KO rating copy');
+  for (const rating of ratings) {
+    assert.ok(aboutHtml.includes(`rating: '${rating}',`), `about rating drifted from index: ${rating}`);
+  }
+  assert.match(aboutHtml, /href="\/#reviews"[^>]*data-i18n="how\.reviewsLink"/, 'rating must link to index #reviews');
+  assert.equal((aboutHtml.match(/data-i18n="how\.rating"/g) ?? []).length, 1, 'rating block must appear exactly once');
 
-  // 맨 숫자 `4.7`은 쓰지 않는다 — 푸터 카카오 SVG path 데이터(`5.03 4.7 6.36L5.5`)에 우연히 포함돼
-  // 영원히 실패하는 검사가 된다. 실제 평점 표기 형태(`4.7 / 5`)만 막는다.
-  assert.doesNotMatch(aboutHtml, /4\.\d\s*\/\s*5/, 'aggregate rating belongs to index #reviews only');
   for (const quote of [
     'this is the program you want to join',
     'Great experience to enjoy a baseball game with a local',
     'It was fun to watch the game and cheer together',
     'will definitely be going to another game with HanBuddy',
+    'fantastic job of explaining what was happening',
     'The guide was nice and it was like being with friends',
     'Super fun experience and our guide was super kind',
   ]) {
