@@ -69,8 +69,17 @@
     <div class="max-w-3xl">
       <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Upcoming event &middot; Seoul</p>
       <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">⚾ Open-Air KBO Baseball Night</h1>
-      <p class="mt-3 text-sm font-semibold text-muted">Jamsil Baseball Stadium &middot; pick your date when you apply</p>
-      <p class="mt-1 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <p class="mt-2 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <a href="#reviews" data-rating-summary class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3.5 py-1.5 text-sm font-bold text-primary-strong transition hover:opacity-85">
+        <span aria-hidden="true" class="tracking-tight">★</span> 4.8 (4 reviews)
+      </a>
+      <!-- 핵심 정보는 문장이 아니라 칩으로 훑는다. 값은 예약 카드·모바일 바와 같아야 한다. -->
+      <ul data-key-facts aria-label="Key facts" class="mt-4 flex flex-wrap gap-2">
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📍</span> Jamsil Baseball Stadium</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">🕐</span> Meet 1 hour before first pitch</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">💰</span> ₩60,000 &middot; ticket &amp; stadium food</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📅</span> Pick your date when you apply</li>
+      </ul>
     </div>
 
     <!-- Photo collage (click to enlarge) -->
@@ -97,21 +106,9 @@
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
       <div class="max-w-2xl">
         <h2 class="font-display text-2xl font-extrabold tracking-tight">A Korean ballpark is a giant party.</h2>
-        <div class="mt-4 space-y-4 text-base leading-7 text-muted">
-          <p>Fried chicken, beer, and 20,000 people singing every batter their own song. It&rsquo;s even better with locals beside you.</p>
-          <p>Jamsil is the open-air classic, and the stadium we know best. Both of our first two baseball nights happened right here.</p>
-          <p>Your buddy teaches you the chants, grabs the food, and explains the game as it happens. No baseball knowledge needed. Just bring your energy.</p>
-        </div>
+        <p class="mt-4 text-base leading-7 text-muted">Fried chicken, beer, and 20,000 people singing every batter their own song. Your buddy teaches you the chants, grabs the food, and explains the game as it happens. No baseball knowledge needed.</p>
 
-        <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Game ticket &amp; stadium food included</span>: both covered by the ₩60,000 fee.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Open-air summer night</span>: the stands fill up as the sun goes down.</span>
-          </li>
+        <ul class="mt-6 space-y-2.5 border-y border-line-soft py-5 text-sm leading-6">
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
             <span><span class="font-bold text-ink">English-friendly local buddies</span>: cheer along without the language barrier.</span>
@@ -123,29 +120,50 @@
         </ul>
 
         <h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">How joining works</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">1 &middot; Apply</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date on the application form. It takes 2 minutes.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">2 &middot; We confirm</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the meeting spot and details.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">3 &middot; Play ball</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddy at the stadium and cheer like a local.</p>
-          </div>
-        </div>
+        <ol class="mt-3 space-y-2 text-sm leading-6 text-muted">
+          <li><span class="font-bold text-ink">1 &middot; Apply</span>: pick your date on the form, it takes 2 minutes.</li>
+          <li><span class="font-bold text-ink">2 &middot; We confirm</span>: we message you the meeting spot and details.</li>
+          <li><span class="font-bold text-ink">3 &middot; Play ball</span>: meet your buddy at the stadium and cheer like a local.</li>
+        </ol>
 
-        <!-- Recent guest review -->
-        <figure class="mt-8 rounded-2xl bg-primary-soft px-6 py-5">
-          <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary-strong">Recent guest review</p>
-          <blockquote class="mt-2 font-display text-lg font-bold leading-snug tracking-tight text-ink">
-            &ldquo;Great experience to enjoy a baseball game with a local&rdquo;
-          </blockquote>
-          <figcaption class="mt-2 text-sm font-semibold text-muted">— Guest at our July baseball night &middot; Jamsil, July 2026</figcaption>
-        </figure>
+        <!-- Guest reviews: 별점은 설문 시트 개별 점수와 1:1 매칭이고 assets/reviews-data.js가
+             단일 소스다. 드리프트는 tests/event-detail-reviews.test.js가 잡는다. -->
+        <section id="reviews" data-guest-reviews data-review-activity="kbo-jamsil" class="mt-10" aria-label="Guest reviews">
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 class="font-display text-xl font-extrabold tracking-tight">What guests say</h2>
+            <p data-rating-line class="text-sm font-bold text-primary-strong"><span aria-hidden="true" class="tracking-tight">★</span> 4.8 &middot; 4 reviews</p>
+          </div>
+          <ul class="mt-4 space-y-3">
+            <li>
+              <figure class="rounded-2xl bg-panel px-5 py-4">
+                <p class="text-base text-primary"><span aria-hidden="true" class="tracking-[0.15em]">★★★★☆</span><span class="sr-only">Rated 4 out of 5</span></p>
+                <blockquote class="mt-1.5 font-display text-base font-bold leading-snug tracking-tight text-ink">“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”</blockquote>
+                <figcaption class="mt-2 text-sm font-semibold text-muted">— Guest at our June baseball night · Jamsil, June 2026</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rounded-2xl bg-panel px-5 py-4">
+                <p class="text-base text-primary"><span aria-hidden="true" class="tracking-[0.15em]">★★★★★</span><span class="sr-only">Rated 5 out of 5</span></p>
+                <blockquote class="mt-1.5 font-display text-base font-bold leading-snug tracking-tight text-ink">“It was fun to watch the game and cheer together!”</blockquote>
+                <figcaption class="mt-2 text-sm font-semibold text-muted">— Guest at our July baseball night · Jamsil, July 2026</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rounded-2xl bg-panel px-5 py-4">
+                <p class="text-base text-primary"><span aria-hidden="true" class="tracking-[0.15em]">★★★★★</span><span class="sr-only">Rated 5 out of 5</span></p>
+                <blockquote class="mt-1.5 font-display text-base font-bold leading-snug tracking-tight text-ink">“Great experience to enjoy a baseball game with a local”</blockquote>
+                <figcaption class="mt-2 text-sm font-semibold text-muted">— Guest at our July baseball night · Jamsil, July 2026</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rounded-2xl bg-panel px-5 py-4">
+                <p class="text-base text-primary"><span aria-hidden="true" class="tracking-[0.15em]">★★★★★</span><span class="sr-only">Rated 5 out of 5</span></p>
+                <blockquote class="mt-1.5 font-display text-base font-bold leading-snug tracking-tight text-ink">“They did a fantastic job of explaining what was happening during the game.”</blockquote>
+                <figcaption class="mt-2 text-sm font-semibold text-muted">— Guest at our July baseball night · Jamsil, July 2026</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </section>
 
         <p class="mt-6 text-xs leading-6 text-muted">We keep your application only to run this meetup, and delete it 6 months after the day.</p>
       </div>

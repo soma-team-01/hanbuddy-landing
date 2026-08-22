@@ -28,6 +28,7 @@
 
   <script src="/assets/analytics.js"></script>
   <script src="/assets/event-slots.js"></script>
+  <script src="/assets/reviews-data.js"></script>
   <script src="/assets/suggest-validation.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -1138,44 +1139,7 @@
           trackAria: 'Guest review cards',
           prevAria: 'Show previous reviews',
           nextAria: 'Show next reviews',
-          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
-          cards: [
-            {
-              quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-              meta: '— Guest at our June baseball night · Jamsil, June 2026',
-              tag: '⚾ KBO Baseball Night',
-            },
-            {
-              quote: '“It was fun to watch the game and cheer together!”',
-              meta: '— Guest at our July baseball night · Jamsil, July 2026',
-              tag: '⚾ KBO Baseball Night',
-            },
-            {
-              quote: '“Great experience to enjoy a baseball game with a local”',
-              meta: '— Guest at our July baseball night · Jamsil, July 2026',
-              tag: '⚾ KBO Baseball Night',
-            },
-            {
-              quote: '“I had such a great evening — will definitely be going to another game with HanBuddy!”',
-              meta: '— Message from a guest after our July baseball night',
-              tag: '⚾ KBO Baseball Night',
-            },
-            {
-              quote: '“They did a fantastic job of explaining what was happening during the game.”',
-              meta: '— Guest at our July baseball night · Jamsil, July 2026',
-              tag: '⚾ KBO Baseball Night',
-            },
-            {
-              quote: '“The guide was nice and it was like being with friends.”',
-              meta: '— Guest at our first football night · Sangam, August 2026',
-              tag: '⚽ K League Football Night',
-            },
-            {
-              quote: '“Super fun experience and our guide was super kind, helpful and made the experience amazing!!”',
-              meta: '— Guest at our first football night · Sangam, August 2026',
-              tag: '⚽ K League Football Night',
-            },
-          ],
+          // 카드 문구·별점은 assets/reviews-data.js가 단일 소스다(상세페이지와 공유).
         },
         finalCta: {
           title: 'See you at the next meetup?',
@@ -1379,44 +1343,7 @@
           trackAria: '게스트 후기 카드',
           prevAria: '이전 후기 보기',
           nextAria: '다음 후기 보기',
-          // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
-          cards: [
-            {
-              quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-              meta: '— 6월 야구 직관 참가 게스트 · 잠실, 2026년 6월',
-              tag: '⚾ KBO 야구 직관',
-            },
-            {
-              quote: '“함께 응원하며 경기를 보는 게 정말 재미있었어요!”',
-              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
-              tag: '⚾ KBO 야구 직관',
-            },
-            {
-              quote: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
-              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
-              tag: '⚾ KBO 야구 직관',
-            },
-            {
-              quote: '“정말 즐거운 저녁이었어요 — 다음 경기도 꼭 HanBuddy와 함께할 거예요!”',
-              meta: '— 7월 야구 직관 후 게스트가 보낸 메시지',
-              tag: '⚾ KBO 야구 직관',
-            },
-            {
-              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
-              meta: '— 7월 야구 직관 참가 게스트 · 잠실, 2026년 7월',
-              tag: '⚾ KBO 야구 직관',
-            },
-            {
-              quote: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
-              meta: '— 첫 축구 직관 참가 게스트 · 상암, 2026년 8월',
-              tag: '⚽ K리그 축구 직관',
-            },
-            {
-              quote: '“정말 재미있는 경험이었고, 가이드가 무척 친절하고 큰 도움이 되어 최고의 경험이 됐어요!!”',
-              meta: '— 첫 축구 직관 참가 게스트 · 상암, 2026년 8월',
-              tag: '⚽ K리그 축구 직관',
-            },
-          ],
+          // 카드 문구·별점은 assets/reviews-data.js가 단일 소스다(상세페이지와 공유).
         },
         finalCta: {
           title: '다음 모임에서 만날까요?',
@@ -1664,11 +1591,12 @@
       });
     };
 
-    const renderReviewCards = (copy) => {
+    const renderReviewCards = (lang) => {
       const container = document.querySelector('[data-review-cards]');
-      if (!container) return;
+      if (!container || !window.HanBuddyReviews) return;
       clear(container);
-      copy.reviews.cards.forEach((item) => {
+      // 시간순. 1번은 히어로가 이미 인용하고 있어 캐러셀은 2번 카드부터 보여준다.
+      window.HanBuddyReviews.cardsForLocale(lang).forEach((item) => {
         const figure = document.createElement('figure');
         figure.className = 'flex w-full shrink-0 snap-start flex-col rounded-2xl bg-canvas-soft p-7 shadow-raised sm:w-[calc((100%-1.5rem)/2)] sm:p-8 md:w-[calc((100%-3rem)/3)]';
 
@@ -1837,11 +1765,11 @@
       scheduleAnnouncementRetire();
     };
 
-    const renderDynamicContent = (copy) => {
+    const renderDynamicContent = (copy, lang) => {
       renderNav(copy);
       renderAnnouncement();
       renderEventCards(copy);
-      renderReviewCards(copy);
+      renderReviewCards(lang);
     };
 
     const setLanguageButtonState = (lang) => {
@@ -1858,7 +1786,7 @@
       const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
       syncStaticText(copy);
       syncMeta(copy);
-      renderDynamicContent(copy);
+      renderDynamicContent(copy, CONTENT_MAP[lang] ? lang : 'en');
       setLanguageButtonState(lang);
       persistLanguage(lang);
     };

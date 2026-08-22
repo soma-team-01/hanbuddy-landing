@@ -69,8 +69,14 @@
     <div class="max-w-3xl">
       <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Open any day &middot; Seoul</p>
       <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">🥓 Korean BBQ Night</h1>
-      <p class="mt-3 text-sm font-semibold text-muted">Any day &middot; Meet at 7:00 PM &middot; about 2 hours</p>
-      <p class="mt-1 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <p class="mt-2 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <!-- 핵심 정보는 문장이 아니라 칩으로 훑는다. 값은 예약 카드·모바일 바와 같아야 한다. -->
+      <ul data-key-facts aria-label="Key facts" class="mt-4 flex flex-wrap gap-2">
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">🕐</span> Meet at 7:00 PM</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">⏱</span> About 2 hours</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">💰</span> ₩20,000 &middot; pork belly &amp; sides</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📅</span> Pick your date when you apply</li>
+      </ul>
     </div>
 
     <!-- Photo collage (click to enlarge) -->
@@ -97,19 +103,12 @@
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
       <div class="max-w-2xl">
         <h2 class="font-display text-2xl font-extrabold tracking-tight">The Korean dinner everyone tells you to try. This is you actually trying it.</h2>
-        <div class="mt-4 space-y-4 text-base leading-7 text-muted">
-          <p>Most Korean BBQ places will not cook a single portion, so grilling pork belly on your own is quietly off the table when you are travelling alone. Coming in with a buddy and a few other guests makes that problem disappear.</p>
-          <p>Your buddy shows you the order the cuts go on and when to turn them, then hands you the tongs. They talk you through building a ssam as well: lettuce, perilla leaf, garlic and ssamjang, in whatever combination you end up liking.</p>
-        </div>
+        <p class="mt-4 text-base leading-7 text-muted">Most Korean BBQ places will not cook a single portion, so grilling pork belly on your own is quietly off the table when you are travelling alone. Your buddy shows you the order the cuts go on, when to turn them, and how to build a ssam.</p>
 
-        <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
+        <ul class="mt-6 space-y-2.5 border-y border-line-soft py-5 text-sm leading-6">
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Pork-based</span>: this meetup is built around pork belly. If you do not eat pork, the Chimaek Night or the Han River Picnic is the better fit.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Pork belly, side dishes and rice</span>: all covered by the ₩20,000 fee.</span>
+            <span><span class="font-bold text-ink">Pork-based</span>: if you do not eat pork, the Chimaek Night or the Han River Picnic is the better fit.</span>
           </li>
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
@@ -122,20 +121,11 @@
         </ul>
 
         <h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">How joining works</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">1 &middot; Apply</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date on the application form. It takes 2 minutes.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">2 &middot; We confirm</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the restaurant and the meeting spot.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">3 &middot; Grill and eat</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddy at 7:00 PM and cook your own dinner.</p>
-          </div>
-        </div>
+        <ol class="mt-3 space-y-2 text-sm leading-6 text-muted">
+          <li><span class="font-bold text-ink">1 &middot; Apply</span>: pick your date on the form, it takes 2 minutes.</li>
+          <li><span class="font-bold text-ink">2 &middot; We confirm</span>: we message you the restaurant and the meeting spot.</li>
+          <li><span class="font-bold text-ink">3 &middot; Grill and eat</span>: meet your buddy at 7:00 PM and cook your own dinner.</li>
+        </ol>
 
         <p class="mt-6 text-xs leading-6 text-muted">We keep your application only to run this meetup, and delete it 6 months after the day.</p>
       </div>

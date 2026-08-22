@@ -220,14 +220,15 @@ test('the phone quote is an approved review that the carousel does not open on',
   // 캐러셀은 DEFAULT_REVIEW_CARD_INDEX 카드에서 출발한다. 히어로가 폰에서 그 카드와
   // 같은 문장을 쓰면, 없애려던 중복이 바로 아래에서 그대로 다시 생긴다.
   const defaultIndex = Number(html.match(/const DEFAULT_REVIEW_CARD_INDEX = (\d+);/)[1]);
+  // 리뷰 카드는 assets/reviews-data.js가 단일 소스다(캐러셀·상세페이지 공유).
+  const { cardsForLocale } = require('../assets/reviews-data.js');
   for (const locale of ['en', 'ko']) {
     const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
     const heroShort = block.match(/quoteShort: '(“[^”]+”)'/);
     assert.ok(heroShort, `${locale} hero.quoteShort 카피가 없다`);
 
-    const cards = [...block.matchAll(/quote: '(“[^”]+”)'/g)].map((m) => m[1]);
-    // 첫 항목은 히어로 대표 인용이고, 그 뒤가 리뷰 카드 7개다.
-    const cardQuotes = cards.slice(1);
+    const cards = cardsForLocale(locale);
+    const cardQuotes = cards.map((card) => card.quote);
     assert.equal(cardQuotes.length, 7, `${locale} 리뷰 카드가 7개가 아니다`);
     assert.ok(cardQuotes.includes(heroShort[1]), `${locale} 폰 인용이 승인된 후기가 아니다`);
     assert.notEqual(
@@ -239,8 +240,7 @@ test('the phone quote is an approved review that the carousel does not open on',
     // 클래스 짝만 맞아도 출처가 다른 회차를 가리키면 사실이 틀린다.
     // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
     const run = (text) => (text.match(/June|July|August|6월|7월|8월/) ?? [])[0];
-    const metas = [...block.matchAll(/meta: '([^']+)'/g)].map((m) => m[1]);
-    const sourceMeta = metas[cardQuotes.indexOf(heroShort[1])];
+    const sourceMeta = cards[cardQuotes.indexOf(heroShort[1])].meta;
     const heroShortBy = block.match(/quoteShortBy: '([^']+)'/);
     assert.ok(heroShortBy, `${locale} hero.quoteShortBy 카피가 없다`);
     assert.equal(
