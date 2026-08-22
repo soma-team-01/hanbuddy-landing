@@ -75,21 +75,21 @@
 
     <!-- Photo collage (click to enlarge) -->
     <div class="mt-6 grid gap-2 overflow-hidden rounded-2xl sm:gap-3 lg:grid-cols-3">
-      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 3 in full screen">
+      <button type="button" data-photo="0" class="group relative block cursor-zoom-in lg:col-span-2 lg:row-span-2" aria-label="Open photo 1 of 6 in full screen">
         <img src="/assets/photos/kleague/kleague-0815-crew.webp" width="1600" height="1200" class="h-64 w-full object-cover object-[50%_62%] transition group-hover:opacity-95 sm:h-80 lg:h-[430px]"
              alt="HanBuddy guests and their local buddy taking a selfie in the stands at Seoul World Cup Stadium" />
       </button>
-      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 3 in full screen">
+      <button type="button" data-photo="1" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 2 of 6 in full screen">
+        <img src="/assets/photos/kleague/kleague-0815-crew-night.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover object-[50%_45%] transition group-hover:opacity-95"
+             alt="HanBuddy guests and their local buddy smiling in the stands under the Seoul World Cup Stadium floodlights" />
+      </button>
+      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 6 in full screen">
         <img src="/assets/photos/kleague/kleague-0815-dusk.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover transition group-hover:opacity-95"
              alt="Seoul World Cup Stadium at dusk during a K League match, seen from the HanBuddy seats" />
-      </button>
-      <button type="button" data-photo="2" class="group relative hidden cursor-zoom-in lg:block" aria-label="Open photo 3 of 3 in full screen">
-        <img src="/assets/photos/kleague/kleague-0815-scarf.webp" width="1600" height="1200" loading="lazy" class="h-[209px] w-full object-cover transition group-hover:opacity-95"
-             alt="An FC Seoul scarf held up in the stands at Seoul World Cup Stadium" />
-        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 3 photos</span>
+        <span class="pointer-events-none absolute bottom-3 right-3 rounded-full bg-canvas-soft/95 px-3.5 py-1.5 text-xs font-bold text-ink shadow-raised">View all 6 photos</span>
       </button>
       <button type="button" data-photo="0" class="mt-1 inline-flex cursor-zoom-in items-center gap-2 justify-self-start rounded-full bg-panel px-4 py-2 text-xs font-bold text-ink lg:hidden" aria-label="Open photo gallery">
-        📷 View all 3 photos
+        📷 View all 6 photos
       </button>
     </div>
 
@@ -249,8 +249,11 @@
   <script>
     const PHOTOS = [
       { src: '/assets/photos/kleague/kleague-0815-crew.webp', alt: 'HanBuddy guests and their local buddy taking a selfie in the stands at Seoul World Cup Stadium' },
+      { src: '/assets/photos/kleague/kleague-0815-crew-night.webp', alt: 'HanBuddy guests and their local buddy smiling in the stands under the Seoul World Cup Stadium floodlights' },
       { src: '/assets/photos/kleague/kleague-0815-dusk.webp', alt: 'Seoul World Cup Stadium at dusk during a K League match, seen from the HanBuddy seats' },
       { src: '/assets/photos/kleague/kleague-0815-scarf.webp', alt: 'An FC Seoul scarf held up in the stands at Seoul World Cup Stadium' },
+      { src: '/assets/photos/kleague/kleague-0815-tickets.webp', alt: 'Match tickets for FC Seoul vs Daejeon held up in front of the pitch at Seoul World Cup Stadium' },
+      { src: '/assets/photos/kleague/kleague-0815-fourcut.webp', alt: 'Four-cut photo booth strip of HanBuddy guests and buddies in an FC Seoul frame' },
     ];
 
     const lightbox = document.getElementById('lightbox');
