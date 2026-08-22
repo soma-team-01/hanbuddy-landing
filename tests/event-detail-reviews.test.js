@@ -92,13 +92,36 @@ test('review sections mirror reviews-data.js exactly', () => {
   assert.ok(sectionsSeen >= 3, `후기 섹션이 너무 적다: ${sectionsSeen}`);
 });
 
-test('detail pages surface key facts as chips', () => {
+test('detail pages put key facts in a one-per-line table and describe the actual day', () => {
   for (const slug of pages) {
-    const chips = html(slug).match(/<ul data-key-facts[\s\S]*?<\/ul>/)?.[0];
-    assert.ok(chips, `${slug}: 핵심 정보 칩(data-key-facts)이 없다`);
-    assert.ok((chips.match(/<li/g) ?? []).length >= 3, `${slug}: 칩이 3개 미만이다`);
-    assert.match(chips, /₩[\d,]+/, `${slug}: 가격 칩이 없다`);
-    assert.match(chips, /Meet/, `${slug}: 집합 시간 칩이 없다`);
-    assert.match(chips, /Pick your date when you apply/, `${slug}: 날짜 안내 칩이 없다`);
+    const source = html(slug);
+    // 핵심 정보는 본문 첫 블록의 <dl>: 모든 폭에서 한 줄에 하나씩(유현님 rule, 2026-08-22).
+    const facts = source.match(/<dl data-key-facts[\s\S]*?<\/dl>/)?.[0];
+    assert.ok(facts, `${slug}: 핵심 정보 표(data-key-facts)가 없다`);
+    assert.doesNotMatch(facts, /flex-wrap/, `${slug}: 정보 표가 칩처럼 한 줄에 여러 개 흐른다`);
+    const rows = [...facts.matchAll(/<dt[^>]*>[\s\S]*?<\/dt>\s*<dd[^>]*>([\s\S]*?)<\/dd>/g)].map((m) => m[1].trim());
+    assert.ok(rows.length >= 4, `${slug}: 정보 행이 4개 미만이다`);
+    const row = (label) => facts.match(new RegExp(`<dt[^>]*>[\\s\\S]*?<\\/span> ${label}<\\/dt>\\s*<dd[^>]*>([^<]*)<\\/dd>`))?.[1];
+    // Fee와 Included는 따로 적는다("₩60,000 · ticket & food"는 뜻이 안 읽혔다).
+    assert.match(row('Fee') ?? '', /^₩[\d,]+ per person$/, `${slug}: Fee 행이 없거나 형식이 다르다`);
+    assert.ok((row('Included') ?? '').length > 0, `${slug}: Included 행이 없다`);
+    assert.doesNotMatch(row('Fee'), /included|ticket|food/i, `${slug}: Fee 행에 포함 항목이 섞여 있다`);
+    assert.ok((row('Meet') ?? '').length > 0, `${slug}: Meet 행이 없다`);
+    assert.equal(row('Date'), 'Pick your date when you apply', `${slug}: Date 행이 신청 캘린더를 가리키지 않는다`);
+    // Date와 Meet는 붙어 있어야 한다(언제 오는지가 한 덩어리).
+    const labels = [...facts.matchAll(/<\/span> ([A-Za-z]+)<\/dt>/g)].map((m) => m[1]);
+    assert.equal(labels.indexOf('Meet') - labels.indexOf('Date'), 1, `${slug}: Date 바로 다음에 Meet가 와야 한다: ${labels.join(', ')}`);
+    assert.ok(!labels.includes('Language'), `${slug}: Language 행은 뺐다`);
+    // 어디서 만나는지는 첫 행. 식당이 고정이 아닌 음식 회차도 "서울, 장소는 메시지로"로 답한다.
+    assert.equal(labels[0], 'Venue', `${slug}: 첫 행은 Venue여야 한다: ${labels.join(', ')}`);
+
+    // "How joining works"(Apply → Confirm → 당연한 절차) 대신 실제 당일 흐름을 적는다.
+    assert.doesNotMatch(source, /How joining works/, `${slug}: 당연한 절차 블록이 되살아났다`);
+    const itinerary = source.match(/<ol[^>]*data-itinerary[\s\S]*?<\/ol>/)?.[0];
+    assert.ok(itinerary, `${slug}: 당일 흐름(data-itinerary)이 없다`);
+    assert.ok((itinerary.match(/<li/g) ?? []).length >= 3, `${slug}: 당일 흐름이 3단계 미만이다`);
+    assert.match(itinerary, /<li[^>]*>[\s\S]*?<span[^>]*>1<\/span>/, `${slug}: 당일 흐름은 1부터 번호가 보여야 한다`);
+    // 개인정보 보관 문구는 신청 폼에만 둔다(상세에서는 뺐다, 2026-08-22).
+    assert.doesNotMatch(source, /We keep your application only/, `${slug}: 보관 문구가 되살아났다`);
   }
 });
