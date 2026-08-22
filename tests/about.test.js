@@ -106,7 +106,7 @@ test('about carries exactly one guest quote and points at index #reviews', () =>
 });
 
 test('about hero image is not lazy-loaded (it is the LCP element)', () => {
-  const heroImg = aboutHtml.match(/<img[^>]*run1-hero\.webp[^>]*>/);
+  const heroImg = aboutHtml.match(/<img[^>]*kleague-0815-dusk\.webp[^>]*>/);
   assert.ok(heroImg, 'hero backdrop image missing');
   assert.doesNotMatch(heroImg[0], /loading="lazy"/, 'hero image must not be lazy');
   assert.match(heroImg[0], /fetchpriority="high"/);
