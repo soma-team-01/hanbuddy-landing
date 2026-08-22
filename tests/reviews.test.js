@@ -87,6 +87,8 @@ test('every rating is a survey score in range, and only the KakaoTalk quote has 
         `잘못된 별점: ${review.rating}`);
     }
     assert.ok(review.activity, '모든 후기는 활동 id를 가진다');
+    // 운영 날짜는 AGENTS.md의 완료 운영 목록과 맞아야 한다(설문 제출일이 아니다).
+    assert.match(review.date, /^20\d{2}-\d{2}-\d{2}$/, `운영 날짜가 ISO 형식이 아니다: ${review.date}`);
   }
   // 설문 응답이 없는 인용(카카오톡 메시지)만 별점이 없고, 상세페이지 목록에서 빠진다.
   const unrated = GUEST_REVIEWS.filter((review) => review.rating === null);

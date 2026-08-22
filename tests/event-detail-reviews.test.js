@@ -6,7 +6,7 @@ const test = require('node:test');
 // 상세페이지 후기 블록은 정적 HTML이라 손으로 옮겨 적는다. 이 테스트가
 // assets/reviews-data.js(단일 소스)와의 드리프트를 잡는다 — 과거에 고척 페이지가
 // 잠실 인용을 잘못 달고 있던 류의 사고를 구조적으로 막는 목적이다.
-const { ratedReviews, ratingSummary } = require('../assets/reviews-data.js');
+const { ratedReviews, detailReviews, ratingSummary } = require('../assets/reviews-data.js');
 
 const root = join(__dirname, '..');
 
@@ -42,8 +42,20 @@ test('review sections mirror reviews-data.js exactly', () => {
 
     const activity = section.match(/data-review-activity="([^"]+)"/)?.[1];
     assert.ok(activity, `${slug}: 후기 섹션에 data-review-activity가 없다`);
-    const reviews = ratedReviews(activity);
+    // 상세는 최신 운영부터 보여준다(유현님 지시, 2026-08-22). 데이터 배열은 오래된 순이다.
+    const reviews = detailReviews(activity);
     assert.ok(reviews.length > 0, `${slug}: ${activity}에는 별점 확인된 후기가 없다`);
+    assert.equal(reviews.length, ratedReviews(activity).length, `${slug}: 최신순 목록이 후기를 빠뜨렸다`);
+    for (let i = 1; i < reviews.length; i += 1) {
+      assert.ok(reviews[i - 1].date >= reviews[i].date, `${slug}: 후기가 최신순이 아니다`);
+    }
+    // 출처 줄에는 운영 날짜가 정확히 적혀야 한다(월만 적으면 회차를 특정할 수 없다).
+    for (const review of reviews) {
+      const [year, month, day] = review.date.split('-').map(Number);
+      const monthName = new Date(Date.UTC(year, month - 1, day)).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+      assert.ok(review.en.meta.includes(`${monthName} ${day}, ${year}`) || review.en.meta.includes(`${monthName} ${day} `),
+        `${slug}: 출처 줄에 운영 날짜(${monthName} ${day}, ${year})가 없다: ${review.en.meta}`);
+    }
 
     // 인용·출처는 승인 원문과 글자 단위로 같아야 하고, 순서도 데이터를 따른다.
     const quotes = [...section.matchAll(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/g)].map((m) => m[1].trim());
