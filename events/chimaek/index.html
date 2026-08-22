@@ -69,8 +69,14 @@
     <div class="max-w-3xl">
       <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Open any day &middot; Seoul</p>
       <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">🍗 Chimaek Night</h1>
-      <p class="mt-3 text-sm font-semibold text-muted">Any day &middot; Meet at 7:00 PM &middot; about 2 hours</p>
-      <p class="mt-1 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <p class="mt-2 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <!-- 핵심 정보는 문장이 아니라 칩으로 훑는다. 값은 예약 카드·모바일 바와 같아야 한다. -->
+      <ul data-key-facts aria-label="Key facts" class="mt-4 flex flex-wrap gap-2">
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">🕐</span> Meet at 7:00 PM</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">⏱</span> About 2 hours</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">💰</span> ₩20,000 &middot; chicken &amp; a drink</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📅</span> Pick your date when you apply</li>
+      </ul>
     </div>
 
     <!-- Photo collage (click to enlarge) -->
@@ -97,16 +103,9 @@
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
       <div class="max-w-2xl">
         <h2 class="font-display text-2xl font-extrabold tracking-tight">The chicken-and-beer night you already saw on screen.</h2>
-        <div class="mt-4 space-y-4 text-base leading-7 text-muted">
-          <p>Chimaek is chicken plus beer, and it is the most ordinary night out in Korea. We go to the kind of place Koreans actually go to after work, not a version of it built for visitors.</p>
-          <p>What we order gets decided at the table, so you can go with whatever the group is in the mood for. Your buddy runs through what each flavour tastes like, then explains the pickled radish, the dipping sauces, and how to get through bone-in chicken without wearing it.</p>
-        </div>
+        <p class="mt-4 text-base leading-7 text-muted">Chimaek is chicken plus beer, and it is the most ordinary night out in Korea. We go to the kind of place Koreans actually go to after work. Your buddy runs through the flavours, the pickled radish, and the dipping sauces.</p>
 
-        <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
-          <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Fried chicken + draft beer</span>: both covered by the ₩20,000 fee.</span>
-          </li>
+        <ul class="mt-6 space-y-2.5 border-y border-line-soft py-5 text-sm leading-6">
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
             <span><span class="font-bold text-ink">Non-alcoholic option available</span>: same price, same table. Nobody will push you to drink.</span>
@@ -122,20 +121,11 @@
         </ul>
 
         <h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">How joining works</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">1 &middot; Apply</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date on the application form. It takes 2 minutes.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">2 &middot; We confirm</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the restaurant and the meeting spot.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">3 &middot; Eat and talk</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddy at 7:00 PM and settle in for the evening.</p>
-          </div>
-        </div>
+        <ol class="mt-3 space-y-2 text-sm leading-6 text-muted">
+          <li><span class="font-bold text-ink">1 &middot; Apply</span>: pick your date on the form, it takes 2 minutes.</li>
+          <li><span class="font-bold text-ink">2 &middot; We confirm</span>: we message you the restaurant and the meeting spot.</li>
+          <li><span class="font-bold text-ink">3 &middot; Eat and talk</span>: meet your buddy at 7:00 PM and settle in for the evening.</li>
+        </ol>
 
         <p class="mt-6 text-xs leading-6 text-muted">We keep your application only to run this meetup, and delete it 6 months after the day.</p>
       </div>

@@ -5,17 +5,8 @@ const test = require('node:test');
 
 const indexHtml = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 
-// CONTENT_MAP 안의 reviews.cards 배열을 로케일별로 뽑아낸다.
-const reviewCardsBlock = (locale) => {
-  const localeStart = indexHtml.indexOf(`${locale}: {`);
-  assert.ok(localeStart > -1, `missing ${locale} copy block`);
-  const reviewsStart = indexHtml.indexOf('reviews: {', localeStart);
-  assert.ok(reviewsStart > -1, `missing ${locale} reviews copy`);
-  const cardsStart = indexHtml.indexOf('cards: [', reviewsStart);
-  const cardsEnd = indexHtml.indexOf('finalCta: {', reviewsStart);
-  assert.ok(cardsStart > -1 && cardsEnd > cardsStart, `missing ${locale} review cards`);
-  return indexHtml.slice(cardsStart, cardsEnd);
-};
+// 후기 문구·별점은 assets/reviews-data.js가 단일 소스다(캐러셀·상세페이지 공유).
+const { GUEST_REVIEWS, cardsForLocale, ratedReviews, ratingSummary } = require('../assets/reviews-data.js');
 
 test('review cards share one height at every width', () => {
   // 트랙이 items-start면 카드가 인용문 길이만큼만 자라 높이가 제각각이 된다.
@@ -61,31 +52,59 @@ test('arrow controls stay keyboard- and screen-reader-usable', () => {
 });
 
 test('both locales ship the same seven approved review cards', () => {
+  assert.equal(GUEST_REVIEWS.length, 7, 'the approved pool holds 7 quotes');
   for (const locale of ['en', 'ko']) {
-    const block = reviewCardsBlock(locale);
-    const quotes = block.match(/quote: '/g) ?? [];
-    assert.equal(quotes.length, 7, `${locale} must have 7 review cards`);
-    assert.equal((block.match(/meta: '/g) ?? []).length, 7, `${locale} cards need meta lines`);
-    assert.equal((block.match(/tag: '/g) ?? []).length, 7, `${locale} cards need program tags`);
+    const cards = cardsForLocale(locale);
+    assert.equal(cards.length, 7, `${locale} must have 7 review cards`);
+    for (const card of cards) {
+      assert.ok(card.quote?.startsWith('“') && card.quote.endsWith('”'), `${locale} quote needs curly quotes`);
+      assert.ok(card.meta?.startsWith('—'), `${locale} cards need meta lines`);
+      assert.ok(card.tag, `${locale} cards need program tags`);
+    }
   }
+  // index가 데이터 모듈을 실제로 읽어야 캐러셀이 그려진다.
+  assert.match(indexHtml, /<script src="\/assets\/reviews-data\.js"><\/script>/);
+  assert.match(indexHtml, /HanBuddyReviews\.cardsForLocale\(/);
 });
 
 test('newly added quotes match the approved survey wording', () => {
-  const en = reviewCardsBlock('en');
+  const en = cardsForLocale('en').map((card) => card.quote).join('\n');
   assert.match(en, /If you are looking to experience Korean baseball culture with local Koreans/);
   assert.match(en, /They did a fantastic job of explaining what was happening during the game/);
   assert.match(en, /The guide was nice and it was like being with friends/);
   assert.match(en, /Super fun experience and our guide was super kind, helpful and made the experience amazing!!/);
-  const ko = reviewCardsBlock('ko');
+  const ko = cardsForLocale('ko').map((card) => card.quote).join('\n');
   assert.match(ko, /한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면/);
   assert.match(ko, /경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요/);
   assert.match(ko, /가이드는 친절했고 친구들과 함께 있는 것 같았어요/);
   assert.match(ko, /가이드가 무척 친절하고 큰 도움이 되어 최고의 경험이 됐어요/);
 });
 
+test('every rating is a survey score in range, and only the KakaoTalk quote has none', () => {
+  for (const review of GUEST_REVIEWS) {
+    if (review.rating !== null) {
+      assert.ok(Number.isInteger(review.rating) && review.rating >= 1 && review.rating <= 5,
+        `잘못된 별점: ${review.rating}`);
+    }
+    assert.ok(review.activity, '모든 후기는 활동 id를 가진다');
+  }
+  // 설문 응답이 없는 인용(카카오톡 메시지)만 별점이 없고, 상세페이지 목록에서 빠진다.
+  const unrated = GUEST_REVIEWS.filter((review) => review.rating === null);
+  assert.equal(unrated.length, 1);
+  assert.match(unrated[0].en.meta, /Message from a guest/);
+  for (const activity of ['kbo-jamsil', 'kleague']) {
+    const summary = ratingSummary(activity);
+    assert.ok(summary.count > 0 && summary.average >= 1 && summary.average <= 5);
+    assert.equal(summary.average, Math.round(summary.average * 10) / 10, '평균은 소수 한 자리');
+    assert.equal(summary.count, ratedReviews(activity).length);
+    for (const review of ratedReviews(activity)) assert.notEqual(review.rating, null);
+  }
+  assert.equal(ratingSummary('no-such-activity'), null);
+});
+
 test('cards run oldest to newest, and the carousel opens on the second one', () => {
   // 1번(6월 파일럿)은 히어로가 이미 대표 인용으로 쓰고 있어 기본 노출에서 빠진다.
-  const quoteOrder = (locale) => [...reviewCardsBlock(locale).matchAll(/quote: '“([^”]+)”'/g)].map((m) => m[1]);
+  const quoteOrder = (locale) => cardsForLocale(locale).map((card) => card.quote.slice(1, -1));
 
   const en = quoteOrder('en');
   assert.equal(en.length, 7);

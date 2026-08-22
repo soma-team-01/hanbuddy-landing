@@ -5,6 +5,7 @@
 /assets/*
 !/assets/analytics.js
 !/assets/event-slots.js
+!/assets/reviews-data.js
 !/assets/apply-validation.js
 !/assets/suggest-validation.js
 !/assets/date-picker.js

@@ -69,7 +69,14 @@
     <div class="max-w-3xl">
       <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-strong">Upcoming event &middot; Seoul</p>
       <h1 class="mt-2 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">🧺 Han River Picnic</h1>
-      <p class="mt-3 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <p class="mt-2 text-sm font-semibold text-muted">Hosted by the HanBuddy team</p>
+      <!-- 핵심 정보는 문장이 아니라 칩으로 훑는다. 값은 예약 카드·모바일 바와 같아야 한다. -->
+      <ul data-key-facts aria-label="Key facts" class="mt-4 flex flex-wrap gap-2">
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📍</span> Han River Park</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">🕐</span> Meet at 5:00 PM</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">💰</span> ₩20,000 &middot; picnic food included</li>
+        <li class="inline-flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink"><span aria-hidden="true">📅</span> Pick your date when you apply</li>
+      </ul>
     </div>
 
     <!-- Photo collage (click to enlarge) -->
@@ -96,15 +103,12 @@
     <div class="mt-8 gap-10 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
       <div class="max-w-2xl">
         <h2 class="font-display text-2xl font-extrabold tracking-tight">This is how Seoul actually relaxes.</h2>
-        <div class="mt-4 space-y-4 text-base leading-7 text-muted">
-          <p>Roll out a mat, get fried chicken delivered straight to the riverside, and watch the rainbow fountain light up Banpo Bridge.</p>
-          <p>Your buddy handles the ordering, the spots, and the stories. You just relax and enjoy the evening.</p>
-        </div>
+        <p class="mt-4 text-base leading-7 text-muted">Roll out a mat, get fried chicken delivered straight to the riverside, and watch the rainbow fountain light up Banpo Bridge. Your buddy handles the ordering, the spots, and the stories.</p>
 
-        <ul class="mt-8 space-y-3 border-y border-line-soft py-6 text-sm leading-6">
+        <ul class="mt-6 space-y-2.5 border-y border-line-soft py-5 text-sm leading-6">
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
-            <span><span class="font-bold text-ink">Picnic food included</span>: Korean fried chicken, tteokbokki and the like, ordered to the riverside on the day and covered by the ₩20,000 fee.</span>
+            <span><span class="font-bold text-ink">Picnic food included</span>: Korean fried chicken, tteokbokki and the like, ordered to the riverside on the day.</span>
           </li>
           <li class="flex items-start gap-3">
             <span aria-hidden="true" class="mt-0.5 font-bold text-primary-strong">✓</span>
@@ -117,20 +121,11 @@
         </ul>
 
         <h2 class="mt-8 font-display text-xl font-extrabold tracking-tight">How joining works</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">1 &middot; Apply</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Pick your date on the application form. It takes 2 minutes.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">2 &middot; We confirm</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">We message you directly with the meeting spot and details.</p>
-          </div>
-          <div class="rounded-2xl bg-panel p-5">
-            <h3 class="font-display text-base font-bold">3 &middot; Chill out</h3>
-            <p class="mt-1.5 text-sm leading-6 text-muted">Meet your buddies by the river and enjoy the evening.</p>
-          </div>
-        </div>
+        <ol class="mt-3 space-y-2 text-sm leading-6 text-muted">
+          <li><span class="font-bold text-ink">1 &middot; Apply</span>: pick your date on the form, it takes 2 minutes.</li>
+          <li><span class="font-bold text-ink">2 &middot; We confirm</span>: we message you the meeting spot and details.</li>
+          <li><span class="font-bold text-ink">3 &middot; Chill out</span>: meet your buddies by the river and enjoy the evening.</li>
+        </ol>
 
         <p class="mt-6 text-xs leading-6 text-muted">We keep your application only to run this meetup, and delete it 6 months after the day.</p>
       </div>
