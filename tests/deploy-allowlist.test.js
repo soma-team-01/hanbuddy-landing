@@ -26,6 +26,7 @@ const MUST_DEPLOY = [
   'api/suggest.js',
   'assets/analytics.js',
   'assets/event-slots.js',
+  'assets/reviews-data.js',
   'assets/apply-validation.js',
   'assets/suggest-validation.js',
   'assets/date-picker.js',
