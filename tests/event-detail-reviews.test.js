@@ -112,6 +112,8 @@ test('detail pages put key facts in a one-per-line table and describe the actual
     const labels = [...facts.matchAll(/<\/span> ([A-Za-z]+)<\/dt>/g)].map((m) => m[1]);
     assert.equal(labels.indexOf('Meet') - labels.indexOf('Date'), 1, `${slug}: Date 바로 다음에 Meet가 와야 한다: ${labels.join(', ')}`);
     assert.ok(!labels.includes('Language'), `${slug}: Language 행은 뺐다`);
+    // 어디서 만나는지는 첫 행. 식당이 고정이 아닌 음식 회차도 "서울, 장소는 메시지로"로 답한다.
+    assert.equal(labels[0], 'Venue', `${slug}: 첫 행은 Venue여야 한다: ${labels.join(', ')}`);
 
     // "How joining works"(Apply → Confirm → 당연한 절차) 대신 실제 당일 흐름을 적는다.
     assert.doesNotMatch(source, /How joining works/, `${slug}: 당연한 절차 블록이 되살아났다`);
