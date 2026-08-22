@@ -53,7 +53,7 @@ test('review sections mirror reviews-data.js exactly', () => {
     for (const review of reviews) {
       const [year, month, day] = review.date.split('-').map(Number);
       const monthName = new Date(Date.UTC(year, month - 1, day)).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
-      assert.ok(review.en.meta.includes(`${monthName} ${day}, ${year}`) || review.en.meta.includes(`${monthName} ${day} `),
+      assert.ok(review.en.meta.includes(`${monthName} ${day}, ${year}`),
         `${slug}: 출처 줄에 운영 날짜(${monthName} ${day}, ${year})가 없다: ${review.en.meta}`);
     }
 
