@@ -260,17 +260,22 @@ test('the hero quote is an approved review that the carousel does not open on', 
     // 캐러셀이 여는 카드와 겹치면 안 되고, 출처가 그 후기의 회차를 말해야 한다.
     // 여기가 비어 있으면 arm 화면에서만 승인 밖 인용이 도는 길이 열린다.
     const variants = block.match(/variants: \{[\s\S]*?\n {10}\},/)[0];
-    const armQuotes = [...variants.matchAll(/\n {14}quote: '(“[^”]+”)',\n {14}quoteBy: '([^']+)',/g)];
-    assert.ok(armQuotes.length > 0, `${locale} arm 인용이 하나도 없다`);
-    for (const [, quote, by] of armQuotes) {
+    for (const arm of ['local', 'friends']) {
+      const armBlock = variants.match(new RegExp(`\\n {12}${arm}: \\{[\\s\\S]*?\\n {12}\\},`));
+      assert.ok(armBlock, `${locale} ${arm} arm 카피가 없다`);
+
+      const pairs = [...armBlock[0].matchAll(/\n {14}quote: '(“[^”]+”)',\n {14}quoteBy: '([^']+)',/g)];
+      assert.equal(pairs.length, 1, `${locale} ${arm} arm은 인용과 출처를 한 쌍만 가져야 한다`);
+
+      const [, quote, by] = pairs[0];
       const index = cardQuotes.indexOf(quote);
-      assert.notEqual(index, -1, `${locale} arm 인용이 승인된 후기가 아니다`);
-      assert.notEqual(index, defaultIndex, `${locale} arm 인용이 캐러셀 첫 화면과 같다`);
-      assert.equal(run(by), run(cards[index].meta), `${locale} arm 인용의 출처 회차가 후기와 다르다`);
+      assert.notEqual(index, -1, `${locale} ${arm} arm 인용이 승인된 후기가 아니다`);
+      assert.notEqual(index, defaultIndex, `${locale} ${arm} arm 인용이 캐러셀 첫 화면과 같다`);
+      assert.equal(run(by), run(cards[index].meta), `${locale} ${arm} arm 인용의 출처 회차가 후기와 다르다`);
       assert.equal(
         sport(by),
         sportOf(GUEST_REVIEWS[index].activity),
-        `${locale} arm 인용의 출처 종목이 후기와 다르다`,
+        `${locale} ${arm} arm 인용의 출처 종목이 후기와 다르다`,
       );
     }
   }
