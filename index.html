@@ -617,21 +617,14 @@
         <figure class="hero-quote relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
           <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
           <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
-          <!-- 같은 인용을 폰에서 20px 볼드로 깔면 네 줄이 된다. 좁은 화면에서는 더 짧은
-               승인 후기로 바꿔 두 줄로 만든다. 리뷰 캐러셀이 2번 카드에서 출발하므로
-               (DEFAULT_REVIEW_CARD_INDEX) 여기에는 3번 카드를 써야 바로 아래와 겹치지 않는다.
-               `sm:hidden`과 `hidden sm:block` 한 쌍이 계약이다. 한쪽만 지우면 둘 다 보인다. -->
-          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:hidden" data-i18n="hero.quoteShort">
+          <!-- 폰·데스크톱 한 문장이다(2026-08-24 통일). 캐러셀이 2번 카드에서
+               출발하므로(DEFAULT_REVIEW_CARD_INDEX) 여기에는 그 카드를 쓸 수 없다.
+               바로 아래에서 같은 문장이 두 번 보인다. 길이는 폰 기준으로 고른다. -->
+          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
             &ldquo;Great experience to enjoy a baseball game with a local&rdquo;
           </blockquote>
-          <blockquote class="mt-2 hidden font-display text-xl font-bold leading-snug tracking-tight text-ink sm:block sm:text-2xl" data-i18n="hero.quote">
-            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
-          </blockquote>
-          <figcaption class="mt-3 text-sm font-semibold text-primary-strong sm:hidden" data-i18n="hero.quoteShortBy">
+          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
             — Guest at our July baseball night, Jamsil Stadium
-          </figcaption>
-          <figcaption class="mt-3 hidden text-sm font-semibold text-primary-strong sm:block" data-i18n="hero.quoteBy">
-            — Guest at our first baseball night, Jamsil Stadium
           </figcaption>
         </figure>
       </div>
@@ -1024,30 +1017,24 @@
             local: {
               subtitle: 'We get the tickets and the stadium food. Your buddy explains the game and teaches you the chants.',
               // 서브카피가 "버디가 경기를 설명해 준다"고 말하면, 바로 아래 인용이
-              // 그 말을 실제로 겪은 사람의 문장이어야 한다. 폰 인용은 이미 로컬
-              // 결이라("with a local") 그대로 둔다.
+              // 그 말을 실제로 겪은 사람의 문장이어야 한다.
               quote: '“They did a fantastic job of explaining what was happening during the game.”',
               quoteBy: '— Guest at our July baseball night, Jamsil Stadium',
             },
             friends: {
               title: 'Come alone. Leave Seoul with\u00a0friends.',
               subtitle: 'Every meetup is a Korean buddy plus other travelers who picked the same night.',
-              // 이 arm의 주장을 게스트가 자기 말로 한 유일한 승인 후기다. 54자라
-              // 폰에서도 두 줄이라 데스크톱과 같은 문장을 쓴다.
+              // 이 arm의 주장을 게스트가 자기 말로 한 유일한 승인 후기다.
               quote: '“The guide was nice and it was like being with friends.”',
               quoteBy: '— Guest at our August football night, Seoul World Cup Stadium',
-              quoteShort: '“The guide was nice and it was like being with friends.”',
-              quoteShortBy: '— Guest at our August football night, Seoul World Cup Stadium',
             },
           },
           primaryCta: 'Join a meetup',
           ratingNote: '4.8 / 5 from our guests · read their reviews',
           ratingNoteShort: '4.8 / 5 from our guests',
           quoteEyebrow: 'Guest review',
-          quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-          quoteShort: '“Great experience to enjoy a baseball game with a local”',
-          quoteShortBy: '— Guest at our July baseball night, Jamsil Stadium',
-          quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
+          quote: '“Great experience to enjoy a baseball game with a local”',
+          quoteBy: '— Guest at our July baseball night, Jamsil Stadium',
           photoCap1: 'new friends, Jul 26 ⚾',
           photoCap2: 'first football night ⚽',
           photoCap3: 'Banpo rainbow 🌈',
@@ -1255,18 +1242,14 @@
               subtitle: '모든 모임에는 한국인 버디와, 같은 날을 고른 다른 여행자들이 함께해요.',
               quote: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
               quoteBy: '— 8월 축구 직관 참가 게스트, 서울월드컵경기장',
-              quoteShort: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
-              quoteShortBy: '— 8월 축구 직관 참가 게스트, 서울월드컵경기장',
             },
           },
           primaryCta: '모임 참여하기',
           ratingNote: '게스트 평점 4.8 / 5 · 후기 보러 가기',
           ratingNoteShort: '게스트 평점 4.8 / 5',
           quoteEyebrow: '게스트 후기',
-          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-          quoteShort: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
-          quoteShortBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
-          quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
+          quote: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
+          quoteBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
           photoCap1: '새 친구들, 7월 26일 ⚾',
           photoCap2: '첫 축구 직관 ⚽',
           photoCap3: '반포 무지개분수 🌈',

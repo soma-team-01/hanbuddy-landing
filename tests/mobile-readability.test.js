@@ -187,88 +187,74 @@ test('the hero lead stays on phones because it is the ad message', () => {
   assert.ok(lead[1].length <= 90, `폰에서 읽을 길이여야 한다 (지금 ${lead[1].length}자)`);
 });
 
-test('the hero quote swaps to a shorter one on phones instead of running four lines', () => {
-  // 대표 인용은 110자라 375px에서 네 줄이 됐다. 폰에서만 더 짧은 승인 후기로
-  // 바꾸는데, 두 blockquote가 서로의 반대 조건을 들고 있어야 성립한다.
-  // 한쪽 클래스만 손대면 폰에서 인용이 두 개 다 보이거나 하나도 안 보인다.
-  const quoteClass = (key) => {
-    const el = html.match(new RegExp(`<blockquote class="([^"]*)"[^>]*data-i18n="${key}"`));
-    assert.ok(el, `${key} blockquote를 찾지 못했다`);
-    return el[1].split(/\s+/);
+test('the hero shows one guest quote, the same one on every screen', () => {
+  // 2026-08-18에는 폰용·데스크톱용 두 벌이었다. 110자짜리 대표 인용이 375px에서
+  // 네 줄이 돼서 폰만 짧은 후기로 바꿨다.
+  // 2026-08-24에 한 벌로 합쳤다. 화면마다 다른 후기가 뜨면 같은 페이지를 두 사람이
+  // 다르게 인용하는 셈이고, 광고 arm까지 카피를 갈아끼우는 지금은 경우의 수가 네
+  // 배가 된다. 대신 길이를 폰 기준으로 고른다. 긴 인용은 캐러셀 1번 카드에 남는다.
+  const one = (tag, key) => {
+    const all = [...html.matchAll(new RegExp(`<${tag} class="([^"]*)"[^>]*data-i18n="hero\\.${key}[^"]*"`, 'g'))];
+    assert.equal(all.length, 1, `히어로 ${key}는 하나여야 한다 (지금 ${all.length}개)`);
+    return all[0][1].split(/\s+/);
   };
 
-  const short = quoteClass('hero\\.quoteShort');
-  assert.ok(short.includes('sm:hidden'), '짧은 인용은 데스크톱에서 사라져야 한다');
-  assert.ok(!short.includes('hidden'), '짧은 인용이 폰에서도 숨으면 폰에 인용이 없다');
+  for (const [tag, key] of [['blockquote', 'quote'], ['figcaption', 'quoteBy']]) {
+    const cls = one(tag, key);
+    assert.ok(!cls.includes('hidden'), `히어로 ${key}를 접으면 그 화면에는 후기가 없다`);
+    assert.ok(!cls.includes('sm:hidden'), `히어로 ${key}가 데스크톱에서 사라진다`);
+  }
 
-  const full = quoteClass('hero\\.quote');
-  assert.ok(full.includes('hidden'), '긴 인용은 폰에서 접혀야 한다');
-  assert.ok(full.includes('sm:block'), '긴 인용은 데스크톱에서 다시 보여야 한다');
-
-  // 인용만 갈아끼우고 출처를 놔두면 남의 후기에 다른 사람 출처가 붙는다.
-  // 실제로 그렇게 만들었다가 브라우저에서 잡았다(2026-08-20: 7월 회차 후기에
-  // "our first baseball night"이 붙어 있었다). 짝을 여기서 고정한다.
-  const captionClass = (key) => {
-    const el = html.match(new RegExp(`<figcaption class="([^"]*)"[^>]*data-i18n="${key}"`));
-    assert.ok(el, `${key} figcaption을 찾지 못했다`);
-    return el[1].split(/\s+/);
-  };
-
-  const shortBy = captionClass('hero\\.quoteShortBy');
-  assert.ok(shortBy.includes('sm:hidden'), '짧은 인용의 출처는 데스크톱에서 사라져야 한다');
-  assert.ok(!shortBy.includes('hidden'), '짧은 인용의 출처가 폰에서도 숨으면 출처 없는 인용이 된다');
-
-  const fullBy = captionClass('hero\\.quoteBy');
-  assert.ok(fullBy.includes('hidden'), '긴 인용의 출처는 폰에서 접혀야 한다');
-  assert.ok(fullBy.includes('sm:block'), '긴 인용의 출처는 데스크톱에서 다시 보여야 한다');
+  // 인용만 갈아끼우고 출처를 놔두면 남의 후기에 다른 사람 출처가 붙는다. 실제로
+  // 그렇게 만들었다가 브라우저에서 잡았다(2026-08-20: 7월 회차 후기에 "our first
+  // baseball night"이 붙어 있었다). 짝이 맞는지는 아래 테스트가 회차로 확인한다.
+  assert.doesNotMatch(html, /data-i18n="hero\.quoteShort/, '폰 전용 인용이 다시 붙었다');
 });
 
-test('the phone quote is an approved review that the carousel does not open on', () => {
-  // 캐러셀은 DEFAULT_REVIEW_CARD_INDEX 카드에서 출발한다. 히어로가 폰에서 그 카드와
-  // 같은 문장을 쓰면, 없애려던 중복이 바로 아래에서 그대로 다시 생긴다.
+test('the hero quote is an approved review that the carousel does not open on', () => {
+  // 캐러셀은 DEFAULT_REVIEW_CARD_INDEX 카드에서 출발한다. 히어로가 그 카드와 같은
+  // 문장을 쓰면, 없애려던 중복이 바로 아래에서 그대로 다시 생긴다.
   const defaultIndex = Number(html.match(/const DEFAULT_REVIEW_CARD_INDEX = (\d+);/)[1]);
   // 리뷰 카드는 assets/reviews-data.js가 단일 소스다(캐러셀·상세페이지 공유).
   const { cardsForLocale } = require('../assets/reviews-data.js');
   for (const locale of ['en', 'ko']) {
     const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
-    const heroShort = block.match(/\n {10}quoteShort: '(“[^”]+”)'/);
-    assert.ok(heroShort, `${locale} hero.quoteShort 카피가 없다`);
+    const heroQuote = block.match(/\n {10}quote: '(“[^”]+”)'/);
+    assert.ok(heroQuote, `${locale} hero.quote 카피가 없다`);
 
     const cards = cardsForLocale(locale);
     const cardQuotes = cards.map((card) => card.quote);
     assert.equal(cardQuotes.length, 7, `${locale} 리뷰 카드가 7개가 아니다`);
-    assert.ok(cardQuotes.includes(heroShort[1]), `${locale} 폰 인용이 승인된 후기가 아니다`);
+    assert.ok(cardQuotes.includes(heroQuote[1]), `${locale} 히어로 인용이 승인된 후기가 아니다`);
     assert.notEqual(
-      heroShort[1],
+      heroQuote[1],
       cardQuotes[defaultIndex],
-      `${locale} 폰 인용이 캐러셀 첫 화면과 같은 문장이다`,
+      `${locale} 히어로 인용이 캐러셀 첫 화면과 같은 문장이다`,
     );
 
     // 클래스 짝만 맞아도 출처가 다른 회차를 가리키면 사실이 틀린다.
     // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
     const run = (text) => (text.match(/June|July|August|6월|7월|8월/) ?? [])[0];
-    const sourceMeta = cards[cardQuotes.indexOf(heroShort[1])].meta;
-    const heroShortBy = block.match(/\n {10}quoteShortBy: '([^']+)'/);
-    assert.ok(heroShortBy, `${locale} hero.quoteShortBy 카피가 없다`);
+    const sourceMeta = cards[cardQuotes.indexOf(heroQuote[1])].meta;
+    const heroQuoteBy = block.match(/\n {10}quoteBy: '([^']+)'/);
+    assert.ok(heroQuoteBy, `${locale} hero.quoteBy 카피가 없다`);
     assert.equal(
-      run(heroShortBy[1]),
+      run(heroQuoteBy[1]),
       run(sourceMeta),
-      `${locale} 폰 인용의 출처 회차가 그 후기가 나온 회차와 다르다`,
+      `${locale} 히어로 인용의 출처 회차가 그 후기가 나온 회차와 다르다`,
     );
 
     // 광고 A/B arm이 갈아끼우는 인용도 같은 계약을 받는다. 승인된 후기여야 하고,
     // 캐러셀이 여는 카드와 겹치면 안 되고, 출처가 그 후기의 회차를 말해야 한다.
     // 여기가 비어 있으면 arm 화면에서만 승인 밖 인용이 도는 길이 열린다.
     const variants = block.match(/variants: \{[\s\S]*?\n {10}\},/)[0];
-    const armQuotes = [...variants.matchAll(/\n {14}(quote|quoteShort): '(“[^”]+”)',\n {14}\1By: '([^']+)',/g)];
+    const armQuotes = [...variants.matchAll(/\n {14}quote: '(“[^”]+”)',\n {14}quoteBy: '([^']+)',/g)];
     assert.ok(armQuotes.length > 0, `${locale} arm 인용이 하나도 없다`);
-    for (const [, key, quote, by] of armQuotes) {
+    for (const [, quote, by] of armQuotes) {
       const index = cardQuotes.indexOf(quote);
-      assert.notEqual(index, -1, `${locale} arm ${key}가 승인된 후기가 아니다`);
-      if (key === 'quoteShort') {
-        assert.notEqual(index, defaultIndex, `${locale} arm 폰 인용이 캐러셀 첫 화면과 같다`);
-      }
-      assert.equal(run(by), run(cards[index].meta), `${locale} arm ${key}의 출처 회차가 후기와 다르다`);
+      assert.notEqual(index, -1, `${locale} arm 인용이 승인된 후기가 아니다`);
+      assert.notEqual(index, defaultIndex, `${locale} arm 인용이 캐러셀 첫 화면과 같다`);
+      assert.equal(run(by), run(cards[index].meta), `${locale} arm 인용의 출처 회차가 후기와 다르다`);
     }
   }
 });
