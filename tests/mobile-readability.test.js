@@ -216,7 +216,7 @@ test('the hero quote is an approved review that the carousel does not open on', 
   // 문장을 쓰면, 없애려던 중복이 바로 아래에서 그대로 다시 생긴다.
   const defaultIndex = Number(html.match(/const DEFAULT_REVIEW_CARD_INDEX = (\d+);/)[1]);
   // 리뷰 카드는 assets/reviews-data.js가 단일 소스다(캐러셀·상세페이지 공유).
-  const { cardsForLocale } = require('../assets/reviews-data.js');
+  const { cardsForLocale, GUEST_REVIEWS } = require('../assets/reviews-data.js');
   for (const locale of ['en', 'ko']) {
     const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
     const heroQuote = block.match(/\n {10}quote: '(“[^”]+”)'/);
@@ -233,15 +233,27 @@ test('the hero quote is an approved review that the carousel does not open on', 
     );
 
     // 클래스 짝만 맞아도 출처가 다른 회차를 가리키면 사실이 틀린다.
-    // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
+    // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다. 달만 보면 같은 달에
+    // 두 종목이 열린 순간 야구 후기에 축구 출처가 붙어도 통과하므로 종목까지 본다
+    // (지금은 8월이 K리그뿐이라 안 걸리지만, 8월 야구 후기가 하나 들어오면 바로
+    // 생기는 구멍이다).
     const run = (text) => (text.match(/June|July|August|6월|7월|8월/) ?? [])[0];
-    const sourceMeta = cards[cardQuotes.indexOf(heroQuote[1])].meta;
+    const sport = (text) => (text.match(/baseball|football|야구|축구/i) ?? [])[0]?.toLowerCase();
+    const sportOf = (activity) => (activity.startsWith('kbo')
+      ? (locale === 'ko' ? '야구' : 'baseball')
+      : (locale === 'ko' ? '축구' : 'football'));
+    const heroIndex = cardQuotes.indexOf(heroQuote[1]);
     const heroQuoteBy = block.match(/\n {10}quoteBy: '([^']+)'/);
     assert.ok(heroQuoteBy, `${locale} hero.quoteBy 카피가 없다`);
     assert.equal(
       run(heroQuoteBy[1]),
-      run(sourceMeta),
+      run(cards[heroIndex].meta),
       `${locale} 히어로 인용의 출처 회차가 그 후기가 나온 회차와 다르다`,
+    );
+    assert.equal(
+      sport(heroQuoteBy[1]),
+      sportOf(GUEST_REVIEWS[heroIndex].activity),
+      `${locale} 히어로 인용의 출처 종목이 그 후기가 나온 활동과 다르다`,
     );
 
     // 광고 A/B arm이 갈아끼우는 인용도 같은 계약을 받는다. 승인된 후기여야 하고,
@@ -255,6 +267,11 @@ test('the hero quote is an approved review that the carousel does not open on', 
       assert.notEqual(index, -1, `${locale} arm 인용이 승인된 후기가 아니다`);
       assert.notEqual(index, defaultIndex, `${locale} arm 인용이 캐러셀 첫 화면과 같다`);
       assert.equal(run(by), run(cards[index].meta), `${locale} arm 인용의 출처 회차가 후기와 다르다`);
+      assert.equal(
+        sport(by),
+        sportOf(GUEST_REVIEWS[index].activity),
+        `${locale} arm 인용의 출처 종목이 후기와 다르다`,
+      );
     }
   }
 });
