@@ -49,12 +49,23 @@ test('phones drop the lower polaroid pair and close the gap it left', () => {
     /\.hero-cta-band > \.hero-polaroids \{[^}]*display: none/,
     '버튼 뒤 폴라로이드 쌍이 모바일에서 숨겨져야 한다',
   );
-  // 사진이 빠진 자리를 그대로 두면 본문 앞이 빈 공백이 된다. 값까지 고정해야
-  // 태블릿용 62px로 되돌아간 경우를 잡는다(선언 존재만 보면 통과해 버린다).
+  // 사진이 빠지면 본문이 버튼 뒤를 비켜 갈 이유도 없어진다(2026-08-24). 폰에서는
+  // 제목 바로 밑으로 올린다. order와 여백을 함께 고정해야 태블릿용 62px이
+  // 되살아나 제목과 본문 사이가 벌어지는 경우까지 잡는다.
   assert.match(
     phone,
-    /\.hero-cta-band > \.hero-subtitle \{[^}]*margin-top:\s*24px/,
-    '사진을 숨겼으면 본문 위 여백도 24px로 줄여야 한다',
+    /\.hero-cta-band > \.hero-subtitle \{[^}]*order:\s*0/,
+    '사진을 숨겼으면 본문이 제목 바로 밑으로 와야 한다',
+  );
+  assert.match(
+    phone,
+    /\.hero-cta-band > \.hero-subtitle \{[^}]*margin-top:\s*0/,
+    '제목과의 간격은 cta-band가 만든다. 본문에 또 주면 벌어진다',
+  );
+  assert.match(
+    phone,
+    /\.hero-cta-band > \.hero-actions \{[^}]*margin-top:/,
+    '버튼이 본문 아래로 내려갔으면 그 사이 여백이 있어야 한다',
   );
   // 제목을 감싸는 위 두 장은 남는다. 여기까지 숨기면 첫 화면에 사진이 없어진다.
   assert.doesNotMatch(phone, /\.hero-lead[^}]*display: none/);

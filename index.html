@@ -392,12 +392,15 @@
     @media (max-width: 767px) {
       #top .hero-cta-band > .hero-polaroids { display: none; }
 
-      /* 위 62px은 hp3·hp4가 깔린 자리를 본문이 비켜 가라고 준 여백이다.
-         사진이 빠지면 그대로 빈 공백만 남으므로 같이 줄인다. 2026-08-24부터
-         서브카피는 좁은 화면에서도 접지 않으므로(광고 유입이 대부분 폰이고,
-         소구점 문장을 못 읽으면 A/B 자체가 성립하지 않는다) 이 값은 767px
-         아래 전 구간에서 쓰인다. */
-      #top .hero-cta-band > .hero-subtitle { margin-top: 24px; }
+      /* 본문이 버튼 아래로 내려가 있던 건 hp3·hp4가 버튼 양옆에 깔려서다.
+         얇은 muted 글씨는 사진 위에서 못 버티고 꽉 찬 버튼은 버티니까 버튼을
+         사진 자리에 두고 본문을 62px 아래로 밀었다. 폰에서는 그 사진이 위에서
+         숨겨지므로 이유가 사라진다. DOM 순서 그대로 제목 → 본문 → 버튼으로
+         되돌린다(데스크톱과 같은 순서고, 광고 소구점 문장이 헤드라인 바로
+         밑에서 한 호흡에 읽힌다). 태블릿은 사진이 살아 있어 그대로 둔다.
+         제목과의 간격은 .hero-cta-band의 margin-top 26px이 이미 만든다. */
+      #top .hero-cta-band > .hero-subtitle { order: 0; margin-top: 0; }
+      #top .hero-cta-band > .hero-actions { margin-top: 28px; }
     }
 
     .hero-polaroids {
