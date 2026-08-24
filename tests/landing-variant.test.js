@@ -117,11 +117,19 @@ test('the landing never touches the hero when there is no variant', () => {
 });
 
 test('every page that can lead to the form relays the value', () => {
+  // 스크립트를 붙이는 것으로 끝나야 한다. 페이지마다 호출 한 줄을 복사해 두면
+  // 새 페이지에서 조용히 빠지고, 거기를 거쳐 온 신청이 arm 미상으로 샌다.
   for (const page of ['index.html', ...relayPages]) {
     const source = read(page);
     assert.match(source, /<script src="\/assets\/landing-variant\.js"><\/script>/, `${page} must load the module`);
-    assert.match(source, /HanBuddyVariant\?\.propagateLinks\?\.\(document\)/, `${page} must relay the value`);
   }
+  const module = readFileSync(join(root, 'assets/landing-variant.js'), 'utf8');
+  assert.match(module, /api\.tagWhenReady\(root\.document\)/, '모듈이 스스로 링크를 이어야 한다');
+  assert.match(module, /DOMContentLoaded/, 'head에서 실행되므로 DOM을 기다려야 한다');
+
+  // 랜딩만 예외다. 카드·공지·네비가 언어 전환 때 다시 그려지므로 그 뒤에 한 번 더
+  // 불러야 새로 만들어진 링크도 값을 물고 간다.
+  assert.match(html, /HanBuddyVariant\?\.propagateLinks\?\.\(document\)/, '랜딩은 렌더 뒤에 다시 이어야 한다');
 });
 
 test('the application funnel reports which arm the guest came from', () => {

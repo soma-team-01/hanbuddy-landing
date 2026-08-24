@@ -330,9 +330,6 @@
         lightboxButtons[(current + step + lightboxButtons.length) % lightboxButtons.length].focus();
       }
     });
-    // 광고 A/B(?v=) 값을 신청 링크까지 이어 준다. 이 페이지의 카피는 arm과
-    // 무관하고, 링크만 값을 물고 간다.
-    window.HanBuddyVariant?.propagateLinks?.(document);
   </script>
 </body>
 </html>

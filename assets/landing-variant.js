@@ -11,7 +11,12 @@
 (function initLandingVariant(root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  if (root) root.HanBuddyVariant = api;
+  if (root) {
+    root.HanBuddyVariant = api;
+    // 스크립트를 붙인 것이 곧 참여 선언이다. 페이지마다 호출 한 줄을 복사해 두면
+    // 새 페이지에서 조용히 빠지고, 거기를 거쳐 온 신청은 arm 미상으로 샌다.
+    api.tagWhenReady(root.document);
+  }
 })(typeof window === 'undefined' ? null : window, () => {
   const PARAM = 'v';
   const VARIANTS = Object.freeze(['local', 'friends']);
@@ -60,5 +65,16 @@
     });
   };
 
-  return { PARAM, VARIANTS, resolve, current, withVariant, propagateLinks };
+  // 스크립트는 head에서 실행되므로 대개 DOM이 아직 없다. 랜딩처럼 렌더가 끝난
+  // 뒤에 링크가 생기는 페이지는 그 자리에서 propagateLinks를 한 번 더 부른다.
+  const tagWhenReady = (doc) => {
+    if (!doc) return;
+    if (doc.readyState === 'loading') {
+      doc.addEventListener('DOMContentLoaded', () => propagateLinks(doc));
+      return;
+    }
+    propagateLinks(doc);
+  };
+
+  return { PARAM, VARIANTS, resolve, current, withVariant, propagateLinks, tagWhenReady };
 });
