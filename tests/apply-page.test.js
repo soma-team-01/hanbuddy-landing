@@ -64,7 +64,7 @@ test('the guests question starts folded behind the friends link', () => {
   // 지금까지 신청 전원이 1인이라 인원 입력은 접혀서 시작한다. 접혀 있어도
   // input이 DOM에 있어 항상 숫자가 전송되므로 폼 계약은 그대로다.
   assert.match(html, /<button type="button" data-guests-toggle/);
-  const box = html.match(/<div class="hidden mt-2" data-guests-box>[\s\S]*?<\/div>/);
+  const box = html.match(/<div id="guests-box" class="hidden mt-2" data-guests-box>[\s\S]*?<\/div>/);
   assert.ok(box, 'the guests box must start hidden');
   assert.match(box[0], /name="guests"/);
   assert.match(box[0], /value="1"/, 'the folded state must submit 1');
@@ -75,6 +75,24 @@ test('the guests question starts folded behind the friends link', () => {
   const koStart = html.indexOf('      ko: {');
   for (const [lang, block] of Object.entries({ EN: html.slice(0, koStart), KO: html.slice(koStart) })) {
     assert.match(block, /guestsToggle: '/, `guestsToggle copy missing in ${lang}`);
+  }
+});
+
+test('the friends link folds the guests question back up', () => {
+  // 잘못 눌러 펼친 사람이 되돌릴 길이 없으면 인원 질문이 화면에 박힌다.
+  // 버튼은 사라지지 않고, 상태를 aria-expanded로 알리며, 접을 때 값을 1로
+  // 되돌려야 보이지 않는 인원수가 전송되지 않는다.
+  assert.match(html, /data-guests-toggle aria-expanded="false" aria-controls="guests-box"/);
+  const setOpen = html.match(/const setGuestsOpen = \([\s\S]*?\n    \};/);
+  assert.ok(setOpen, 'the toggle must run through one open/close function');
+  assert.match(setOpen[0], /classList\.toggle\('hidden', !open\)/, 'closing must hide the box again');
+  assert.match(setOpen[0], /setAttribute\('aria-expanded', String\(open\)\)/);
+  assert.match(setOpen[0], /if \(!open\) form\.elements\.guests\.value = '1';/, 'folding must reset the count');
+  // 라벨은 키를 갈아 끼워야 언어를 바꿔도 펼침 상태의 문구가 유지된다.
+  assert.match(setOpen[0], /open \? 'apply\.guestsToggleOpen' : 'apply\.guestsToggle'/);
+  const koStart = html.indexOf('      ko: {');
+  for (const [lang, block] of Object.entries({ EN: html.slice(0, koStart), KO: html.slice(koStart) })) {
+    assert.match(block, /guestsToggleOpen: '/, `guestsToggleOpen copy missing in ${lang}`);
   }
 });
 
