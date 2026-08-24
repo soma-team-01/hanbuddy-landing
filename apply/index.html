@@ -224,10 +224,10 @@
           <label for="field-name" class="block text-sm font-bold text-ink" data-i18n="apply.fields.name">Full name</label>
           <input type="text" id="field-name" name="name" maxlength="100" required autocomplete="name"
                  class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
-          <button type="button" data-guests-toggle
+          <button type="button" data-guests-toggle aria-expanded="false" aria-controls="guests-box"
                   class="focusable mt-2 rounded text-sm font-bold text-primary-strong"
                   data-i18n="apply.guestsToggle">+ Coming with friends?</button>
-          <div class="hidden mt-2" data-guests-box>
+          <div id="guests-box" class="hidden mt-2" data-guests-box>
             <label for="field-guests" class="block text-sm font-bold text-ink" data-i18n="apply.fields.guests">How many people, including you?</label>
             <input type="number" id="field-guests" name="guests" min="1" max="10" value="1" required inputmode="numeric"
                    class="focusable mt-2 w-full rounded-xl border border-line-strong bg-canvas-soft px-4 py-3 text-base" />
@@ -447,6 +447,7 @@
             sourceOtherPlaceholder: 'e.g. Reddit, a poster at my school',
           },
           guestsToggle: '+ Coming with friends?',
+          guestsToggleOpen: '- Just me',
           pricePerPerson: (amount) => `₩${amount} per person`,
           calendar: {
             months: ['January', 'February', 'March', 'April', 'May', 'June',
@@ -531,6 +532,7 @@
             sourceOtherPlaceholder: '예: 레딧, 학교 게시판',
           },
           guestsToggle: '+ 일행이 있나요?',
+          guestsToggleOpen: '- 저 혼자예요',
           pricePerPerson: (amount) => `1인 ₩${amount}`,
           calendar: {
             months: ['1월', '2월', '3월', '4월', '5월', '6월',
@@ -778,16 +780,25 @@
     form.elements.eventId.addEventListener('change', () => renderSlots(currentLanguage()));
 
     // Other를 골랐을 때만 직접 입력을 보여주고, 되돌리면 값도 비운다.
-    // 인원 입력은 접어서 시작한다. 한번 펼치면 되돌리지 않는다. 값을 1로
-    // 두면 접힌 것과 같은 신청이라 접기 버튼까지 만들 이유가 없다.
+    // 인원 입력은 접어서 시작하고, 잘못 눌렀으면 같은 버튼으로 다시 접는다.
+    // 라벨은 data-i18n 키를 갈아 끼워 바꾼다. 그래야 펼친 채로 언어를 바꿔도
+    // syncStaticText가 그 상태에 맞는 문구를 다시 넣는다. 접을 때 값을 1로
+    // 되돌리지 않으면 보이지 않는 인원수가 그대로 전송된다.
     const guestsToggle = form.querySelector('[data-guests-toggle]');
     const guestsBox = document.querySelector('[data-guests-box]');
-    const revealGuests = ({ focusWhenRevealed = false } = {}) => {
-      guestsToggle.classList.add('hidden');
-      guestsBox.classList.remove('hidden');
-      if (focusWhenRevealed) form.elements.guests.focus();
+    const setGuestsOpen = (open, { focusWhenRevealed = false } = {}) => {
+      guestsBox.classList.toggle('hidden', !open);
+      guestsToggle.setAttribute('aria-expanded', String(open));
+      guestsToggle.setAttribute('data-i18n', open ? 'apply.guestsToggleOpen' : 'apply.guestsToggle');
+      const label = getByPath(currentCopy(), guestsToggle.getAttribute('data-i18n'));
+      if (typeof label === 'string') guestsToggle.textContent = label;
+      if (!open) form.elements.guests.value = '1';
+      if (open && focusWhenRevealed) form.elements.guests.focus();
     };
-    guestsToggle.addEventListener('click', () => revealGuests({ focusWhenRevealed: true }));
+    const revealGuests = (options) => setGuestsOpen(true, options);
+    guestsToggle.addEventListener('click', () => {
+      setGuestsOpen(guestsBox.classList.contains('hidden'), { focusWhenRevealed: true });
+    });
 
     const sourceOtherBox = document.querySelector('[data-source-other]');
     // 포커스 이동은 방금 Other를 고른 사람에게만 의미가 있다. 언어 전환에서도
