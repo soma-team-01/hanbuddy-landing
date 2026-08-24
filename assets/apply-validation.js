@@ -9,7 +9,7 @@
 })(typeof window === 'undefined' ? null : window, (slots) => {
   const FIELD_OPTIONS = Object.freeze({
     contactMethod: ['WhatsApp', 'LINE', 'KakaoTalk', 'Instagram DM', 'WeChat', 'Other'],
-    source: ['Meetup', 'Facebook', 'Instagram', 'Friend', 'Offline promotion', 'University community', 'Other'],
+    source: ['Meetup', 'Facebook', 'Instagram', 'Friend', 'Google search', 'Offline promotion', 'University community', 'Other'],
   });
 
   const MAX_LENGTH = { name: 100, nationality: 100, contactId: 200, requests: 1000, sourceOther: 100 };
