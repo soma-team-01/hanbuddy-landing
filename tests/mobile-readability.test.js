@@ -173,11 +173,18 @@ test('the hero opens on the headline, not a label above it', () => {
   assert.doesNotMatch(html, /hero-eyebrow/, 'eyebrow 전용 규칙이 남아 있다');
 });
 
-test('the hero lead is desktop-only', () => {
-  // 제목과 버튼만으로 첫 화면이 서고, 본문은 폰에서 넉 줄을 먹고 있었다.
+test('the hero lead stays on phones because it is the ad message', () => {
+  // 2026-08-18에는 접는 게 맞았다. 넉 줄짜리 회색 문단이 제목과 버튼 사이를
+  // 막고 있었고, 제목이 이미 하는 말이었다.
+  // 2026-08-24에 뒤집었다. 검색 광고 소구점 A/B가 이 문단으로 arm을 가르는데
+  // 광고 유입은 대부분 폰이다. 접어 두면 실험 대상이 소구점을 못 읽는다.
+  // 대신 문단을 폰 기준으로 짧게 다시 썼다(한 줄짜리 나열).
   const cls = hiddenOnMobile('data-i18n="hero.subtitle"');
-  assert.match(cls, /\bhidden\b/, '히어로 본문은 폰에서 접혀야 한다');
-  assert.match(cls, /\bsm:block\b/, '데스크톱에서는 다시 보여야 한다');
+  assert.doesNotMatch(cls, /\bhidden\b/, '히어로 본문을 접으면 광고 소구점이 폰에서 사라진다');
+
+  const lead = html.match(/subtitle: '([^']*)',\n\s*\/\/ 구글 검색 광고 A\/B/);
+  assert.ok(lead, 'EN 히어로 서브카피를 찾지 못했다');
+  assert.ok(lead[1].length <= 90, `폰에서 읽을 길이여야 한다 (지금 ${lead[1].length}자)`);
 });
 
 test('the hero quote swaps to a shorter one on phones instead of running four lines', () => {

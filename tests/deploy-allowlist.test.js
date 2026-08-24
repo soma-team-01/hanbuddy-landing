@@ -30,6 +30,7 @@ const MUST_DEPLOY = [
   'assets/apply-validation.js',
   'assets/suggest-validation.js',
   'assets/date-picker.js',
+  'assets/landing-variant.js',
   'assets/brand/logo-borderless.webp',
   'assets/brand/apple-touch-icon.png',
   'assets/photos/kbo/run1-hero.webp',
