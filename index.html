@@ -30,6 +30,7 @@
   <script src="/assets/event-slots.js"></script>
   <script src="/assets/reviews-data.js"></script>
   <script src="/assets/suggest-validation.js"></script>
+  <script src="/assets/landing-variant.js"></script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -327,8 +328,13 @@
       #top .hero-copy > .hero-quote { order: 5; }
 
       /* 버튼 묶음: 한강 두 장이 배경 레이어로 깔리고 버튼이 그 사이에 선다.
-         본문은 사진 아래에서 시작하도록 위 여백을 크게 줘서, 얇은 글씨가
-         사진 위를 지나지 않게 한다(겹침은 12px, 첫 줄이 스치는 정도). */
+         2026-08-24까지는 본문이 버튼 아래에 있었다. 사진 위를 얇은 muted 글씨가
+         지나지 않게 62px을 밀어 둔 배치였다. 지금은 제목 바로 밑으로 올린다.
+         본문은 가운데 320px 안에 갇혀 있고 사진은 좌우 바깥으로 나가 있어서
+         (hp3 left -62px / hp4 right -62px, 폭 156px) 가로로 만날 일이 없다.
+         읽는 순서가 데스크톱과 같아지고, 광고 소구점 문장이 헤드라인 바로
+         밑에서 한 호흡에 읽힌다. 폰에서는 사진 두 장이 아예 숨겨진다.
+         본문 위 간격은 .hero-cta-band의 margin-top 26px이 만든다. */
       #top .hero-cta-band {
         position: relative;
         display: flex;
@@ -337,14 +343,14 @@
 
       #top .hero-cta-band > .hero-actions {
         order: 1;
-        margin-top: 0;
+        margin-top: 28px;
         position: relative;
         z-index: 2;
       }
 
       #top .hero-cta-band > .hero-subtitle {
-        order: 2;
-        margin: 62px auto 0;
+        order: 0;
+        margin: 0 auto;
         max-width: 320px;
         font-size: 15.5px;
         line-height: 1.62;
@@ -390,11 +396,6 @@
        태블릿(768~1279px)은 폭에 여유가 있어 네 장을 그대로 둔다. */
     @media (max-width: 767px) {
       #top .hero-cta-band > .hero-polaroids { display: none; }
-
-      /* 위 62px은 hp3·hp4가 깔린 자리를 본문이 비켜 가라고 준 여백이다.
-         사진이 빠지면 그대로 빈 공백만 남으므로 같이 줄인다. 본문 자체는
-         640px 미만에서 접히므로, 이 값이 실제로 쓰이는 구간은 640~767px이다. */
-      #top .hero-cta-band > .hero-subtitle { margin-top: 24px; }
     }
 
     .hero-polaroids {
@@ -590,8 +591,8 @@
             </figure>
           </div>
 
-          <p class="hero-subtitle mx-auto mt-6 hidden max-w-2xl text-base leading-7 text-muted sm:block sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
-            Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.
+          <p class="hero-subtitle mx-auto mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg sm:leading-8" data-i18n="hero.subtitle">
+            Baseball nights, Han River picnics, Korean BBQ. Always with a local buddy.
           </p>
 
           <div class="hero-actions mt-8 flex justify-center">
@@ -614,21 +615,14 @@
         <figure class="hero-quote relative mx-auto mt-9 max-w-2xl rounded-2xl bg-primary-soft px-7 py-6 text-left shadow-subtle sm:px-9 sm:py-7">
           <span aria-hidden="true" class="absolute -top-4 left-6 font-display text-6xl font-extrabold leading-none text-primary/40">&ldquo;</span>
           <p class="eyebrow" data-i18n="hero.quoteEyebrow">Guest review</p>
-          <!-- 같은 인용을 폰에서 20px 볼드로 깔면 네 줄이 된다. 좁은 화면에서는 더 짧은
-               승인 후기로 바꿔 두 줄로 만든다. 리뷰 캐러셀이 2번 카드에서 출발하므로
-               (DEFAULT_REVIEW_CARD_INDEX) 여기에는 3번 카드를 써야 바로 아래와 겹치지 않는다.
-               `sm:hidden`과 `hidden sm:block` 한 쌍이 계약이다. 한쪽만 지우면 둘 다 보인다. -->
-          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:hidden" data-i18n="hero.quoteShort">
+          <!-- 폰·데스크톱 한 문장이다(2026-08-24 통일). 캐러셀이 2번 카드에서
+               출발하므로(DEFAULT_REVIEW_CARD_INDEX) 여기에는 그 카드를 쓸 수 없다.
+               바로 아래에서 같은 문장이 두 번 보인다. 길이는 폰 기준으로 고른다. -->
+          <blockquote class="mt-2 font-display text-xl font-bold leading-snug tracking-tight text-ink sm:text-2xl" data-i18n="hero.quote">
             &ldquo;Great experience to enjoy a baseball game with a local&rdquo;
           </blockquote>
-          <blockquote class="mt-2 hidden font-display text-xl font-bold leading-snug tracking-tight text-ink sm:block sm:text-2xl" data-i18n="hero.quote">
-            &ldquo;If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!&rdquo;
-          </blockquote>
-          <figcaption class="mt-3 text-sm font-semibold text-primary-strong sm:hidden" data-i18n="hero.quoteShortBy">
+          <figcaption class="mt-3 text-sm font-semibold text-primary-strong" data-i18n="hero.quoteBy">
             — Guest at our July baseball night, Jamsil Stadium
-          </figcaption>
-          <figcaption class="mt-3 hidden text-sm font-semibold text-primary-strong sm:block" data-i18n="hero.quoteBy">
-            — Guest at our first baseball night, Jamsil Stadium
           </figcaption>
         </figure>
       </div>
@@ -1012,15 +1006,33 @@
         },
         hero: {
           title: 'Experience Korea like a local!',
-          subtitle: 'Cheer at a Korean baseball night or picnic by the Han River with a local buddy who orders the food and teaches you the chants.',
+          subtitle: 'Baseball nights, Han River picnics, Korean BBQ. Always with a local buddy.',
+          // 구글 검색 광고 A/B(2026-08-24). `?v=`가 붙은 유입에만 덮어쓴다.
+          // local은 헤드라인을 그대로 두고 티켓팅·언어 장벽 해소만 앞세우고,
+          // friends는 헤드라인부터 바꿔 한국인 버디와 같은 날 온 다른 여행자,
+          // 두 축을 모두 말한다.
+          variants: {
+            local: {
+              subtitle: 'We get the tickets and the stadium food. Your buddy explains the game and teaches you the chants.',
+              // 서브카피가 "버디가 경기를 설명해 준다"고 말하면, 바로 아래 인용이
+              // 그 말을 실제로 겪은 사람의 문장이어야 한다.
+              quote: '“They did a fantastic job of explaining what was happening during the game.”',
+              quoteBy: '— Guest at our July baseball night, Jamsil Stadium',
+            },
+            friends: {
+              title: 'Come alone. Leave Seoul with\u00a0friends.',
+              subtitle: 'Every meetup is a Korean buddy plus other travelers who picked the same night.',
+              // 이 arm의 주장을 게스트가 자기 말로 한 유일한 승인 후기다.
+              quote: '“The guide was nice and it was like being with friends.”',
+              quoteBy: '— Guest at our August football night, Seoul World Cup Stadium',
+            },
+          },
           primaryCta: 'Join a meetup',
           ratingNote: '4.8 / 5 from our guests · read their reviews',
           ratingNoteShort: '4.8 / 5 from our guests',
           quoteEyebrow: 'Guest review',
-          quote: '“If you are looking to experience Korean baseball culture with local Koreans, then this is the program you want to join!”',
-          quoteShort: '“Great experience to enjoy a baseball game with a local”',
-          quoteShortBy: '— Guest at our July baseball night, Jamsil Stadium',
-          quoteBy: '— Guest at our first baseball night, Jamsil Stadium',
+          quote: '“Great experience to enjoy a baseball game with a local”',
+          quoteBy: '— Guest at our July baseball night, Jamsil Stadium',
           photoCap1: 'new friends, Jul 26 ⚾',
           photoCap2: 'first football night ⚽',
           photoCap3: 'Banpo rainbow 🌈',
@@ -1216,15 +1228,26 @@
         },
         hero: {
           title: 'Experience Korea like a local!',
-          subtitle: 'KBO 야구 직관도, 한강 피크닉도 로컬 버디와 함께하세요. 음식을 주문해 주고, 응원가를 알려드립니다.',
+          subtitle: '야구 직관, 한강 피크닉, 삼겹살. 언제나 로컬 버디와 함께.',
+          variants: {
+            local: {
+              subtitle: '티켓도 경기장 먹거리도 저희가 준비해요. 버디가 경기를 설명해 주고 응원가를 알려드려요.',
+              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
+              quoteBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
+            },
+            friends: {
+              title: '혼자 왔다가, 서울에서 친구를 만들어 가세요.',
+              subtitle: '모든 모임에는 한국인 버디와, 같은 날을 고른 다른 여행자들이 함께해요.',
+              quote: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
+              quoteBy: '— 8월 축구 직관 참가 게스트, 서울월드컵경기장',
+            },
+          },
           primaryCta: '모임 참여하기',
           ratingNote: '게스트 평점 4.8 / 5 · 후기 보러 가기',
           ratingNoteShort: '게스트 평점 4.8 / 5',
           quoteEyebrow: '게스트 후기',
-          quote: '“한국 야구 문화를 현지 한국인과 함께 경험하고 싶다면, HanBuddy가 바로 당신이 참여하고 싶은 프로그램입니다!”',
-          quoteShort: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
-          quoteShortBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
-          quoteBy: '— 첫 야구 직관 참가 게스트, 잠실야구장',
+          quote: '“로컬 버디와 함께 야구 경기를 즐길 수 있어 정말 좋은 경험이었어요”',
+          quoteBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
           photoCap1: '새 친구들, 7월 26일 ⚾',
           photoCap2: '첫 축구 직관 ⚽',
           photoCap3: '반포 무지개분수 🌈',
@@ -1782,13 +1805,37 @@
       });
     };
 
+    // ===== 구글 검색 광고 소구점 A/B: ?v=local | ?v=friends =====
+    // 값이 없거나 화이트리스트 밖이면 아무 DOM도 건드리지 않는다. 파라미터 없는
+    // 화면이 지금 그대로 남는 것이 이 실험의 롤백 계획이다.
+    const LANDING_VARIANT = window.HanBuddyVariant?.current?.() ?? null;
+
+    const applyHeroVariant = (copy) => {
+      const variant = LANDING_VARIANT && copy.hero.variants?.[LANDING_VARIANT];
+      if (!variant) return;
+      // syncStaticText가 기본 카피를 이미 써 넣은 뒤라야 덮어쓸 수 있다.
+      // 순서를 뒤집으면 언어를 바꿀 때마다 기본 카피가 되살아난다.
+      //
+      // arm이 갖고 있는 키만 덮어쓴다. local은 헤드라인을 그대로 두고, 폰 인용도
+      // 이미 자기 결이라 건드리지 않는다. 없는 키를 빈 문자열로 밀어내면 그 자리가
+      // 통째로 사라진다.
+      Object.keys(variant).forEach((key) => {
+        const node = document.querySelector(`[data-i18n="hero.${key}"]`);
+        if (node && typeof variant[key] === 'string') node.textContent = variant[key];
+      });
+    };
+
     const applyLanguage = (lang) => {
       const copy = CONTENT_MAP[lang] ?? CONTENT_MAP.en;
       syncStaticText(copy);
+      applyHeroVariant(copy);
       syncMeta(copy);
       renderDynamicContent(copy, CONTENT_MAP[lang] ? lang : 'en');
       setLanguageButtonState(lang);
       persistLanguage(lang);
+      // 카드·공지·네비는 방금 다시 그려졌다. 링크가 만들어지는 자리마다 손으로
+      // 붙이는 대신 렌더가 끝난 뒤 한 번에 실어 준다.
+      window.HanBuddyVariant?.propagateLinks?.(document);
     };
 
     // ===== 섹션 뒷배경 자동 크로스페이드 ([data-photo-backdrop] 안의 사진들) =====
