@@ -231,7 +231,7 @@ test('the phone quote is an approved review that the carousel does not open on',
   const { cardsForLocale } = require('../assets/reviews-data.js');
   for (const locale of ['en', 'ko']) {
     const block = html.match(new RegExp(`^ {6}${locale}: \\{[\\s\\S]*?^ {6}\\},$`, 'm'))[0];
-    const heroShort = block.match(/quoteShort: '(“[^”]+”)'/);
+    const heroShort = block.match(/\n {10}quoteShort: '(“[^”]+”)'/);
     assert.ok(heroShort, `${locale} hero.quoteShort 카피가 없다`);
 
     const cards = cardsForLocale(locale);
@@ -248,13 +248,28 @@ test('the phone quote is an approved review that the carousel does not open on',
     // 인용이 온 카드의 meta와 같은 회차를 말하는지 본다.
     const run = (text) => (text.match(/June|July|August|6월|7월|8월/) ?? [])[0];
     const sourceMeta = cards[cardQuotes.indexOf(heroShort[1])].meta;
-    const heroShortBy = block.match(/quoteShortBy: '([^']+)'/);
+    const heroShortBy = block.match(/\n {10}quoteShortBy: '([^']+)'/);
     assert.ok(heroShortBy, `${locale} hero.quoteShortBy 카피가 없다`);
     assert.equal(
       run(heroShortBy[1]),
       run(sourceMeta),
       `${locale} 폰 인용의 출처 회차가 그 후기가 나온 회차와 다르다`,
     );
+
+    // 광고 A/B arm이 갈아끼우는 인용도 같은 계약을 받는다. 승인된 후기여야 하고,
+    // 캐러셀이 여는 카드와 겹치면 안 되고, 출처가 그 후기의 회차를 말해야 한다.
+    // 여기가 비어 있으면 arm 화면에서만 승인 밖 인용이 도는 길이 열린다.
+    const variants = block.match(/variants: \{[\s\S]*?\n {10}\},/)[0];
+    const armQuotes = [...variants.matchAll(/\n {14}(quote|quoteShort): '(“[^”]+”)',\n {14}\1By: '([^']+)',/g)];
+    assert.ok(armQuotes.length > 0, `${locale} arm 인용이 하나도 없다`);
+    for (const [, key, quote, by] of armQuotes) {
+      const index = cardQuotes.indexOf(quote);
+      assert.notEqual(index, -1, `${locale} arm ${key}가 승인된 후기가 아니다`);
+      if (key === 'quoteShort') {
+        assert.notEqual(index, defaultIndex, `${locale} arm 폰 인용이 캐러셀 첫 화면과 같다`);
+      }
+      assert.equal(run(by), run(cards[index].meta), `${locale} arm ${key}의 출처 회차가 후기와 다르다`);
+    }
   }
 });
 

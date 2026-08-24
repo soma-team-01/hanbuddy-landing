@@ -1023,10 +1023,21 @@
           variants: {
             local: {
               subtitle: 'We get the tickets and the stadium food. Your buddy explains the game and teaches you the chants.',
+              // 서브카피가 "버디가 경기를 설명해 준다"고 말하면, 바로 아래 인용이
+              // 그 말을 실제로 겪은 사람의 문장이어야 한다. 폰 인용은 이미 로컬
+              // 결이라("with a local") 그대로 둔다.
+              quote: '“They did a fantastic job of explaining what was happening during the game.”',
+              quoteBy: '— Guest at our July baseball night, Jamsil Stadium',
             },
             friends: {
               title: 'Come alone. Leave Seoul with\u00a0friends.',
               subtitle: 'Every meetup is a Korean buddy plus other travelers who picked the same night.',
+              // 이 arm의 주장을 게스트가 자기 말로 한 유일한 승인 후기다. 54자라
+              // 폰에서도 두 줄이라 데스크톱과 같은 문장을 쓴다.
+              quote: '“The guide was nice and it was like being with friends.”',
+              quoteBy: '— Guest at our August football night, Seoul World Cup Stadium',
+              quoteShort: '“The guide was nice and it was like being with friends.”',
+              quoteShortBy: '— Guest at our August football night, Seoul World Cup Stadium',
             },
           },
           primaryCta: 'Join a meetup',
@@ -1236,10 +1247,16 @@
           variants: {
             local: {
               subtitle: '티켓도 경기장 먹거리도 저희가 준비해요. 버디가 경기를 설명해 주고 응원가를 알려드려요.',
+              quote: '“경기 중에 무슨 일이 벌어지고 있는지 정말 잘 설명해 줬어요.”',
+              quoteBy: '— 7월 야구 직관 참가 게스트, 잠실야구장',
             },
             friends: {
               title: '혼자 왔다가, 서울에서 친구를 만들어 가세요.',
               subtitle: '모든 모임에는 한국인 버디와, 같은 날을 고른 다른 여행자들이 함께해요.',
+              quote: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
+              quoteBy: '— 8월 축구 직관 참가 게스트, 서울월드컵경기장',
+              quoteShort: '“가이드는 친절했고 친구들과 함께 있는 것 같았어요.”',
+              quoteShortBy: '— 8월 축구 직관 참가 게스트, 서울월드컵경기장',
             },
           },
           primaryCta: '모임 참여하기',
@@ -1817,11 +1834,12 @@
       if (!variant) return;
       // syncStaticText가 기본 카피를 이미 써 넣은 뒤라야 덮어쓸 수 있다.
       // 순서를 뒤집으면 언어를 바꿀 때마다 기본 카피가 되살아난다.
-      const nodes = {
-        title: document.querySelector('[data-i18n="hero.title"]'),
-        subtitle: document.querySelector('[data-i18n="hero.subtitle"]'),
-      };
-      Object.entries(nodes).forEach(([key, node]) => {
+      //
+      // arm이 갖고 있는 키만 덮어쓴다. local은 헤드라인을 그대로 두고, 폰 인용도
+      // 이미 자기 결이라 건드리지 않는다. 없는 키를 빈 문자열로 밀어내면 그 자리가
+      // 통째로 사라진다.
+      Object.keys(variant).forEach((key) => {
+        const node = document.querySelector(`[data-i18n="hero.${key}"]`);
         if (node && typeof variant[key] === 'string') node.textContent = variant[key];
       });
     };
