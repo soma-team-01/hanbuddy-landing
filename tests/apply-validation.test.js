@@ -126,6 +126,8 @@ test('the honeypot silently fails validation', () => {
 test('form options are exposed for the page to render', () => {
   assert.ok(FIELD_OPTIONS.contactMethod.includes('KakaoTalk'));
   assert.ok(FIELD_OPTIONS.source.includes('Instagram'));
+  // 검색 광고를 돌리는 동안 이 칸이 빠지면 검색 유입이 전부 Other로 뭉개진다.
+  assert.ok(FIELD_OPTIONS.source.includes('Google search'));
 });
 
 // 상시 오픈 회차는 서버가 날짜를 직접 판정한다. 폼의 select는 브라우저에만 있고,
