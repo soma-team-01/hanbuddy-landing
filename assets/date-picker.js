@@ -80,7 +80,7 @@
 
     // 좌우 이동은 "열려 있는 다음 날짜"로 간다. 고척처럼 띄엄띄엄 열리는 회차에서
     // 하루씩 밀면 비활성 칸을 여러 번 지나야 해서 키보드로는 사실상 못 쓴다.
-    const step = (delta) => {
+    const step = (delta, isTrusted = false) => {
       const isos = enabledIsos();
       const at = isos.indexOf(selected);
       // 아직 고른 날이 없으면 진행 방향의 끝에서 시작한다. at을 0으로 보면
@@ -88,19 +88,19 @@
       const target = at < 0
         ? (delta > 0 ? isos[0] : isos.at(-1))
         : isos[at + delta];
-      if (target) select(target, { focus: true });
+      if (target) select(target, { focus: true, isTrusted });
     };
 
     // 위아래는 한 주씩. 그 자리가 닫혀 있으면 같은 방향에서 가장 가까운 날로 붙는다.
-    const stepWeek = (delta) => {
-      if (!selected) return step(delta > 0 ? 1 : -1);
+    const stepWeek = (delta, isTrusted = false) => {
+      if (!selected) return step(delta > 0 ? 1 : -1, isTrusted);
       const wanted = shiftDays(selected.slice(0, 10), delta * 7);
-      if (byDay.has(wanted)) return select(byDay.get(wanted).iso, { focus: true });
+      if (byDay.has(wanted)) return select(byDay.get(wanted).iso, { focus: true, isTrusted });
       const isos = enabledIsos();
       const pool = delta > 0
         ? isos.filter((iso) => iso.slice(0, 10) >= wanted)
         : isos.filter((iso) => iso.slice(0, 10) <= wanted).reverse();
-      if (pool.length) select(pool[0], { focus: true });
+      if (pool.length) select(pool[0], { focus: true, isTrusted });
     };
 
     const focusActive = () => {
@@ -194,29 +194,29 @@
         : labels[language].pickPrompt;
     };
 
-    function select(iso, { focus = false, silent = false } = {}) {
+    function select(iso, { focus = false, silent = false, isTrusted = false } = {}) {
       selected = iso || '';
       input.value = selected;
       if (selected) viewMonth = monthOf(selected);
       render();
       if (focus) focusActive();
-      if (!silent) onChange(selected);
+      if (!silent) onChange(selected, isTrusted === true);
     }
 
     grid.addEventListener('click', (event) => {
       const cell = event.target.closest('button[data-day]');
       if (!cell || cell.disabled) return;
-      select(byDay.get(cell.dataset.day).iso, { focus: true });
+      select(byDay.get(cell.dataset.day).iso, { focus: true, isTrusted: event.isTrusted });
     });
 
     grid.addEventListener('keydown', (event) => {
       const moves = {
-        ArrowRight: () => step(1),
-        ArrowLeft: () => step(-1),
-        ArrowDown: () => stepWeek(1),
-        ArrowUp: () => stepWeek(-1),
-        Home: () => select(enabledIsos()[0], { focus: true }),
-        End: () => select(enabledIsos().at(-1), { focus: true }),
+        ArrowRight: () => step(1, event.isTrusted),
+        ArrowLeft: () => step(-1, event.isTrusted),
+        ArrowDown: () => stepWeek(1, event.isTrusted),
+        ArrowUp: () => stepWeek(-1, event.isTrusted),
+        Home: () => select(enabledIsos()[0], { focus: true, isTrusted: event.isTrusted }),
+        End: () => select(enabledIsos().at(-1), { focus: true, isTrusted: event.isTrusted }),
         PageDown: () => showMonth(1),
         PageUp: () => showMonth(-1),
       };

@@ -20,6 +20,7 @@ cd ~/projects/hanbuddy-landing
 # 신청 폼을 제출까지 돌려볼 때 (시크릿 필요 없음)
 node scripts/dev-server.js                          # http://127.0.0.1:8099/apply/
 QA_SCENARIO=sheet-fail node scripts/dev-server.js   # 또는 both-fail — 저장 실패 분기 확인
+QA_SCENARIO=discord-fail node scripts/dev-server.js # 시트 접수 후 알림 실패 분기 확인
 # ⚠️ 저장은 스텁이다. 접수 완료 화면이 떠도 시트 연동이 동작한다는 뜻은 아니다.
 
 # 정적 페이지만 볼 때 (가장 빠르지만 /api/가 돌지 않아 제출은 전부 실패한다)
@@ -37,6 +38,8 @@ node --test tests/*.test.js
 ```
 
 about·apply 카피 동기화(메인과 공유하는 문구), 카드 날짜와 `EVENT_SLOTS`의 일치, 신청 폼 검증, 서버 로그 개인정보 차단, `.vercelignore` 배포 누락, 애널리틱스 동의 게이팅, `DESIGN.md`↔구현 팔레트·타이포 동기화를 검사한다. CI는 없으므로 푸시 전에 로컬에서 돌린다.
+
+신청 측정의 canonical funnel은 `application_form_open` → `application_start` → `generate_lead`다. 첫 이벤트는 신청 페이지로 가는 실제 CTA 클릭마다 한 번(같은 클릭의 `select_content`는 보내지 않음), 두 번째는 신청 폼의 첫 trusted 입력 또는 날짜 선택에 한 번, 마지막은 `/api/apply`가 HTTP 성공과 `{ ok: true }`를 함께 반환한 뒤 한 번만 전송한다. 선택 날짜·인원·유입 경로를 포함한 폼 값은 분석 payload에 넣지 않는다. 다른 클릭·자동 폼 이벤트가 추가되더라도 이 세 단계의 대체 지표가 아니라 보조 지표로 문서화해야 한다.
 
 ## 배포
 
