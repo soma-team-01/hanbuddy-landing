@@ -20,6 +20,7 @@ cd ~/projects/hanbuddy-landing
 # 신청 폼을 제출까지 돌려볼 때 (시크릿 필요 없음)
 node scripts/dev-server.js                          # http://127.0.0.1:8099/apply/
 QA_SCENARIO=sheet-fail node scripts/dev-server.js   # 또는 both-fail — 저장 실패 분기 확인
+QA_SCENARIO=discord-fail node scripts/dev-server.js # 시트 접수 후 알림 실패 분기 확인
 # ⚠️ 저장은 스텁이다. 접수 완료 화면이 떠도 시트 연동이 동작한다는 뜻은 아니다.
 
 # 정적 페이지만 볼 때 (가장 빠르지만 /api/가 돌지 않아 제출은 전부 실패한다)

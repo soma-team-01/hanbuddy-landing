@@ -2,11 +2,11 @@ const crypto = require('node:crypto');
 const { validateApplication } = require('../assets/apply-validation.js');
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
-// 0·O·1·I를 뺀 32자. 사람이 전화로 불러줄 수 있어야 한다.
-const ID_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const SHEET_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 const MAX_BODY_BYTES = 16 * 1024;
-// 시트 경로는 토큰 발급과 append 두 번을 순서대로 타므로, 상한은 그 합이 함수
+const IDEMPOTENCY_KEY_PATTERN = /^HB-\d{8}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{16}$/;
+// 시트 경로는 토큰 발급, 조회, append, reconciliation/cleanup을 순서대로 타므로,
+// 상한은 그 합이 함수
 // 실행 한도 안에 들어오게 잡는다. 디스코드 재시도까지 더해도 여유가 남는다.
 // 환경변수는 테스트가 기다리지 않게 하려는 것이다. 배포에서는 설정하지 않는다.
 const REQUEST_TIMEOUT_MS = Number(process.env.APPLY_REQUEST_TIMEOUT_MS) || 3000;
@@ -27,15 +27,6 @@ const emit = (fields) => {
 };
 
 const kstParts = (now) => new Date(now + KST_OFFSET_MS).toISOString();
-
-const buildApplicationId = (now = Date.now()) => {
-  const ymd = kstParts(now).slice(0, 10).replace(/-/g, '');
-  const bytes = crypto.randomBytes(6);
-  let suffix = '';
-  // 32는 256의 약수라 나머지 연산에 치우침이 없다.
-  for (const byte of bytes) suffix += ID_ALPHABET[byte % ID_ALPHABET.length];
-  return `HB-${ymd}-${suffix}`;
-};
 
 const buildRow = ({ applicationId, timestampKst, value }) => [
   timestampKst,
@@ -61,13 +52,16 @@ const buildRow = ({ applicationId, timestampKst, value }) => [
 
 const base64url = (input) => Buffer.from(input).toString('base64url');
 
-// 상한이 없으면 시트가 응답하지 않을 때 Promise.allSettled가 끝나지 않는다.
-// 디스코드가 이미 성공했더라도 신청자는 함수가 강제 종료될 때까지 기다리다
-// 오류 화면을 보게 되는데, 접수는 된 상태라 가장 나쁜 조합이다.
-//
-// 마감은 홉마다가 아니라 저장 경로마다 하나씩 만든다. 시트 경로는 토큰 발급과
-// append 두 번을 순서대로 타므로, 호출마다 새로 걸면 최악의 대기가 홉 수만큼
-// 곱해지고 나중에 홉이 하나 늘면 상한이 조용히 따라 늘어난다.
+const idempotencyKeyFrom = (request) => {
+  const headers = request.headers;
+  const value = typeof headers?.get === 'function'
+    ? headers.get('idempotency-key')
+    : headers?.['idempotency-key'];
+  return typeof value === 'string' && IDEMPOTENCY_KEY_PATTERN.test(value) ? value : null;
+};
+
+// 마감은 홉마다가 아니라 저장 경로마다 하나씩 만든다. 시트 경로의 모든 조회,
+// append, cleanup에 새로 걸면 최악의 대기가 홉 수만큼 곱해진다.
 const deadline = () => AbortSignal.timeout(REQUEST_TIMEOUT_MS);
 
 const accessToken = async (signal) => {
@@ -100,13 +94,30 @@ const accessToken = async (signal) => {
   return body.access_token;
 };
 
-const appendRow = async (row, signal) => {
-  const token = await accessToken(signal);
+const sheetValuesUrl = (range, suffix = '') => {
   const sheetId = process.env.APPLICATIONS_SHEET_ID;
   const tab = process.env.APPLICATIONS_SHEET_TAB || 'applications';
-  const range = encodeURIComponent(`${tab}!A:Q`);
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append`
-    + '?valueInputOption=RAW&insertDataOption=INSERT_ROWS';
+  return `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/`
+    + `${encodeURIComponent(`${tab}!${range}`)}${suffix}`;
+};
+
+const readRows = async (token, signal) => {
+  const response = await fetch(sheetValuesUrl('A:Q'), {
+    method: 'GET',
+    signal,
+    headers: { authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) throw new Error('sheet-lookup');
+  const body = await response.json();
+  if (!Array.isArray(body.values)) return [];
+  return body.values.map((row, index) => ({
+    rowNumber: index + 1,
+    values: Array.isArray(row) ? row : [],
+  }));
+};
+
+const appendRow = async (row, token, signal) => {
+  const url = sheetValuesUrl('A:Q', ':append?valueInputOption=RAW&insertDataOption=INSERT_ROWS');
   const response = await fetch(url, {
     method: 'POST',
     signal,
@@ -114,13 +125,74 @@ const appendRow = async (row, signal) => {
     body: JSON.stringify({ values: [row] }),
   });
   if (!response.ok) throw new Error('sheet');
+  const body = await response.json();
+  const updatedRange = body?.updates?.updatedRange;
+  const match = typeof updatedRange === 'string' && updatedRange.match(/!A(\d+):Q(\d+)$/);
+  if (!match || match[1] !== match[2]) return null;
+  return Number(match[1]);
 };
 
-const notifyDiscord = async ({ applicationId, value, sheetFailed, signal }) => {
+const clearRow = async (rowNumber, token, signal) => {
+  const response = await fetch(sheetValuesUrl(`A${rowNumber}:Q${rowNumber}`, ':clear'), {
+    method: 'POST',
+    signal,
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: '{}',
+  });
+  if (!response.ok) throw new Error('sheet-clear');
+};
+
+const comparableCell = (value) => (value === undefined || value === null ? '' : String(value));
+
+const samePayload = (storedRow, expectedRow) => {
+  for (let index = 2; index < 17; index += 1) {
+    if (comparableCell(storedRow[index]) !== comparableCell(expectedRow[index])) return false;
+  }
+  return true;
+};
+
+const inspectApplication = async ({ applicationId, expectedRow, token, signal }) => {
+  const matches = (await readRows(token, signal))
+    .filter(({ values }) => comparableCell(values[1]) === applicationId)
+    .sort((left, right) => left.rowNumber - right.rowNumber);
+  if (matches.length === 0) return { status: 'missing', duplicateRows: [] };
+
+  const [canonical, ...duplicates] = matches;
+  const status = samePayload(canonical.values, expectedRow) ? 'stored' : 'conflict';
+  return {
+    status,
+    canonicalRow: canonical.rowNumber,
+    duplicateRows: duplicates.map(({ rowNumber }) => rowNumber),
+  };
+};
+
+const cleanupOwnedDuplicates = async ({
+  applicationId, expectedRow, canonicalRow, duplicateRows, token, signal,
+}) => {
+  // 한 행을 비운 뒤에는 Sheets append가 그 trailing row를 바로 재사용할 수 있다.
+  // 다음 stale clear를 미리 보내 두지 않도록 반드시 한 행씩 응답을 확인한다.
+  for (const rowNumber of duplicateRows) {
+    await clearRow(rowNumber, token, signal);
+  }
+
+  // clear 2xx만으로는 중복 제거와 원본 보존을 증명할 수 없다. 같은 deadline 안에서
+  // canonical 한 행만, 같은 payload로 남았는지 다시 읽은 뒤에만 owner가 성공한다.
+  const verified = await inspectApplication({
+    applicationId, expectedRow, token, signal,
+  });
+  if (verified.status !== 'stored'
+    || verified.canonicalRow !== canonicalRow
+    || verified.duplicateRows.length !== 0) {
+    throw new Error('sheet-reconcile');
+  }
+  return verified;
+};
+
+const notifyDiscord = async ({ applicationId, value, signal }) => {
   const webhook = process.env.DISCORD_WEBHOOK_URL;
   if (!webhook) throw new Error('webhook');
   const lines = [
-    sheetFailed ? '⚠️ **시트 저장 실패** 아래 내용을 수동으로 옮겨주세요' : '🎉 **새 신청**',
+    '🎉 **새 신청**',
     `\`${applicationId}\``,
     `${value.eventTitle} · ${value.slotIso.replace('T', ' ')} · ${value.guests}명`,
     `${value.name} (${value.nationality})`,
@@ -151,50 +223,124 @@ const handler = async (request, response) => {
     return;
   }
 
+  const idempotencyKey = idempotencyKeyFrom(request);
+  if (!idempotencyKey) {
+    response.status(400).json({ ok: false, code: 'VALIDATION' });
+    return;
+  }
+
   const checked = validateApplication(payload);
   if (!checked.ok) {
     // 봇은 성공처럼 보내고 저장하지 않는다. 실패를 알려주면 우회를 학습한다.
     if (checked.field === 'website') {
-      response.status(200).json({ ok: true, applicationId: buildApplicationId() });
+      response.status(200).json({ ok: true, applicationId: idempotencyKey });
       return;
     }
     response.status(400).json({ ok: false, code: 'VALIDATION', field: checked.field });
     return;
   }
 
-  const applicationId = buildApplicationId();
+  const applicationId = idempotencyKey;
   const timestampKst = kstParts(Date.now()).slice(0, 19).replace('T', ' ');
   const row = buildRow({ applicationId, timestampKst, value: checked.value });
 
-  const [sheet, discord] = await Promise.allSettled([
-    appendRow(row, deadline()),
-    notifyDiscord({ applicationId, value: checked.value, sheetFailed: false, signal: deadline() }),
-  ]);
-
-  const sheetFailed = sheet.status === 'rejected';
-  const discordFailed = discord.status === 'rejected';
-
-  if (sheetFailed && discordFailed) {
-    emit({ application_id: applicationId, code: 'STORAGE', stage: 'both' });
+  // 서버리스 인스턴스의 메모리는 재시도 사이에 공유되지 않는다. 시트 B열의
+  // application_id와 같은 행의 C:Q를 durable idempotency record로 쓴다.
+  const sheetSignal = deadline();
+  let token;
+  try {
+    token = await accessToken(sheetSignal);
+    const prior = await inspectApplication({
+      applicationId, expectedRow: row, token, signal: sheetSignal,
+    });
+    // Append ownership이 없는 retry는 과거 중복을 추측해서 지우지 않는다.
+    if (prior.duplicateRows.length !== 0) throw new Error('sheet-duplicates');
+    if (prior.status === 'conflict') {
+      response.status(409).json({ ok: false, code: 'CONFLICT' });
+      return;
+    }
+    if (prior.status === 'stored') {
+      response.status(200).json({ ok: true, applicationId });
+      return;
+    }
+  } catch {
+    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
     response.status(500).json({ ok: false, code: 'STORAGE' });
     return;
   }
 
-  if (sheetFailed) {
-    // 디스코드에 내용이 남아 수동 복구가 되므로 접수로 처리한다. 여기서
-    // 오류를 띄우면 그 사람은 대부분 그냥 이탈한다.
-    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-    await notifyDiscord({
-      applicationId, value: checked.value, sheetFailed: true, signal: deadline(),
-    }).catch(() => {});
+  let callerRow = null;
+  try {
+    callerRow = await appendRow(row, token, sheetSignal);
+  } catch {
+    // Google이 append를 적용한 뒤 응답만 끊겼을 수 있다. reconciliation은 계속
+    // 하되 updatedRange를 못 받았으므로 어느 행을 썼는지 ownership은 주장하지 않는다.
   }
-  if (discordFailed) emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
+
+  let inspected;
+  try {
+    inspected = await inspectApplication({
+      applicationId, expectedRow: row, token, signal: sheetSignal,
+    });
+  } catch {
+    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
+    response.status(500).json({ ok: false, code: 'STORAGE' });
+    return;
+  }
+
+  if (inspected.status === 'missing') {
+    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
+    response.status(500).json({ ok: false, code: 'STORAGE' });
+    return;
+  }
+
+  const ownsCanonicalRow = callerRow !== null && callerRow === inspected.canonicalRow;
+  if (inspected.duplicateRows.length !== 0) {
+    // updatedRange로 lowest row ownership을 증명한 invocation 하나만 cleanup한다.
+    // nonowner/ambiguous caller는 owner가 끝낸 뒤의 ordinary retry에서만 성공한다.
+    if (!ownsCanonicalRow || inspected.status !== 'stored') {
+      emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
+      response.status(500).json({ ok: false, code: 'STORAGE' });
+      return;
+    }
+    try {
+      inspected = await cleanupOwnedDuplicates({
+        applicationId,
+        expectedRow: row,
+        canonicalRow: inspected.canonicalRow,
+        duplicateRows: inspected.duplicateRows,
+        token,
+        signal: sheetSignal,
+      });
+    } catch {
+      emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
+      response.status(500).json({ ok: false, code: 'STORAGE' });
+      return;
+    }
+  }
+
+  if (inspected.status === 'conflict') {
+    response.status(409).json({ ok: false, code: 'CONFLICT' });
+    return;
+  }
+
+  // updatedRange로 자기 행을 증명하고 그 행이 lowest canonical일 때만 알린다.
+  // 응답을 잃었거나 비정상 응답으로 row ownership이 불명확하면 접수는 성공해도
+  // Discord는 보내지 않는다. Discord는 durable authority가 아닌 운영 알림이다.
+  if (ownsCanonicalRow) {
+    await notifyDiscord({
+      applicationId, value: checked.value, signal: deadline(),
+    }).catch(() => {
+      emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
+    });
+  }
 
   response.status(200).json({ ok: true, applicationId });
 };
 
 module.exports = handler;
-module.exports.buildApplicationId = buildApplicationId;
 module.exports.buildRow = buildRow;
 module.exports.safeLog = safeLog;
 module.exports.ALLOWED_LOG_KEYS = ALLOWED_LOG_KEYS;
+module.exports.idempotencyKeyFrom = idempotencyKeyFrom;
+module.exports.samePayload = samePayload;

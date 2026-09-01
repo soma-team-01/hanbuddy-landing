@@ -75,38 +75,9 @@ test('every event detail has a matching absolute self-canonical and og:url', () 
 test('event and breadcrumb JSON-LD is valid and agrees with page metadata', () => {
   for (const { id, html } of eventPages) {
     const nodes = graphNodes(html);
-    const events = nodes.filter((entry) => entry['@type'] === 'Event');
     const breadcrumbNodes = nodes.filter((entry) => entry['@type'] === 'BreadcrumbList');
     const canonical = `https://www.hanbuddy.kr/events/${id}/`;
     const title = metadataValue(html, /<title>([^<]+) \| HanBuddy<\/title>/, `${id} title`);
-    const description = metadataValue(
-      html,
-      /<meta name="description" content="([^"]+)" \/>/,
-      `${id} description`,
-    );
-    const image = metadataValue(
-      html,
-      /<meta property="og:image" content="([^"]+)" \/>/,
-      `${id} image`,
-    );
-    const venue = metadataValue(
-      html,
-      /<dt[^>]*>[^<]*<span[^>]*>[^<]*<\/span> Venue<\/dt>\s*<dd[^>]*>([^<]+)<\/dd>/,
-      `${id} venue`,
-    );
-
-    assert.ok(events.length > 0, `${id} Event JSON-LD`);
-    for (const event of events) {
-      assert.equal(event['@context'], undefined, '@context belongs on the graph wrapper');
-      assert.equal(event.name, title);
-      assert.equal(event.description, description);
-      assert.equal(event.url, canonical);
-      assert.equal(event.image, image);
-      assert.deepEqual(event.location, { '@type': 'Place', name: venue });
-      for (const unsupported of ['offers', 'availability', 'aggregateRating', 'review', 'organizer', 'endDate']) {
-        assert.equal(event[unsupported], undefined, `${id} must not invent ${unsupported}`);
-      }
-    }
     assert.equal(breadcrumbNodes.length, 1, `${id} must have exactly one BreadcrumbList`);
     const [breadcrumbs] = breadcrumbNodes;
     assert.deepEqual(breadcrumbs.itemListElement, [
@@ -116,39 +87,32 @@ test('event and breadcrumb JSON-LD is valid and agrees with page metadata', () =
   }
 });
 
-test('event JSON-LD schedules agree exactly with canonical slot data', () => {
-  for (const slotSource of EVENT_SLOTS) {
-    const page = eventPages.find(({ id }) => id === slotSource.id);
-    assert.ok(page, `missing detail page for ${slotSource.id}`);
-    const events = graphNodes(page.html).filter((entry) => entry['@type'] === 'Event');
-
-    if (slotSource.slots) {
-      assert.equal(events.length, slotSource.slots.length, `${slotSource.id} needs one Event per fixed slot`);
-      assert.deepEqual(
-        events.map((event) => event.startDate),
-        slotSource.slots.map((slot) => `${slot}:00+09:00`),
-        `${slotSource.id} structured dates drifted from EVENT_SLOTS`,
-      );
-      assert.equal(new Set(events.map((event) => event['@id'])).size, events.length,
-        `${slotSource.id} fixed Event @ids must be unique`);
-      for (const event of events) {
-        assert.match(event['@id'], new RegExp(`^https://www\\.hanbuddy\\.kr/events/${slotSource.id}/#event-`));
-        assert.equal(event.eventSchedule, undefined, `${slotSource.id} fixed Events must not use Schedule`);
-        assert.match(event.startDate, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00\+09:00$/);
-      }
-    } else {
-      assert.equal(events.length, 1, `${slotSource.id} recurring activity needs one Event`);
-      assert.equal(events[0].startDate, undefined);
-      assert.deepEqual(events[0].eventSchedule, {
-        '@type': 'Schedule',
-        repeatFrequency: 'P1D',
-        startTime: `${slotSource.recurring.time}:00`,
-        scheduleTimezone: 'Asia/Seoul',
-      });
-      assert.match(events[0].eventSchedule.startTime, /^\d{2}:\d{2}:\d{2}$/,
-        `${slotSource.id} Schedule startTime must use the Schema.org Time format`);
-    }
+test('every generic event page avoids Event, Schedule, fake addresses, and representative dates', () => {
+  for (const { id, html } of eventPages) {
+    const nodes = graphNodes(html);
+    assert.equal(nodes.filter((entry) => entry['@type'] === 'Event').length, 0,
+      `${id} has no separately routed occurrence and must not claim Event eligibility`);
+    assert.equal(nodes.filter((entry) => entry['@type'] === 'Schedule').length, 0,
+      `${id} must not claim a schedule for a flexible generic page`);
+    assert.doesNotMatch(html, /"address"\s*:/,
+      `${id} must not disguise a venue name as a PostalAddress`);
+    assert.doesNotMatch(html, /September (?:5|13), 2026/,
+      `${id} must not retain the stale representative occurrence`);
+    assert.match(html, /<dt[^>]*>[^<]*<span[^>]*>[^<]*<\/span> Date<\/dt>\s*<dd[^>]*>Pick your date when you apply<\/dd>/,
+      `${id} generic visible Date copy`);
   }
+});
+
+test('Jamsil metadata does not promise a night game for flexible dates', () => {
+  const page = eventPages.find(({ id }) => id === 'kbo-jamsil');
+  assert.doesNotMatch(
+    metadataValue(page.html, /<meta name="description" content="([^"]+)" \/>/, 'Jamsil description'),
+    /night game/i,
+  );
+  assert.doesNotMatch(
+    metadataValue(page.html, /<meta property="og:description" content="([^"]+)" \/>/, 'Jamsil og description'),
+    /night game/i,
+  );
 });
 
 test('robots and sitemap publish only the intended indexable surface', () => {

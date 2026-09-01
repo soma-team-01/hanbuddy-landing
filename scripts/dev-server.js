@@ -9,12 +9,13 @@
  *   1. 시크릿 없이 폼 전체를 돌릴 수 있다. vercel dev는 서비스 계정 개인키를
  *      각자 노트북에 내려받아야 하는데, 폼 동작을 보려고 치를 값은 아니다.
  *      여기서는 임시 RSA 키를 즉석에서 만들어 JWT 서명 경로까지 진짜로 태운다.
- *   2. 실패 분기를 재현할 수 있다. "시트만 실패해도 접수" "둘 다 실패하면 오류"는
- *      실제 시트로는 권한을 일부러 깨야만 볼 수 있다.
+ *   2. 실패 분기를 재현할 수 있다. 시트가 실패하면 durable 접수도 실패하고,
+ *      Discord만 실패하면 시트 접수는 성공하는 분기를 실제 권한 없이 볼 수 있다.
  *
  * 사용:
  *   node scripts/dev-server.js                  # 저장 성공 시나리오
  *   QA_SCENARIO=sheet-fail node scripts/dev-server.js
+ *   QA_SCENARIO=discord-fail node scripts/dev-server.js
  *   QA_SCENARIO=both-fail  node scripts/dev-server.js
  *   실행 중 전환: curl "http://127.0.0.1:8099/__scenario?mode=both-fail"
  */
@@ -25,7 +26,7 @@ const { extname, join, resolve, sep } = require('node:path');
 
 const ROOT = resolve(__dirname, '..');
 const PORT = Number(process.env.PORT) || 8099;
-const SCENARIOS = ['ok', 'sheet-fail', 'both-fail'];
+const SCENARIOS = ['ok', 'sheet-fail', 'discord-fail', 'both-fail'];
 
 let scenario = SCENARIOS.includes(process.env.QA_SCENARIO) ? process.env.QA_SCENARIO : 'ok';
 
@@ -40,15 +41,40 @@ process.env.APPLICATIONS_SHEET_TAB = 'applications';
 process.env.DISCORD_WEBHOOK_URL = 'https://discord.invalid/dev-stub';
 
 const sent = [];
-global.fetch = async (url) => {
-  const target = String(url);
+const storedRows = [];
+global.fetch = async (url, init = {}) => {
+  const target = decodeURIComponent(String(url));
   if (target.includes('oauth2.googleapis.com')) {
     return { ok: true, json: async () => ({ access_token: 'dev-stub-token' }) };
   }
   const channel = target.includes('sheets.googleapis.com') ? 'sheet' : 'discord';
-  const failed = scenario === 'both-fail' || (scenario === 'sheet-fail' && channel === 'sheet');
+  const failed = scenario === 'both-fail'
+    || (scenario === 'sheet-fail' && channel === 'sheet')
+    || (scenario === 'discord-fail' && channel === 'discord');
   sent.push(`${channel}:${failed ? 'fail' : 'ok'}`);
-  return { ok: !failed };
+  if (failed) return { ok: false };
+  if (channel === 'sheet' && init.method === 'GET') {
+    return {
+      ok: true,
+      json: async () => ({ values: storedRows.map((row) => [...row]) }),
+    };
+  }
+  if (channel === 'sheet') {
+    if (target.endsWith(':clear')) {
+      const match = target.match(/!A(\d+):Q\1:clear$/);
+      if (!match) return { ok: false };
+      storedRows[Number(match[1]) - 1] = [];
+      return { ok: true, json: async () => ({}) };
+    }
+    const row = JSON.parse(init.body).values[0];
+    storedRows.push(row);
+    const rowNumber = storedRows.length;
+    return {
+      ok: true,
+      json: async () => ({ updates: { updatedRange: `applications!A${rowNumber}:Q${rowNumber}` } }),
+    };
+  }
+  return { ok: true };
 };
 
 const handler = require(join(ROOT, 'api', 'apply.js'));
@@ -132,7 +158,11 @@ const server = http.createServer(async (request, response) => {
         return this;
       },
     };
-    await handler({ method: request.method, body: await readBody(request) }, shim);
+    await handler({
+      method: request.method,
+      headers: request.headers,
+      body: await readBody(request),
+    }, shim);
     return;
   }
 
@@ -146,7 +176,7 @@ server.listen(PORT, '127.0.0.1', () => {
     '',
     `  http://127.0.0.1:${PORT}/apply/`,
     '',
-    `  시나리오: ${scenario}  (ok | sheet-fail | both-fail)`,
+    `  시나리오: ${scenario}  (${SCENARIOS.join(' | ')})`,
     '',
     '  ⚠️  저장은 스텁입니다. 실제 시트에 쓰지 않고 디스코드로 보내지도 않습니다.',
     '     접수 완료 화면이 떠도 시트 연동이 동작한다는 뜻은 아닙니다.',

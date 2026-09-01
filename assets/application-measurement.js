@@ -12,6 +12,7 @@
   ]);
 
   const CONTENT_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  const IDEMPOTENCY_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const LANGUAGES = new Set(['en', 'ko']);
   const LANDING_VARIANTS = new Set(['local', 'friends', 'none']);
 
@@ -32,51 +33,161 @@
     trackEvent = () => {},
     trackLead = () => {},
   } = {}) => {
+    let startEligible = false;
     let started = false;
+    let completionPending = false;
     let completed = false;
+
+    const deliverStart = () => {
+      if (!startEligible || started || completed) return false;
+      const delivered = trackEvent('application_start', buildApplicationContext(context()));
+      if (delivered !== true) return false;
+      started = true;
+      return true;
+    };
+
+    const deliverCompletion = () => {
+      if (!completionPending || !started || completed) return false;
+      const delivered = trackEvent('generate_lead', buildApplicationContext(context()));
+      if (delivered !== true) return false;
+      completed = true;
+      completionPending = false;
+      trackLead();
+      return true;
+    };
+
+    const retry = () => {
+      const startDelivered = deliverStart();
+      const completionDelivered = deliverCompletion();
+      return startDelivered || completionDelivered;
+    };
 
     return {
       start({ isTrusted } = {}) {
         if (isTrusted !== true) return false;
-        if (started || completed) return false;
-        started = true;
-        trackEvent('application_start', buildApplicationContext(context()));
-        return true;
+        startEligible = true;
+        return deliverStart();
       },
       complete() {
-        if (!started || completed) return false;
-        completed = true;
-        trackEvent('generate_lead', buildApplicationContext(context()));
-        trackLead();
+        if (!startEligible || completed) return false;
+        completionPending = true;
+        retry();
+        return completed;
+      },
+      retry,
+    };
+  };
+
+  const buildIdempotencyKey = ({ now = Date.now(), crypto = globalThis.crypto } = {}) => {
+    if (typeof crypto?.getRandomValues !== 'function') {
+      throw new Error('secure randomness unavailable');
+    }
+    const ymd = new Date(now + (9 * 60 * 60 * 1000))
+      .toISOString().slice(0, 10).replace(/-/g, '');
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    let suffix = '';
+    for (const byte of bytes) suffix += IDEMPOTENCY_ALPHABET[byte % IDEMPOTENCY_ALPHABET.length];
+    return `HB-${ymd}-${suffix}`;
+  };
+
+  const stableValue = (value) => {
+    if (Array.isArray(value)) return value.map(stableValue);
+    if (value && typeof value === 'object') {
+      const result = {};
+      for (const key of Object.keys(value).sort()) {
+        if (value[key] !== undefined) result[key] = stableValue(value[key]);
+      }
+      return result;
+    }
+    return value;
+  };
+
+  const buildPayloadFingerprint = async (payload, { crypto = globalThis.crypto } = {}) => {
+    if (typeof crypto?.subtle?.digest !== 'function') {
+      throw new Error('secure digest unavailable');
+    }
+    const canonical = JSON.stringify(stableValue(payload));
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+    return [...new Uint8Array(digest)]
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+  };
+
+  const createSubmissionIdentityState = (observeIdentityState) => {
+    let state = 'idle';
+    let idempotencyKey = null;
+    let payloadFingerprint = null;
+    const notify = typeof observeIdentityState === 'function'
+      ? observeIdentityState
+      : () => {};
+    const emitSnapshot = () => notify(Object.freeze({
+      state,
+      idempotencyKey,
+      payloadFingerprint,
+    }));
+
+    return {
+      canSubmit: () => state === 'idle',
+      begin() {
+        if (state !== 'idle') return false;
+        state = 'submitting';
+        emitSnapshot();
         return true;
+      },
+      identify(nextFingerprint, createIdempotencyKey) {
+        if (payloadFingerprint !== nextFingerprint) {
+          idempotencyKey = createIdempotencyKey();
+          payloadFingerprint = nextFingerprint;
+        }
+        emitSnapshot();
+        return idempotencyKey;
+      },
+      fail() {
+        state = 'idle';
+        emitSnapshot();
+      },
+      complete() {
+        state = 'completed';
+        emitSnapshot();
       },
     };
   };
 
-  const createApplicationSubmitter = ({ request } = {}) => {
+  const createApplicationSubmitter = ({
+    request,
+    createIdempotencyKey = buildIdempotencyKey,
+    createPayloadFingerprint = buildPayloadFingerprint,
+    normalizePayload = (payload) => payload,
+    observeIdentityState,
+  } = {}) => {
     if (typeof request !== 'function') throw new TypeError('request must be a function');
-    let state = 'idle';
+    const identity = createSubmissionIdentityState(observeIdentityState);
 
     return {
-      canSubmit: () => state === 'idle',
+      canSubmit: identity.canSubmit,
       async submit(payload) {
-        if (state !== 'idle') return { status: 'duplicate' };
-        state = 'submitting';
+        if (!identity.begin()) return { status: 'duplicate' };
         try {
+          const nextFingerprint = await createPayloadFingerprint(normalizePayload(payload));
+          const idempotencyKey = identity.identify(nextFingerprint, createIdempotencyKey);
           const response = await request('/api/apply', {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
+            headers: {
+              'content-type': 'application/json',
+              'idempotency-key': idempotencyKey,
+            },
             body: JSON.stringify(payload),
           });
           const result = await response.json();
           if (response.ok !== true || result?.ok !== true) {
-            state = 'idle';
+            identity.fail();
             return { status: 'failure', result };
           }
-          state = 'completed';
+          identity.complete();
           return { status: 'success', result };
         } catch (error) {
-          state = 'idle';
+          identity.fail();
           return { status: 'failure', error };
         }
       },
@@ -86,6 +197,8 @@
   return {
     CANONICAL_APPLICATION_FUNNEL,
     buildApplicationContext,
+    buildIdempotencyKey,
+    buildPayloadFingerprint,
     createApplicationFunnel,
     createApplicationSubmitter,
   };

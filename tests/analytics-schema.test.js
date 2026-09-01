@@ -612,6 +612,31 @@ test('basic application mode is silent before consent and sends one page view af
   assert.match(harness.insertedScripts[0].src, /connect\.facebook\.net\/en_US\/fbevents\.js/);
 });
 
+test('application event delivery reports failure before consent and retries when analytics becomes enabled', { skip: !moduleExists }, () => {
+  const harness = createBrowserHarness({
+    consentMode: 'basic',
+    pageType: 'application',
+    href: 'https://www.hanbuddy.kr/apply/',
+  });
+  let enabledCalls = 0;
+  harness.browserWindow.HanBuddyAnalytics.onEnabled(() => { enabledCalls += 1; });
+
+  assert.equal(
+    harness.browserWindow.HanBuddyAnalytics.trackEvent('application_start', { page_type: 'application' }),
+    false,
+  );
+  harness.chooseConsent('accept');
+  assert.equal(enabledCalls, 1);
+  assert.equal(
+    harness.browserWindow.HanBuddyAnalytics.trackEvent('application_start', { page_type: 'application' }),
+    true,
+  );
+  const starts = harness.browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command, name]) => command === 'event' && name === 'application_start');
+  assert.equal(starts.length, 1);
+});
+
 test('application leads use the Meta standard Lead event only while consent is granted', { skip: !moduleExists }, () => {
   const harness = createBrowserHarness({
     consentMode: 'basic',

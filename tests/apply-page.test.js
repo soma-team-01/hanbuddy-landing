@@ -226,6 +226,10 @@ test('the canonical funnel uses shared context without reading selected form val
   assert.match(context, /content_id: document\.body\.dataset\.analyticsContentId/);
   assert.doesNotMatch(context, /form\.elements|payload\./);
   assert.match(html, /applicationFunnel\.start\(\{ isTrusted: inputEvent\.isTrusted \}\)/);
+  assert.match(html, /onEnabled\?\.\(\(\) => applicationFunnel\.retry\(\)\)/,
+    'granting consent must retry an eligible start that was previously blocked');
+  assert.match(html, /normalizePayload: \(payload\) => \{[\s\S]*?VALIDATION\.validateApplication\(payload\)/,
+    'idempotency compares the same normalized payload that the API validates');
   assert.match(
     html,
     /datePicker\.onChange\(\(_iso, isTrusted\) => applicationFunnel\.start\(\{ isTrusted \}\)\);/,

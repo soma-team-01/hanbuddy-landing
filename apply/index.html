@@ -655,8 +655,15 @@
       trackEvent: track,
       trackLead: () => window.HanBuddyAnalytics?.trackLead?.(),
     });
+    window.HanBuddyAnalytics?.onEnabled?.(() => applicationFunnel.retry());
     const applicationSubmitter = HanBuddyApplicationMeasurement.createApplicationSubmitter({
       request: (...args) => fetch(...args),
+      // 서버와 같은 normalized value만 해시한다. 신청자 값은 메모리에만 있고,
+      // fingerprint나 idempotency key 외에는 브라우저 저장소에 남기지 않는다.
+      normalizePayload: (payload) => {
+        const checked = VALIDATION.validateApplication(payload);
+        return checked.ok ? checked.value : payload;
+      },
     });
 
     const syncCtas = () => {

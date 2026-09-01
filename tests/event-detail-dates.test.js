@@ -17,8 +17,8 @@ test('there is an event detail page to check', () => {
 });
 
 // 후기 캡션은 지난 운영을 증명하는 문장이라 "July 2026" 같은 날짜가 정당하게 들어간다.
-// JSON-LD 일정도 검색엔진용 canonical slot data라 화면 카피가 아니다. 방문자에게
-// 보이는 앞으로의 일정만 검사해야 하므로 두 영역을 먼저 걷어낸다.
+// generic detail page는 개별 회차 URL이 아니므로 본문과 JSON-LD 어디에도 대표 날짜를
+// 만들지 않는다. 앞으로의 날짜는 신청 캘린더만 authoritative하게 유지한다.
 const withoutQuotes = (source) => source
   .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
   .replace(/<figcaption[\s\S]*?<\/figcaption>/g, '')
@@ -32,7 +32,7 @@ const DATE_PATTERNS = [
   /\b20\d{2}-\d{2}-\d{2}\b/,
 ];
 
-test('detail pages never print a specific date', () => {
+test('generic detail pages never print a specific future date', () => {
   // 날짜는 신청 캘린더에서만 고른다. 상세페이지에 박아두면 그날이 지나는 순간
   // 거짓말이 되고, 리그 일정을 갱신할 때마다 여섯 페이지를 손으로 따라가야 한다.
   //

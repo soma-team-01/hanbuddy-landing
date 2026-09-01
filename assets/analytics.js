@@ -225,6 +225,7 @@
   let consentSettingsTrigger = null;
   let initialized = false;
   let sectionObserverStarted = false;
+  const enabledCallbacks = new Set();
 
   const safeStoredAnalyticsConsent = () => {
     try {
@@ -333,22 +334,31 @@
   };
 
   const trackGa = (name, params = {}) => {
-    if (!canTrack()) return;
+    if (!canTrack()) return false;
     browserWindow.gtag('event', name, params);
+    return true;
   };
 
   const trackMetaCustom = (name, params = {}) => {
-    if (!canTrack() || typeof browserWindow.fbq !== 'function') return;
+    if (!canTrack() || typeof browserWindow.fbq !== 'function') return false;
     browserWindow.fbq('trackCustom', name, params);
+    return true;
   };
 
   const trackMetaStandard = (name, params = {}) => {
-    if (!canTrack() || typeof browserWindow.fbq !== 'function') return;
+    if (!canTrack() || typeof browserWindow.fbq !== 'function') return false;
     browserWindow.fbq('track', name, params);
+    return true;
   };
 
   const trackLead = () => {
-    trackMetaStandard('Lead', { content_category: 'application' });
+    return trackMetaStandard('Lead', { content_category: 'application' });
+  };
+
+  const onEnabled = (callback) => {
+    if (typeof callback !== 'function') return () => {};
+    enabledCallbacks.add(callback);
+    return () => enabledCallbacks.delete(callback);
   };
 
   const ctaPlacement = (element) => {
@@ -456,6 +466,7 @@
     sendPageView();
     loadMetaPixel();
     startSectionAnalytics();
+    enabledCallbacks.forEach((callback) => callback());
   };
 
   const loadLimitedAnalytics = () => {
@@ -630,6 +641,7 @@
     isTrackableHostname,
     trackLead,
     trackLanguageSwitch,
+    onEnabled,
     // 신청 폼이 자기 깔때기 이벤트를 직접 보낸다. 동의 게이트는 trackGa 안에 있다.
     trackEvent: trackGa,
   };
