@@ -377,7 +377,7 @@
     }
   };
 
-  const trackCtaElement = (element) => {
+  const trackCtaElement = (element, sourceEvent) => {
     const ctaKey = element.dataset.cta;
     const event = buildCtaEvent({
       ctaKey,
@@ -385,6 +385,15 @@
       pageContext: currentPageContext(),
     });
     if (!event) return;
+    // application_form_open means a real user activation of a real application
+    // link. Trusted click events also cover keyboard-activated anchors.
+    if (
+      ctaKey === 'apply'
+      && (
+        sourceEvent?.isTrusted !== true
+        || !matchesConfiguredDestination(element, 'application_page')
+      )
+    ) return;
 
     trackGa(event.ga.name, event.ga.params);
     if (
@@ -591,7 +600,7 @@
     document.addEventListener('click', (event) => {
       const cta = event.target.closest?.('[data-cta]');
       if (cta) {
-        trackCtaElement(cta);
+        trackCtaElement(cta, event);
         return;
       }
       const content = event.target.closest?.('[data-analytics-content-id]');

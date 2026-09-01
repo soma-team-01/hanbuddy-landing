@@ -10,6 +10,7 @@
   <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
 
   <script src="/assets/analytics.js"></script>
+  <script src="/assets/application-measurement.js"></script>
   <script src="/assets/landing-variant.js"></script>
   <script src="/assets/event-slots.js"></script>
   <script src="/assets/apply-validation.js"></script>
@@ -601,8 +602,6 @@
       // 먼저 페이지 컨텍스트에 올리면 신청 페이지 조회도 같은 퍼널로 이어진다.
       document.body.dataset.analyticsContentId = prefilledEvent;
     }
-    let startedTracked = false;
-
     const getByPath = (source, path) => path.split('.').reduce((value, key) => value?.[key], source);
     const clear = (node) => {
       while (node.firstChild) node.removeChild(node.firstChild);
@@ -639,6 +638,26 @@
     // (비어 있는 것과 태깅이 끊긴 것을 리포트에서 구분하기 위해서다).
     const LANDING_VARIANT = window.HanBuddyVariant?.current?.() ?? null;
     const landingVariantParam = () => LANDING_VARIANT || 'none';
+
+    // Canonical funnel: application_form_open (the inbound CTA) → first trusted
+    // form interaction → a confirmed successful /api/apply response. Only page
+    // context is measured; selected dates and every other form value stay out.
+    const applicationContext = () => ({
+      page_type: 'application',
+      content_type: document.body.dataset.analyticsContentId ? 'experience' : undefined,
+      content_id: document.body.dataset.analyticsContentId,
+      content_language: currentLanguage(),
+      landing_variant: landingVariantParam(),
+      prefilled: Boolean(prefilledEvent),
+    });
+    const applicationFunnel = HanBuddyApplicationMeasurement.createApplicationFunnel({
+      context: applicationContext,
+      trackEvent: track,
+      trackLead: () => window.HanBuddyAnalytics?.trackLead?.(),
+    });
+    const applicationSubmitter = HanBuddyApplicationMeasurement.createApplicationSubmitter({
+      request: (...args) => fetch(...args),
+    });
 
     const syncCtas = () => {
       document.querySelectorAll('[data-cta]').forEach((el) => {
@@ -681,6 +700,9 @@
         ko: CONTENT_MAP.ko.apply.calendar,
       },
     });
+    // 날짜 선택기는 hidden input의 값을 직접 쓰므로 브라우저 input 이벤트가
+    // 생기지 않는다. 원래 클릭·키보드 이벤트의 trust를 콜백으로 넘겨 합성 선택을 거른다.
+    datePicker.onChange((_iso, isTrusted) => applicationFunnel.start({ isTrusted }));
 
     const renderSlots = (language) => {
       const priceLine = document.querySelector('[data-event-price]');
@@ -768,23 +790,13 @@
         restoreErrorBox();
       }
       track('application_error', {
-        content_type: 'experience',
-        content_id: form.elements.eventId.value,
+        ...applicationContext(),
         field,
-        content_language: currentLanguage(),
       });
     };
 
-    form.addEventListener('input', () => {
-      if (startedTracked) return;
-      startedTracked = true;
-      track('application_start', {
-        content_type: 'experience',
-        content_id: form.elements.eventId.value,
-        prefilled: Boolean(prefilledEvent),
-        landing_variant: landingVariantParam(),
-        content_language: currentLanguage(),
-      });
+    form.addEventListener('input', (inputEvent) => {
+      applicationFunnel.start({ isTrusted: inputEvent.isTrusted });
     });
 
     form.elements.eventId.addEventListener('change', () => renderSlots(currentLanguage()));
@@ -825,6 +837,8 @@
 
     form.addEventListener('submit', async (submitEvent) => {
       submitEvent.preventDefault();
+      if (!applicationSubmitter.canSubmit()) return;
+      applicationFunnel.start({ isTrusted: submitEvent.isTrusted });
       const copy = currentCopy();
       clearErrors();
 
@@ -854,14 +868,10 @@
       button.textContent = copy.apply.sending;
 
       try {
-        const response = await fetch('/api/apply', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        const result = await response.json();
-        if (!result.ok) {
-          if (result.code === 'VALIDATION' && result.field) return showFieldError(result.field, copy);
+        const outcome = await applicationSubmitter.submit(payload);
+        const result = outcome.result;
+        if (outcome.status !== 'success') {
+          if (result?.code === 'VALIDATION' && result.field) return showFieldError(result.field, copy);
           throw new Error('storage');
         }
         document.querySelector('[data-application-id]').textContent = result.applicationId;
@@ -872,17 +882,7 @@
         // 리더 사용자는 접수됐다는 사실도 신청번호도 듣지 못한다.
         done.querySelector('h1').focus({ preventScroll: true });
         window.scrollTo({ top: 0 });
-        track('generate_lead', {
-          content_type: 'experience',
-          content_id: payload.eventId,
-          date_slot: payload.slotIso,
-          guests: Number(payload.guests),
-          lead_source: payload.source,
-          prefilled: Boolean(prefilledEvent),
-          landing_variant: landingVariantParam(),
-          content_language: currentLanguage(),
-        });
-        window.HanBuddyAnalytics?.trackLead?.();
+        applicationFunnel.complete();
       } catch {
         // 항목 문제가 아니므로 제출 버튼 옆으로 되돌린다. 방금 누른 자리가 눈이 있는 곳이다.
         restoreErrorBox();

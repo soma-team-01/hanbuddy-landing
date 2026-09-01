@@ -17,8 +17,10 @@ test('there is an event detail page to check', () => {
 });
 
 // 후기 캡션은 지난 운영을 증명하는 문장이라 "July 2026" 같은 날짜가 정당하게 들어간다.
-// 앞으로의 일정만 검사해야 하므로 인용 블록은 먼저 걷어낸다.
+// JSON-LD 일정도 검색엔진용 canonical slot data라 화면 카피가 아니다. 방문자에게
+// 보이는 앞으로의 일정만 검사해야 하므로 두 영역을 먼저 걷어낸다.
 const withoutQuotes = (source) => source
+  .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
   .replace(/<figcaption[\s\S]*?<\/figcaption>/g, '')
   .replace(/<blockquote[\s\S]*?<\/blockquote>/g, '');
 

@@ -133,11 +133,10 @@ test('every page that can lead to the form relays the value', () => {
 });
 
 test('the application funnel reports which arm the guest came from', () => {
-  for (const name of ['application_start', 'generate_lead']) {
-    const call = applyHtml.match(new RegExp(`track\\('${name}',[\\s\\S]*?\\}\\);`));
-    assert.ok(call, `missing track call: ${name}`);
-    assert.match(call[0], /landing_variant: landingVariantParam\(\)/, `${name} must report the arm`);
-  }
+  const context = applyHtml.match(/const applicationContext = \(\) => \(\{[\s\S]*?^    \}\);/m)?.[0] || '';
+  assert.ok(context, 'application measurement context must be readable');
+  assert.match(context, /landing_variant: landingVariantParam\(\)/);
+  assert.match(applyHtml, /createApplicationFunnel\(\{[\s\S]*?context: applicationContext/);
 });
 
 test('the arm reaches analytics through the whitelist, never raw', () => {

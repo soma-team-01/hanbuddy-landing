@@ -8,6 +8,7 @@ const modulePath = join(__dirname, '..', 'assets', 'analytics.js');
 const moduleExists = existsSync(modulePath);
 const analytics = moduleExists ? require(modulePath) : {};
 const analyticsSource = moduleExists ? readFileSync(modulePath, 'utf8') : '';
+const applicationMeasurement = require('../assets/application-measurement.js');
 
 const createBrowserHarness = ({
   withSection = false,
@@ -189,8 +190,15 @@ const createBrowserHarness = ({
     clickSettings() {
       settingsHandlers.forEach((handler) => handler());
     },
-    clickDocument(target) {
-      (documentHandlers.click || []).forEach((handler) => handler({ target }));
+    clickDocument(target, event = {}) {
+      (documentHandlers.click || []).forEach((handler) => handler({
+        target,
+        isTrusted: true,
+        ...event,
+      }));
+    },
+    dispatchDocumentClick(event) {
+      (documentHandlers.click || []).forEach((handler) => handler(event));
     },
     pressKey(key) {
       (documentHandlers.keydown || []).forEach((handler) => handler({ key }));
@@ -715,7 +723,7 @@ test('toggles the Google collection opt-out across consent grant and revoke', { 
   assert.equal(browserWindow[disableKey], true, 'revoking consent disables Google collection again');
 });
 
-test('routes delegated document clicks through CTA tracking', { skip: !moduleExists }, () => {
+test('trusted keyboard-activated anchor clicks route through delegated CTA tracking', { skip: !moduleExists }, () => {
   const { browserWindow, chooseConsent, clickDocument } = createBrowserHarness();
   const applicationLink = {
     dataset: {
@@ -729,7 +737,7 @@ test('routes delegated document clicks through CTA tracking', { skip: !moduleExi
   };
 
   chooseConsent('accept');
-  clickDocument(applicationLink);
+  clickDocument(applicationLink, { detail: 0 });
 
   const applicationEvents = browserWindow.dataLayer
     .map((entry) => Array.from(entry))
@@ -739,6 +747,170 @@ test('routes delegated document clicks through CTA tracking', { skip: !moduleExi
   assert.equal(applicationEvents.length, 1);
   assert.equal(applicationEvents[0][2].destination, 'application_page');
   assert.equal(applicationEvents[0][2].placement, 'test');
+});
+
+test('one application CTA click emits one application_form_open and no select_content', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
+  const applicationLink = {
+    dataset: {
+      analyticsPlacement: 'test',
+      analyticsContentId: 'kbo-jamsil',
+      analyticsContentStatus: 'open',
+      cta: 'apply',
+    },
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
+    closest(selector) {
+      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
+      return null;
+    },
+  };
+  chooseConsent('accept');
+  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
+
+  const events = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 1);
+  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
+});
+
+test('synthetic and programmatic application CTA clicks emit no application_form_open', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
+  const applicationLink = {
+    dataset: {
+      analyticsPlacement: 'test',
+      analyticsContentId: 'kbo-jamsil',
+      analyticsContentStatus: 'open',
+      cta: 'apply',
+    },
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
+    closest(selector) {
+      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
+      return null;
+    },
+    click() {
+      dispatchDocumentClick({ target: applicationLink, isTrusted: false });
+    },
+  };
+
+  chooseConsent('accept');
+  dispatchDocumentClick({ target: applicationLink, isTrusted: false });
+  applicationLink.click();
+
+  const events = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 0);
+  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
+});
+
+test('separate application CTA clicks remain separate interactions', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
+  const applicationLink = {
+    dataset: {
+      analyticsPlacement: 'test',
+      analyticsContentId: 'kbo-jamsil',
+      analyticsContentStatus: 'open',
+      cta: 'apply',
+    },
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
+    closest(selector) {
+      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
+      return null;
+    },
+  };
+
+  chooseConsent('accept');
+  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
+  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
+
+  const events = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 2);
+  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
+});
+
+test('application_form_open requires the configured application destination', { skip: !moduleExists }, () => {
+  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
+  const staleApplicationLink = {
+    dataset: { analyticsPlacement: 'test', cta: 'apply' },
+    href: 'https://www.hanbuddy.kr/privacy/',
+    closest(selector) {
+      return selector === '[data-cta]' ? staleApplicationLink : null;
+    },
+  };
+
+  chooseConsent('accept');
+  dispatchDocumentClick({ target: staleApplicationLink, isTrusted: true });
+
+  const events = browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 0);
+});
+
+test('canonical application events obey consent and never replay or carry form fields', { skip: !moduleExists }, () => {
+  const denied = createBrowserHarness({ consentMode: 'basic', pageType: 'application' });
+  const deniedMeta = [];
+  denied.browserWindow.fbq = (...args) => deniedMeta.push(args);
+  const deniedFunnel = applicationMeasurement.createApplicationFunnel({
+    context: () => ({
+      page_type: 'application',
+      content_language: 'en',
+      name: '[redacted]',
+      contactId: '[redacted]',
+    }),
+    trackEvent: denied.browserWindow.HanBuddyAnalytics.trackEvent,
+    trackLead: denied.browserWindow.HanBuddyAnalytics.trackLead,
+  });
+  deniedFunnel.start({ isTrusted: true });
+  deniedFunnel.complete();
+  denied.chooseConsent('reject');
+  assert.equal(
+    denied.browserWindow.dataLayer
+      .map((entry) => Array.from(entry))
+      .filter(([command, name]) => command === 'event' && (
+        name === 'application_start' || name === 'generate_lead'
+      )).length,
+    0,
+  );
+  assert.equal(deniedMeta.filter(([, name]) => name === 'Lead').length, 0);
+
+  const allowed = createBrowserHarness({ consentMode: 'basic', pageType: 'application' });
+  const allowedMeta = [];
+  allowed.browserWindow.fbq = (...args) => allowedMeta.push(args);
+  allowed.chooseConsent('accept');
+  const allowedFunnel = applicationMeasurement.createApplicationFunnel({
+    context: () => ({
+      page_type: 'application',
+      content_type: 'experience',
+      content_id: 'kbo-gocheok',
+      content_language: 'en',
+      name: '[redacted]',
+      contactId: '[redacted]',
+      slotIso: '[redacted]',
+    }),
+    trackEvent: allowed.browserWindow.HanBuddyAnalytics.trackEvent,
+    trackLead: allowed.browserWindow.HanBuddyAnalytics.trackLead,
+  });
+  allowedFunnel.start({ isTrusted: true });
+  allowedFunnel.start({ isTrusted: true });
+  allowedFunnel.complete();
+  allowedFunnel.complete();
+
+  const events = allowed.browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command, name]) => command === 'event' && (
+      name === 'application_start' || name === 'generate_lead'
+    ));
+  assert.equal(events.map(([, name]) => name).join(','), 'application_start,generate_lead');
+  for (const event of events) {
+    for (const forbidden of ['name', 'contactId', 'slotIso', 'guests', 'source', 'sourceOther']) {
+      assert.equal(Object.hasOwn(event[2], forbidden), false, `${forbidden} leaked into ${event[1]}`);
+    }
+  }
+  assert.equal(allowedMeta.filter(([command, name]) => command === 'track' && name === 'Lead').length, 1);
 });
 
 test('contact CTAs use the Meta standard Contact event after consent', { skip: !moduleExists }, () => {

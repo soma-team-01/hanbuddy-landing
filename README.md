@@ -38,6 +38,8 @@ node --test tests/*.test.js
 
 about·apply 카피 동기화(메인과 공유하는 문구), 카드 날짜와 `EVENT_SLOTS`의 일치, 신청 폼 검증, 서버 로그 개인정보 차단, `.vercelignore` 배포 누락, 애널리틱스 동의 게이팅, `DESIGN.md`↔구현 팔레트·타이포 동기화를 검사한다. CI는 없으므로 푸시 전에 로컬에서 돌린다.
 
+신청 측정의 canonical funnel은 `application_form_open` → `application_start` → `generate_lead`다. 첫 이벤트는 신청 페이지로 가는 실제 CTA 클릭마다 한 번(같은 클릭의 `select_content`는 보내지 않음), 두 번째는 신청 폼의 첫 trusted 입력 또는 날짜 선택에 한 번, 마지막은 `/api/apply`가 HTTP 성공과 `{ ok: true }`를 함께 반환한 뒤 한 번만 전송한다. 선택 날짜·인원·유입 경로를 포함한 폼 값은 분석 payload에 넣지 않는다. 다른 클릭·자동 폼 이벤트가 추가되더라도 이 세 단계의 대체 지표가 아니라 보조 지표로 문서화해야 한다.
+
 ## 배포
 
 수동 배포 절차는 없다. **브랜치 → PR → 리뷰 반영 → `main`에 squash 머지**하면 Vercel이 자동 배포한다(main 직접 push는 훅으로 차단됨).
