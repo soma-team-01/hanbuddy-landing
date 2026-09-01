@@ -10,12 +10,17 @@ const structuredData = [...homeHtml.matchAll(
 )].map((match) => JSON.parse(match[1]));
 
 test('home page identifies the site as HanBuddy for search engines', () => {
+  assert.equal(
+    structuredData.filter((entry) => entry['@type'] === 'WebSite').length,
+    1,
+    'exactly one WebSite structured data entity must exist',
+  );
   const website = structuredData.find((entry) => entry['@type'] === 'WebSite');
 
   assert.ok(website, 'WebSite structured data must exist');
   assert.equal(website['@context'], 'https://schema.org');
   assert.equal(website.name, 'HanBuddy');
-  assert.equal(website.alternateName, 'hanbuddy.kr');
+  assert.equal(Object.hasOwn(website, 'alternateName'), false);
   assert.equal(website.url, 'https://www.hanbuddy.kr/');
 });
 
