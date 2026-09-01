@@ -15,6 +15,9 @@
   const IDEMPOTENCY_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const LANGUAGES = new Set(['en', 'ko']);
   const LANDING_VARIANTS = new Set(['local', 'friends', 'none']);
+  // Tracking adapters confirm delivery only with the exact boolean true. Truthy
+  // return values must stay retryable because they do not prove consented delivery.
+  const deliveryConfirmed = (result) => Object.is(result, true);
 
   const buildApplicationContext = (source = {}) => {
     const context = {
@@ -41,7 +44,7 @@
     const deliverStart = () => {
       if (!startEligible || started || completed) return false;
       const delivered = trackEvent('application_start', buildApplicationContext(context()));
-      if (delivered !== true) return false;
+      if (!deliveryConfirmed(delivered)) return false;
       started = true;
       return true;
     };
@@ -49,7 +52,7 @@
     const deliverCompletion = () => {
       if (!completionPending || !started || completed) return false;
       const delivered = trackEvent('generate_lead', buildApplicationContext(context()));
-      if (delivered !== true) return false;
+      if (!deliveryConfirmed(delivered)) return false;
       completed = true;
       completionPending = false;
       trackLead();
@@ -80,10 +83,10 @@
 
   const buildIdempotencyKey = ({ now = Date.now(), crypto = globalThis.crypto } = {}) => {
     if (typeof crypto?.getRandomValues !== 'function') {
-      throw new Error('secure randomness unavailable');
+      throw new TypeError('secure randomness unavailable');
     }
     const ymd = new Date(now + (9 * 60 * 60 * 1000))
-      .toISOString().slice(0, 10).replace(/-/g, '');
+      .toISOString().slice(0, 10).replaceAll('-', '');
     const bytes = new Uint8Array(16);
     crypto.getRandomValues(bytes);
     let suffix = '';
@@ -95,7 +98,7 @@
     if (Array.isArray(value)) return value.map(stableValue);
     if (value && typeof value === 'object') {
       const result = {};
-      for (const key of Object.keys(value).sort()) {
+      for (const key of Object.keys(value).sort((left, right) => left.localeCompare(right, 'en'))) {
         if (value[key] !== undefined) result[key] = stableValue(value[key]);
       }
       return result;
@@ -105,7 +108,7 @@
 
   const buildPayloadFingerprint = async (payload, { crypto = globalThis.crypto } = {}) => {
     if (typeof crypto?.subtle?.digest !== 'function') {
-      throw new Error('secure digest unavailable');
+      throw new TypeError('secure digest unavailable');
     }
     const canonical = JSON.stringify(stableValue(payload));
     const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));

@@ -18,6 +18,32 @@ const context = {
   landing_variant: 'local',
   prefilled: true,
 };
+const FIXTURE_APPLICATION_ID = 'HB-20260901-ABCDEFGHJKLMNPQR';
+const applicationResponse = ({
+  httpOk = true,
+  body = { ok: true, applicationId: FIXTURE_APPLICATION_ID },
+} = {}) => ({
+  ok: httpOk,
+  json: async () => body,
+});
+const consentControlledFunnel = ({ recordEvent, recordLead = false } = {}) => {
+  const calls = [];
+  let consentGranted = false;
+  const funnel = measurement.createApplicationFunnel({
+    context: () => context,
+    trackEvent: (name, params) => {
+      if (!consentGranted) return false;
+      calls.push(recordEvent ? recordEvent(name, params) : name);
+      return true;
+    },
+    trackLead: recordLead ? () => calls.push(['meta', 'Lead']) : undefined,
+  });
+  return {
+    calls,
+    funnel,
+    grantConsent() { consentGranted = true; },
+  };
+};
 
 test('declares the canonical application funnel in order', () => {
   assert.deepEqual(measurement.CANONICAL_APPLICATION_FUNNEL, [
@@ -40,6 +66,11 @@ test('idempotency keys are KST-dated, high-entropy receipt ids without look-alik
   });
 
   assert.match(key, /^HB-20260806-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{16}$/);
+  assert.throws(
+    () => measurement.buildIdempotencyKey({ crypto: {} }),
+    TypeError,
+    'a missing cryptographic random source is a caller type error',
+  );
 });
 
 test('application start and lead each emit once in canonical order', () => {
@@ -81,21 +112,24 @@ test('application start rejects synthetic interactions', () => {
   assert.deepEqual(calls, []);
 });
 
+test('analytics delivery is confirmed only by exact boolean true', () => {
+  for (const delivered of [1, 'true', {}, [], null, undefined]) {
+    const funnel = measurement.createApplicationFunnel({
+      trackEvent: () => delivered,
+    });
+    assert.equal(funnel.start({ isTrusted: true }), false);
+  }
+});
+
 test('a trusted pre-consent start is delivered once when consent becomes available during completion', () => {
-  const calls = [];
-  let consentGranted = false;
-  const funnel = measurement.createApplicationFunnel({
-    context: () => context,
-    trackEvent: (name, params) => {
-      if (!consentGranted) return false;
-      calls.push(['ga', name, params]);
-      return true;
-    },
-    trackLead: () => calls.push(['meta', 'Lead']),
+  const harness = consentControlledFunnel({
+    recordEvent: (name, params) => ['ga', name, params],
+    recordLead: true,
   });
+  const { calls, funnel } = harness;
 
   assert.equal(funnel.start({ isTrusted: true }), false, 'a dropped event is not a delivered start');
-  consentGranted = true;
+  harness.grantConsent();
   assert.equal(funnel.complete(), true, 'completion retries the eligible start after consent');
   assert.equal(funnel.start({ isTrusted: true }), false);
   assert.equal(funnel.complete(), false);
@@ -107,20 +141,12 @@ test('a trusted pre-consent start is delivered once when consent becomes availab
 });
 
 test('a successful pre-consent submission can retry its pending funnel after consent', () => {
-  const calls = [];
-  let consentGranted = false;
-  const funnel = measurement.createApplicationFunnel({
-    context: () => context,
-    trackEvent: (name) => {
-      if (!consentGranted) return false;
-      calls.push(name);
-      return true;
-    },
-  });
+  const harness = consentControlledFunnel();
+  const { calls, funnel } = harness;
 
   assert.equal(funnel.start({ isTrusted: true }), false);
   assert.equal(funnel.complete(), false, 'lead completion remains pending while delivery is blocked');
-  consentGranted = true;
+  harness.grantConsent();
   assert.equal(funnel.retry(), true);
   assert.deepEqual(calls, ['application_start', 'generate_lead']);
   assert.equal(funnel.retry(), false);
@@ -146,10 +172,10 @@ test('application analytics payloads use an allowlist and exclude all form field
 
 test('generate_lead is available only after a successful HTTP and API response', async () => {
   for (const [label, request, expected] of [
-    ['success', async () => ({ ok: true, json: async () => ({ ok: true, applicationId: 'fixture-id' }) }), 'success'],
-    ['HTTP failure', async () => ({ ok: false, json: async () => ({ ok: true, applicationId: 'fixture-id' }) }), 'failure'],
-    ['API validation failure', async () => ({ ok: true, json: async () => ({ ok: false, code: 'VALIDATION' }) }), 'failure'],
-    ['storage failure', async () => ({ ok: true, json: async () => ({ ok: false, code: 'STORAGE' }) }), 'failure'],
+    ['success', async () => applicationResponse(), 'success'],
+    ['HTTP failure', async () => applicationResponse({ httpOk: false }), 'failure'],
+    ['API validation failure', async () => applicationResponse({ body: { ok: false, code: 'VALIDATION' } }), 'failure'],
+    ['storage failure', async () => applicationResponse({ body: { ok: false, code: 'STORAGE' } }), 'failure'],
     ['request failure', async () => { throw new Error('network'); }, 'failure'],
     ['invalid JSON', async () => ({ ok: true, json: async () => { throw new Error('invalid'); } }), 'failure'],
   ]) {
@@ -170,7 +196,7 @@ test('duplicate submits share no request and a completed application cannot emit
       requests += 1;
       markStarted();
       await pending;
-      return { ok: true, json: async () => ({ ok: true, applicationId: 'fixture-id' }) };
+      return applicationResponse();
     },
   });
 
@@ -191,8 +217,8 @@ test('a failed request can be retried without creating a false lead', async () =
     request: async () => {
       requests += 1;
       return requests === 1
-        ? { ok: false, json: async () => ({ ok: false, code: 'STORAGE' }) }
-        : { ok: true, json: async () => ({ ok: true, applicationId: 'fixture-id' }) };
+        ? applicationResponse({ httpOk: false, body: { ok: false, code: 'STORAGE' } })
+        : applicationResponse();
     },
   });
 
@@ -209,7 +235,7 @@ test('a lost response retry reuses one idempotency key for the logical submissio
   const submitter = measurement.createApplicationSubmitter({
     createIdempotencyKey: () => {
       generatedKeys += 1;
-      return 'HB-20260901-ABCDEFGHJKLMNPQR';
+      return FIXTURE_APPLICATION_ID;
     },
     request: async (_url, init) => {
       requests += 1;
@@ -217,10 +243,7 @@ test('a lost response retry reuses one idempotency key for the logical submissio
       if (requests === 1) {
         return { ok: true, json: async () => { throw new Error('response lost'); } };
       }
-      return {
-        ok: true,
-        json: async () => ({ ok: true, applicationId: 'HB-20260901-ABCDEFGHJKLMNPQR' }),
-      };
+      return applicationResponse();
     },
   });
 
@@ -228,15 +251,15 @@ test('a lost response retry reuses one idempotency key for the logical submissio
   assert.equal((await submitter.submit({ fixture: 'same application' })).status, 'success');
   assert.equal(generatedKeys, 1);
   assert.deepEqual(requestHeaders, [
-    'HB-20260901-ABCDEFGHJKLMNPQR',
-    'HB-20260901-ABCDEFGHJKLMNPQR',
+    FIXTURE_APPLICATION_ID,
+    FIXTURE_APPLICATION_ID,
   ]);
 });
 
 test('editing fields after an ambiguous response creates a new key', async () => {
   const sent = [];
   const keys = [
-    'HB-20260901-ABCDEFGHJKLMNPQR',
+    FIXTURE_APPLICATION_ID,
     'HB-20260901-RQPONMLKJHGFEDCB',
   ];
   const submitter = measurement.createApplicationSubmitter({
@@ -247,7 +270,7 @@ test('editing fields after an ambiguous response creates a new key', async () =>
     request: async (_url, init) => {
       sent.push({ key: init.headers['idempotency-key'], body: init.body });
       if (sent.length < 3) throw new Error('response lost');
-      return { ok: true, json: async () => ({ ok: true, applicationId: sent.at(-1).key }) };
+      return applicationResponse({ body: { ok: true, applicationId: sent.at(-1).key } });
     },
   });
   const original = { name: 'Julie', contactId: '+82 10 0000 0000', guests: '1' };
@@ -258,8 +281,8 @@ test('editing fields after an ambiguous response creates a new key', async () =>
   assert.equal((await submitter.submit(reordered)).status, 'failure');
   assert.equal((await submitter.submit(edited)).status, 'success');
   assert.deepEqual(sent.map(({ key }) => key), [
-    'HB-20260901-ABCDEFGHJKLMNPQR',
-    'HB-20260901-ABCDEFGHJKLMNPQR',
+    FIXTURE_APPLICATION_ID,
+    FIXTURE_APPLICATION_ID,
     'HB-20260901-RQPONMLKJHGFEDCB',
   ]);
   assert.equal(keys.length, 0);
@@ -308,7 +331,7 @@ test('submitter retains only opaque identity state and leaves browser persistenc
 
   const observed = [];
   const submitter = browserWindow.HanBuddyApplicationMeasurement.createApplicationSubmitter({
-    createIdempotencyKey: () => 'HB-20260901-ABCDEFGHJKLMNPQR',
+    createIdempotencyKey: () => FIXTURE_APPLICATION_ID,
     createPayloadFingerprint: async () => 'a'.repeat(64),
     observeIdentityState: (state) => observed.push(state),
     request: async (_url, init) => {
@@ -331,18 +354,18 @@ test('submitter retains only opaque identity state and leaves browser persistenc
       { state: 'submitting', idempotencyKey: null, payloadFingerprint: null },
       {
         state: 'submitting',
-        idempotencyKey: 'HB-20260901-ABCDEFGHJKLMNPQR',
+        idempotencyKey: FIXTURE_APPLICATION_ID,
         payloadFingerprint: 'a'.repeat(64),
       },
       {
         state: 'idle',
-        idempotencyKey: 'HB-20260901-ABCDEFGHJKLMNPQR',
+        idempotencyKey: FIXTURE_APPLICATION_ID,
         payloadFingerprint: 'a'.repeat(64),
       },
     ],
   );
   for (const state of observed) {
-    assert.deepEqual(Object.keys(state).sort(), [
+    assert.deepEqual(Object.keys(state).sort((left, right) => left.localeCompare(right)), [
       'idempotencyKey',
       'payloadFingerprint',
       'state',
@@ -368,4 +391,40 @@ test('payload fingerprints are stable, non-PII digests', async () => {
   assert.notEqual(first, edited);
   assert.match(first, /^[a-f0-9]{64}$/);
   assert.doesNotMatch(first, /Julie|0000/);
+
+  let canonical;
+  const inspectingCrypto = {
+    subtle: {
+      async digest(_algorithm, bytes) {
+        canonical = new TextDecoder().decode(bytes);
+        return new Uint8Array(32);
+      },
+    },
+  };
+  await measurement.buildPayloadFingerprint({
+    source: '',
+    eventTitle: 'Korean BBQ Night',
+    nationality: 'France',
+    requests: '',
+    contactMethod: 'WhatsApp',
+    slotIso: '2026-09-02T19:00',
+    language: 'en',
+    guests: 1,
+    eventId: 'samgyeopsal',
+    name: 'Julie',
+    contactId: '+82 10 0000 0000',
+  }, { crypto: inspectingCrypto });
+  assert.equal(
+    canonical,
+    '{"contactId":"+82 10 0000 0000","contactMethod":"WhatsApp",'
+      + '"eventId":"samgyeopsal","eventTitle":"Korean BBQ Night","guests":1,'
+      + '"language":"en","name":"Julie","nationality":"France","requests":"",'
+      + '"slotIso":"2026-09-02T19:00","source":""}',
+    'the normalized application schema has one deterministic key order',
+  );
+  await assert.rejects(
+    measurement.buildPayloadFingerprint({}, { crypto: {} }),
+    TypeError,
+    'a missing cryptographic digest is a caller type error',
+  );
 });

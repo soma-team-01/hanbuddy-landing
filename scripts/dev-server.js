@@ -61,7 +61,7 @@ global.fetch = async (url, init = {}) => {
   }
   if (channel === 'sheet') {
     if (target.endsWith(':clear')) {
-      const match = target.match(/!A(\d+):Q\1:clear$/);
+      const match = /!A(\d+):Q\1:clear$/.exec(target);
       if (!match) return { ok: false };
       storedRows[Number(match[1]) - 1] = [];
       return { ok: true, json: async () => ({}) };

@@ -97,8 +97,9 @@ const accessToken = async (signal) => {
 const sheetValuesUrl = (range, suffix = '') => {
   const sheetId = process.env.APPLICATIONS_SHEET_ID;
   const tab = process.env.APPLICATIONS_SHEET_TAB || 'applications';
+  const encodedRange = encodeURIComponent(`${tab}!${range}`);
   return `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/`
-    + `${encodeURIComponent(`${tab}!${range}`)}${suffix}`;
+    + encodedRange + suffix;
 };
 
 const readRows = async (token, signal) => {
@@ -127,7 +128,7 @@ const appendRow = async (row, token, signal) => {
   if (!response.ok) throw new Error('sheet');
   const body = await response.json();
   const updatedRange = body?.updates?.updatedRange;
-  const match = typeof updatedRange === 'string' && updatedRange.match(/!A(\d+):Q(\d+)$/);
+  const match = typeof updatedRange === 'string' ? /!A(\d+):Q(\d+)$/.exec(updatedRange) : null;
   if (!match || match[1] !== match[2]) return null;
   return Number(match[1]);
 };
@@ -188,6 +189,61 @@ const cleanupOwnedDuplicates = async ({
   return verified;
 };
 
+const appendWithOwnership = async ({ row, token, signal }) => {
+  try {
+    return await appendRow(row, token, signal);
+  } catch {
+    // Google이 append를 적용한 뒤 응답만 끊겼을 수 있다. reconciliation은 계속
+    // 하되 updatedRange를 못 받았으므로 어느 행을 썼는지 ownership은 주장하지 않는다.
+    return null;
+  }
+};
+
+const reconcileAppend = async ({ applicationId, row, callerRow, token, signal }) => {
+  let inspected = await inspectApplication({
+    applicationId, expectedRow: row, token, signal,
+  });
+  if (inspected.status === 'missing') throw new Error('sheet-missing');
+
+  const ownsCanonicalRow = callerRow !== null && callerRow === inspected.canonicalRow;
+  if (inspected.duplicateRows.length !== 0) {
+    // updatedRange로 lowest row ownership을 증명한 invocation 하나만 cleanup한다.
+    // nonowner/ambiguous caller는 owner가 끝낸 뒤의 ordinary retry에서만 성공한다.
+    if (!ownsCanonicalRow || inspected.status !== 'stored') {
+      throw new Error('sheet-duplicates');
+    }
+    inspected = await cleanupOwnedDuplicates({
+      applicationId,
+      expectedRow: row,
+      canonicalRow: inspected.canonicalRow,
+      duplicateRows: inspected.duplicateRows,
+      token,
+      signal,
+    });
+  }
+
+  return { status: inspected.status, ownsCanonicalRow };
+};
+
+const storeApplication = async ({ applicationId, row }) => {
+  // 서버리스 인스턴스의 메모리는 재시도 사이에 공유되지 않는다. 시트 B열의
+  // application_id와 같은 행의 C:Q를 durable idempotency record로 쓴다.
+  const signal = deadline();
+  const token = await accessToken(signal);
+  const prior = await inspectApplication({
+    applicationId, expectedRow: row, token, signal,
+  });
+
+  // Append ownership이 없는 retry는 과거 중복을 추측해서 지우지 않는다.
+  if (prior.duplicateRows.length !== 0) throw new Error('sheet-duplicates');
+  if (prior.status !== 'missing') {
+    return { status: prior.status, ownsCanonicalRow: false };
+  }
+
+  const callerRow = await appendWithOwnership({ row, token, signal });
+  return reconcileAppend({ applicationId, row, callerRow, token, signal });
+};
+
 const notifyDiscord = async ({ applicationId, value, signal }) => {
   const webhook = process.env.DISCORD_WEBHOOK_URL;
   if (!webhook) throw new Error('webhook');
@@ -211,131 +267,91 @@ const notifyDiscord = async ({ applicationId, value, signal }) => {
   if (!response.ok) throw new Error('webhook');
 };
 
-const handler = async (request, response) => {
+const requestOutcome = (request) => {
   if (request.method !== 'POST') {
-    response.status(405).json({ ok: false, code: 'METHOD' });
-    return;
+    return { response: { status: 405, body: { ok: false, code: 'METHOD' } } };
   }
 
   const payload = request.body && typeof request.body === 'object' ? request.body : {};
   if (JSON.stringify(payload).length > MAX_BODY_BYTES) {
-    response.status(400).json({ ok: false, code: 'VALIDATION', field: 'requests' });
-    return;
+    return {
+      response: {
+        status: 400,
+        body: { ok: false, code: 'VALIDATION', field: 'requests' },
+      },
+    };
   }
 
-  const idempotencyKey = idempotencyKeyFrom(request);
-  if (!idempotencyKey) {
-    response.status(400).json({ ok: false, code: 'VALIDATION' });
-    return;
+  const applicationId = idempotencyKeyFrom(request);
+  if (!applicationId) {
+    return { response: { status: 400, body: { ok: false, code: 'VALIDATION' } } };
   }
 
   const checked = validateApplication(payload);
   if (!checked.ok) {
-    // 봇은 성공처럼 보내고 저장하지 않는다. 실패를 알려주면 우회를 학습한다.
-    if (checked.field === 'website') {
-      response.status(200).json({ ok: true, applicationId: idempotencyKey });
-      return;
-    }
-    response.status(400).json({ ok: false, code: 'VALIDATION', field: checked.field });
-    return;
+    const response = checked.field === 'website'
+      ? { status: 200, body: { ok: true, applicationId } }
+      : {
+          status: 400,
+          body: { ok: false, code: 'VALIDATION', field: checked.field },
+        };
+    return { response };
   }
 
-  const applicationId = idempotencyKey;
   const timestampKst = kstParts(Date.now()).slice(0, 19).replace('T', ' ');
-  const row = buildRow({ applicationId, timestampKst, value: checked.value });
+  return {
+    applicationId,
+    row: buildRow({ applicationId, timestampKst, value: checked.value }),
+    value: checked.value,
+  };
+};
 
-  // 서버리스 인스턴스의 메모리는 재시도 사이에 공유되지 않는다. 시트 B열의
-  // application_id와 같은 행의 C:Q를 durable idempotency record로 쓴다.
-  const sheetSignal = deadline();
-  let token;
+const sendResponse = (response, result) => {
+  response.status(result.status).json(result.body);
+};
+
+const sendStorageFailure = (response, applicationId) => {
+  emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
+  sendResponse(response, { status: 500, body: { ok: false, code: 'STORAGE' } });
+};
+
+const notifyOwner = async ({ applicationId, value }) => {
   try {
-    token = await accessToken(sheetSignal);
-    const prior = await inspectApplication({
-      applicationId, expectedRow: row, token, signal: sheetSignal,
-    });
-    // Append ownership이 없는 retry는 과거 중복을 추측해서 지우지 않는다.
-    if (prior.duplicateRows.length !== 0) throw new Error('sheet-duplicates');
-    if (prior.status === 'conflict') {
-      response.status(409).json({ ok: false, code: 'CONFLICT' });
-      return;
-    }
-    if (prior.status === 'stored') {
-      response.status(200).json({ ok: true, applicationId });
-      return;
-    }
+    await notifyDiscord({ applicationId, value, signal: deadline() });
   } catch {
-    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-    response.status(500).json({ ok: false, code: 'STORAGE' });
+    emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
+  }
+};
+
+const handler = async (request, response) => {
+  const outcome = requestOutcome(request);
+  if (outcome.response) {
+    sendResponse(response, outcome.response);
     return;
   }
 
-  let callerRow = null;
+  let stored;
   try {
-    callerRow = await appendRow(row, token, sheetSignal);
+    stored = await storeApplication(outcome);
   } catch {
-    // Google이 append를 적용한 뒤 응답만 끊겼을 수 있다. reconciliation은 계속
-    // 하되 updatedRange를 못 받았으므로 어느 행을 썼는지 ownership은 주장하지 않는다.
-  }
-
-  let inspected;
-  try {
-    inspected = await inspectApplication({
-      applicationId, expectedRow: row, token, signal: sheetSignal,
-    });
-  } catch {
-    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-    response.status(500).json({ ok: false, code: 'STORAGE' });
+    sendStorageFailure(response, outcome.applicationId);
     return;
   }
 
-  if (inspected.status === 'missing') {
-    emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-    response.status(500).json({ ok: false, code: 'STORAGE' });
-    return;
-  }
-
-  const ownsCanonicalRow = callerRow !== null && callerRow === inspected.canonicalRow;
-  if (inspected.duplicateRows.length !== 0) {
-    // updatedRange로 lowest row ownership을 증명한 invocation 하나만 cleanup한다.
-    // nonowner/ambiguous caller는 owner가 끝낸 뒤의 ordinary retry에서만 성공한다.
-    if (!ownsCanonicalRow || inspected.status !== 'stored') {
-      emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-      response.status(500).json({ ok: false, code: 'STORAGE' });
-      return;
-    }
-    try {
-      inspected = await cleanupOwnedDuplicates({
-        applicationId,
-        expectedRow: row,
-        canonicalRow: inspected.canonicalRow,
-        duplicateRows: inspected.duplicateRows,
-        token,
-        signal: sheetSignal,
-      });
-    } catch {
-      emit({ application_id: applicationId, code: 'STORAGE', stage: 'sheet' });
-      response.status(500).json({ ok: false, code: 'STORAGE' });
-      return;
-    }
-  }
-
-  if (inspected.status === 'conflict') {
-    response.status(409).json({ ok: false, code: 'CONFLICT' });
+  if (stored.status === 'conflict') {
+    sendResponse(response, { status: 409, body: { ok: false, code: 'CONFLICT' } });
     return;
   }
 
   // updatedRange로 자기 행을 증명하고 그 행이 lowest canonical일 때만 알린다.
   // 응답을 잃었거나 비정상 응답으로 row ownership이 불명확하면 접수는 성공해도
   // Discord는 보내지 않는다. Discord는 durable authority가 아닌 운영 알림이다.
-  if (ownsCanonicalRow) {
-    await notifyDiscord({
-      applicationId, value: checked.value, signal: deadline(),
-    }).catch(() => {
-      emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
-    });
-  }
+  if (stored.ownsCanonicalRow) await notifyOwner(outcome);
 
-  response.status(200).json({ ok: true, applicationId });
+  sendResponse(response, {
+    status: 200,
+    body: { ok: true, applicationId: outcome.applicationId },
+  });
 };
 
 module.exports = handler;
