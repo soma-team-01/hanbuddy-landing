@@ -218,6 +218,77 @@ const createBrowserHarness = ({
   };
 };
 
+const assertCtaSchema = ({
+  ctaKey,
+  placement,
+  pageContext,
+  gaName,
+  destination,
+  metaName = null,
+  profileId,
+  gaOnly = false,
+}) => {
+  const params = {
+    ...pageContext,
+    destination,
+    placement,
+    ...(profileId ? { profile_id: profileId } : {}),
+  };
+  const actual = analytics.buildCtaEvent({ ctaKey, placement, pageContext });
+  const expected = {
+    ga: { name: gaName, params },
+    meta: metaName ? { name: metaName, params } : null,
+  };
+
+  assert.deepEqual(gaOnly ? actual.ga : actual, gaOnly ? expected.ga : expected);
+};
+
+const createApplicationCtaLink = ({
+  dispatchDocumentClick,
+  includeContentTracking = true,
+  placement = 'test',
+} = {}) => {
+  const applicationLink = {
+    dataset: {
+      analyticsPlacement: placement,
+      cta: 'apply',
+      ...(includeContentTracking ? {
+        analyticsContentId: 'kbo-jamsil',
+        analyticsContentStatus: 'open',
+      } : {}),
+    },
+    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
+    closest(selector) {
+      if (selector === '[data-cta]') return applicationLink;
+      if (includeContentTracking && selector === '[data-analytics-content-id]') return applicationLink;
+      return null;
+    },
+  };
+  if (dispatchDocumentClick) {
+    applicationLink.click = () => {
+      dispatchDocumentClick({ target: applicationLink, isTrusted: false });
+    };
+  }
+  return applicationLink;
+};
+
+const runApplicationCtaClicks = ({ clickTrustValues, programmaticClicks = 0 }) => {
+  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
+  const applicationLink = createApplicationCtaLink({
+    dispatchDocumentClick: programmaticClicks ? dispatchDocumentClick : undefined,
+  });
+
+  chooseConsent('accept');
+  clickTrustValues.forEach((isTrusted) => {
+    dispatchDocumentClick({ target: applicationLink, isTrusted });
+  });
+  for (let click = 0; click < programmaticClicks; click += 1) applicationLink.click();
+
+  return browserWindow.dataLayer
+    .map((entry) => Array.from(entry))
+    .filter(([command]) => command === 'event');
+};
+
 test('ships one shared analytics module', () => {
   assert.ok(moduleExists, 'assets/analytics.js must exist');
 });
@@ -250,38 +321,14 @@ test('builds a stable page context without empty optional values', { skip: !modu
 });
 
 test('maps the application CTA to its own GA event and the existing Meta high-intent event', { skip: !moduleExists }, () => {
-  const pageContext = {
-    page_type: 'home',
-    content_language: 'en',
-  };
-
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'apply',
-      placement: 'top',
-      pageContext,
-    }),
-    {
-      ga: {
-        name: 'application_form_open',
-        params: {
-          page_type: 'home',
-          content_language: 'en',
-          destination: 'application_page',
-          placement: 'top',
-        },
-      },
-      meta: {
-        name: 'ApplicationFormOpen',
-        params: {
-          page_type: 'home',
-          content_language: 'en',
-          destination: 'application_page',
-          placement: 'top',
-        },
-      },
-    },
-  );
+  assertCtaSchema({
+    ctaKey: 'apply',
+    placement: 'top',
+    pageContext: { page_type: 'home', content_language: 'en' },
+    gaName: 'application_form_open',
+    destination: 'application_page',
+    metaName: 'ApplicationFormOpen',
+  });
 });
 
 test('uses separate GA events for contact, community, profile, and navigation actions', { skip: !moduleExists }, () => {
@@ -290,146 +337,35 @@ test('uses separate GA events for contact, community, profile, and navigation ac
     content_language: 'ko',
   };
 
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'instagram',
-      placement: 'footer',
-      pageContext,
-    }),
-    {
-      ga: {
-        name: 'contact_click',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'instagram',
-          placement: 'footer',
-        },
-      },
-      meta: {
-        name: 'Contact',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'instagram',
-          placement: 'footer',
-        },
-      },
-    },
-  );
-
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'contact',
-      placement: 'apply',
-      pageContext,
-    }),
-    {
-      ga: {
-        name: 'contact_click',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'kakaotalk',
-          placement: 'apply',
-        },
-      },
-      meta: {
-        name: 'Contact',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'kakaotalk',
-          placement: 'apply',
-        },
-      },
-    },
-  );
-
   // WhatsApp은 인스타·카톡과 같은 문의 채널이므로 같은 GA 이벤트를 쓰고
   // destination으로만 갈린다. 채널별 이벤트 이름을 새로 파면 전환 집계가 쪼개진다.
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'whatsapp',
-      placement: 'footer',
-      pageContext,
-    }),
+  for (const scenario of [
     {
-      ga: {
-        name: 'contact_click',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'whatsapp',
-          placement: 'footer',
-        },
-      },
-      meta: {
-        name: 'Contact',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'whatsapp',
-          placement: 'footer',
-        },
-      },
+      ctaKey: 'instagram', placement: 'footer', gaName: 'contact_click',
+      destination: 'instagram', metaName: 'Contact',
     },
-  );
-
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'meetup',
-      placement: 'footer',
-      pageContext,
-    }),
     {
-      ga: {
-        name: 'community_click',
-        params: {
-          page_type: 'about',
-          content_language: 'ko',
-          destination: 'meetup',
-          placement: 'footer',
-        },
-      },
-      meta: null,
+      ctaKey: 'contact', placement: 'apply', gaName: 'contact_click',
+      destination: 'kakaotalk', metaName: 'Contact',
     },
-  );
-
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'apply_section',
-      placement: 'nav',
-      pageContext,
-    }).ga,
     {
-      name: 'navigation_click',
-      params: {
-        page_type: 'about',
-        content_language: 'ko',
-        destination: 'apply_section',
-        placement: 'nav',
-      },
+      ctaKey: 'whatsapp', placement: 'footer', gaName: 'contact_click',
+      destination: 'whatsapp', metaName: 'Contact',
     },
-  );
-
-  assert.deepEqual(
-    analytics.buildCtaEvent({
-      ctaKey: 'linkedin_minhyung',
-      placement: 'team',
-      pageContext,
-    }).ga,
     {
-      name: 'profile_click',
-      params: {
-        page_type: 'about',
-        content_language: 'ko',
-        destination: 'linkedin',
-        placement: 'team',
-        profile_id: 'minhyung',
-      },
+      ctaKey: 'meetup', placement: 'footer', gaName: 'community_click', destination: 'meetup',
     },
-  );
+    {
+      ctaKey: 'apply_section', placement: 'nav', gaName: 'navigation_click',
+      destination: 'apply_section', gaOnly: true,
+    },
+    {
+      ctaKey: 'linkedin_minhyung', placement: 'team', gaName: 'profile_click',
+      destination: 'linkedin', profileId: 'minhyung', gaOnly: true,
+    },
+  ]) {
+    assertCtaSchema({ pageContext, ...scenario });
+  }
 });
 
 test('maps an event-card click to the GA recommended content-selection schema', { skip: !moduleExists }, () => {
@@ -750,16 +686,7 @@ test('toggles the Google collection opt-out across consent grant and revoke', { 
 
 test('trusted keyboard-activated anchor clicks route through delegated CTA tracking', { skip: !moduleExists }, () => {
   const { browserWindow, chooseConsent, clickDocument } = createBrowserHarness();
-  const applicationLink = {
-    dataset: {
-      analyticsPlacement: 'test',
-      cta: 'apply',
-    },
-    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
-    closest(selector) {
-      return selector === '[data-cta]' ? applicationLink : null;
-    },
-  };
+  const applicationLink = createApplicationCtaLink({ includeContentTracking: false });
 
   chooseConsent('accept');
   clickDocument(applicationLink, { detail: 0 });
@@ -774,87 +701,33 @@ test('trusted keyboard-activated anchor clicks route through delegated CTA track
   assert.equal(applicationEvents[0][2].placement, 'test');
 });
 
-test('one application CTA click emits one application_form_open and no select_content', { skip: !moduleExists }, () => {
-  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
-  const applicationLink = {
-    dataset: {
-      analyticsPlacement: 'test',
-      analyticsContentId: 'kbo-jamsil',
-      analyticsContentStatus: 'open',
-      cta: 'apply',
-    },
-    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
-    closest(selector) {
-      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
-      return null;
-    },
-  };
-  chooseConsent('accept');
-  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
-
-  const events = browserWindow.dataLayer
-    .map((entry) => Array.from(entry))
-    .filter(([command]) => command === 'event');
-  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 1);
-  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
-});
-
-test('synthetic and programmatic application CTA clicks emit no application_form_open', { skip: !moduleExists }, () => {
-  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
-  const applicationLink = {
-    dataset: {
-      analyticsPlacement: 'test',
-      analyticsContentId: 'kbo-jamsil',
-      analyticsContentStatus: 'open',
-      cta: 'apply',
-    },
-    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
-    closest(selector) {
-      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
-      return null;
-    },
-    click() {
-      dispatchDocumentClick({ target: applicationLink, isTrusted: false });
-    },
-  };
-
-  chooseConsent('accept');
-  dispatchDocumentClick({ target: applicationLink, isTrusted: false });
-  applicationLink.click();
-
-  const events = browserWindow.dataLayer
-    .map((entry) => Array.from(entry))
-    .filter(([command]) => command === 'event');
-  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 0);
-  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
-});
-
-test('separate application CTA clicks remain separate interactions', { skip: !moduleExists }, () => {
-  const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
-  const applicationLink = {
-    dataset: {
-      analyticsPlacement: 'test',
-      analyticsContentId: 'kbo-jamsil',
-      analyticsContentStatus: 'open',
-      cta: 'apply',
-    },
-    href: 'https://www.hanbuddy.kr/apply/?event=kbo-jamsil',
-    closest(selector) {
-      if (selector === '[data-cta]' || selector === '[data-analytics-content-id]') return applicationLink;
-      return null;
-    },
-  };
-
-  chooseConsent('accept');
-  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
-  dispatchDocumentClick({ target: applicationLink, isTrusted: true });
-
-  const events = browserWindow.dataLayer
-    .map((entry) => Array.from(entry))
-    .filter(([command]) => command === 'event');
-  assert.equal(events.filter(([, name]) => name === 'application_form_open').length, 2);
-  assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
-});
+for (const scenario of [
+  {
+    name: 'one application CTA click emits one application_form_open and no select_content',
+    clickTrustValues: [true],
+    expectedApplicationOpens: 1,
+  },
+  {
+    name: 'synthetic and programmatic application CTA clicks emit no application_form_open',
+    clickTrustValues: [false],
+    programmaticClicks: 1,
+    expectedApplicationOpens: 0,
+  },
+  {
+    name: 'separate application CTA clicks remain separate interactions',
+    clickTrustValues: [true, true],
+    expectedApplicationOpens: 2,
+  },
+]) {
+  test(scenario.name, { skip: !moduleExists }, () => {
+    const events = runApplicationCtaClicks(scenario);
+    assert.equal(
+      events.filter(([, name]) => name === 'application_form_open').length,
+      scenario.expectedApplicationOpens,
+    );
+    assert.equal(events.filter(([, name]) => name === 'select_content').length, 0);
+  });
+}
 
 test('application_form_open requires the configured application destination', { skip: !moduleExists }, () => {
   const { browserWindow, chooseConsent, dispatchDocumentClick } = createBrowserHarness();
