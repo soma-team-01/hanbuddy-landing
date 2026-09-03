@@ -1,9 +1,12 @@
 /*
 !/index.html
+!/robots.txt
+!/sitemap.xml
 !/favicon.ico
 !/assets
 /assets/*
 !/assets/analytics.js
+!/assets/application-measurement.js
 !/assets/event-slots.js
 !/assets/reviews-data.js
 !/assets/apply-validation.js

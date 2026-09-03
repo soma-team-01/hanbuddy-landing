@@ -6,6 +6,7 @@ const test = require('node:test');
 const root = join(__dirname, '..');
 const html = readFileSync(join(root, 'apply', 'index.html'), 'utf8');
 const indexHtml = readFileSync(join(root, 'index.html'), 'utf8');
+const measurementJs = readFileSync(join(root, 'assets', 'application-measurement.js'), 'utf8');
 
 test('every required field is present, labelled and marked required', () => {
   for (const name of ['eventId', 'slotIso', 'guests', 'name', 'nationality',
@@ -113,6 +114,7 @@ test('the honeypot is hidden from people but present for bots', () => {
 test('the page loads the shared slot and validation modules, not its own copy', () => {
   assert.match(html, /<script src="\/assets\/event-slots\.js"><\/script>/);
   assert.match(html, /<script src="\/assets\/apply-validation\.js"><\/script>/);
+  assert.match(html, /<script src="\/assets\/application-measurement\.js"><\/script>/);
   assert.doesNotMatch(html, /const EVENT_SLOTS = /, 'slots must not be duplicated on the page');
 });
 
@@ -216,23 +218,39 @@ test('a valid prefilled event joins the application page view to the content fun
   assert.match(html, /document\.body\.dataset\.analyticsContentId = prefilledEvent/);
 });
 
-test('the three funnel events carry the shared analytics context', () => {
-  // trackGa는 파라미터를 자동으로 채우지 않는다. 여기서 빠뜨리면 스펙 9.2가
-  // 요구하는 공통 컨텍스트 없이 이벤트가 쌓인다.
-  for (const name of ['application_start', 'application_error', 'generate_lead']) {
-    const call = html.match(new RegExp(`track\\('${name}',[\\s\\S]*?\\}\\);`));
-    assert.ok(call, `missing track call: ${name}`);
-    assert.match(call[0], /content_language:/, `${name} must report content_language`);
-    assert.match(call[0], /content_type: 'experience'/, `${name} must report content_type`);
-    assert.match(call[0], /content_id:/, `${name} must report content_id`);
-    assert.doesNotMatch(call[0], /experience_id:|event_id:/, `${name} must not fork the content identifier`);
-  }
+test('the canonical funnel uses shared context without reading selected form values', () => {
+  assert.match(measurementJs, /application_form_open[\s\S]*application_start[\s\S]*generate_lead/);
+  const context = html.match(/const applicationContext = \(\) => \(\{[\s\S]*?^    \}\);/m)?.[0] || '';
+  assert.ok(context, 'application context must be readable');
+  assert.match(context, /content_language: currentLanguage\(\)/);
+  assert.match(context, /content_id: document\.body\.dataset\.analyticsContentId/);
+  assert.doesNotMatch(context, /form\.elements|payload\./);
+  assert.match(html, /applicationFunnel\.start\(\{ isTrusted: inputEvent\.isTrusted \}\)/);
+  assert.match(html, /onEnabled\?\.\(\(\) => applicationFunnel\.retry\(\)\)/,
+    'granting consent must retry an eligible start that was previously blocked');
+  assert.match(html, /normalizePayload: \(payload\) => \{[\s\S]*?VALIDATION\.validateApplication\(payload\)/,
+    'idempotency compares the same normalized payload that the API validates');
+  assert.match(
+    html,
+    /datePicker\.onChange\(\(_iso, isTrusted\) => applicationFunnel\.start\(\{ isTrusted \}\)\);/,
+    'choosing a date is a real form interaction even though the picker writes a hidden input',
+  );
 });
 
 test('a successful application sends the recommended GA lead and the Meta standard Lead', () => {
-  assert.match(html, /track\('generate_lead',[\s\S]*?content_language:/);
-  assert.match(html, /HanBuddyAnalytics\?\.trackLead\?\.\(\)/);
+  assert.match(html, /if \(outcome\.status !== 'success'\)[\s\S]*applicationFunnel\.complete\(\)/);
+  assert.match(measurementJs, /trackEvent\('generate_lead'/);
+  assert.match(measurementJs, /trackLead\(\)/);
   assert.doesNotMatch(html, /track\('application_submitted'/);
+});
+
+test('validation and failed API outcomes cannot reach lead completion', () => {
+  const validation = html.indexOf('if (!local.ok) return showFieldError(local.field, copy);');
+  const request = html.indexOf('applicationSubmitter.submit(payload)');
+  const successGate = html.indexOf("if (outcome.status !== 'success')");
+  const completion = html.indexOf('applicationFunnel.complete();');
+  assert.ok(validation >= 0 && validation < request, 'local validation must precede the request');
+  assert.ok(request < successGate && successGate < completion, 'only the success branch may complete the funnel');
 });
 
 test('application payload never collects browser attribution data', () => {
@@ -242,10 +260,10 @@ test('application payload never collects browser attribution data', () => {
   assert.match(payload, /source: form\.elements\.source\.value/);
   assert.match(payload, /sourceOther: form\.elements\.sourceOther\.value/);
 
-  const submitted = html.match(/track\('generate_lead',[\s\S]*?^        \}\);/m)?.[0] || '';
-  assert.ok(submitted, 'generate_lead event must be readable');
-  assert.match(submitted, /lead_source: payload\.source/);
-  assert.doesNotMatch(submitted, /sourceOther/);
+  for (const field of ['name', 'nationality', 'contactMethod', 'contactId', 'requests',
+    'source', 'sourceOther', 'slotIso', 'guests', 'consent']) {
+    assert.doesNotMatch(measurementJs, new RegExp(`['"]${field}['"]`), `${field} must not be allowlisted`);
+  }
 });
 
 test('the invalid state is visible, not just announced', () => {

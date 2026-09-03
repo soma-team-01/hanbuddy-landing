@@ -18,6 +18,8 @@ const eventPages = readdirSync(join(root, 'events'), { withFileTypes: true })
 // 자산은 폴더·확장자 규칙이 살아 있는지 확인하는 게 목적이라 대표 파일만 든다.
 const MUST_DEPLOY = [
   'index.html',
+  'robots.txt',
+  'sitemap.xml',
   'favicon.ico',
   'about/index.html',
   'apply/index.html',
@@ -25,6 +27,7 @@ const MUST_DEPLOY = [
   'api/apply.js',
   'api/suggest.js',
   'assets/analytics.js',
+  'assets/application-measurement.js',
   'assets/event-slots.js',
   'assets/reviews-data.js',
   'assets/apply-validation.js',
