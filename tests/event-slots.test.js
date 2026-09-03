@@ -319,3 +319,41 @@ test('event cards carry no hardcoded dates', () => {
     }
   }
 });
+
+// 국가대표 A매치는 경기마다 구장이 다르다(9/24 수원, 9/28 서울). 구장은
+// 날짜와 함께 골라지므로 캘린더 라벨이 구장을 같이 말해야 한다. 이벤트 하나에
+// 구장 하나를 전제한 상세 정보표는 이 회차에서 "고르는 날짜에 따라"로 적는다.
+test('venue-per-match events label every open date with its stadium', () => {
+  const SEP1 = Date.parse('2026-09-01T12:00:00+09:00');
+  const event = findEvent('korea-football');
+  assert.ok(event, 'korea-football 회차가 없다');
+  assert.ok(event.venues, '구장 표가 없다');
+  for (const iso of event.slots) {
+    const venue = event.venues[iso.slice(0, 10)];
+    assert.ok(venue && venue.en && venue.ko, `${iso}에 구장이 없다`);
+  }
+  for (const ymd of Object.keys(event.venues)) {
+    assert.ok(event.slots.some((iso) => iso.slice(0, 10) === ymd), `구장만 있고 경기가 없는 날: ${ymd}`);
+  }
+  for (const slot of openDates(event, SEP1)) {
+    const venue = event.venues[slot.iso.slice(0, 10)];
+    assert.deepEqual(slot.venue, venue);
+    assert.ok(slot.label.en.endsWith(` · ${venue.en}`), slot.label.en);
+    assert.ok(slot.label.ko.endsWith(` · ${venue.ko}`), slot.label.ko);
+    assert.ok(slot.label.en.includes('Meet at'), '구장이 붙어도 집합 시각은 남아야 한다');
+  }
+  // 폼이 보낸 값은 서버가 같은 함수로 다시 푼다. 구장까지 같이 나와야 알림에 쓸 수 있다.
+  const resolved = findSlot('korea-football', event.slots[0], SEP1);
+  assert.ok(resolved && resolved.venue, '서버 재검증 결과에 구장이 없다');
+});
+
+test('single-venue events keep their labels free of a stadium suffix', () => {
+  const SEP1 = Date.parse('2026-09-01T12:00:00+09:00');
+  for (const event of EVENT_SLOTS.filter((item) => !item.venues)) {
+    for (const slot of openDates(event, SEP1).slice(0, 3)) {
+      assert.equal(slot.venue, undefined, `${event.id}에 구장이 붙었다`);
+      assert.equal(slot.label.en.split(' · ').length, 2, slot.label.en);
+      assert.equal(slot.label.ko.split(' · ').length, 2, slot.label.ko);
+    }
+  }
+});
