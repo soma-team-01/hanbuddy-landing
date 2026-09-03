@@ -89,7 +89,9 @@ test('review sections mirror reviews-data.js exactly', () => {
       assert.match(section, /data-review-source-note/, `${slug}: 빌려온 후기인데 출처 안내가 없다`);
     }
   }
-  assert.ok(sectionsSeen >= 3, `후기 섹션이 너무 적다: ${sectionsSeen}`);
+  // 2026-09-04: K리그 페이지를 10월 FC서울 홈경기까지 내려서 후기 섹션은 야구 둘뿐이다.
+  // 국가대표 페이지는 아직 운영 전이라 후기 섹션이 없다. K리그가 돌아오면 3으로 올린다.
+  assert.ok(sectionsSeen >= 2, `후기 섹션이 너무 적다: ${sectionsSeen}`);
 });
 
 test('detail pages put key facts in a one-per-line table and describe the actual day', () => {

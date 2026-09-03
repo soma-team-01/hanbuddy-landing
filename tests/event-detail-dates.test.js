@@ -58,7 +58,7 @@ test('the date detector actually catches the formats it claims to', () => {
   }
   // 날짜가 아닌 문장까지 잡으면 카피를 쓸 때마다 거짓 경보가 난다.
   for (const sample of [
-    'You may bring 2 friends', 'Marching in with 3 chants', 'about 2 hours', '₩60,000',
+    'You may bring 2 friends', 'Marching in with 3 chants', 'about 2 hours', '₩65,000', '₩80,000',
   ]) {
     assert.equal(caught(sample), false, `날짜가 아닌데 잡혔다: ${sample}`);
   }

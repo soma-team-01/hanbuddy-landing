@@ -16,13 +16,17 @@
   // - `recurring`: 우리가 예약만 하면 되는 활동(음식·한강). 날짜를 열어두는 데
   //   비용이 들지 않으므로 평일·주말 없이 전부 연다.
   //
+  // 고정 슬롯 회차는 보통 구장이 하나라 상세페이지가 구장을 말한다. 국가대표
+  // A매치처럼 경기마다 구장이 다르면 `venues`(YYYY-MM-DD -> {en, ko})를 두고,
+  // 라벨이 구장을 같이 붙인다. 구장은 날짜와 함께 골라지는 값이다.
+  //
   // 현재 채워진 KBO 일정은 2026-10-07까지다. 그 뒤 잔여경기는 아직 편성되지
   // 않았다. 편성되면 여기에 날짜를 추가한다.
   const EVENT_SLOTS = Object.freeze([
     {
       id: 'kbo-gocheok',
       title: { en: 'Indoor Dome KBO Baseball Night', ko: '고척돔 실내 야구 직관' },
-      price: 60000,
+      price: 65000,
       // 카드에 먼저 보여줄 날짜. 오픈은 전부 열어두되, 사람을 모으고 싶은 날은
       // 운영자가 고른다. slots에 없는 날이나 지난 날은 카드에서 조용히 빠진다.
       featured: ['2026-09-05'],
@@ -38,7 +42,7 @@
     {
       id: 'kbo-jamsil',
       title: { en: 'Open-Air KBO Baseball Night', ko: '잠실 야외 야구 직관' },
-      price: 60000,
+      price: 65000,
       featured: ['2026-09-13'],
       // 두산과 LG가 함께 쓰는 구장이라 리그 휴식일인 월요일만 비고 거의 매일 열린다.
       slots: [
@@ -56,14 +60,17 @@
       ],
     },
     {
-      id: 'kleague',
-      title: { en: 'K League Football Night', ko: 'K리그 축구 직관' },
-      price: 60000,
-      // FC서울 홈경기일(서울월드컵경기장)만.
-      slots: [
-        '2026-08-15T18:30', '2026-08-25T18:30', '2026-09-05T18:00',
-        '2026-10-10T13:00', '2026-10-17T13:00', '2026-10-24T13:00',
-      ],
+      id: 'korea-football',
+      title: { en: 'Korea National Team Football Night', ko: '국가대표 축구 직관' },
+      price: 80000,
+      featured: ['2026-09-24'],
+      // 2026년 9~10월 A매치 4연전 중 수도권 2경기. 울산(10/2)·용인(10/6)은 열지 않는다.
+      // 킥오프는 둘 다 20:00, 집합은 60분 전.
+      venues: {
+        '2026-09-24': { en: 'Suwon World Cup Stadium', ko: '수원월드컵경기장' },
+        '2026-09-28': { en: 'Seoul World Cup Stadium', ko: '서울월드컵경기장' },
+      },
+      slots: ['2026-09-24T19:00', '2026-09-28T19:00'],
     },
     {
       id: 'hanriver',
@@ -119,7 +126,7 @@
 
   // 고정 슬롯과 상시 오픈이 같은 문자열을 같은 모양으로 읽는다. 슬롯마다 라벨을
   // 손으로 적으면 40개가 넘는 경기일에서 EN/KO가 서로 어긋난다.
-  const slotLabel = (iso) => {
+  const slotLabel = (iso, venue) => {
     const ymd = iso.slice(0, 10);
     const day = weekdayIndex(ymd);
     const month = Number(ymd.slice(5, 7)) - 1;
@@ -128,13 +135,22 @@
     const clock = clockLabel(time);
     // 한국어는 24시간제로 적는다. 12시간제로 쓰면 13:00 경기와 새벽 1시가 모두
     // "1:00 집합"이 되고, 18:00은 "6:00 집합"이라 아침으로 읽힌다.
+    // 구장이 경기마다 다른 회차만 구장을 뒤에 붙인다. 구장이 하나인 회차는
+    // 상세페이지가 이미 말하고 있어 라벨까지 길어질 이유가 없다.
+    const venueEn = venue ? ` · ${venue.en}` : '';
+    const venueKo = venue ? ` · ${venue.ko}` : '';
     return {
-      en: `${DAYS_EN[day]}, ${MONTHS_EN[month]} ${dayOfMonth} · Meet at ${clock.hour12} ${clock.suffix}`,
-      ko: `${month + 1}월 ${dayOfMonth}일 (${DAYS_KO[day]}) · ${time} 집합`,
+      en: `${DAYS_EN[day]}, ${MONTHS_EN[month]} ${dayOfMonth} · Meet at ${clock.hour12} ${clock.suffix}${venueEn}`,
+      ko: `${month + 1}월 ${dayOfMonth}일 (${DAYS_KO[day]}) · ${time} 집합${venueKo}`,
     };
   };
 
-  const toSlot = (iso) => ({ iso, label: slotLabel(iso) });
+  // 구장이 있는 날은 슬롯 객체에도 실어 보낸다. 서버 재검증(findSlot)이 같은
+  // 객체를 돌려주므로 알림·시트가 구장을 다시 찾지 않아도 된다.
+  const toSlot = (iso, event) => {
+    const venue = event && event.venues ? event.venues[iso.slice(0, 10)] : undefined;
+    return venue ? { iso, label: slotLabel(iso, venue), venue } : { iso, label: slotLabel(iso) };
+  };
 
   // 카드용 짧은 라벨. 집합 시각을 일부러 뺀다: 카드는 "언제쯤 열리나"만 답하고,
   // 정확한 집합 시각은 날짜를 고르는 신청 캘린더가 말한다.
@@ -188,7 +204,7 @@
 
   // 고정 슬롯 회차가 지금 고를 수 있는 날짜. 지난 경기는 걸러낸다.
   const fixedDates = (event, now = Date.now()) => (event && event.slots
-    ? event.slots.filter((iso) => !isSlotPast(iso, now)).map(toSlot)
+    ? event.slots.filter((iso) => !isSlotPast(iso, now)).map((iso) => toSlot(iso, event))
     : []);
 
   // 회차 모델과 무관하게 "지금 고를 수 있는 날짜"를 하나의 창구로 준다.
