@@ -19,6 +19,36 @@ const structuredData = [...homeHtml.matchAll(
   /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
 )].map((match) => JSON.parse(match[1]));
 
+const tagAttributes = (html, tagName) => [...html.matchAll(
+  new RegExp(`<${tagName}\\b[^>]*>`, 'gi'),
+)].map(([tag]) => Object.fromEntries([...tag.matchAll(
+  /\s([^\s"'=<>`]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g,
+)].map(([, name, doubleQuoted, singleQuoted, unquoted]) => [
+  name.toLowerCase(),
+  doubleQuoted ?? singleQuoted ?? unquoted ?? '',
+])));
+
+const assertAbsoluteUrl = (value, label) => {
+  assert.doesNotThrow(() => new URL(value), `${label} must be an absolute URL`);
+};
+
+const assertHomeSiteIdentity = (html) => {
+  const canonicalUrls = tagAttributes(html, 'link')
+    .filter(({ rel }) => rel?.toLowerCase().split(/\s+/).includes('canonical'))
+    .map(({ href }) => href);
+  const openGraphUrls = tagAttributes(html, 'meta')
+    .filter((attributes) => attributes.property?.toLowerCase() === 'og:url')
+    .map(({ content }) => content);
+
+  assert.equal(canonicalUrls.length, 1, 'home page must have exactly one canonical');
+  assert.equal(openGraphUrls.length, 1, 'home page must have exactly one og:url');
+  assertAbsoluteUrl(canonicalUrls[0], 'home page canonical');
+  assertAbsoluteUrl(openGraphUrls[0], 'home page og:url');
+  assert.equal(canonicalUrls[0], openGraphUrls[0], 'home page canonical and og:url must match');
+  assert.equal(canonicalUrls[0], 'https://www.hanbuddy.kr/');
+  assert.equal(openGraphUrls[0], 'https://www.hanbuddy.kr/');
+};
+
 test('home page identifies the site as HanBuddy for search engines', () => {
   assert.equal(
     structuredData.filter((entry) => entry['@type'] === 'WebSite').length,
@@ -35,13 +65,25 @@ test('home page identifies the site as HanBuddy for search engines', () => {
 });
 
 test('home page publishes matching canonical and Open Graph site identity', () => {
-  assert.match(
-    homeHtml,
-    /<link rel="canonical" href="https:\/\/www\.hanbuddy\.kr\/" \/>/,
-  );
+  assertHomeSiteIdentity(homeHtml);
   assert.match(
     homeHtml,
     /<meta property="og:site_name" content="HanBuddy" \/>/,
+  );
+});
+
+test('home page identity rejects differently serialized duplicate tags', () => {
+  assert.throws(
+    () => assertHomeSiteIdentity(
+      `${homeHtml}<link href='https://www.hanbuddy.kr/' rel='canonical'>`,
+    ),
+    /home page must have exactly one canonical/,
+  );
+  assert.throws(
+    () => assertHomeSiteIdentity(
+      `${homeHtml}<meta content='https://www.hanbuddy.kr/' property='og:url'>`,
+    ),
+    /home page must have exactly one og:url/,
   );
 });
 
