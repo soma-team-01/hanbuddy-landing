@@ -17,8 +17,19 @@ const AUG10 = Date.parse('2026-08-10T12:00:00+09:00');
 const fixedEvents = EVENT_SLOTS.filter((event) => !event.recurring);
 const recurringEvents = EVENT_SLOTS.filter((event) => event.recurring);
 
+// 2026-09-04에 한강·삼겹살·치맥을 접어 지금은 상시 오픈 회차가 하나도 없다.
+// 모델 코드(recurringDates·openDates 분기)는 남아 있으니 픽스처로 계속 지킨다.
+// 예약형 회차가 다시 생기면 실제 회차도 같은 검사를 자동으로 돈다.
+const RECURRING_FIXTURE = Object.freeze({
+  id: 'fixture-any-day',
+  title: { en: 'Any-Day Fixture', ko: '상시 픽스처' },
+  price: 20000,
+  recurring: { time: '19:00', leadDays: 2, horizonDays: 30 },
+});
+const recurringSamples = [...recurringEvents, RECURRING_FIXTURE];
+
 test('every event carries an id, canonical title and price', () => {
-  assert.ok(EVENT_SLOTS.length >= 4);
+  assert.ok(EVENT_SLOTS.length >= 3);
   for (const event of EVENT_SLOTS) {
     assert.match(event.id, /^[a-z][a-z-]*$/, `bad id: ${event.id}`);
     assert.ok(event.title.en.length > 0);
@@ -149,14 +160,13 @@ test('card highlight labels carry a date but never a meeting time', () => {
   }
   // 상시 오픈 회차는 카드에 날짜를 찍지 않는다. 다음 날짜가 항상 리드타임 끝이라
   // 정보가 없고, 고정 일정처럼 읽히면 "아무 날이나"라는 장점이 가려진다.
-  for (const event of recurringEvents) {
+  for (const event of recurringSamples) {
     assert.deepEqual(highlightDates(event, 3, AUG10), []);
   }
 });
 
 test('recurring events declare a complete weekday rule', () => {
-  assert.ok(recurringEvents.length > 0);
-  for (const event of recurringEvents) {
+  for (const event of recurringSamples) {
     const rule = event.recurring;
     assert.match(rule.time, /^\d{2}:\d{2}$/, `bad time: ${rule.time}`);
     assert.ok(Number.isInteger(rule.leadDays) && rule.leadDays >= 1, `${event.id} leadDays`);
@@ -165,7 +175,7 @@ test('recurring events declare a complete weekday rule', () => {
 });
 
 test('recurring dates open every day, honour the lead time and stop at the horizon', () => {
-  for (const event of recurringEvents) {
+  for (const event of recurringSamples) {
     const rule = event.recurring;
     const dates = recurringDates(event, AUG10);
     assert.ok(dates.length > 0, `${event.id}에 신청 가능한 날짜가 없다`);
@@ -196,7 +206,7 @@ test('recurring dates open every day, honour the lead time and stop at the horiz
 });
 
 test('recurring dates are counted from the KST calendar day, not UTC', () => {
-  const event = recurringEvents[0];
+  const event = RECURRING_FIXTURE;
   // 8/10 00:30 KST = 8/9 15:30 UTC. 계산이 UTC 날짜로 새면 "오늘"이 8/9가 되어
   // 창이 통째로 하루 앞당겨진다. 정오와 같은 결과가 나와야 한다.
   const justAfterMidnightKst = Date.parse('2026-08-10T00:30:00+09:00');
@@ -217,20 +227,23 @@ test('recurring dates are counted from the KST calendar day, not UTC', () => {
 });
 
 test('recurring slot resolution rejects anything the picker could not have produced', () => {
-  const event = recurringEvents[0];
+  const event = RECURRING_FIXTURE;
   const time = event.recurring.time;
+  // 픽스처는 EVENT_SLOTS에 없어 findSlot(id 조회)을 못 쓴다. findSlot이 하는 일은
+  // openDates에서 iso를 찾는 것뿐이라 같은 창구를 직접 본다.
+  const resolve = (iso) => openDates(event, AUG10).find((slot) => slot.iso === iso) || null;
   const good = recurringDates(event, AUG10)[0];
-  assert.ok(findSlot(event.id, good.iso, AUG10), '정상 날짜가 거부됐다');
+  assert.ok(resolve(good.iso), '정상 날짜가 거부됐다');
 
   // 폼을 우회해 직접 보내는 값들. 서버가 같은 함수를 부르므로 여기서 막힌다.
-  assert.equal(findSlot(event.id, `2026-08-11T${time}`, AUG10), null, '리드타임 이내가 통과했다');
-  assert.equal(findSlot(event.id, `2026-08-10T${time}`, AUG10), null, '당일이 통과했다');
-  assert.equal(findSlot(event.id, `2026-10-14T${time}`, AUG10), null, '기간 밖이 통과했다');
-  assert.equal(findSlot(event.id, '2026-08-12T04:00', AUG10), null, '집합 시각이 다른데 통과했다');
+  assert.equal(resolve(`2026-08-11T${time}`), null, '리드타임 이내가 통과했다');
+  assert.equal(resolve(`2026-08-10T${time}`), null, '당일이 통과했다');
+  assert.equal(resolve(`2026-10-14T${time}`), null, '기간 밖이 통과했다');
+  assert.equal(resolve('2026-08-12T04:00'), null, '집합 시각이 다른데 통과했다');
   // 고정 슬롯 회차의 날짜를 상시 오픈 회차에 붙이는 조작.
   const fixedIso = fixedEvents[0].slots.find((iso) => !iso.endsWith(`T${time}`));
   assert.ok(fixedIso, '집합 시각이 다른 고정 슬롯이 없다. 이 검사의 전제가 깨졌다');
-  assert.equal(findSlot(event.id, fixedIso, AUG10), null, '다른 회차 슬롯이 통과했다');
+  assert.equal(resolve(fixedIso), null, '다른 회차 슬롯이 통과했다');
 });
 
 test('fixed-slot resolution accepts only that event own match days', () => {

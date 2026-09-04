@@ -59,27 +59,17 @@ test('the final CTA gives phones a shorter vertical frame than the photo band ne
   assert.ok(classes.includes('lg:py-32'), '데스크톱 여백은 그대로다');
 });
 
-test('event cards render no tagline at all, but life cards keep the any-day line', () => {
-  // 태그라인은 2026-08-18 모바일 접기를 거쳐 2026-08-22 유현님 결정으로 스포츠에
-  // 이어 라이프까지 어느 화면에서도 그리지 않는다. 카드는 사진·제목에 스포츠는
-  // 날짜 칩, 라이프는 상시 안내 한 줄만 얹는다. 카피는 CONTENT_MAP에 남긴다
-  // (지우는 대신 안 그린다). anyDay 줄은 날짜 칩의 카운터파트라 같이 지우면
-  // 회차 모델 구분(경기일 고정 vs 아무 날이나)이 카드에서 사라진다.
+test('event cards render no tagline at all', () => {
+  // 태그라인은 2026-08-18 모바일 접기를 거쳐 2026-08-22 유현님 결정으로 어느
+  // 화면에서도 그리지 않는다. 카드는 사진·제목·날짜 칩만 얹는다. 카피는
+  // CONTENT_MAP에 남긴다(지우는 대신 안 그린다). 라이프 카드의 상시 안내 줄
+  // (anyDay)은 2026-09-04에 음식 회차를 접으면서 티어와 함께 걷어냈다.
   const renderer = html.slice(
     html.indexOf('const renderEventCards'),
     html.indexOf('const renderReviewCards'),
   );
   assert.doesNotMatch(renderer, /item\.tagline/, '카드 태그라인 렌더링이 되살아났다');
-  // 상시 안내는 짧은 판(모바일)·긴 판(데스크톱) 한 쌍이다. 모바일 3열 폭에서는
-  // 긴 문장이 어중간하게 꺾인다("pick"만 다음 줄). 히어로 인용과 같은 계약:
-  // 서로 반대 조건을 들고 있어야 폰에 한 줄만 남는다.
-  const anyShort = renderer.match(/textNode\('p', '([^']*)', copy\.events\.anyDayShort\)/);
-  assert.ok(anyShort, '모바일용 짧은 상시 안내가 없다');
-  assert.match(anyShort[1], /\bsm:hidden\b/, '짧은 판은 데스크톱에서 사라져야 한다');
-  const anyFull = renderer.match(/textNode\('p', '([^']*)', copy\.events\.anyDay\)/);
-  assert.ok(anyFull, '데스크톱용 상시 안내가 없다');
-  assert.match(anyFull[1], /\bhidden\b/, '긴 판은 모바일에서 접혀야 한다');
-  assert.match(anyFull[1], /\bsm:block\b/, '긴 판은 데스크톱에서 다시 보여야 한다');
+  assert.doesNotMatch(renderer, /anyDay/, '상시 안내 줄이 되살아났다. 예약형 회차가 돌아오면 이 단언부터 풀 것');
 });
 
 test('the contact channels sit in one row that matches the primary button width', () => {

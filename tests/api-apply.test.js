@@ -21,13 +21,17 @@ const { findEvent, openDates } = require('../assets/event-slots.js');
 
 // 핸들러는 now를 받지 않고 Date.now()로 판정하므로, 고정 시각을 넘겨 맞출 수가 없다.
 // 야구 회차를 쓰면 리그 일정이 떨어진 날부터 열린 슬롯이 없어 이 스위트가
-// 통째로 죽는다(신청 API의 문제가 아닌데도). 언제 돌려도 날짜가 있는 상시 오픈
-// 회차를 쓴다. 고정 슬롯 경로는 apply-validation 테스트가 따로 덮는다.
-const openFoodSlot = () => openDates(findEvent('samgyeopsal'))[0].iso;
+// 통째로 죽는다(신청 API의 문제가 아닌데도). 예전에는 언제 돌려도 날짜가 있는
+// 상시 오픈 회차(삼겹살)로 피했는데 2026-09-04에 음식 회차를 접었다. 대신 시계를
+// 고정하고 그 시각에 열린 잠실 슬롯을 데이터에서 집어 온다. node --test는 파일마다
+// 프로세스를 따로 띄우므로 이 스텁이 다른 스위트로 새지 않는다.
+const FIXED_NOW = Date.parse('2026-09-04T12:00:00+09:00');
+Date.now = () => FIXED_NOW;
+const openSlot = () => openDates(findEvent('kbo-jamsil'), FIXED_NOW)[0].iso;
 const { buildRow, safeLog, ALLOWED_LOG_KEYS } = handler;
 
 const application = () => ({
-  eventId: 'samgyeopsal', slotIso: openFoodSlot(), guests: '1', name: 'Test',
+  eventId: 'kbo-jamsil', slotIso: openSlot(), guests: '1', name: 'Test',
   nationality: 'France', contactMethod: 'WhatsApp', contactId: 'x',
   requests: '', source: '', consent: true, language: 'en',
 });

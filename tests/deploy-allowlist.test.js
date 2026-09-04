@@ -20,6 +20,7 @@ const MUST_DEPLOY = [
   'index.html',
   'robots.txt',
   'sitemap.xml',
+  'vercel.json',
   'favicon.ico',
   'about/index.html',
   'apply/index.html',
@@ -37,12 +38,7 @@ const MUST_DEPLOY = [
   'assets/brand/logo-borderless.webp',
   'assets/brand/apple-touch-icon.png',
   'assets/photos/kbo/run1-hero.webp',
-  'assets/photos/hanriver/hanriver-fountain.webp',
   'assets/photos/kleague/kleague-0815-crew.webp',
-  'assets/photos/samgyeopsal/samgyeopsal-grill.webp',
-  'assets/photos/samgyeopsal/samgyeopsal-table.webp',
-  'assets/photos/chimaek/chimaek-og.webp',
-  'assets/photos/chimaek/chimaek-half.webp',
   ...eventPages,
 ];
 

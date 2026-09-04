@@ -13,7 +13,8 @@ const pages = readdirSync(join(root, 'events'), { withFileTypes: true })
 const html = (slug) => readFileSync(join(root, 'events', slug, 'index.html'), 'utf8');
 
 test('there is an event detail page to check', () => {
-  assert.ok(pages.length >= 6, `이벤트 페이지가 너무 적다: ${pages.length}`);
+  // 2026-09-04에 음식·한강 상세 3장을 내려서 야구 둘·국대 하나다. K리그가 돌아오면 4.
+  assert.ok(pages.length >= 3, `이벤트 페이지가 너무 적다: ${pages.length}`);
 });
 
 // 후기 캡션은 지난 운영을 증명하는 문장이라 "July 2026" 같은 날짜가 정당하게 들어간다.

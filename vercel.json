@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    { "source": "/events/hanriver", "destination": "/#events", "permanent": true },
+    { "source": "/events/hanriver/", "destination": "/#events", "permanent": true },
+    { "source": "/events/samgyeopsal", "destination": "/#events", "permanent": true },
+    { "source": "/events/samgyeopsal/", "destination": "/#events", "permanent": true },
+    { "source": "/events/chimaek", "destination": "/#events", "permanent": true },
+    { "source": "/events/chimaek/", "destination": "/#events", "permanent": true }
+  ]
+}

@@ -91,15 +91,19 @@ test('choosing Other on the source requires typing what it was', () => {
 });
 
 test('a slot from another event is rejected', () => {
-  // 한강은 상시 오픈이라 날짜는 겹쳐도 집합 시각이 다르다. 잠실 슬롯을 그대로
-  // 붙이면 시각이 어긋나 걸린다.
-  const result = validateApplication({ ...valid(), eventId: 'hanriver', slotIso: firstOpen('kbo-jamsil') }, AUG10);
+  // 국가대표 축구는 경기일이 따로 있다. 잠실 슬롯을 그대로 붙이면 그 회차에
+  // 없는 날짜라 걸린다.
+  const result = validateApplication({ ...valid(), eventId: 'korea-football', slotIso: firstOpen('kbo-jamsil') }, AUG10);
   assert.equal(result.ok, false);
   assert.equal(result.field, 'slotIso');
 });
 
 test('a slot that already passed is rejected', () => {
-  const result = validateApplication({ ...valid(), eventId: 'hanriver', slotIso: '2026-08-08T17:00' }, AUG10);
+  // 실재하는 경기일을 고르고 시계만 그 뒤로 돌린다. 목록에 없는 날짜로 검사하면
+  // "지났다"가 아니라 "없다"로 걸려 만료 판정을 검증하지 못한다.
+  const slotIso = firstOpen('kbo-jamsil');
+  const afterSlot = Date.parse(`${slotIso}:00+09:00`) + 60 * 60 * 1000;
+  const result = validateApplication({ ...valid(), slotIso }, afterSlot);
   assert.equal(result.ok, false);
   assert.equal(result.field, 'slotIso');
 });
@@ -130,36 +134,10 @@ test('form options are exposed for the page to render', () => {
   assert.ok(FIELD_OPTIONS.source.includes('Google search'));
 });
 
-// 상시 오픈 회차는 서버가 날짜를 직접 판정한다. 폼의 select는 브라우저에만 있고,
-// 신청 요청은 누구나 손으로 만들어 보낼 수 있다.
-const foodApplication = (slotIso) => ({ ...valid(), eventId: 'samgyeopsal', slotIso });
-
-test('a weekday inside the booking window is accepted for a recurring event', () => {
-  const result = validateApplication(foodApplication('2026-08-12T19:00'), AUG10);
-  assert.equal(result.ok, true, result.field);
-  assert.equal(result.value.eventTitle, 'Korean BBQ Night');
-  // slotIso 형식은 고정 슬롯 회차와 같아야 한다. 시트 5열이 이 문자열을 그대로 받는다.
-  assert.match(result.value.slotIso, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
-  assert.equal(result.value.slotIso, '2026-08-12T19:00');
-});
-
-test('the server rejects recurring dates the date picker would never offer', () => {
-  const rejected = {
-    '리드타임 이내': '2026-08-11T19:00',
-    '당일': '2026-08-10T19:00',
-    '지난 날짜': '2026-08-05T19:00',
-    '기간 밖': '2026-10-14T19:00',
-    '다른 집합 시각': '2026-08-12T20:00',
-    '다른 회차의 슬롯': '2026-08-22T13:00',
-  };
-  for (const [label, slotIso] of Object.entries(rejected)) {
-    const result = validateApplication(foodApplication(slotIso), AUG10);
-    assert.equal(result.ok, false, `${label}(${slotIso})이 통과했다`);
-    assert.equal(result.field, 'slotIso', `${label}은 slotIso로 걸려야 한다`);
-  }
-});
-
-test('a recurring date cannot be attached to a fixed-slot event', () => {
+// 상시 오픈 회차(한강·삼겹살·치맥)는 2026-09-04에 접었다. 그 모델의 날짜 판정은
+// tests/event-slots.test.js가 픽스처로 계속 지킨다. 여기서는 서버가 같은 창구
+// (findSlot → openDates)를 지나는지만 고정 슬롯 회차로 확인한다.
+test('an arbitrary weekday cannot be attached to a fixed-slot event', () => {
   // 야구는 티켓을 미리 사두므로 임의의 평일을 열어 줄 수 없다.
   const result = validateApplication({ ...valid(), slotIso: '2026-08-12T19:00' }, AUG10);
   assert.equal(result.ok, false);
