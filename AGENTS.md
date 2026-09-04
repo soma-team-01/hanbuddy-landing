@@ -27,7 +27,7 @@ hanbuddy-landing/
 |   |-- landing-variant.js   # ?v= arm resolution (whitelist) + carrying the value to /apply/
 |   |-- brand/                # logos, favicon, apple-touch icon, soma logo (webp + png)
 |   |-- photos/kbo/           # run1-* (2026-06-25) and kbo-0726-* (2026-07-26) public WebP derivatives
-|   |-- photos/hanriver/      # hanriver-* public WebP derivatives
+|   |-- photos/hanriver/      # hanriver-* public WebP derivatives (kept in the repo, not deployed since 2026-09-04)
 |   |-- photos/kleague/       # team-owned K League photos (2026-08-15 run proof / card / backdrop)
 |   |-- photos/samgyeopsal/   # team-owned Korean BBQ photos: 4 collage shots + landscape OG derivative
 |   |-- photos/chimaek/       # team-owned chimaek photos: 4 collage shots + landscape OG derivative
@@ -83,7 +83,7 @@ hanbuddy-landing/
 | Application measurement | module | `assets/application-measurement.js` | Declares the canonical `application_form_open` → `application_start` → `generate_lead` funnel, allowlists non-form page context, and accepts only one in-flight/successful submission for measurement |
 | `POST /api/apply` | function | `api/apply.js` | Revalidates the payload and client idempotency key, uses Sheet B:Q as the durable idempotency record, and reconciles concurrent appends to the lowest matching row while clearing later duplicates in place. C:Q binds the key to its first normalized payload. Only the invocation whose append `updatedRange` owns the canonical row may notify Discord; ambiguous append responses never notify. A sequential retry returns the prior result without appending or notifying again. The full Sheet path carries **one** deadline, not one per hop. Signs the service-account JWT with Node's built-in `crypto` (no npm) |
 | `/about` | page | `about/index.html` | Operator-positioning team page: full-bleed photo hero, origin section, zigzag how-we-run-it section, dark timeline band of completed/upcoming runs, team section, final CTA; own CONTENT_MAP |
-| `/events/kbo-gocheok/`, `/events/kbo-jamsil/`, `/events/korea-football/`, `/events/hanriver/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
+| `/events/kbo-gocheok/`, `/events/kbo-jamsil/`, `/events/korea-football/` | pages | `events/*/index.html` | Booking-style detail pages: title block, photo collage + focus-trapped lightbox, sticky booking card (desktop) / bottom CTA bar (mobile) |
 | `CONFIG` | inline JS object | `index.html` script | Maps CTA keys to external URLs + GA/Pixel IDs |
 | `CONTENT_MAP` | inline JS object | `index.html` script | EN/KO copy: meta, nav, hero, events cards, how, reviews, finalCta, footer, consent |
 | `showToast` / `renderEventCards` / `renderReviewCards` | JS | `index.html` script | Dynamic renderers re-run on language switch |
@@ -121,7 +121,7 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 |---|---|---|
 | Gocheok, indoor | `Indoor Dome KBO Baseball Night` | `고척돔 실내 야구 직관` |
 | Jamsil, open-air | `Open-Air KBO Baseball Night` | `잠실 야외 야구 직관` |
-| Han River | `Han River Picnic` | `한강 피크닉` |
+| Han River (retired 2026-09-04) | `Han River Picnic` | `한강 피크닉` |
 | Seoul World Cup Stadium (K League, retired until October) | `K League Football Night` | `K리그 축구 직관` |
 | National team A-match (Seoul or Suwon) | `Korea National Team Football Night` | `국가대표 축구 직관` |
 
@@ -136,7 +136,7 @@ An activity has exactly one canonical name. Landing cards, event detail titles, 
 - An event detail page's `data-analytics-content-id` must equal its card id, or the same run is counted under two names in GA and in the sheet. `tests/analytics-pages.test.js` enforces this.
 - Event **URLs** follow the same ids: `/events/kbo-gocheok/`, `/events/kbo-jamsil/`. Renamed on 2026-08-06 once 유현님 confirmed only the root domain had been shared externally (ads, Meetup, and Instagram all point at `hanbuddy.kr`). No redirects were left behind, so never publish a detail URL without checking this list first.
 - The `/about` timeline is exempt: its entries are narrative records of what happened on a date (`Jamsil KBO: our first baseball night`), not activity labels, so they keep their own wording.
-- `Han River Tour` is retired; the activity is a picnic.
+- `Han River Tour` is retired; the activity was a picnic, itself retired on 2026-09-04.
 
 ### Approved public quotes (verbatim; nothing else may be quoted)
 

@@ -205,7 +205,7 @@ photography and lets the fields carry the page. One column, `max-w-2xl`, no phot
 
 **Final CTA backdrop layer** (moved here from `#reviews`, 2026-08-03)
 
-- Five wide-shot (landscape) photos balanced across activities — 2 Han River (sunset lawn, Banpo fountain at night), 2 baseball (daytime crowds, night lights), 1 K League — behind a uniform `primary-strong`/80 scrim.
+- Five wide-shot (landscape) photos balanced across the live activities — 4 baseball (`kbo-stadium-hero` Jamsil daytime, `run1-hero`, `gocheok-dome-night`, `run1-night`) and 1 K League (`kleague-0815-dusk`) — behind a uniform scrim. Until 2026-09-04 two of the five were Han River shots (sunset lawn, Banpo fountain at night); they left with the retired picnic and their folder no longer deploys, so do not reference `assets/photos/hanriver/*` here unless the activity returns.
 - The scrim is `ink`/70, moved over unchanged from `#reviews`. A brand-red scrim was tried and rejected (유현님, 2026-08-03): tinting the photos red reads as a colored film laid over the section rather than as photography. Keep the neutral scrim so the photos look like photos, and let red carry the CTA button instead.
 - Portrait sources are not used here: at the band's wide ratio a 3:4 photo loses most of its frame to `object-cover`. Pick landscape crops instead of nudging `object-position`.
 - Photos are decorative (`alt=""`, wrapper `aria-hidden` + `data-photo-backdrop`) and must not show identifiable faces up close — selfie-style group shots are excluded; distant group shots are fine (유현님 rule, 2026-07-29).
