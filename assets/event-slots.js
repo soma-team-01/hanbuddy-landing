@@ -13,8 +13,10 @@
   //   묶여 있어 우리가 날짜를 정할 수 없다. 잔여경기가 편성되면 갱신해야 한다.
   //   집합은 경기 시작 60분 전으로 통일한다. 주말 경기가 14:00에 시작하는 날도
   //   있어서 요일만 보고 집합 시각을 정하면 경기가 끝난 뒤 모이게 된다.
-  // - `recurring`: 우리가 예약만 하면 되는 활동(음식·한강). 날짜를 열어두는 데
-  //   비용이 들지 않으므로 평일·주말 없이 전부 연다.
+  // - `recurring`: 우리가 예약만 하면 되는 활동. 날짜를 열어두는 데 비용이
+  //   들지 않으므로 평일·주말 없이 전부 연다. 한강·삼겹살·치맥이 이 모델이었는데
+  //   2026-09-04에 운영을 접어 지금은 쓰는 회차가 없다. 모델 코드는 남겨 둔다:
+  //   예약형 활동이 돌아오면 여기에 항목만 추가하면 된다.
   //
   // 고정 슬롯 회차는 보통 구장이 하나라 상세페이지가 구장을 말한다. 국가대표
   // A매치처럼 경기마다 구장이 다르면 `venues`(YYYY-MM-DD -> {en, ko})를 두고,
@@ -71,24 +73,6 @@
         '2026-09-28': { en: 'Seoul World Cup Stadium', ko: '서울월드컵경기장' },
       },
       slots: ['2026-09-24T19:00', '2026-09-28T19:00'],
-    },
-    {
-      id: 'hanriver',
-      title: { en: 'Han River Picnic', ko: '한강 피크닉' },
-      price: 20000,
-      recurring: { time: '17:00', leadDays: 2, horizonDays: 30 },
-    },
-    {
-      id: 'samgyeopsal',
-      title: { en: 'Korean BBQ Night', ko: '삼겹살 나이트' },
-      price: 20000,
-      recurring: { time: '19:00', leadDays: 2, horizonDays: 30 },
-    },
-    {
-      id: 'chimaek',
-      title: { en: 'Chimaek Night', ko: '치맥 나이트' },
-      price: 20000,
-      recurring: { time: '19:00', leadDays: 2, horizonDays: 30 },
     },
   ]);
 

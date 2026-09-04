@@ -88,5 +88,6 @@ test('the guard actually looks at the deployed public pages', () => {
   }
 
   const eventPages = files.filter((file) => /^events\/[^/]+\/index\.html$/.test(file));
-  assert.ok(eventPages.length >= 4, `이벤트 페이지가 ${eventPages.length}개만 잡혔다`);
+  // 2026-09-04 음식·한강 상세를 내려 3장. K리그가 돌아오면 4.
+  assert.ok(eventPages.length >= 3, `이벤트 페이지가 ${eventPages.length}개만 잡혔다`);
 });
