@@ -5,11 +5,16 @@ const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const SHEET_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 const MAX_BODY_BYTES = 16 * 1024;
 const IDEMPOTENCY_KEY_PATTERN = /^HB-\d{8}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{16}$/;
-// 시트 경로는 토큰 발급, 조회, append, reconciliation/cleanup을 순서대로 타므로,
-// 상한은 그 합이 함수
-// 실행 한도 안에 들어오게 잡는다. 디스코드 재시도까지 더해도 여유가 남는다.
+// 시트 경로는 토큰 발급, 조회, append, reconciliation/cleanup을 순서대로 한 마감으로
+// 탄다. 따뜻한 상태 실측은 1.7초지만 cold start에서 append 뒤에 마감이 끊기면
+// 행은 남고 알림은 사라지므로(2026-09-02 누락 사고) 그 편차를 흡수할 만큼 잡는다.
+// Discord는 운영 알림이라 신청자 대기를 저장만큼 늘리지 않는다. 둘을 더해도
+// 함수 실행 한도 안에 넉넉히 들어온다.
 // 환경변수는 테스트가 기다리지 않게 하려는 것이다. 배포에서는 설정하지 않는다.
-const REQUEST_TIMEOUT_MS = Number(process.env.APPLY_REQUEST_TIMEOUT_MS) || 3000;
+const DEADLINE_MS = Object.freeze({
+  sheet: Number(process.env.APPLY_REQUEST_TIMEOUT_MS) || 8000,
+  discord: Number(process.env.APPLY_REQUEST_TIMEOUT_MS) || 3000,
+});
 
 const ALLOWED_LOG_KEYS = ['application_id', 'code', 'stage'];
 
@@ -62,7 +67,7 @@ const idempotencyKeyFrom = (request) => {
 
 // 마감은 홉마다가 아니라 저장 경로마다 하나씩 만든다. 시트 경로의 모든 조회,
 // append, cleanup에 새로 걸면 최악의 대기가 홉 수만큼 곱해진다.
-const deadline = () => AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+const deadline = (ms) => AbortSignal.timeout(ms);
 
 const accessToken = async (signal) => {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -222,13 +227,13 @@ const reconcileAppend = async ({ applicationId, row, callerRow, token, signal })
     });
   }
 
-  return { status: inspected.status, ownsCanonicalRow };
+  return { status: inspected.status, retry: false };
 };
 
 const storeApplication = async ({ applicationId, row }) => {
   // 서버리스 인스턴스의 메모리는 재시도 사이에 공유되지 않는다. 시트 B열의
   // application_id와 같은 행의 C:Q를 durable idempotency record로 쓴다.
-  const signal = deadline();
+  const signal = deadline(DEADLINE_MS.sheet);
   const token = await accessToken(signal);
   const prior = await inspectApplication({
     applicationId, expectedRow: row, token, signal,
@@ -237,18 +242,20 @@ const storeApplication = async ({ applicationId, row }) => {
   // Append ownership이 없는 retry는 과거 중복을 추측해서 지우지 않는다.
   if (prior.duplicateRows.length !== 0) throw new Error('sheet-duplicates');
   if (prior.status !== 'missing') {
-    return { status: prior.status, ownsCanonicalRow: false };
+    return { status: prior.status, retry: true };
   }
 
   const callerRow = await appendWithOwnership({ row, token, signal });
   return reconcileAppend({ applicationId, row, callerRow, token, signal });
 };
 
-const notifyDiscord = async ({ applicationId, value, signal }) => {
+const notifyDiscord = async ({ applicationId, value, retry, signal }) => {
   const webhook = process.env.DISCORD_WEBHOOK_URL;
   if (!webhook) throw new Error('webhook');
   const lines = [
-    '🎉 **새 신청**',
+    // 재제출은 첫 요청이 실패한 뒤에만 일어나므로 대개는 첫 알림이 없었다.
+    // 그래도 같은 신청번호가 두 번 보일 수 있으니 팀이 한눈에 걸러내게 표시한다.
+    retry ? '🔁 **재제출 알림** 같은 신청번호가 이미 접수돼 있어 다시 알립니다 (중복 가능)' : '🎉 **새 신청**',
     `\`${applicationId}\``,
     `${value.eventTitle} · ${value.slotIso.replace('T', ' ')} · ${value.guests}명`,
     `${value.name} (${value.nationality})`,
@@ -315,9 +322,11 @@ const sendStorageFailure = (response, applicationId) => {
   sendResponse(response, { status: 500, body: { ok: false, code: 'STORAGE' } });
 };
 
-const notifyOwner = async ({ applicationId, value }) => {
+const notifyTeam = async ({ applicationId, value, retry }) => {
   try {
-    await notifyDiscord({ applicationId, value, signal: deadline() });
+    await notifyDiscord({
+      applicationId, value, retry, signal: deadline(DEADLINE_MS.discord),
+    });
   } catch {
     emit({ application_id: applicationId, code: 'STORAGE', stage: 'discord' });
   }
@@ -343,10 +352,11 @@ const handler = async (request, response) => {
     return;
   }
 
-  // updatedRange로 자기 행을 증명하고 그 행이 lowest canonical일 때만 알린다.
-  // 응답을 잃었거나 비정상 응답으로 row ownership이 불명확하면 접수는 성공해도
-  // Discord는 보내지 않는다. Discord는 durable authority가 아닌 운영 알림이다.
-  if (stored.ownsCanonicalRow) await notifyOwner(outcome);
+  // 시트에 남은 것이 확인된 순간에는 row ownership과 무관하게 알린다. 응답 유실이나
+  // 마감 초과 뒤의 재제출에서 알림을 아끼면 시트에는 있는데 팀은 모르는 신청이
+  // 생긴다(2026-09-02). 알림 중복은 팀이 한 번 더 보면 끝나지만 누락은 신청자를
+  // 잃는다. 중복 정리 경쟁에서 진 요청은 위에서 500으로 끝나므로 여기 오지 않는다.
+  await notifyTeam({ ...outcome, retry: stored.retry });
 
   sendResponse(response, {
     status: 200,
@@ -360,3 +370,4 @@ module.exports.safeLog = safeLog;
 module.exports.ALLOWED_LOG_KEYS = ALLOWED_LOG_KEYS;
 module.exports.idempotencyKeyFrom = idempotencyKeyFrom;
 module.exports.samePayload = samePayload;
+module.exports.DEADLINE_MS = DEADLINE_MS;

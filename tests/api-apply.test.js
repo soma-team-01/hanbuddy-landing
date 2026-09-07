@@ -384,7 +384,9 @@ test('a stale reconciler cannot clear a trailing row reused by another accepted 
   });
 });
 
-test('append response loss can confirm storage but never claims notification ownership', async () => {
+test('append response loss still notifies once storage is confirmed, and a retry notifies again', async () => {
+  // 알림 중복은 팀이 한 번 더 보면 끝나지만, 알림 누락은 신청자가 그대로 사라진다.
+  // 그래서 시트에 남은 것이 확인된 순간에는 row ownership과 무관하게 알린다.
   const rows = [Array.from({ length: 17 }, (_value, index) => `header-${index + 1}`)];
   const sheet = createSheetHarness({
     rows,
@@ -408,7 +410,11 @@ test('append response loss can confirm storage but never claims notification own
   assert.equal(edited.code, 409, 'editing after an ambiguous response cannot claim the old receipt');
   assert.deepEqual(edited.body, { ok: false, code: 'CONFLICT' });
   assert.equal(sheet.calls.append, 1);
-  assert.equal(sheet.calls.discord, 0, 'neither unknown ownership nor a prior-row retry may notify');
+  assert.equal(sheet.calls.discord, 2, 'confirmed storage notifies even without ownership, and the retry notifies again');
+  const [firstNotice, retryNotice] = sheet.discordBodies.map(({ content }) => content);
+  assert.ok(firstNotice.startsWith('🎉'), 'the first confirmed storage is announced as a new application');
+  assert.ok(retryNotice.startsWith('🔁'), 'a retry is announced as a retry so the team can spot duplicates');
+  assert.ok(retryNotice.includes(IDEMPOTENCY_KEY), 'the retry notice carries the same application id');
 });
 
 test('an idempotency key is bound to its first normalized C:Q payload', async () => {
@@ -461,7 +467,9 @@ test('unproven duplicate cleanup fails closed without Discord notification', asy
   assert.equal(sheet.calls.discord, 0);
 });
 
-test('a lost-response retry returns the prior result without appending or notifying again', async () => {
+test('a lost-response retry returns the prior result without appending, but notifies again as a retry', async () => {
+  // 재제출은 첫 요청이 실패한 뒤에만 일어나고, 첫 요청은 저장 성공 뒤에야 알리므로
+  // 재제출 알림이 진짜 중복이 되는 경우는 200 응답이 네트워크에서 유실됐을 때뿐이다.
   const sheet = createSheetHarness();
   const firstResponse = apiResponse();
   const retryResponse = apiResponse();
@@ -476,7 +484,49 @@ test('a lost-response retry returns the prior result without appending or notify
   assert.deepEqual(retryResponse.body, firstResponse.body);
   assert.equal(firstResponse.body.applicationId, IDEMPOTENCY_KEY);
   assert.equal(sheet.calls.append, 1);
-  assert.equal(sheet.calls.discord, 1);
+  assert.equal(sheet.calls.discord, 2, 'a duplicate notice beats a lost applicant');
+  const [firstNotice, retryNotice] = sheet.discordBodies.map(({ content }) => content);
+  assert.ok(firstNotice.startsWith('🎉'));
+  assert.ok(retryNotice.startsWith('🔁'), 'the retry is labelled so the team can tell it apart');
+  assert.ok(retryNotice.includes(IDEMPOTENCY_KEY));
+});
+
+test('a stored application whose Discord call fails is logged, not lost silently', async () => {
+  const sheet = createSheetHarness({ onDiscord: () => ({ ok: false }) });
+  const lines = [];
+  const previousWrite = process.stdout.write;
+  process.stdout.write = (chunk) => { lines.push(String(chunk)); return true; };
+
+  const response = apiResponse();
+  try {
+    await withFetch(sheet.fetch, () => handler(applicationRequest(), response));
+  } finally {
+    process.stdout.write = previousWrite;
+  }
+
+  assert.equal(response.code, 200, 'the applicant is still accepted');
+  assert.deepEqual(lines.map((line) => JSON.parse(line)), [
+    { application_id: IDEMPOTENCY_KEY, code: 'STORAGE', stage: 'discord' },
+  ]);
+});
+
+test('the default sheet deadline absorbs a cold start while Discord keeps its own shorter one', () => {
+  // 시트 경로는 토큰·조회·append·재조회 네 홉을 한 마감으로 탄다. 3초는 따뜻한 상태
+  // (실측 1.7초)엔 맞지만 cold start에서 append 뒤에 끊기면 행은 남고 알림은 사라진다.
+  // 테스트는 env로 마감을 줄이므로, 기본값은 env 없는 자식 프로세스에서 읽는다.
+  const { execFileSync } = require('node:child_process');
+  const env = { ...process.env };
+  delete env.APPLY_REQUEST_TIMEOUT_MS;
+  const output = execFileSync(process.execPath, [
+    '-e', "process.stdout.write(JSON.stringify(require('./api/apply.js').DEADLINE_MS))",
+  ], { cwd: join(__dirname, '..'), env, encoding: 'utf8' });
+  const deadlines = JSON.parse(output);
+
+  assert.ok(deadlines.sheet >= 8000, `sheet deadline must absorb a cold start: ${deadlines.sheet}`);
+  assert.ok(deadlines.discord >= 3000 && deadlines.discord < deadlines.sheet,
+    'Discord is a best-effort notice and must not extend the applicant wait as far as storage may');
+  assert.ok(deadlines.sheet + deadlines.discord <= 30000,
+    'the worst case must stay far inside the function execution limit');
 });
 
 test('a hung durable storage call fails within its deadline without sending a duplicate-prone notification', async () => {
