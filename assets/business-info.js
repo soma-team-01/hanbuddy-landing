@@ -1,7 +1,7 @@
 // Shared public business details for every footer.
 (() => {
   const markup = `
-      <div class="border-t border-line-soft pt-5">
+      <div>
         <p><span lang="ko">상호</span>: <span lang="ko">제로원</span> · <span lang="ko">대표자</span>: <span lang="ko">김민형</span></p>
         <p><span lang="ko">사업자등록번호</span>: 597-05-03957</p>
         <p><span lang="ko">사업장 주소</span>: <span lang="ko">서울특별시 동대문구 전농로34길 15-4 404호</span></p>
@@ -11,6 +11,7 @@
   document.querySelectorAll('footer').forEach((footer) => {
     const layout = footer.firstElementChild;
     if (!layout) return;
+    layout.style.paddingBottom = '1rem';
     const width = Array.from(layout.classList).find((name) => name.startsWith('max-w-'));
     const container = document.createElement('div');
     container.className = `mx-auto ${width || 'max-w-6xl'} px-5 pb-8 text-xs leading-6 text-muted`;
