@@ -6,6 +6,7 @@
 !/favicon.ico
 !/assets
 /assets/*
+!/assets/business-info.js
 !/assets/analytics.js
 !/assets/application-measurement.js
 !/assets/event-slots.js
