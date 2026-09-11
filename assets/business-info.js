@@ -8,8 +8,15 @@
         <p><span lang="ko">문의</span>: <a href="mailto:contact@hanbuddy.kr" class="focusable rounded underline underline-offset-4 hover:text-primary-strong">contact@hanbuddy.kr</a></p>
       </div>
   `;
-  document.querySelectorAll('[data-business-info]').forEach((container) => {
+  document.querySelectorAll('footer').forEach((footer) => {
+    const layout = footer.firstElementChild;
+    if (!layout) return;
+    const width = Array.from(layout.classList).find((name) => name.startsWith('max-w-'));
+    const container = document.createElement('div');
+    container.className = `mx-auto ${width || 'max-w-6xl'} px-5 pb-8 text-xs leading-6 text-muted`;
+    container.setAttribute('data-business-info', '');
     container.lang = 'ko';
     container.innerHTML = markup;
+    footer.append(container);
   });
 })();

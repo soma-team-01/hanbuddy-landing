@@ -646,3 +646,17 @@
     trackEvent: trackGa,
   };
 });
+
+// Public footer content is independent of analytics consent and tracking.
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  const loadBusinessInfo = () => {
+    const script = document.createElement('script');
+    script.src = '/assets/business-info.js';
+    document.head.append(script);
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadBusinessInfo, { once: true });
+  } else {
+    loadBusinessInfo();
+  }
+}
