@@ -1,7 +1,7 @@
 // Shared public business details for every footer.
 (() => {
   const markup = `
-      <div class="border-t border-line-soft pt-5">
+      <div class="pt-5">
         <p><span lang="ko">상호</span>: <span lang="ko">제로원</span> · <span lang="ko">대표자</span>: <span lang="ko">김민형</span></p>
         <p><span lang="ko">사업자등록번호</span>: 597-05-03957</p>
         <p><span lang="ko">사업장 주소</span>: <span lang="ko">서울특별시 동대문구 전농로34길 15-4 404호</span></p>
