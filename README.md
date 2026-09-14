@@ -1,13 +1,13 @@
 # HanBuddy Landing (공개 모집/홍보 랜딩)
 
-ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 사이트. **주 타깃은 외국인 게스트(international guests) 모집**이며, 페이지 전체가 게스트 화법으로 구성된다. 한국인·로컬 buddy 모집은 최종 CTA 섹션의 한 줄 안내(KakaoTalk 오픈채팅 유도)로만 노출한다.
+ZeroOne 팀 HanBuddy의 공개 recruitment/promotion 정적 사이트. **주 타깃은 외국인 게스트(international guests) 모집**이며, 페이지 전체가 게스트 화법으로 구성된다. 한국인·로컬 buddy 모집은 최종 CTA 섹션의 한 줄 안내(KakaoTalk 문의 유도)로만 노출한다.
 
 포지셔닝은 **날짜 기반 이벤트**다(주말 전용 아님 — 야구는 평일에도 진행). `#events` 섹션의 Meetup 스타일 카드가 현재 공개된 일정을 보여주고, 각 카드는 `/events/`의 예약형 상세페이지로 연결된다. 완료된 운영(2026-06-25·07-26 잠실 KBO, 한강 피크닉)의 승인 사진과 게스트 후기를 홍보용 proof로 사용한다.
 
 - **프로덕션**: https://www.hanbuddy.kr — `main` 머지 시 Vercel GitHub 연동으로 **자동 배포** (수동 배포 불필요)
 - **페이지**: `/` (메인) · `/about` (팀 소개) · `/apply/` (신청 폼) · `/events/kbo-gocheok/` · `/events/kbo-jamsil/` · `/events/korea-football/` (이벤트 상세)
 - **신청**: 사이트 자체 폼 `/apply/` (`index.html`의 `CONFIG.apply`). 상세페이지는 `/apply/?event=<id>`로 회차를 프리필한다. 구글폼(`https://forms.gle/B1fWgX3MjtHUHGNt5`)은 이미 배포된 외부 링크 때문에 살려두지만 사이트에서는 더 이상 가리키지 않는다
-- **문의**: 기본은 Instagram DM https://www.instagram.com/hanbuddy_kr/ , KakaoTalk 오픈채팅 https://open.kakao.com/o/sP3n4rFi 은 보조·한국인 버디 채널
+- **문의**: 기본은 Instagram DM https://www.instagram.com/hanbuddy_kr/ , KakaoTalk 문의 http://pf.kakao.com/_qapJX/chat 은 보조·한국인 버디 채널
 - **구조**: 빌드 스텝·패키지 매니저·npm 의존성이 없는 정적 HTML + 공개용 WebP 파생 이미지에, 신청 접수용 Vercel Function(`api/apply.js`) 하나가 붙어 있다. 상세 구조와 규칙은 `AGENTS.md`, 디자인 시스템은 `DESIGN.md`(SSOT)
 - 신청 정보는 `/apply/`에서 수집해 팀 소유 구글 시트에 쌓고 **행사 종료 후 6개월** 보관 뒤 파기한다. 수집 항목·목적·보유기간·삭제 요청 창구는 폼 안 고지문에 적혀 있고, 필수 동의 체크박스를 받는다. 개인정보를 레포에 커밋하거나 서버 로그에 남기는 것은 여전히 금지다.
 - 참가자 사진은 회차별 동의 기반으로 사용하며, 원본 JPG/EXIF는 배포하지 않는다(공개는 EXIF 제거 WebP만).
