@@ -9,7 +9,7 @@
     destinations: Object.freeze({
       application_page: '/apply/',
       instagram: 'https://www.instagram.com/hanbuddy_kr/',
-      kakaotalk: 'http://pf.kakao.com/_qapJX/chat',
+      kakaotalk: 'https://pf.kakao.com/_qapJX/chat',
       whatsapp: 'https://wa.me/821082970110',
     }),
   });
